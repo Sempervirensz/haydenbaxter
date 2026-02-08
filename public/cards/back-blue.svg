@@ -1,0 +1,220 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 250 350" width="250" height="350">
+  <defs>
+    <!-- Ornate scrollwork pattern -->
+    <pattern id="scroll-blue" width="24" height="24" patternUnits="userSpaceOnUse" patternTransform="rotate(0)">
+      <rect width="24" height="24" fill="#1a3a8a"/>
+      <circle cx="12" cy="12" r="4" fill="none" stroke="#a0b0e8" stroke-width="0.4" opacity="0.5"/>
+      <path d="M0 12 Q6 6 12 12 Q18 18 24 12" fill="none" stroke="#a0b0e8" stroke-width="0.3" opacity="0.4"/>
+      <path d="M12 0 Q6 6 12 12 Q18 18 12 24" fill="none" stroke="#a0b0e8" stroke-width="0.3" opacity="0.4"/>
+    </pattern>
+  </defs>
+
+  <!-- Card base with white border -->
+  <rect x="0" y="0" width="250" height="350" rx="12" fill="white"/>
+
+  <!-- Main red background -->
+  <rect x="6" y="6" width="238" height="338" rx="8" fill="#1a3a8a"/>
+
+  <!-- Inner white border line -->
+  <rect x="10" y="10" width="230" height="330" rx="6" fill="none" stroke="white" stroke-width="1.5"/>
+
+  <!-- Second border -->
+  <rect x="14" y="14" width="222" height="322" rx="5" fill="none" stroke="white" stroke-width="0.8" opacity="0.7"/>
+
+  <!-- Ornate outer frame -->
+  <rect x="18" y="18" width="214" height="314" rx="4" fill="none" stroke="white" stroke-width="2"/>
+
+  <!-- Inner decorative zone -->
+  <rect x="22" y="22" width="206" height="306" rx="3" fill="url(#scroll-blue)"/>
+
+  <!-- Diamond lattice overlay -->
+  <g stroke="white" stroke-width="0.5" opacity="0.25" fill="none">
+    <!-- Diagonal lines one way -->
+    <line x1="22" y1="22" x2="228" y2="328"/>
+    <line x1="62" y1="22" x2="228" y2="288"/>
+    <line x1="102" y1="22" x2="228" y2="248"/>
+    <line x1="142" y1="22" x2="228" y2="208"/>
+    <line x1="182" y1="22" x2="228" y2="168"/>
+    <line x1="222" y1="22" x2="228" y2="128"/>
+    <line x1="22" y1="62" x2="228" y2="328"/>
+    <line x1="22" y1="102" x2="188" y2="328"/>
+    <line x1="22" y1="142" x2="148" y2="328"/>
+    <line x1="22" y1="182" x2="108" y2="328"/>
+    <line x1="22" y1="222" x2="68" y2="328"/>
+    <line x1="22" y1="262" x2="28" y2="328"/>
+    <!-- Diagonal lines other way -->
+    <line x1="228" y1="22" x2="22" y2="328"/>
+    <line x1="188" y1="22" x2="22" y2="288"/>
+    <line x1="148" y1="22" x2="22" y2="248"/>
+    <line x1="108" y1="22" x2="22" y2="208"/>
+    <line x1="68" y1="22" x2="22" y2="168"/>
+    <line x1="28" y1="22" x2="22" y2="128"/>
+    <line x1="228" y1="62" x2="22" y2="328"/>
+    <line x1="228" y1="102" x2="62" y2="328"/>
+    <line x1="228" y1="142" x2="102" y2="328"/>
+    <line x1="228" y1="182" x2="142" y2="328"/>
+    <line x1="228" y1="222" x2="182" y2="328"/>
+    <line x1="228" y1="262" x2="222" y2="328"/>
+  </g>
+
+  <!-- Inner frame -->
+  <rect x="30" y="30" width="190" height="290" rx="3" fill="none" stroke="white" stroke-width="1.5"/>
+  <rect x="34" y="34" width="182" height="282" rx="2" fill="#1a3a8a" stroke="white" stroke-width="0.5" opacity="0.8"/>
+
+  <!-- Cross-hatch pattern in inner area -->
+  <g stroke="white" stroke-width="0.35" opacity="0.2">
+    <line x1="34" y1="65" x2="216" y2="65"/>
+    <line x1="34" y1="95" x2="216" y2="95"/>
+    <line x1="34" y1="125" x2="216" y2="125"/>
+    <line x1="34" y1="155" x2="216" y2="155"/>
+    <line x1="34" y1="185" x2="216" y2="185"/>
+    <line x1="34" y1="215" x2="216" y2="215"/>
+    <line x1="34" y1="245" x2="216" y2="245"/>
+    <line x1="34" y1="275" x2="216" y2="275"/>
+    <line x1="65" y1="34" x2="65" y2="316"/>
+    <line x1="95" y1="34" x2="95" y2="316"/>
+    <line x1="125" y1="34" x2="125" y2="316"/>
+    <line x1="155" y1="34" x2="155" y2="316"/>
+    <line x1="185" y1="34" x2="185" y2="316"/>
+  </g>
+
+  <!-- CENTER MEDALLION -->
+  <!-- Outer oval -->
+  <ellipse cx="125" cy="175" rx="52" ry="68" fill="#1a3a8a" stroke="white" stroke-width="2"/>
+  <ellipse cx="125" cy="175" rx="48" ry="64" fill="none" stroke="white" stroke-width="0.8"/>
+
+  <!-- Radiating lines from center -->
+  <g stroke="white" stroke-width="0.6" opacity="0.5">
+    <line x1="125" y1="111" x2="125" y2="130"/>
+    <line x1="125" y1="220" x2="125" y2="239"/>
+    <line x1="77" y1="175" x2="92" y2="175"/>
+    <line x1="158" y1="175" x2="173" y2="175"/>
+    <!-- Diagonals -->
+    <line x1="90" y1="125" x2="102" y2="140"/>
+    <line x1="160" y1="125" x2="148" y2="140"/>
+    <line x1="90" y1="225" x2="102" y2="210"/>
+    <line x1="160" y1="225" x2="148" y2="210"/>
+  </g>
+
+  <!-- Angel/Cherub figure - upper -->
+  <g fill="white" opacity="0.9">
+    <!-- Head -->
+    <circle cx="125" cy="138" r="5"/>
+    <!-- Body -->
+    <ellipse cx="125" cy="153" rx="6" ry="10"/>
+    <!-- Wings left -->
+    <path d="M119 148 Q105 140 100 148 Q108 145 115 150 Z"/>
+    <!-- Wings right -->
+    <path d="M131 148 Q145 140 150 148 Q142 145 135 150 Z"/>
+    <!-- Legs -->
+    <line x1="122" y1="163" x2="120" y2="172" stroke="white" stroke-width="1.5"/>
+    <line x1="128" y1="163" x2="130" y2="172" stroke="white" stroke-width="1.5"/>
+  </g>
+
+  <!-- Angel/Cherub figure - lower (mirrored) -->
+  <g fill="white" opacity="0.9" transform="rotate(180, 125, 175)">
+    <!-- Head -->
+    <circle cx="125" cy="138" r="5"/>
+    <!-- Body -->
+    <ellipse cx="125" cy="153" rx="6" ry="10"/>
+    <!-- Wings left -->
+    <path d="M119 148 Q105 140 100 148 Q108 145 115 150 Z"/>
+    <!-- Wings right -->
+    <path d="M131 148 Q145 140 150 148 Q142 145 135 150 Z"/>
+    <!-- Legs -->
+    <line x1="122" y1="163" x2="120" y2="172" stroke="white" stroke-width="1.5"/>
+    <line x1="128" y1="163" x2="130" y2="172" stroke="white" stroke-width="1.5"/>
+  </g>
+
+  <!-- Decorative wheel/compass in center -->
+  <circle cx="125" cy="175" r="12" fill="none" stroke="white" stroke-width="1"/>
+  <circle cx="125" cy="175" r="8" fill="none" stroke="white" stroke-width="0.5"/>
+  <circle cx="125" cy="175" r="3" fill="white" opacity="0.8"/>
+  <!-- Spokes -->
+  <g stroke="white" stroke-width="0.7">
+    <line x1="125" y1="163" x2="125" y2="167"/>
+    <line x1="125" y1="183" x2="125" y2="187"/>
+    <line x1="113" y1="175" x2="117" y2="175"/>
+    <line x1="133" y1="175" x2="137" y2="175"/>
+    <line x1="116.5" y1="166.5" x2="119" y2="169"/>
+    <line x1="133.5" y1="166.5" x2="131" y2="169"/>
+    <line x1="116.5" y1="183.5" x2="119" y2="181"/>
+    <line x1="133.5" y1="183.5" x2="131" y2="181"/>
+  </g>
+
+  <!-- CORNER ORNAMENTS -->
+  <!-- Top-left scrollwork -->
+  <g stroke="white" stroke-width="1.2" fill="none" opacity="0.9">
+    <path d="M40 50 Q50 36 65 42 Q55 45 52 55"/>
+    <path d="M42 42 Q48 38 55 40"/>
+    <circle cx="44" cy="44" r="2.5" fill="white"/>
+  </g>
+
+  <!-- Top-right scrollwork -->
+  <g stroke="white" stroke-width="1.2" fill="none" opacity="0.9">
+    <path d="M210 50 Q200 36 185 42 Q195 45 198 55"/>
+    <path d="M208 42 Q202 38 195 40"/>
+    <circle cx="206" cy="44" r="2.5" fill="white"/>
+  </g>
+
+  <!-- Bottom-left scrollwork -->
+  <g stroke="white" stroke-width="1.2" fill="none" opacity="0.9">
+    <path d="M40 300 Q50 314 65 308 Q55 305 52 295"/>
+    <path d="M42 308 Q48 312 55 310"/>
+    <circle cx="44" cy="306" r="2.5" fill="white"/>
+  </g>
+
+  <!-- Bottom-right scrollwork -->
+  <g stroke="white" stroke-width="1.2" fill="none" opacity="0.9">
+    <path d="M210 300 Q200 314 185 308 Q195 305 198 295"/>
+    <path d="M208 308 Q202 312 195 310"/>
+    <circle cx="206" cy="306" r="2.5" fill="white"/>
+  </g>
+
+  <!-- SIDE ORNAMENTS -->
+  <!-- Top center ornament -->
+  <g stroke="white" stroke-width="1" fill="white" opacity="0.8">
+    <path d="M110 38 Q125 28 140 38" fill="none"/>
+    <circle cx="125" cy="34" r="2"/>
+    <path d="M118 40 L125 35 L132 40" fill="none"/>
+  </g>
+
+  <!-- Bottom center ornament -->
+  <g stroke="white" stroke-width="1" fill="white" opacity="0.8">
+    <path d="M110 312 Q125 322 140 312" fill="none"/>
+    <circle cx="125" cy="316" r="2"/>
+    <path d="M118 310 L125 315 L132 310" fill="none"/>
+  </g>
+
+  <!-- Left center ornament -->
+  <g stroke="white" stroke-width="1" fill="white" opacity="0.8">
+    <path d="M38 160 Q28 175 38 190" fill="none"/>
+    <circle cx="34" cy="175" r="2"/>
+  </g>
+
+  <!-- Right center ornament -->
+  <g stroke="white" stroke-width="1" fill="white" opacity="0.8">
+    <path d="M212 160 Q222 175 212 190" fill="none"/>
+    <circle cx="216" cy="175" r="2"/>
+  </g>
+
+  <!-- Scrollwork vines along edges -->
+  <g stroke="white" stroke-width="0.6" fill="none" opacity="0.5">
+    <!-- Top edge -->
+    <path d="M60 36 Q70 30 80 36 Q90 42 100 36"/>
+    <path d="M150 36 Q160 30 170 36 Q180 42 190 36"/>
+    <!-- Bottom edge -->
+    <path d="M60 314 Q70 320 80 314 Q90 308 100 314"/>
+    <path d="M150 314 Q160 320 170 314 Q180 308 190 314"/>
+    <!-- Left edge -->
+    <path d="M36 60 Q30 70 36 80 Q42 90 36 100"/>
+    <path d="M36 120 Q30 130 36 140"/>
+    <path d="M36 210 Q30 220 36 230"/>
+    <path d="M36 250 Q30 260 36 270 Q42 280 36 290"/>
+    <!-- Right edge -->
+    <path d="M214 60 Q220 70 214 80 Q208 90 214 100"/>
+    <path d="M214 120 Q220 130 214 140"/>
+    <path d="M214 210 Q220 220 214 230"/>
+    <path d="M214 250 Q220 260 214 270 Q208 280 214 290"/>
+  </g>
+</svg>
