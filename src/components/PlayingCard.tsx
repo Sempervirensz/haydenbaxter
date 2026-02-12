@@ -94,7 +94,7 @@ export default function PlayingCard({
         }}
       >
         <h3
-          className="text-sm font-bold tracking-wider"
+          className="text-xs font-bold tracking-wider leading-tight"
           style={{
             color: textColor,
             fontFamily: "var(--font-serif)",
@@ -103,7 +103,7 @@ export default function PlayingCard({
           {card.title}
         </h3>
         <p
-          className="text-xs mt-0.5 text-white/60"
+          className="text-[10px] mt-0.5 text-white/60 leading-tight"
           style={{ fontFamily: "var(--font-sans)" }}
         >
           {card.description}

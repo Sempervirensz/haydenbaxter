@@ -25,6 +25,7 @@
   text-align: center;
   margin-top: 12px;
   transition: opacity 0.5s ease, transform 0.5s ease;
+  overflow: hidden;
 }
 
 /* 3D Card System */
