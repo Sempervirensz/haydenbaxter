@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 234 333" width="234" height="333">
+  <rect width="234" height="333" fill="white" rx="0"/>
+
+  <!-- Border -->
+  <rect x="8" y="8" width="218" height="317" fill="none" stroke="#1a1a1a" stroke-width="1.5" rx="4"/>
+
+  <!-- Top-left corner: A and small spade -->
+  <text x="18" y="38" font-family="Georgia, serif" font-size="22" font-weight="bold" fill="#1a1a1a" text-anchor="start">A</text>
+  <path d="M24,44 C24,44 18,54 18,58 C18,62 21,64 24,62 C24,62 24,66 20,68 L28,68 C24,66 24,62 24,62 C27,64 30,62 30,58 C30,54 24,44 24,44 Z" fill="#1a1a1a"/>
+
+  <!-- Bottom-right corner: A and small spade (rotated) -->
+  <g transform="translate(234,333) rotate(180)">
+    <text x="18" y="38" font-family="Georgia, serif" font-size="22" font-weight="bold" fill="#1a1a1a" text-anchor="start">A</text>
+    <path d="M24,44 C24,44 18,54 18,58 C18,62 21,64 24,62 C24,62 24,66 20,68 L28,68 C24,66 24,62 24,62 C27,64 30,62 30,58 C30,54 24,44 24,44 Z" fill="#1a1a1a"/>
+  </g>
+
+  <!-- Large center spade -->
+  <g transform="translate(117,145)">
+    <path d="M0,-70 C0,-70 -50,0 -50,25 C-50,50 -30,58 -15,48 C-8,43 -4,35 -3,28 C-3,28 -5,65 -25,80 L25,80 C5,65 3,28 3,28 C4,35 8,43 15,48 C30,58 50,50 50,25 C50,0 0,-70 0,-70 Z" fill="#1a1a1a"/>
+    <!-- Stem -->
+    <rect x="-4" y="55" width="8" height="25" fill="#1a1a1a" rx="1"/>
+  </g>
+
+  <!-- "ACE OF SPADES" text arc -->
+  <text x="117" y="255" font-family="Georgia, serif" font-size="11" fill="#1a1a1a" text-anchor="middle" letter-spacing="2">ACE OF SPADES</text>
+
+  <!-- Decorative line above text -->
+  <line x1="55" y1="242" x2="179" y2="242" stroke="#1a1a1a" stroke-width="0.75"/>
+
+  <!-- Decorative line below text -->
+  <line x1="55" y1="262" x2="179" y2="262" stroke="#1a1a1a" stroke-width="0.75"/>
+
+  <!-- Small decorative flourishes -->
+  <path d="M50,242 C50,239 55,239 55,242" fill="none" stroke="#1a1a1a" stroke-width="0.75"/>
+  <path d="M179,242 C179,239 184,239 184,242" fill="none" stroke="#1a1a1a" stroke-width="0.75"/>
+  <path d="M50,262 C50,265 55,265 55,262" fill="none" stroke="#1a1a1a" stroke-width="0.75"/>
+  <path d="M179,262 C179,265 184,265 184,262" fill="none" stroke="#1a1a1a" stroke-width="0.75"/>
+</svg>

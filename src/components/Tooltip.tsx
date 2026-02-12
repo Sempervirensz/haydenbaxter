@@ -9,7 +9,7 @@ export default function Tooltip({ visible, color = "black" }: TooltipProps) {
       className={`tooltip ${!visible ? "tooltip-hidden" : ""}`}
     >
       <span
-        className="inline-block px-4 py-2 rounded-full text-sm font-medium shadow-lg border"
+        className="inline-block px-2 py-1 sm:px-4 sm:py-2 rounded-full text-[10px] sm:text-sm font-medium shadow-lg border"
         style={{
           fontFamily: "var(--font-sans)",
           backgroundColor: "white",

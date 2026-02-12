@@ -9,10 +9,29 @@
   --flip-easing: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+/* Card column — locks width to card size so caption centers correctly */
+.card-column {
+  position: relative;
+  width: var(--card-width);
+  flex-shrink: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Caption below card */
+.card-caption {
+  width: var(--card-width);
+  text-align: center;
+  margin-top: 12px;
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
 /* 3D Card System */
 .card-perspective-wrapper {
   perspective: 1200px;
-  width: var(--card-width);
+  -webkit-perspective: 1200px;
+  width: 100%;
   height: var(--card-height);
   flex-shrink: 0;
 }
@@ -23,6 +42,9 @@
   cursor: pointer;
   position: relative;
   transition: transform 0.3s ease;
+  /* Preserve 3D through the wrapper for iOS Safari */
+  transform-style: preserve-3d;
+  -webkit-transform-style: preserve-3d;
 }
 .card-hover-wrapper:hover {
   transform: translateY(-12px);
@@ -33,6 +55,7 @@
   width: 100%;
   height: 100%;
   transform-style: preserve-3d;
+  -webkit-transform-style: preserve-3d;
   transition: transform var(--flip-duration) var(--flip-easing);
   will-change: transform;
 }
@@ -49,9 +72,6 @@
     0 4px 24px rgba(0, 0, 0, 0.4),
     0 1px 4px rgba(0, 0, 0, 0.2);
   transition: box-shadow 0.3s ease;
-  /* Force GPU to pre-composite both faces on load, preventing first-flip flash */
-  transform: translateZ(0);
-  will-change: transform;
 }
 
 .card-hover-wrapper:hover .card-face {
@@ -66,7 +86,7 @@
 }
 
 .card-back {
-  transform: rotateY(180deg) translateZ(0);
+  transform: rotateY(180deg);
 }
 
 /* Card Front Overlay */
@@ -90,7 +110,7 @@
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translateX(-50%) translateY(-50%) scale(0.9);
+  transform: translateX(-50%) translateY(-50%) translateZ(120px) scale(0.9);
   opacity: 0;
   transition: opacity 0.2s ease, transform 0.2s ease;
   pointer-events: none;
@@ -99,10 +119,11 @@
 }
 .card-hover-wrapper:hover .tooltip {
   opacity: 1;
-  transform: translateX(-50%) translateY(-50%) scale(1);
+  transform: translateX(-50%) translateY(-50%) translateZ(120px) scale(1);
 }
 .tooltip-hidden {
   opacity: 0 !important;
+  transition: none !important;
 }
 
 /* Responsive */
@@ -114,6 +135,9 @@
   .card-hover-wrapper:hover {
     transform: translateY(-8px);
   }
+  .card-caption {
+    margin-top: 8px;
+  }
   .card-overlay-title {
     font-size: 0.8rem;
   }
@@ -123,21 +147,22 @@
 }
 @media (max-width: 640px) {
   :root {
-    --card-width: 150px;
-    --card-height: 212px;
+    --card-width: calc((100vw - 48px) / 4);
+    --card-height: calc(((100vw - 48px) / 4) * 1.41);
+    --card-border-radius: 6px;
   }
   .card-hover-wrapper:hover {
-    transform: translateY(-6px);
+    transform: none;
   }
   .card-overlay-title {
-    font-size: 0.65rem;
+    font-size: 0.55rem;
   }
   .card-overlay-desc {
-    font-size: 0.45rem;
+    font-size: 0.4rem;
   }
   .card-overlay-banner {
-    padding: 4px 6px;
-    gap: 2px;
+    padding: 3px 4px;
+    gap: 1px;
   }
 }
 

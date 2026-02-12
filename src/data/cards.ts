@@ -56,7 +56,7 @@ export const CARDS: CardData[] = [
     color: "black",
     title: "ACE OF EXECUTION",
     description: "Got an Idea? I've got the skills to make it real",
-    faceImage: "/cards/spades_ace.svg",
+    faceImage: "/cards/hf_20260210_001825_ff0bfcdc-a15d-4636-94e5-ef8ffc7cf4aa.jpeg",
     backVariant: "black",
     bunchedTransform: { translateX: -100, translateY: 20, rotate: 24, scale: 0.95 },
   },

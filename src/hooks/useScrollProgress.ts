@@ -15,10 +15,25 @@ export function useScrollProgress() {
     const updateProgress = () => {
       const rect = el.getBoundingClientRect();
       const windowH = window.innerHeight;
-      // Map: when deck bottom is at viewport bottom → 0 (bunched)
-      //       when deck is fully in view → 1 (unbunched/straight)
-      const raw = 1 - rect.top / (windowH * 0.6);
-      setProgress(Math.min(Math.max(raw, 0), 1));
+      // On mobile, cards may already be in view on load.
+      // Use the distance the user has scrolled relative to the scroll space below the fold.
+      const scrollY = window.scrollY || window.pageYOffset;
+      const docH = document.documentElement.scrollHeight;
+      const scrollSpace = docH - windowH;
+
+      if (scrollSpace <= 0) {
+        // No scroll space available — show unbunched
+        setProgress(1);
+      } else {
+        // Use a blend: primarily scroll-based on mobile, rect-based on desktop
+        const rectBased = 1 - rect.top / (windowH * 0.6);
+        const scrollBased = scrollY / (scrollSpace * 0.5); // unbunch within first 50% of scroll
+
+        // On small screens (mobile), prefer scroll-based to avoid starting already unbunched
+        const isMobile = windowH < 700;
+        const raw = isMobile ? scrollBased : rectBased;
+        setProgress(Math.min(Math.max(raw, 0), 1));
+      }
       ticking = false;
     };
 

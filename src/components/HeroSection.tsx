@@ -1,8 +1,11 @@
 import CardDeck from "./CardDeck";
+import Navbar from "./Navbar";
 
 export default function HeroSection() {
   return (
     <section className="min-h-screen flex flex-col items-center justify-between relative bg-[#0a0a0a]">
+      <Navbar />
+
       {/* Subtle glow behind cards */}
       <div
         className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] rounded-full opacity-20 blur-[120px] pointer-events-none"
@@ -10,18 +13,18 @@ export default function HeroSection() {
       />
 
       {/* Hero text */}
-      <div className="flex flex-col items-center justify-center text-center px-4 pt-32 pb-16">
+      <div className="flex flex-col items-center justify-center text-center px-5 sm:px-4 pt-20 sm:pt-32 pb-6 sm:pb-16">
         <p
-          className="text-sm tracking-[0.2em] uppercase text-white/60 mb-6"
+          className="text-[10px] sm:text-sm tracking-[0.12em] sm:tracking-[0.2em] uppercase text-white/60 mb-3 sm:mb-6"
           style={{ fontFamily: "var(--font-sans)" }}
         >
-          I&apos;m Hayden, A Digital Product Designer
+          I&apos;m Hayden — Founder &amp; Product Builder.
         </p>
         <h1
-          className="text-5xl md:text-7xl lg:text-8xl font-normal leading-[1.05] max-w-4xl"
+          className="text-[22px] sm:text-5xl md:text-7xl lg:text-8xl font-normal leading-[1.1] sm:leading-[1.05] max-w-4xl"
           style={{ fontFamily: "var(--font-serif)" }}
         >
-          I Create Designs That Appeal, Engage &amp; Sell
+          I build thoughtful products where data, design, and the real world meet.
         </h1>
       </div>
 

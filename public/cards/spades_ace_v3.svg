@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 234 333" width="234" height="333">
+  <rect width="234" height="333" fill="white" rx="0"/>
+
+  <!-- Top-left corner -->
+  <text x="16" y="36" font-family="Georgia, serif" font-size="20" font-weight="bold" fill="#1a1a1a">A</text>
+  <path d="M22,42 C22,42 17,50 17,53 C17,56 19.5,57.5 22,56 C22,56 22,59 19,61 L25,61 C22,59 22,56 22,56 C24.5,57.5 27,56 27,53 C27,50 22,42 22,42 Z" fill="#1a1a1a"/>
+
+  <!-- Bottom-right corner -->
+  <g transform="translate(234,333) rotate(180)">
+    <text x="16" y="36" font-family="Georgia, serif" font-size="20" font-weight="bold" fill="#1a1a1a">A</text>
+    <path d="M22,42 C22,42 17,50 17,53 C17,56 19.5,57.5 22,56 C22,56 22,59 19,61 L25,61 C22,59 22,56 22,56 C24.5,57.5 27,56 27,53 C27,50 22,42 22,42 Z" fill="#1a1a1a"/>
+  </g>
+
+  <!-- Massive center spade — bold and dominant -->
+  <g transform="translate(117,140)">
+    <path d="M0,-95 C0,-95 -65,-15 -65,25 C-65,58 -42,70 -20,57 C-11,51 -5,40 -3,30 C-3,30 -7,78 -32,100 L32,100 C7,78 3,30 3,30 C5,40 11,51 20,57 C42,70 65,58 65,25 C65,-15 0,-95 0,-95 Z" fill="#1a1a1a"/>
+  </g>
+
+  <!-- Large "A" centered in the spade -->
+  <text x="117" y="160" font-family="Georgia, serif" font-size="42" font-weight="bold" fill="white" text-anchor="middle">A</text>
+
+  <!-- Simple thin line -->
+  <line x1="60" y1="272" x2="174" y2="272" stroke="#1a1a1a" stroke-width="0.5"/>
+
+  <!-- Small spade below line -->
+  <path d="M117,278 C117,278 112,284 112,286 C112,289 114,290 117,288 C117,288 117,291 114,293 L120,293 C117,291 117,288 117,288 C120,290 122,289 122,286 C122,284 117,278 117,278 Z" fill="#1a1a1a"/>
+</svg>

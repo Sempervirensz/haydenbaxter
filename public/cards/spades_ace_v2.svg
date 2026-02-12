@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 234 333" width="234" height="333">
+  <rect width="234" height="333" fill="white" rx="0"/>
+
+  <!-- Inner border with double line -->
+  <rect x="10" y="10" width="214" height="313" fill="none" stroke="#1a1a1a" stroke-width="1" rx="4"/>
+  <rect x="14" y="14" width="206" height="305" fill="none" stroke="#1a1a1a" stroke-width="0.5" rx="3"/>
+
+  <!-- Top-left corner -->
+  <text x="22" y="40" font-family="Georgia, serif" font-size="24" font-weight="bold" fill="#1a1a1a" text-anchor="start">A</text>
+  <path d="M28,48 C28,48 22,58 22,62 C22,66 25,68 28,66 C28,66 28,70 24,72 L32,72 C28,70 28,66 28,66 C31,68 34,66 34,62 C34,58 28,48 28,48 Z" fill="#1a1a1a"/>
+
+  <!-- Bottom-right corner -->
+  <g transform="translate(234,333) rotate(180)">
+    <text x="22" y="40" font-family="Georgia, serif" font-size="24" font-weight="bold" fill="#1a1a1a" text-anchor="start">A</text>
+    <path d="M28,48 C28,48 22,58 22,62 C22,66 25,68 28,66 C28,66 28,70 24,72 L32,72 C28,70 28,66 28,66 C31,68 34,66 34,62 C34,58 28,48 28,48 Z" fill="#1a1a1a"/>
+  </g>
+
+  <!-- Large ornate center spade -->
+  <g transform="translate(117,130)">
+    <!-- Main spade shape -->
+    <path d="M0,-80 C0,-80 -55,-10 -55,22 C-55,50 -35,60 -18,50 C-10,45 -5,36 -3,28 C-3,28 -6,70 -28,88 L28,88 C6,70 3,28 3,28 C5,36 10,45 18,50 C35,60 55,50 55,22 C55,-10 0,-80 0,-80 Z" fill="#1a1a1a"/>
+
+    <!-- Inner highlight/detail on spade -->
+    <path d="M0,-60 C0,-60 -35,-5 -35,18 C-35,38 -22,44 -12,37 C-7,33 -4,26 -3,20 C-3,20 -5,50 -18,62 L18,62 C5,50 3,20 3,20 C4,26 7,33 12,37 C22,44 35,38 35,18 C35,-5 0,-60 0,-60 Z" fill="white" opacity="0.15"/>
+  </g>
+
+  <!-- Decorative banner -->
+  <g transform="translate(117,245)">
+    <!-- Banner ribbon -->
+    <path d="M-70,0 L-60,-8 L60,-8 L70,0 L60,8 L-60,8 Z" fill="none" stroke="#1a1a1a" stroke-width="1"/>
+    <!-- Banner ends -->
+    <path d="M-70,0 L-80,-4 L-70,-8 L-60,-8 L-70,0 Z" fill="#1a1a1a" opacity="0.1" stroke="#1a1a1a" stroke-width="0.5"/>
+    <path d="M70,0 L80,-4 L70,-8 L60,-8 L70,0 Z" fill="#1a1a1a" opacity="0.1" stroke="#1a1a1a" stroke-width="0.5"/>
+    <text y="4" font-family="Georgia, serif" font-size="10" fill="#1a1a1a" text-anchor="middle" letter-spacing="3">ACE OF SPADES</text>
+  </g>
+
+  <!-- Top decorative flourish -->
+  <path d="M95,85 C105,80 112,82 117,78 C122,82 129,80 139,85" fill="none" stroke="#1a1a1a" stroke-width="0.8"/>
+  <circle cx="117" cy="78" r="2" fill="#1a1a1a"/>
+
+  <!-- Bottom decorative flourish -->
+  <path d="M85,275 Q100,268 117,272 Q134,268 149,275" fill="none" stroke="#1a1a1a" stroke-width="0.8"/>
+  <circle cx="117" cy="272" r="2" fill="#1a1a1a"/>
+
+  <!-- Corner decorative dots -->
+  <circle cx="22" cy="82" r="1.5" fill="#1a1a1a"/>
+  <circle cx="212" cy="82" r="1.5" fill="#1a1a1a"/>
+  <circle cx="22" cy="251" r="1.5" fill="#1a1a1a"/>
+  <circle cx="212" cy="251" r="1.5" fill="#1a1a1a"/>
+</svg>
