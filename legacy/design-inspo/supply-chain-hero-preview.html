@@ -1,0 +1,1014 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Supply Chain Hero — Hayden Baxter</title>
+  <style>
+    :root {
+      color-scheme: dark;
+
+      --bg: #060608;
+      --panel: #101116;
+      --panel-2: #0d0e12;
+      --line: rgba(255, 255, 255, 0.08);
+      --line-strong: rgba(255, 255, 255, 0.12);
+      --text: #f2f2f4;
+      --muted: #a5a8b1;
+      --soft-quote: #d6d6d6;
+
+      --east-pos: 24% 48%;
+      --west-pos: 78% 46%;
+      --seam-width: 140px;
+      --seam-softness: 90px;
+      --overlap: 28px;
+
+      --hero-side-pad: clamp(16px, 2vw, 26px);
+      --hero-top-pad: clamp(14px, 1.8vw, 22px);
+      --hero-bottom-pad: clamp(18px, 2.2vw, 28px);
+
+      --ease-out-premium: cubic-bezier(.22, .74, .18, 1);
+      --ease-soft: cubic-bezier(.2, .7, .2, 1);
+      --shadow-soft: 0 20px 60px rgba(0, 0, 0, 0.4);
+      --shadow-card: 0 12px 30px rgba(0, 0, 0, 0.3);
+      --focus-ring:
+        0 0 0 2px rgba(6, 6, 8, 0.9),
+        0 0 0 4px rgba(136, 172, 255, 0.48);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+
+    body {
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    [hidden] {
+      display: none !important;
+    }
+
+    .page {
+      background:
+        radial-gradient(1200px 700px at 15% -10%, rgba(94, 120, 255, 0.06), transparent 55%),
+        radial-gradient(900px 560px at 85% -15%, rgba(0, 214, 170, 0.035), transparent 60%),
+        #060608;
+    }
+
+    .supply-hero {
+      position: relative;
+      height: 100vh;
+      min-height: 720px;
+      width: 100%;
+      background: #000;
+      overflow: clip;
+      isolation: isolate;
+    }
+
+    .supply-hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1;
+      background:
+        radial-gradient(120% 95% at 50% 42%, transparent 48%, rgba(0, 0, 0, 0.36) 78%, rgba(0, 0, 0, 0.58) 100%),
+        linear-gradient(to bottom, rgba(0, 0, 0, 0.28), transparent 16%, transparent 84%, rgba(0, 0, 0, 0.5));
+    }
+
+    .supply-hero::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 8;
+      pointer-events: none;
+      opacity: 0.06;
+      background:
+        radial-gradient(circle at 20% 35%, rgba(255, 255, 255, 0.8) 0 0.7px, transparent 0.9px) 0 0 / 10px 10px,
+        radial-gradient(circle at 80% 70%, rgba(255, 255, 255, 0.75) 0 0.6px, transparent 0.8px) 0 0 / 12px 12px,
+        radial-gradient(circle at 40% 20%, rgba(255, 255, 255, 0.7) 0 0.5px, transparent 0.7px) 0 0 / 8px 8px;
+      mix-blend-mode: soft-light;
+    }
+
+    .hero-stage {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      background: #000;
+    }
+
+    .hero-panel {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: calc(50% + var(--overlap));
+      overflow: clip;
+      will-change: transform, filter;
+      transition:
+        transform 1100ms var(--ease-out-premium),
+        filter 220ms ease;
+      filter: saturate(0.98);
+    }
+
+    .hero-panel--east {
+      left: 0;
+      transform: translate3d(calc(-8vw - var(--overlap) - 12px), 0, 0) scale(1.03);
+      z-index: 2;
+    }
+
+    .hero-panel--west {
+      right: 0;
+      transform: translate3d(calc(8vw + var(--overlap) + 12px), 0, 0) scale(1.03);
+      z-index: 2;
+    }
+
+    .supply-hero.is-revealed .hero-panel--east {
+      transform: translate3d(var(--overlap), 0, 0) scale(1);
+    }
+
+    .supply-hero.is-revealed .hero-panel--west {
+      transform: translate3d(calc(-1 * var(--overlap)), 0, 0) scale(1);
+    }
+
+    .hero-panel:hover {
+      filter: saturate(1.04) contrast(1.03);
+    }
+
+    .hero-panel__map {
+      position: absolute;
+      inset: 0;
+      background-image: url("/assets/pacific-map.png");
+      background-repeat: no-repeat;
+      background-size: 230% auto;
+      background-color: #000;
+      filter: saturate(0.6) contrast(1.15) brightness(0.92);
+      transition: filter 260ms ease, transform 700ms var(--ease-soft);
+      will-change: transform, filter;
+      transform: scale(1.01);
+    }
+
+    .hero-panel--east .hero-panel__map {
+      background-position: var(--east-pos);
+    }
+
+    .hero-panel--west .hero-panel__map {
+      background-position: var(--west-pos);
+    }
+
+    .hero-panel:hover .hero-panel__map {
+      filter: saturate(0.68) contrast(1.2) brightness(0.96);
+      transform: scale(1.018);
+    }
+
+    .hero-panel::before,
+    .hero-panel::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+
+    .hero-panel::before {
+      z-index: 3;
+      background:
+        radial-gradient(120% 130% at 50% 50%, transparent 34%, rgba(0, 0, 0, 0.12) 62%, rgba(0, 0, 0, 0.24) 100%),
+        linear-gradient(180deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.08) 30%, rgba(0, 0, 0, 0.18) 75%, rgba(0, 0, 0, 0.34));
+      mix-blend-mode: multiply;
+    }
+
+    .hero-panel::after {
+      z-index: 4;
+      background:
+        radial-gradient(80% 65% at 50% 50%, transparent 38%, rgba(0, 0, 0, 0.18) 72%, rgba(0, 0, 0, 0.36)),
+        linear-gradient(
+          90deg,
+          rgba(0, 0, 0, 0.38) 0%,
+          rgba(0, 0, 0, 0.14) 18%,
+          transparent 42%,
+          transparent 58%,
+          rgba(0, 0, 0, 0.14) 82%,
+          rgba(0, 0, 0, 0.4) 100%
+        );
+      opacity: 0.95;
+    }
+
+    .hero-stage__seam {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 50%;
+      width: var(--seam-width);
+      transform: translateX(-50%);
+      background: #000;
+      z-index: 5;
+      pointer-events: none;
+    }
+
+    .hero-stage__seam::before,
+    .hero-stage__seam::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: var(--seam-softness);
+      pointer-events: none;
+    }
+
+    .hero-stage__seam::before {
+      left: calc(-1 * var(--seam-softness));
+      background: linear-gradient(to right, #000 0%, rgba(0, 0, 0, 0.92) 28%, rgba(0, 0, 0, 0.45) 65%, transparent 100%);
+    }
+
+    .hero-stage__seam::after {
+      right: calc(-1 * var(--seam-softness));
+      background: linear-gradient(to left, #000 0%, rgba(0, 0, 0, 0.92) 28%, rgba(0, 0, 0, 0.45) 65%, transparent 100%);
+    }
+
+    .hero-stage__quote-lane {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: min(940px, calc(100% - 44px));
+      height: clamp(168px, 23vh, 240px);
+      transform: translate(-50%, -50%);
+      z-index: 6;
+      pointer-events: none;
+      background:
+        linear-gradient(
+          90deg,
+          transparent 0%,
+          rgba(0, 0, 0, 0.85) 10%,
+          #000 20%,
+          #000 80%,
+          rgba(0, 0, 0, 0.85) 90%,
+          transparent 100%
+        ),
+        linear-gradient(
+          180deg,
+          transparent 0%,
+          rgba(0, 0, 0, 0.92) 18%,
+          #000 34%,
+          #000 66%,
+          rgba(0, 0, 0, 0.92) 82%,
+          transparent 100%
+        );
+      opacity: 0.94;
+      filter: saturate(0.8);
+    }
+
+    .hero-stage__quote-wrap {
+      position: absolute;
+      inset: 0;
+      z-index: 7;
+      display: grid;
+      place-items: center;
+      padding: var(--hero-top-pad) clamp(18px, 4vw, 44px) var(--hero-bottom-pad);
+      pointer-events: none;
+    }
+
+    .hero-quote {
+      margin: 0;
+      max-width: 900px;
+      color: var(--soft-quote);
+      text-align: center;
+      font-size: clamp(1rem, 1.25rem + 0.3vw, 1.35rem);
+      line-height: 1.5;
+      letter-spacing: -0.01em;
+      font-weight: 500;
+      position: relative;
+      padding: clamp(14px, 1.6vw, 18px) clamp(16px, 2.2vw, 28px);
+      border-radius: 18px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.026), rgba(255, 255, 255, 0.012)),
+        rgba(255, 255, 255, 0.012);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.025),
+        0 18px 50px rgba(0, 0, 0, 0.38);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+
+      opacity: 0;
+      transform: translateY(26px);
+      transition:
+        opacity 760ms var(--ease-soft) 680ms,
+        transform 880ms var(--ease-out-premium) 680ms;
+    }
+
+    .hero-quote::before {
+      content: "";
+      position: absolute;
+      inset: -1px;
+      border-radius: inherit;
+      pointer-events: none;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.06), transparent 45%, rgba(255, 255, 255, 0.025));
+      mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+      -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+      mask-composite: exclude;
+      -webkit-mask-composite: xor;
+      padding: 1px;
+      opacity: 0.5;
+    }
+
+    .supply-hero.is-revealed .hero-quote {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .proof-section {
+      position: relative;
+      z-index: 2;
+      margin-top: 0;
+      padding: clamp(14px, 2vw, 22px) clamp(14px, 2vw, 22px) clamp(28px, 4vw, 40px);
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.012), rgba(255, 255, 255, 0)),
+        var(--bg);
+    }
+
+    .proof-shell {
+      max-width: 1160px;
+      margin: 0 auto;
+    }
+
+    .proof-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 12px 14px;
+      border-radius: 16px;
+      border: 1px solid var(--line);
+      background:
+        radial-gradient(140% 180% at 0% 0%, rgba(92, 120, 255, 0.06), transparent 55%),
+        rgba(255, 255, 255, 0.012);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.02);
+    }
+
+    .proof-row__label {
+      margin: 0;
+      color: rgba(255, 255, 255, 0.84);
+      font-size: 14px;
+      line-height: 1.35;
+      font-weight: 600;
+      letter-spacing: 0.01em;
+    }
+
+    .proof-row__btn {
+      appearance: none;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.022), rgba(255, 255, 255, 0.012)),
+        rgba(255, 255, 255, 0.012);
+      color: rgba(255, 255, 255, 0.94);
+      border-radius: 12px;
+      padding: 9px 12px;
+      font-size: 12px;
+      line-height: 1;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition:
+        transform 180ms ease,
+        border-color 180ms ease,
+        box-shadow 180ms ease,
+        background-color 180ms ease;
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.025),
+        0 0 0 rgba(136, 172, 255, 0);
+      white-space: nowrap;
+    }
+
+    .proof-row__btn:hover {
+      transform: translateY(-1px);
+      border-color: rgba(255, 255, 255, 0.16);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.03),
+        0 0 0 1px rgba(136, 172, 255, 0.08),
+        0 10px 24px rgba(0, 0, 0, 0.24),
+        0 0 22px rgba(136, 172, 255, 0.12);
+    }
+
+    .proof-row__btn[aria-expanded="true"] {
+      border-color: rgba(136, 172, 255, 0.24);
+      background:
+        radial-gradient(160% 200% at 0% 0%, rgba(92, 120, 255, 0.12), transparent 55%),
+        rgba(255, 255, 255, 0.02);
+    }
+
+    .proof-drawer {
+      display: grid;
+      grid-template-rows: 0fr;
+      opacity: 0;
+      transform: translateY(-4px);
+      transition:
+        grid-template-rows 520ms var(--ease-out-premium),
+        opacity 280ms ease,
+        transform 520ms var(--ease-out-premium),
+        margin-top 520ms var(--ease-out-premium);
+      margin-top: 0;
+      pointer-events: none;
+    }
+
+    .proof-drawer.is-open {
+      grid-template-rows: 1fr;
+      opacity: 1;
+      transform: translateY(0);
+      margin-top: 12px;
+      pointer-events: auto;
+    }
+
+    .proof-drawer__clip {
+      overflow: clip;
+      min-height: 0;
+    }
+
+    .proof-drawer__surface {
+      border-radius: 18px;
+      border: 1px solid var(--line);
+      background:
+        radial-gradient(150% 180% at 0% 0%, rgba(92, 120, 255, 0.05), transparent 58%),
+        radial-gradient(150% 180% at 100% 0%, rgba(0, 214, 170, 0.03), transparent 60%),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.012), rgba(255, 255, 255, 0.006));
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.025),
+        var(--shadow-card);
+      padding: 14px;
+      transform: translateY(-10px);
+      opacity: 0;
+      transition:
+        transform 420ms var(--ease-out-premium),
+        opacity 260ms ease;
+    }
+
+    .proof-drawer.is-open .proof-drawer__surface {
+      transform: translateY(0);
+      opacity: 1;
+      transition-delay: 70ms;
+    }
+
+    .proof-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      margin-bottom: 12px;
+    }
+
+    .proof-tab {
+      appearance: none;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.01)),
+        rgba(255, 255, 255, 0.01);
+      color: rgba(255, 255, 255, 0.76);
+      border-radius: 999px;
+      padding: 9px 12px;
+      font-size: 12px;
+      line-height: 1;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      cursor: pointer;
+      transition:
+        transform 160ms ease,
+        border-color 160ms ease,
+        box-shadow 160ms ease,
+        color 160ms ease;
+    }
+
+    .proof-tab:hover {
+      transform: translateY(-1px);
+      color: rgba(255, 255, 255, 0.92);
+      border-color: rgba(255, 255, 255, 0.14);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    .proof-tab[aria-selected="true"] {
+      color: rgba(255, 255, 255, 0.96);
+      border-color: rgba(136, 172, 255, 0.26);
+      background:
+        radial-gradient(140% 180% at 0% 0%, rgba(92, 120, 255, 0.12), transparent 58%),
+        rgba(255, 255, 255, 0.02);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.03),
+        0 0 0 1px rgba(136, 172, 255, 0.06);
+    }
+
+    .proof-panel {
+      border-radius: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.055);
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.012), rgba(255, 255, 255, 0.006)),
+        rgba(255, 255, 255, 0.01);
+      padding: 14px;
+      animation: panelFade 220ms ease;
+    }
+
+    @keyframes panelFade {
+      from {
+        opacity: 0;
+        transform: translateY(4px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .proof-panel__title {
+      margin: 0 0 8px;
+      font-size: 14px;
+      line-height: 1.15;
+      font-weight: 700;
+      letter-spacing: 0.01em;
+      color: rgba(255, 255, 255, 0.92);
+    }
+
+    .proof-panel__bullets {
+      margin: 0;
+      padding-left: 18px;
+      display: grid;
+      gap: 6px;
+    }
+
+    .proof-panel__bullets li {
+      color: rgba(255, 255, 255, 0.74);
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .proof-panel__tags {
+      margin-top: 10px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .proof-tag {
+      display: inline-flex;
+      align-items: center;
+      padding: 5px 9px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.065);
+      background: rgba(255, 255, 255, 0.03);
+      color: rgba(255, 255, 255, 0.78);
+      font-size: 11px;
+      line-height: 1;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      white-space: nowrap;
+    }
+
+    .proof-row__btn:focus-visible,
+    .proof-tab:focus-visible {
+      outline: none;
+      box-shadow: var(--focus-ring);
+    }
+
+    @media (max-width: 767px) {
+      :root {
+        --east-pos: 22% 45%;
+        --west-pos: 78% 47%;
+        --seam-width: 116px;
+        --seam-softness: 64px;
+        --overlap: 18px;
+      }
+
+      .supply-hero {
+        min-height: 640px;
+      }
+
+      .hero-panel {
+        left: 0;
+        right: 0;
+        width: 100%;
+        height: calc(50% + var(--overlap));
+      }
+
+      .hero-panel--east {
+        top: 0;
+        bottom: auto;
+        transform: translate3d(0, calc(-11vh - var(--overlap)), 0) scale(1.03);
+      }
+
+      .hero-panel--west {
+        top: auto;
+        bottom: 0;
+        transform: translate3d(0, calc(11vh + var(--overlap)), 0) scale(1.03);
+      }
+
+      .supply-hero.is-revealed .hero-panel--east {
+        transform: translate3d(0, var(--overlap), 0) scale(1);
+      }
+
+      .supply-hero.is-revealed .hero-panel--west {
+        transform: translate3d(0, calc(-1 * var(--overlap)), 0) scale(1);
+      }
+
+      .hero-panel__map {
+        background-size: 210% auto;
+      }
+
+      .hero-stage__seam {
+        left: 0;
+        right: 0;
+        top: 50%;
+        bottom: auto;
+        width: auto;
+        height: var(--seam-width);
+        transform: translateY(-50%);
+      }
+
+      .hero-stage__seam::before,
+      .hero-stage__seam::after {
+        left: 0;
+        right: 0;
+        width: auto;
+        height: var(--seam-softness);
+      }
+
+      .hero-stage__seam::before {
+        top: calc(-1 * var(--seam-softness));
+        bottom: auto;
+        background: linear-gradient(to bottom, #000 0%, rgba(0, 0, 0, 0.92) 28%, rgba(0, 0, 0, 0.45) 65%, transparent 100%);
+      }
+
+      .hero-stage__seam::after {
+        bottom: calc(-1 * var(--seam-softness));
+        top: auto;
+        background: linear-gradient(to top, #000 0%, rgba(0, 0, 0, 0.92) 28%, rgba(0, 0, 0, 0.45) 65%, transparent 100%);
+      }
+
+      .hero-stage__quote-lane {
+        width: min(94vw, 760px);
+        height: clamp(180px, 24vh, 220px);
+        background:
+          linear-gradient(
+            180deg,
+            transparent 0%,
+            rgba(0, 0, 0, 0.9) 12%,
+            #000 25%,
+            #000 75%,
+            rgba(0, 0, 0, 0.9) 88%,
+            transparent 100%
+          ),
+          linear-gradient(
+            90deg,
+            transparent 0%,
+            rgba(0, 0, 0, 0.8) 16%,
+            #000 36%,
+            #000 64%,
+            rgba(0, 0, 0, 0.8) 84%,
+            transparent 100%
+          );
+      }
+
+      .hero-stage__quote-wrap {
+        padding-inline: 14px;
+      }
+
+      .hero-quote {
+        font-size: clamp(0.95rem, 0.9rem + 0.55vw, 1.06rem);
+        line-height: 1.48;
+        padding: 14px 14px;
+        border-radius: 14px;
+      }
+
+      .proof-row {
+        flex-wrap: wrap;
+        align-items: stretch;
+      }
+
+      .proof-row__btn {
+        width: 100%;
+        justify-content: center;
+      }
+
+      .proof-tabs {
+        gap: 7px;
+      }
+
+      .proof-tab {
+        width: 100%;
+        text-align: left;
+        border-radius: 12px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .hero-panel,
+      .hero-panel__map,
+      .hero-quote,
+      .proof-drawer,
+      .proof-drawer__surface,
+      .proof-row__btn,
+      .proof-tab,
+      .proof-panel {
+        transition: none !important;
+        animation: none !important;
+      }
+
+      .hero-panel--east,
+      .hero-panel--west {
+        transform: none !important;
+      }
+
+      .hero-quote {
+        opacity: 1 !important;
+        transform: none !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="supply-hero" id="supplyHero" data-hero aria-labelledby="supplyHeroQuote">
+      <div class="hero-stage" aria-hidden="true">
+        <div class="hero-panel hero-panel--east">
+          <div class="hero-panel__map"></div>
+        </div>
+        <div class="hero-panel hero-panel--west">
+          <div class="hero-panel__map"></div>
+        </div>
+
+        <div class="hero-stage__seam"></div>
+        <div class="hero-stage__quote-lane"></div>
+      </div>
+
+      <div class="hero-stage__quote-wrap">
+        <blockquote class="hero-quote" id="supplyHeroQuote">
+          "Fortune 100 global sourcing and supply chain leader with 8+ years across China, Vietnam, and Indonesia—fluent in Mandarin and known for building supplier networks and AI-powered, ESG-ready traceability from raw materials to final production"
+        </blockquote>
+      </div>
+    </section>
+
+    <section class="proof-section" aria-label="Supply chain operating proof details">
+      <div class="proof-shell">
+        <div class="proof-row">
+          <p class="proof-row__label" id="proofRowLabel">Want the operating proof?</p>
+          <button
+            type="button"
+            class="proof-row__btn"
+            id="proofToggle"
+            aria-expanded="false"
+            aria-controls="proofDrawer"
+            aria-describedby="proofRowLabel"
+          >
+            View details
+          </button>
+        </div>
+
+        <div
+          class="proof-drawer"
+          id="proofDrawer"
+          aria-hidden="true"
+          data-open="false"
+        >
+          <div class="proof-drawer__clip">
+            <div class="proof-drawer__surface">
+              <div class="proof-tabs" role="tablist" aria-label="Supply chain proof tabs">
+                <button
+                  type="button"
+                  class="proof-tab"
+                  role="tab"
+                  id="tab-operator"
+                  aria-selected="true"
+                  aria-controls="panel-operator"
+                  tabindex="0"
+                  data-tab-target="panel-operator"
+                >
+                  Operator Story
+                </button>
+                <button
+                  type="button"
+                  class="proof-tab"
+                  role="tab"
+                  id="tab-governance"
+                  aria-selected="false"
+                  aria-controls="panel-governance"
+                  tabindex="-1"
+                  data-tab-target="panel-governance"
+                >
+                  Governance
+                </button>
+                <button
+                  type="button"
+                  class="proof-tab"
+                  role="tab"
+                  id="tab-traceability"
+                  aria-selected="false"
+                  aria-controls="panel-traceability"
+                  tabindex="-1"
+                  data-tab-target="panel-traceability"
+                >
+                  Traceability
+                </button>
+              </div>
+
+              <section
+                class="proof-panel"
+                role="tabpanel"
+                id="panel-operator"
+                aria-labelledby="tab-operator"
+                tabindex="0"
+              >
+                <h2 class="proof-panel__title">Operator Story</h2>
+                <ul class="proof-panel__bullets">
+                  <li>Owned end-to-end sourcing and supply chain execution across shifting timelines, supplier dependencies, and downstream delivery pressure.</li>
+                  <li>Coordinated cross-team operating rhythms so procurement, product, and reporting moved from reactive updates to decision-ready handoffs.</li>
+                  <li>Delivered under real constraints: lead times, documentation friction, supplier variability, and global execution complexity.</li>
+                </ul>
+                <div class="proof-panel__tags" aria-label="Operator Story tags">
+                  <span class="proof-tag">Lifecycle Ops</span>
+                  <span class="proof-tag">Cross-Functional</span>
+                  <span class="proof-tag">Execution</span>
+                </div>
+              </section>
+
+              <section
+                class="proof-panel"
+                role="tabpanel"
+                id="panel-governance"
+                aria-labelledby="tab-governance"
+                tabindex="0"
+                hidden
+              >
+                <h2 class="proof-panel__title">Governance</h2>
+                <ul class="proof-panel__bullets">
+                  <li>Clarified field ownership so operational data had accountable stewards, not shared ambiguity.</li>
+                  <li>Defined conventions and status logic that kept reporting consistent across teams and time periods.</li>
+                  <li>Built exception-review habits around the records that mattered most, improving trust in downstream decisions.</li>
+                </ul>
+                <div class="proof-panel__tags" aria-label="Governance tags">
+                  <span class="proof-tag">Data Integrity</span>
+                  <span class="proof-tag">Conventions</span>
+                  <span class="proof-tag">Exceptions</span>
+                </div>
+              </section>
+
+              <section
+                class="proof-panel"
+                role="tabpanel"
+                id="panel-traceability"
+                aria-labelledby="tab-traceability"
+                tabindex="0"
+                hidden
+              >
+                <h2 class="proof-panel__title">Traceability</h2>
+                <ul class="proof-panel__bullets">
+                  <li>Applied provenance thinking to map how material, supplier, and process data should connect across the chain.</li>
+                  <li>Structured audit-trail expectations so teams could verify movement, changes, and decisions with less manual reconstruction.</li>
+                  <li>Designed workflows with ESG-ready reporting in mind, so traceability supports operations instead of slowing them down.</li>
+                </ul>
+                <div class="proof-panel__tags" aria-label="Traceability tags">
+                  <span class="proof-tag">Provenance</span>
+                  <span class="proof-tag">Audit Trail</span>
+                  <span class="proof-tag">ESG-Ready</span>
+                </div>
+              </section>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    (function () {
+      var hero = document.querySelector("[data-hero]");
+      var prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+      function revealHero() {
+        if (!hero) return;
+        hero.classList.add("is-revealed");
+      }
+
+      if (hero) {
+        if (prefersReducedMotion) {
+          revealHero();
+        } else if ("IntersectionObserver" in window) {
+          var heroObserver = new IntersectionObserver(function (entries, observer) {
+            for (var i = 0; i < entries.length; i += 1) {
+              if (entries[i].isIntersecting) {
+                revealHero();
+                observer.disconnect();
+                break;
+              }
+            }
+          }, {
+            root: null,
+            threshold: 0.35
+          });
+          heroObserver.observe(hero);
+        } else {
+          revealHero();
+        }
+      }
+
+      var toggleBtn = document.getElementById("proofToggle");
+      var drawer = document.getElementById("proofDrawer");
+      var drawerWasOpen = false;
+
+      function setDrawerOpen(open, options) {
+        if (!toggleBtn || !drawer) return;
+        var opts = options || {};
+        drawerWasOpen = open;
+
+        toggleBtn.setAttribute("aria-expanded", String(open));
+        drawer.setAttribute("aria-hidden", String(!open));
+        drawer.classList.toggle("is-open", open);
+        drawer.dataset.open = String(open);
+
+        if (!open && opts.restoreFocus) {
+          toggleBtn.focus();
+        }
+      }
+
+      if (toggleBtn && drawer) {
+        toggleBtn.addEventListener("click", function () {
+          var nextOpen = toggleBtn.getAttribute("aria-expanded") !== "true";
+          setDrawerOpen(nextOpen);
+        });
+
+        document.addEventListener("keydown", function (event) {
+          if (event.key === "Escape" && drawerWasOpen) {
+            setDrawerOpen(false, { restoreFocus: true });
+          }
+        });
+      }
+
+      var tabList = document.querySelector('[role="tablist"]');
+      var tabs = tabList ? Array.prototype.slice.call(tabList.querySelectorAll('[role="tab"]')) : [];
+      var panels = Array.prototype.slice.call(document.querySelectorAll('[role="tabpanel"]'));
+
+      function activateTab(nextTab, shouldFocus) {
+        if (!nextTab) return;
+
+        var targetId = nextTab.getAttribute("aria-controls");
+
+        for (var i = 0; i < tabs.length; i += 1) {
+          var isActive = tabs[i] === nextTab;
+          tabs[i].setAttribute("aria-selected", String(isActive));
+          tabs[i].tabIndex = isActive ? 0 : -1;
+        }
+
+        for (var j = 0; j < panels.length; j += 1) {
+          var panel = panels[j];
+          var match = panel.id === targetId;
+          panel.hidden = !match;
+          panel.setAttribute("tabindex", match ? "0" : "-1");
+        }
+
+        if (shouldFocus) {
+          nextTab.focus();
+        }
+      }
+
+      if (tabList && tabs.length) {
+        tabList.addEventListener("click", function (event) {
+          var tab = event.target.closest('[role="tab"]');
+          if (!tab || tabList.contains(tab) === false) return;
+          activateTab(tab, false);
+        });
+
+        tabList.addEventListener("keydown", function (event) {
+          var currentTab = event.target.closest('[role="tab"]');
+          if (!currentTab) return;
+
+          var currentIndex = tabs.indexOf(currentTab);
+          if (currentIndex === -1) return;
+
+          var nextIndex = null;
+
+          if (event.key === "ArrowRight" || event.key === "ArrowDown") {
+            nextIndex = (currentIndex + 1) % tabs.length;
+          } else if (event.key === "ArrowLeft" || event.key === "ArrowUp") {
+            nextIndex = (currentIndex - 1 + tabs.length) % tabs.length;
+          } else if (event.key === "Home") {
+            nextIndex = 0;
+          } else if (event.key === "End") {
+            nextIndex = tabs.length - 1;
+          }
+
+          if (nextIndex !== null) {
+            event.preventDefault();
+            activateTab(tabs[nextIndex], true);
+          }
+        });
+      }
+    })();
+  </script>
+</body>
+</html>
