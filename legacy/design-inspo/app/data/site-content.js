@@ -11,9 +11,66 @@ export const SITE_CONTENT = {
     ]
   },
   hero: {
+    eyebrow: "I\u2019m Hayden \u2014 Founder & Product Builder.",
     sub: "I'm Hayden — founder & product builder.",
     heading:
       "I build thoughtful products where data, design, and the human experience converge."
+  },
+  cardDeck: {
+    cards: [
+      {
+        id: 0,
+        rank: "J",
+        suit: "club",
+        color: "black",
+        title: "JACK OF ALL TRADES",
+        description: "I\u2019m a generalist with expertise in multiple design disciplines",
+        frontImage: "assets/cards/clubs_jack.svg",
+        backImage: "assets/cards/back-blue-custom.png",
+        backVariant: "black",
+        bunchedTransform: { x: 100, y: 20, rotate: -24, scale: 0.95 },
+        zIndex: 1
+      },
+      {
+        id: 1,
+        rank: "Q",
+        suit: "heart",
+        color: "red",
+        title: "QUEEN OF VISION",
+        description: "Can create designs that form connections and steal hearts ;)",
+        frontImage: "assets/cards/hearts_queen.svg",
+        backImage: "assets/cards/back-red-custom.png",
+        backVariant: "red",
+        bunchedTransform: { x: 40, y: -65, rotate: -12, scale: 1 },
+        zIndex: 2
+      },
+      {
+        id: 2,
+        rank: "K",
+        suit: "diamond",
+        color: "red",
+        title: "KING OF STRATEGY",
+        description: "My formula for great design: Zoom in, Zoom Out, Repeat",
+        frontImage: "assets/cards/diamonds_king.svg",
+        backImage: "assets/cards/back-red-custom.png",
+        backVariant: "red",
+        bunchedTransform: { x: -40, y: -65, rotate: 12, scale: 1 },
+        zIndex: 3
+      },
+      {
+        id: 3,
+        rank: "A",
+        suit: "spade",
+        color: "black",
+        title: "ACE OF EXECUTION",
+        description: "Got an Idea? I\u2019ve got the skills to make it real",
+        frontImage: "assets/cards/spades_ace.svg",
+        backImage: "assets/cards/back-blue-custom.png",
+        backVariant: "black",
+        bunchedTransform: { x: -100, y: 20, rotate: 24, scale: 0.95 },
+        zIndex: 4
+      }
+    ]
   },
   brands: {
     logos: ["Nike", "Disney", "Aosom"],

@@ -18,7 +18,11 @@ function renderHeader(header) {
 }
 
 function renderHero(hero) {
+  var eyebrow = hero.eyebrow
+    ? '<p class="hero__eyebrow">' + hero.eyebrow + "</p>"
+    : "";
   return (
+    eyebrow +
     '<p class="hero__sub">' +
     hero.sub +
     '</p><h1 class="hero__heading">' +
@@ -70,6 +74,41 @@ function renderCards(cards) {
     .join("");
 
   return '<div class="cards__grid">' + cardMarkup + "</div>";
+}
+
+function renderCardDeck(cardDeck) {
+  var cardsHtml = cardDeck.cards
+    .map(function(card) {
+      return (
+        '<button class="deck-card" type="button" data-card-id="' + card.id + '"' +
+        ' style="z-index:' + card.zIndex + '"' +
+        ' aria-label="' + card.title + ' \u2014 click to flip">' +
+        '<div class="deck-card__inner">' +
+        '<div class="deck-card__face deck-card__face--front">' +
+        '<img src="' + card.backImage + '" alt="Card back" draggable="false">' +
+        '</div>' +
+        '<div class="deck-card__face deck-card__face--back">' +
+        '<img src="' + card.frontImage + '" alt="' + card.rank + ' of ' + card.suit + 's" draggable="false">' +
+        '</div>' +
+        '</div>' +
+        '<div class="deck-card__caption">' +
+        '<h3 class="deck-card__caption-title" style="color:' + (card.color === "red" ? "#b91c1c" : "#fff") + '">' + card.title + '</h3>' +
+        '<p class="deck-card__caption-desc">' + card.description + '</p>' +
+        '</div>' +
+        '</button>'
+      );
+    })
+    .join("");
+
+  return (
+    '<div class="deck" data-deck>' +
+    '<div class="deck__glow" aria-hidden="true"></div>' +
+    '<div class="deck__stack" data-deck-stack>' +
+    cardsHtml +
+    '</div>' +
+    '<div class="deck__caption" data-deck-caption aria-live="polite"></div>' +
+    '</div>'
+  );
 }
 
 function renderSplash(words) {
@@ -430,6 +469,10 @@ export function renderPage(content) {
   if (header) header.innerHTML = renderHeader(content.header);
   if (hero) hero.innerHTML = renderHero(content.hero);
   if (brands) brands.innerHTML = renderBrands(content.brands);
-  if (cards) cards.innerHTML = renderCards(content.cards);
+  if (cards && content.cardDeck) {
+    cards.innerHTML = renderCardDeck(content.cardDeck);
+  } else if (cards) {
+    cards.innerHTML = renderCards(content.cards);
+  }
   if (work) work.innerHTML = renderWork(content.work);
 }

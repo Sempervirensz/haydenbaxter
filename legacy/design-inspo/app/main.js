@@ -7,10 +7,16 @@ import {
   initSupplyChainSection,
   initConsultingSection
 } from "./features/supply-consulting.js?v=20260224-scv1";
+import { initCardDeck } from "./features/card-deck.js";
 
 export function bootstrap() {
   renderPage(SITE_CONTENT);
   initSplash();
+
+  if (SITE_CONTENT.cardDeck) {
+    initCardDeck(SITE_CONTENT.cardDeck);
+  }
+
   initWorkScroll(SITE_CONTENT.workScroll);
 
   var etbScreen = (SITE_CONTENT.work && SITE_CONTENT.work.detailScreens || []).find(function(screen) {
