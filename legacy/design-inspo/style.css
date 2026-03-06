@@ -13,9 +13,43 @@
     --depth: 3px;
     --speed: 140ms cubic-bezier(.25,.46,.45,.94);
     --focus-ring: rgba(255,255,255,0.18);
+
+    /* ── Spacing scale ── */
+    --space-xs:  clamp(4px,  0.5vw,  6px);
+    --space-sm:  clamp(8px,  1vw,   12px);
+    --space-md:  clamp(16px, 2vw,   24px);
+    --space-lg:  clamp(24px, 3.5vw, 40px);
+    --space-xl:  clamp(40px, 5.5vw, 64px);
+    --space-2xl: clamp(56px, 8vw,   96px);
+    --space-3xl: clamp(72px, 10vw,  120px);
+
+    /* ── Type scale ── */
+    --text-xs:  clamp(9px,  0.7vw,  10px);
+    --text-sm:  clamp(10px, 0.85vw, 11px);
+    --text-base: clamp(11px, 1vw,   13px);
+    --text-md:  clamp(13px, 1.2vw,  15px);
+    --text-lg:  clamp(16px, 1.8vw,  20px);
+    --text-xl:  clamp(20px, 2.5vw,  30px);
+    --text-2xl: clamp(28px, 4vw,    48px);
+    --text-3xl: clamp(38px, 6vw,    72px);
+    --text-4xl: clamp(48px, 8vw,    96px);
+
+    /* ── Page gutter ── */
+    --gutter: clamp(16px, 4vw, 48px);
+
+    /* ── Radii ── */
+    --radius-sm: 3px;
+    --radius-md: 8px;
+    --radius-lg: 14px;
+
+    /* ── Panel surface ── */
+    --surface-1: #1c1c1c;
+    --surface-border: rgba(255,255,255,0.06);
   }
 
   *,*::before,*::after { margin:0; padding:0; box-sizing:border-box; }
+
+  html { overflow-x: clip; }
 
   body {
     background: var(--bg);
@@ -23,6 +57,7 @@
     color: #fff;
     font-family: "Inter", "Helvetica Neue", Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
+    overflow-x: clip;
   }
 
   /* ============================================
@@ -42,14 +77,15 @@
   .header__inner {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 20px 48px;
+    padding: var(--space-md) var(--gutter);
     display: flex;
     align-items: center;
-    gap: 24px;
+    gap: var(--space-md);
+    flex-wrap: wrap;
   }
 
   .wordmark {
-    font-size: 14px;
+    font-size: var(--text-md);
     font-weight: 600;
     letter-spacing: 0.03em;
     color: rgba(255,255,255,0.92);
@@ -60,7 +96,8 @@
   .nav {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: var(--space-sm);
+    flex-wrap: wrap;
   }
 
   /* ============================================
@@ -81,8 +118,8 @@
     user-select: none;
     -webkit-tap-highlight-color: transparent;
     color: rgba(255,255,255,0.72);
-    padding: 7px 14px 6px;
-    border-radius: 3px;
+    padding: clamp(10px, 1.4vw, 14px) clamp(14px, 2vw, 20px) clamp(9px, 1.3vw, 13px);
+    border-radius: var(--radius-sm);
     background: #1c1c1c;
     border: 1px solid rgba(255,255,255,0.08);
     box-shadow:
@@ -140,7 +177,7 @@
     background: #262626;
     border-color: rgba(255,255,255,0.12);
     color: rgba(255,255,255,0.85);
-    padding: 7px 18px 6px;
+    padding: clamp(10px, 1.4vw, 14px) clamp(18px, 2.4vw, 24px) clamp(9px, 1.3vw, 13px);
   }
 
   .tag:nth-of-type(1) { --r: 0.5deg;  --y: 0px;    --o: 0.96; }
@@ -155,23 +192,26 @@
   .hero {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 120px 48px 0;
+    padding: var(--space-3xl) var(--gutter) 0;
     text-align: center;
   }
 
+  /* Hide .hero__sub when eyebrow is present (same content; avoid duplication) */
+  .hero__eyebrow + .hero__sub { display: none; }
+
   .hero__sub {
-    font-size: 11px;
-    letter-spacing: 0.22em;
+    font-size: var(--text-sm);
+    letter-spacing: 0.18em;
     text-transform: uppercase;
     color: rgba(255,255,255,0.5);
     font-weight: 400;
-    margin-bottom: 32px;
+    margin-bottom: var(--space-lg);
   }
 
   .hero__heading {
     font-family: "Playfair Display", Georgia, "Times New Roman", serif;
     font-weight: 700;
-    font-size: clamp(38px, 6.5vw, 80px);
+    font-size: var(--text-3xl);
     line-height: 1.08;
     letter-spacing: -0.02em;
     color: #fff;
@@ -183,7 +223,7 @@
      BRAND CAROUSEL
      ============================================ */
   .brands {
-    padding: 80px 0 60px;
+    padding: var(--space-xl) 0 var(--space-lg);
     overflow: hidden;
     position: relative;
   }
@@ -193,7 +233,7 @@
     content: "";
     position: absolute;
     top: 0; bottom: 0;
-    width: 120px;
+    width: clamp(40px, 10vw, 120px);
     z-index: 2;
     pointer-events: none;
   }
@@ -203,7 +243,7 @@
   .brands__track {
     display: flex;
     align-items: center;
-    gap: 80px;
+    gap: clamp(40px, 8vw, 80px);
     width: max-content;
     animation: scroll-brands 18s linear infinite;
   }
@@ -232,11 +272,11 @@
 
   .brands__note {
     text-align: center;
-    font-size: 10px;
+    font-size: var(--text-xs);
     letter-spacing: 0.06em;
     color: rgba(255,255,255,0.15);
-    margin-top: 28px;
-    padding: 0 48px;
+    margin-top: var(--space-md);
+    padding: 0 var(--gutter);
   }
 
   /* ============================================
@@ -245,7 +285,7 @@
   .cards {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 0 48px 120px;
+    padding: var(--space-xl) var(--gutter) var(--space-3xl);
   }
 
   .cards__grid {
@@ -299,11 +339,11 @@
   /* ===== Hero Eyebrow ===== */
   .hero__eyebrow {
     font-family: "DM Mono", monospace;
-    font-size: 10px;
+    font-size: var(--text-sm);
     letter-spacing: 0.12em;
     text-transform: uppercase;
     color: rgba(255,255,255,0.45);
-    margin-bottom: 12px;
+    margin-bottom: var(--space-lg);
   }
 
   /* ===== Card Deck (HaydenBaxter port) ===== */
@@ -312,7 +352,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 0 16px 24px;
+    padding: 0 var(--space-sm) var(--space-md);
   }
 
   .deck__glow {
@@ -320,8 +360,8 @@
     bottom: 0;
     left: 50%;
     transform: translateX(-50%);
-    width: 800px;
-    height: 400px;
+    width: min(800px, 120vw);
+    height: min(400px, 60vw);
     border-radius: 50%;
     opacity: 0.15;
     filter: blur(120px);
@@ -370,7 +410,7 @@
     inset: 0;
     backface-visibility: hidden;
     -webkit-backface-visibility: hidden;
-    border-radius: 8px;
+    border-radius: var(--radius-md);
     overflow: hidden;
     box-shadow: 0 4px 24px rgba(0,0,0,0.5);
   }
@@ -5949,20 +5989,19 @@
     transform: scale(1);
   }
 
+  @media (max-width: 960px) {
+    .wordmark { margin-right: 0; flex-basis: 100%; margin-bottom: var(--space-xs); }
+  }
+
   @media (max-width: 680px) {
-    .header__inner { padding: 16px 24px; flex-wrap: wrap; }
-    .wordmark { margin-right: 0; flex-basis: 100%; margin-bottom: 8px; }
-    .nav { gap: 8px; flex-wrap: wrap; }
-    .hero { padding: 80px 24px 0; }
-    .brands { padding: 60px 0 40px; }
-    .cards { padding: 0 12px 60px; }
     .cards__grid { grid-template-columns: 1fr; }
     .deck__stack { gap: 3px; }
     .deck-card { width: clamp(56px, 20vw, 120px); }
-    .work__screen { padding: 32px 24px 24px; }
-    .work__screen--landing { padding: 40px 24px 32px; margin: 4px; top: 4px; left: 4px; right: 4px; bottom: 4px; }
-    .cd-slot { width: clamp(300px, 80vw, 420px); }
+    .work__screen { padding: var(--space-md) var(--space-md) var(--space-md); }
+    .work__screen--landing { padding: var(--space-lg) var(--space-md) var(--space-md); margin: 4px; top: 4px; left: 4px; right: 4px; bottom: 4px; justify-content: flex-start; }
+    .cd-slot { width: clamp(300px, 80vw, 420px); margin-top: var(--space-lg); }
     .pd-grid { grid-template-columns: 1fr; }
-    .pd-full { margin: 0 -24px -24px; }
-    .pd-full__bar { padding: 10px 24px; }
+    .pd-full { margin: 0 calc(var(--gutter) * -1) calc(var(--gutter) * -1); }
+    .pd-full__bar { padding: var(--space-sm) var(--gutter); }
+    .work__inner { top: 140px; height: calc(100vh - 140px); }
   }
