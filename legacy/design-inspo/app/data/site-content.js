@@ -7,6 +7,7 @@ export const SITE_CONTENT = {
       { label: "About", variant: "nav" },
       { label: "Contact", variant: "nav" },
       { label: "Resume", variant: "nav" },
+      { label: "Journal", variant: "nav", href: "https://journal.haydenbaxter.com", external: true },
       { label: "Book a Call", variant: "cta" }
     ]
   },

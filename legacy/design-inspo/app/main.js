@@ -1,5 +1,5 @@
-import { SITE_CONTENT } from "./data/site-content.js?v=20260224-scv1";
-import { renderPage } from "./renderers/page.js?v=20260224-scv1";
+import { SITE_CONTENT } from "./data/site-content.js?v=20260305-journal";
+import { renderPage } from "./renderers/page.js?v=20260305-journal";
 import { initSplash } from "./features/splash.js";
 import { initWorkScroll } from "./features/work-scroll.js";
 import { initEmergingTechBuilds } from "./features/emerging-tech-builds.js?v=20260224-scv1";

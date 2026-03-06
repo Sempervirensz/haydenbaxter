@@ -15,6 +15,7 @@ export default function Navbar() {
             key={link.label}
             href={link.href}
             className={`tag ${link.cta ? "tag--cta" : "tag--nav"}`}
+            {...(link.external && { target: "_blank", rel: "noopener noreferrer" })}
           >
             {link.label}
           </a>

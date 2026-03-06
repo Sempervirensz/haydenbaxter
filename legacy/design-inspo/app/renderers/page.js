@@ -2,6 +2,9 @@ function renderNavButtons(navButtons) {
   return navButtons
     .map(function(button) {
       var className = button.variant === "cta" ? "tag tag--cta" : "tag tag--nav";
+      if (button.href && button.external) {
+        return '<a class="' + className + '" href="' + button.href + '" target="_blank" rel="noopener noreferrer">' + button.label + "</a>";
+      }
       return '<button class="' + className + '" type="button">' + button.label + "</button>";
     })
     .join("");
