@@ -1,0 +1,19 @@
+# Portfolio Rules (Cursor)
+
+## Non-negotiables
+- Dark-only UI. Preserve DYMO label vibe + grounded motion.
+- Respect prefers-reduced-motion.
+- Small diffs: touch the minimum files required.
+
+## Two-world repo
+- Next.js site = primary (ship here)
+- legacy/design-inspo = reference (copy patterns from here, don’t invent new ones)
+
+## Architecture discipline (Next.js)
+- Keep copy in `src/data/**` (not scattered across components).
+- Keep behavior isolated (no global state blobs).
+- Keep styling token-driven; avoid one-off CSS.
+
+## When porting from Design-Inspo
+- Prefer “wrap then refactor”: mount the behavior first, then improve.
+- Preserve DOM hooks/class naming if reusing CSS/JS behavior.

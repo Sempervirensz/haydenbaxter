@@ -1,0 +1,29 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "next-dev",
+      "runtimeExecutable": "/Users/haydenbaxter/.nvm/versions/node/v20.19.6/bin/node",
+      "runtimeArgs": ["node_modules/.bin/next", "dev"],
+      "port": 3000
+    },
+    {
+      "name": "design-inspo",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": ["-m", "http.server", "8002", "--directory", "legacy/design-inspo"],
+      "port": 8002
+    },
+    {
+      "name": "particle-globe-lab",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev", "--prefix", "legacy/design-inspo/experiments/particle-globe-lab"],
+      "port": 5173
+    },
+    {
+      "name": "supply-chain-hero",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev", "--prefix", "legacy/design-inspo/experiments/supply-chain-hero"],
+      "port": 5174
+    }
+  ]
+}

@@ -1,7 +1,10 @@
 import CardDeck from "./CardDeck";
 import Navbar from "./Navbar";
+import { SITE_CONTENT } from "@/data/siteContent";
 
 export default function HeroSection() {
+  const { hero } = SITE_CONTENT;
+
   return (
     <section className="min-h-screen flex flex-col items-center justify-between relative bg-[#0a0a0a]">
       <Navbar />
@@ -18,13 +21,13 @@ export default function HeroSection() {
           className="text-[10px] sm:text-sm tracking-[0.12em] sm:tracking-[0.2em] uppercase text-white/60 mb-3 sm:mb-6"
           style={{ fontFamily: "var(--font-sans)" }}
         >
-          I&apos;m Hayden — Founder &amp; Product Builder.
+          {hero.eyebrow}
         </p>
         <h1
           className="text-[22px] sm:text-5xl md:text-7xl lg:text-8xl font-normal leading-[1.1] sm:leading-[1.05] max-w-4xl"
           style={{ fontFamily: "var(--font-serif)" }}
         >
-          I build thoughtful products where data, design, and the real world meet.
+          {hero.heading}
         </h1>
       </div>
 

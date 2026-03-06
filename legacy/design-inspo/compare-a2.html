@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Label Maker Variations 5–14</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Space+Mono:wght@400;700&family=JetBrains+Mono:wght@400;500;600&family=Inconsolata:wght@400;500;600;700&family=Source+Code+Pro:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *,*::before,*::after { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    background: #000;
+    min-height: 100vh;
+    font-family: "Inter", sans-serif;
+    -webkit-font-smoothing: antialiased;
+    color: #fff;
+  }
+
+  .section {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 40px 48px 48px;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+  .section:last-child { border-bottom: none; }
+
+  .section__label {
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.25);
+    margin-bottom: 24px;
+    font-weight: 500;
+  }
+
+  .row {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+  }
+
+  .wm {
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    color: rgba(255,255,255,0.9);
+    white-space: nowrap;
+    margin-right: auto;
+  }
+
+  .nav { display: flex; align-items: center; gap: 10px; }
+
+
+  /* ============================================
+     A5 — HEAVY EMBOSS
+     Stronger deboss than original A. Darker face,
+     deeper inset, more visible hard edge below.
+     ============================================ */
+  .v5 {
+    all:unset; cursor:pointer; display:inline-block; position:relative;
+    font-family: "DM Mono", monospace;
+    font-size: 10px; font-weight: 500;
+    letter-spacing: 0.22em; text-transform: uppercase;
+    line-height:1; white-space:nowrap; user-select:none;
+    color: rgba(255,255,255,0.72);
+    padding: 7px 14px 6px;
+    border-radius: 3px;
+    background: #1c1c1c;
+    border: 1px solid rgba(255,255,255,0.08);
+    box-shadow:
+      inset 0 2px 4px rgba(0,0,0,0.75),
+      inset 0 -1px 0 rgba(255,255,255,0.05),
+      0 3px 0 #0b0b0b,
+      0 4px 7px rgba(0,0,0,0.85);
+    text-shadow: 0 1px 1px rgba(0,0,0,0.7);
+    transition: transform 100ms ease, box-shadow 100ms ease, color 140ms ease;
+    transform: rotate(var(--r,0deg)) translateY(var(--y,0px));
+    opacity: var(--o,1);
+  }
+  .v5::before {
+    content:""; position:absolute; inset:0; border-radius:inherit; pointer-events:none;
+    opacity:0.08;
+    background: repeating-conic-gradient(rgba(255,255,255,1) 0% 25%, transparent 0% 50%);
+    background-size:2px 2px; mix-blend-mode:overlay;
+  }
+  .v5:hover {
+    color:rgba(255,255,255,0.88);
+    transform:rotate(var(--r,0deg)) translateY(calc(var(--y,0px) - 2px));
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.65), inset 0 -1px 0 rgba(255,255,255,0.06), 0 5px 0 #0b0b0b, 0 6px 10px rgba(0,0,0,0.9);
+  }
+  .v5:active {
+    color:rgba(255,255,255,0.55);
+    transform:rotate(var(--r,0deg)) translateY(calc(var(--y,0px) + 2px));
+    box-shadow: inset 0 3px 6px rgba(0,0,0,0.85), 0 0 0 #0b0b0b, 0 1px 2px rgba(0,0,0,0.5);
+    transition-duration:40ms;
+  }
+  .v5:focus-visible { outline:none; box-shadow: inset 0 2px 4px rgba(0,0,0,0.75), 0 3px 0 #0b0b0b, 0 0 0 2px rgba(255,255,255,0.14); }
+  .v5-cta { background:#262626; border-color:rgba(255,255,255,0.12); color:rgba(255,255,255,0.85); padding:7px 18px 6px; }
+  .nav--v5 button:nth-child(1){--r:0.5deg;--y:0px;--o:0.96}
+  .nav--v5 button:nth-child(2){--r:-0.4deg;--y:1.5px;--o:1}
+  .nav--v5 button:nth-child(3){--r:0.7deg;--y:-1px;--o:0.93}
+  .nav--v5 button:nth-child(4){--r:-0.5deg;--y:2px;--o:0.97}
+  .nav--v5 button:nth-child(5){--r:-0.3deg;--y:-0.5px}
+
+
+  /* ============================================
+     A6 — CASSETTE LABEL
+     Wider, warm amber tint. Retro audio vibe.
+     Warm grain, warm border. Wider buttons.
+     ============================================ */
+  .v6 {
+    all:unset; cursor:pointer; display:inline-block; position:relative;
+    font-family: "Inconsolata", monospace;
+    font-size: 10.5px; font-weight: 600;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    line-height:1; white-space:nowrap; user-select:none;
+    color: rgba(235,220,190,0.72);
+    padding: 7px 20px 6px;
+    border-radius: 3px;
+    background: #201e1a;
+    border: 1px solid rgba(200,180,140,0.12);
+    box-shadow:
+      inset 0 1px 2px rgba(0,0,0,0.6),
+      inset 0 -1px 0 rgba(200,180,140,0.04),
+      0 3px 0 #0e0d0b,
+      0 4px 6px rgba(0,0,0,0.8);
+    text-shadow: 0.4px 0.3px 0 rgba(0,0,0,0.5);
+    transition: transform 110ms ease, box-shadow 110ms ease, color 150ms ease;
+    transform: rotate(var(--r,0deg)) translateY(var(--y,0px));
+    opacity: var(--o,1);
+  }
+  .v6::before {
+    content:""; position:absolute; inset:0; border-radius:inherit; pointer-events:none;
+    opacity:0.06;
+    background: repeating-conic-gradient(rgba(200,180,140,1) 0% 25%, transparent 0% 50%);
+    background-size:3px 3px; mix-blend-mode:overlay;
+  }
+  .v6:hover {
+    color:rgba(235,220,190,0.9);
+    transform:rotate(var(--r,0deg)) translateY(calc(var(--y,0px) - 2px));
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.5), inset 0 -1px 0 rgba(200,180,140,0.06), 0 5px 0 #0e0d0b, 0 6px 9px rgba(0,0,0,0.85);
+  }
+  .v6:active {
+    color:rgba(235,220,190,0.5);
+    transform:rotate(var(--r,0deg)) translateY(calc(var(--y,0px) + 1.5px));
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.75), 0 0 0 #0e0d0b, 0 1px 2px rgba(0,0,0,0.5);
+    transition-duration:40ms;
+  }
+  .v6:focus-visible { outline:none; box-shadow: inset 0 1px 2px rgba(0,0,0,0.6), 0 3px 0 #0e0d0b, 0 0 0 2px rgba(200,180,140,0.18); }
+  .v6-cta { background:#28251e; border-color:rgba(200,180,140,0.18); color:rgba(235,220,190,0.85); padding:7px 23px 6px; }
+  .nav--v6 button:nth-child(1){--r:0.6deg;--y:-0.5px;--o:0.95}
+  .nav--v6 button:nth-child(2){--r:-0.3deg;--y:1.5px;--o:1}
+  .nav--v6 button:nth-child(3){--r:0.8deg;--y:0px;--o:0.91}
+  .nav--v6 button:nth-child(4){--r:-0.6deg;--y:1px;--o:0.96}
+  .nav--v6 button:nth-child(5){--r:-0.4deg;--y:-1px}
+
+
+  /* ============================================
+     A7 — VHS SPINE
+     Tall narrow. Strong top border. Scan lines.
+     ============================================ */
+  .v7 {
+    all:unset; cursor:pointer; display:inline-block; position:relative;
+    font-family: "Inter", sans-serif;
+    font-size: 9px; font-weight: 600;
+    letter-spacing: 0.28em; text-transform: uppercase;
+    line-height:1; white-space:nowrap; user-select:none;
+    color: rgba(255,255,255,0.68);
+    padding: 10px 12px 8px;
+    border-radius: 2px;
+    background: #1e1e1e;
+    border: 1px solid rgba(255,255,255,0.06);
+    border-top: 2.5px solid rgba(255,255,255,0.14);
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.05),
+      inset 0 -1px 2px rgba(0,0,0,0.4),
+      0 3px 0 #0b0b0b,
+      0 4px 6px rgba(0,0,0,0.8);
+    transition: transform 100ms ease, box-shadow 100ms ease, color 140ms ease;
+    transform: rotate(var(--r,0deg)) translateY(var(--y,0px));
+    opacity: var(--o,1);
+  }
+  .v7::before {
+    content:""; position:absolute; inset:0; border-radius:inherit; pointer-events:none;
+    opacity:0.06;
+    background: repeating-linear-gradient(0deg, transparent 0px, transparent 2px, rgba(255,255,255,0.25) 2px, rgba(255,255,255,0.25) 3px);
+    mix-blend-mode:overlay;
+  }
+  .v7:hover {
+    color:rgba(255,255,255,0.85);
+    transform:rotate(var(--r,0deg)) translateY(calc(var(--y,0px) - 2px));
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.07), inset 0 -1px 2px rgba(0,0,0,0.3), 0 5px 0 #0b0b0b, 0 6px 9px rgba(0,0,0,0.85);
+  }
+  .v7:active {
+    color:rgba(255,255,255,0.48);
+    transform:rotate(var(--r,0deg)) translateY(calc(var(--y,0px) + 2px));
+    box-shadow: inset 0 2px 3px rgba(0,0,0,0.6), 0 0 0 #0b0b0b, 0 1px 2px rgba(0,0,0,0.5);
+    transition-duration:40ms;
+  }
+  .v7:focus-visible { outline:none; box-shadow: inset 0 1px 0 rgba(255,255,255,0.05), 0 3px 0 #0b0b0b, 0 0 0 2px rgba(255,255,255,0.14); }
+  .v7-cta { background:#272727; border-top-color:rgba(255,255,255,0.2); color:rgba(255,255,255,0.82); padding:10px 16px 8px; }
+  .nav--v7 button:nth-child(1){--r:0.4deg;--y:1px;--o:0.94}
+  .nav--v7 button:nth-child(2){--r:-0.5deg;--y:-1px;--o:1}
+  .nav--v7 button:nth-child(3){--r:0.7deg;--y:0.5px;--o:0.92}
+  .nav--v7 button:nth-child(4){--r:-0.3deg;--y:2px;--o:0.97}
+  .nav--v7 button:nth-child(5){--r:-0.45deg;--y:-0.5px}
+
+
+  /* ============================================
+     A8 — FLOPPY DISK LABEL
+     Double border, wider, flat 80s office feel.
+     ============================================ */
+  .v8 {
+    all:unset; cursor:pointer; display:inline-block; position:relative;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 9.5px; font-weight: 500;
+    letter-spacing: 0.2em; text-transform: uppercase;
+    line-height:1; white-space:nowrap; user-select:none;
+    color: rgba(255,255,255,0.66);
+    padding: 7px 17px 6px;
+    border-radius: 1px;
+    background: #1b1b1b;
+    border: 1.5px solid rgba(255,255,255,0.1);
+    box-shadow:
+      inset 0 0 0 1.5px rgba(255,255,255,0.035),
+      inset 0 1px 2px rgba(0,0,0,0.5),
+      0 2.5px 0 #0a0a0a,
+      0 3.5px 6px rgba(0,0,0,0.8);
+    text-shadow: 0.3px 0.2px 0 rgba(0,0,0,0.5);
+    transition: transform 110ms ease, box-shadow 110ms ease, color 150ms ease;
+    transform: rotate(var(--r,0deg)) translateY(var(--y,0px));
+    opacity: var(--o,1);
+  }
+  .v8::before {
+    content:""; position:absolute; inset:0; border-radius:inherit; pointer-events:none;
+    opacity:0.05;
+    background: repeating-conic-gradient(rgba(255,255,255,1) 0% 25%, transparent 0% 50%);
+    background-size:2px 2px; mix-blend-mode:overlay;
+  }
+  .v8:hover {
+    color:rgba(255,255,255,0.82);
+    border-color:rgba(255,255,255,0.16);
+    transform:rotate(var(--r,0deg)) translateY(calc(var(--y,0px) - 2px));
+    box-shadow: inset 0 0 0 1.5px rgba(255,255,255,0.05), inset 0 1px 2px rgba(0,0,0,0.4), 0 4.5px 0 #0a0a0a, 0 5.5px 9px rgba(0,0,0,0.85);
+  }
+  .v8:active {
+    color:rgba(255,255,255,0.45);
+    border-color:rgba(255,255,255,0.07);
+    transform:rotate(var(--r,0deg)) translateY(calc(var(--y,0px) + 1.5px));
+    box-shadow: inset 0 0 0 1.5px rgba(255,255,255,0.02), inset 0 2px 3px rgba(0,0,0,0.65), 0 0 0 #0a0a0a, 0 1px 2px rgba(0,0,0,0.5);
+    transition-duration:40ms;
+  }
+  .v8:focus-visible { outline:none; box-shadow: inset 0 0 0 1.5px rgba(255,255,255,0.035), 0 2.5px 0 #0a0a0a, 0 0 0 2px rgba(255,255,255,0.14); }
+  .v8-cta { background:#242424; border-color:rgba(255,255,255,0.16); color:rgba(255,255,255,0.8); padding:7px 20px 6px; }
+  .nav--v8 button:nth-child(1){--r:0.35deg;--y:-0.5px;--o:0.95}
+  .nav--v8 button:nth-child(2){--r:-0.45deg;--y:1px;--o:0.9}
+  .nav--v8 button:nth-child(3){--r:0.6deg;--y:0px;--o:0.94}
+  .nav--v8 button:nth-child(4){--r:-0.4deg;--y:1.5px;--o:0.97}
+  .nav--v8 button:nth-child(5){--r:-0.25deg;--y:-1px}
+
+
+  /* ============================================
+     A9 — PCB SILKSCREEN
+     Green-tinted. Visible green border. Technical.
+     ============================================ */
+  .v9 {
+    all:unset; cursor:pointer; display:inline-block; position:relative;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 9.5px; font-weight: 500;
+    letter-spacing: 0.2em; text-transform: uppercase;
+    line-height:1; white-space:nowrap; user-select:none;
+    color: rgba(160,210,160,0.7);
+    padding: 6px 14px 5px;
+    border-radius: 2px;
+    background: #141a14;
+    border: 1px solid rgba(100,180,100,0.18);
+    box-shadow:
+      inset 0 1px 2px rgba(0,0,0,0.5),
+      inset 0 -1px 0 rgba(100,180,100,0.04),
+      0 2.5px 0 #080a08,
+      0 3.5px 6px rgba(0,0,0,0.75);
+    text-shadow: 0 0 4px rgba(100,180,100,0.08);
+    transition: transform 100ms ease, box-shadow 100ms ease, color 160ms ease;
+    transform: rotate(var(--r,0deg)) translateY(var(--y,0px));
+    opacity: var(--o,1);
+  }
+  .v9::before {
+    content:""; position:absolute; inset:0; border-radius:inherit; pointer-events:none;
+    opacity:0.06;
+    background: radial-gradient(circle, rgba(100,180,100,0.5) 0.5px, transparent 0.5px);
+    background-size:4px 4px; mix-blend-mode:overlay;
+  }
+  .v9:hover {
+    color:rgba(160,210,160,0.9);
+    border-color:rgba(100,180,100,0.28);
+    transform:rotate(var(--r,0deg)) translateY(calc(var(--y,0px) - 2px));
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.4), inset 0 -1px 0 rgba(100,180,100,0.06), 0 4.5px 0 #080a08, 0 5.5px 9px rgba(0,0,0,0.85);
+  }
+  .v9:active {
+    color:rgba(160,210,160,0.45);
+    border-color:rgba(100,180,100,0.1);
+    transform:rotate(var(--r,0deg)) translateY(calc(var(--y,0px) + 1.5px));
+    box-shadow: inset 0 2px 3px rgba(0,0,0,0.6), 0 0 0 #080a08, 0 1px 2px rgba(0,0,0,0.5);
+    transition-duration:40ms;
+  }
+  .v9:focus-visible { outline:none; box-shadow: inset 0 1px 2px rgba(0,0,0,0.5), 0 2.5px 0 #080a08, 0 0 0 2px rgba(100,180,100,0.2); }
+  .v9-cta { background:#1a221a; border-color:rgba(100,180,100,0.25); color:rgba(160,210,160,0.85); padding:6px 17px 5px; }
+  .nav--v9 button:nth-child(1){--r:0.3deg;--y:0.5px;--o:0.96}
+  .nav--v9 button:nth-child(2){--r:-0.4deg;--y:-0.5px;--o:1}
+  .nav--v9 button:nth-child(3){--r:0.5deg;--y:1px;--o:0.92}
+  .nav--v9 button:nth-child(4){--r:-0.35deg;--y:0px;--o:0.95}
+  .nav--v9 button:nth-child(5){--r:-0.2deg;--y:1.5px}
+
+
+  /* ============================================
+     A10 — FILING TAB
+     Top-heavy. Rounded top corners, flat bottom.
+     Gradient face. Taller buttons.
+     ============================================ */
+  .v10 {
+    all:unset; cursor:pointer; display:inline-block; position:relative;
+    font-family: "Inter", sans-serif;
+    font-size: 9.5px; font-weight: 500;
+    letter-spacing: 0.2em; text-transform: uppercase;
+    line-height:1; white-space:nowrap; user-select:none;
+    color: rgba(255,255,255,0.68);
+    padding: 10px 14px 8px;
+    border-radius: 4px 4px 1px 1px;
+    background: linear-gradient(180deg, #242424 0%, #1c1c1c 100%);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-top: 2px solid rgba(255,255,255,0.13);
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.06),
+      inset 0 -1px 2px rgba(0,0,0,0.35),
+      0 3px 0 #0c0c0c,
+      0 4px 6px rgba(0,0,0,0.8);
+    transition: transform 100ms ease, box-shadow 100ms ease, color 140ms ease;
+    transform: rotate(var(--r,0deg)) translateY(var(--y,0px));
+    opacity: var(--o,1);
+  }
+  .v10::before {
+    content:""; position:absolute; inset:0; border-radius:inherit; pointer-events:none;
+    opacity:0.05;
+    background: repeating-conic-gradient(rgba(255,255,255,1) 0% 25%, transparent 0% 50%);
+    background-size:2px 2px; mix-blend-mode:overlay;
+  }
+  .v10:hover {
+    color:rgba(255,255,255,0.85);
+    transform:rotate(var(--r,0deg)) translateY(calc(var(--y,0px) - 2px));
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.08), inset 0 -1px 2px rgba(0,0,0,0.25), 0 5px 0 #0c0c0c, 0 6px 9px rgba(0,0,0,0.85);
+  }
+  .v10:active {
+    color:rgba(255,255,255,0.48);
+    transform:rotate(var(--r,0deg)) translateY(calc(var(--y,0px) + 2px));
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.6), 0 0 0 #0c0c0c, 0 1px 2px rgba(0,0,0,0.5);
+    transition-duration:40ms;
+  }
+  .v10:focus-visible { outline:none; box-shadow: inset 0 1px 0 rgba(255,255,255,0.06), 0 3px 0 #0c0c0c, 0 0 0 2px rgba(255,255,255,0.14); }
+  .v10-cta { background:linear-gradient(180deg,#2c2c2c 0%,#242424 100%); border-top-color:rgba(255,255,255,0.2); color:rgba(255,255,255,0.82); padding:10px 18px 8px; }
+  .nav--v10 button:nth-child(1){--r:0.5deg;--y:-0.5px;--o:0.94}
+  .nav--v10 button:nth-child(2){--r:-0.4deg;--y:1.5px;--o:1}
+  .nav--v10 button:nth-child(3){--r:0.7deg;--y:0px;--o:0.92}
+  .nav--v10 button:nth-child(4){--r:-0.55deg;--y:1px;--o:0.96}
+  .nav--v10 button:nth-child(5){--r:-0.3deg;--y:-1px}
+
+
+  /* ============================================
+     A11 — STAMPED STEEL
+     Cool blue-grey tint. Diagonal brush texture.
+     Engraved text effect.
+     ============================================ */
+  .v11 {
+    all:unset; cursor:pointer; display:inline-block; position:relative;
+    font-family: "Inter", sans-serif;
+    font-size: 9.5px; font-weight: 600;
+    letter-spacing: 0.22em; text-transform: uppercase;
+    line-height:1; white-space:nowrap; user-select:none;
+    color: rgba(190,195,210,0.65);
+    padding: 7px 14px 6px;
+    border-radius: 2px;
+    background: #1c1d20;
+    border: 1px solid rgba(190,195,220,0.1);
+    box-shadow:
+      inset 0 1px 0 rgba(190,195,220,0.06),
+      inset 0 -1px 1px rgba(0,0,0,0.35),
+      0 2.5px 0 #0c0c0e,
+      0 3.5px 6px rgba(0,0,0,0.8);
+    text-shadow:
+      0 -1px 0 rgba(0,0,0,0.65),
+      0 1px 0 rgba(190,195,220,0.07);
+    transition: transform 100ms ease, box-shadow 100ms ease, color 140ms ease;
+    transform: rotate(var(--r,0deg)) translateY(var(--y,0px));
+    opacity: var(--o,1);
+  }
+  .v11::before {
+    content:""; position:absolute; inset:0; border-radius:inherit; pointer-events:none;
+    opacity:0.07;
+    background: repeating-linear-gradient(135deg, transparent 0px, transparent 1px, rgba(190,195,220,0.15) 1px, rgba(190,195,220,0.15) 2px);
+    mix-blend-mode:overlay;
+  }
+  .v11:hover {
+    color:rgba(190,195,210,0.85);
+    transform:rotate(var(--r,0deg)) translateY(calc(var(--y,0px) - 2px));
+    box-shadow: inset 0 1px 0 rgba(190,195,220,0.08), inset 0 -1px 1px rgba(0,0,0,0.25), 0 4.5px 0 #0c0c0e, 0 5.5px 9px rgba(0,0,0,0.85);
+  }
+  .v11:active {
+    color:rgba(190,195,210,0.42);
+    transform:rotate(var(--r,0deg)) translateY(calc(var(--y,0px) + 1.5px));
+    box-shadow: inset 0 2px 3px rgba(0,0,0,0.55), 0 0 0 #0c0c0e, 0 1px 2px rgba(0,0,0,0.5);
+    transition-duration:40ms;
+  }
+  .v11:focus-visible { outline:none; box-shadow: inset 0 1px 0 rgba(190,195,220,0.06), 0 2.5px 0 #0c0c0e, 0 0 0 2px rgba(190,195,220,0.14); }
+  .v11-cta { background:#24252a; border-color:rgba(190,195,220,0.16); color:rgba(190,195,210,0.82); padding:7px 18px 6px; }
+  .nav--v11 button:nth-child(1){--r:0.4deg;--y:0px;--o:0.95}
+  .nav--v11 button:nth-child(2){--r:-0.5deg;--y:1.5px;--o:1}
+  .nav--v11 button:nth-child(3){--r:0.65deg;--y:-1px;--o:0.93}
+  .nav--v11 button:nth-child(4){--r:-0.4deg;--y:0.5px;--o:0.96}
+  .nav--v11 button:nth-child(5){--r:-0.3deg;--y:-0.5px}
+
+
+  /* ============================================
+     A12 — DOT MATRIX
+     Slightly larger text, fuzzy glow. Dot texture.
+     Visible button face. Old printer vibes.
+     ============================================ */
+  .v12 {
+    all:unset; cursor:pointer; display:inline-block; position:relative;
+    font-family: "Inconsolata", monospace;
+    font-size: 11px; font-weight: 500;
+    letter-spacing: 0.16em; text-transform: uppercase;
+    line-height:1; white-space:nowrap; user-select:none;
+    color: rgba(255,255,255,0.62);
+    padding: 7px 15px 6px;
+    border-radius: 2px;
+    background: #191919;
+    border: 1px solid rgba(255,255,255,0.07);
+    box-shadow:
+      inset 0 1px 2px rgba(0,0,0,0.45),
+      0 2px 0 #0a0a0a,
+      0 3px 5px rgba(0,0,0,0.7);
+    text-shadow:
+      0 0 3px rgba(255,255,255,0.08),
+      0.5px 0.3px 0 rgba(255,255,255,0.03);
+    transition: transform 120ms ease, box-shadow 120ms ease, color 180ms ease;
+    transform: rotate(var(--r,0deg)) translateY(var(--y,0px));
+    opacity: var(--o,1);
+  }
+  .v12::before {
+    content:""; position:absolute; inset:0; border-radius:inherit; pointer-events:none;
+    opacity:0.06;
+    background: radial-gradient(circle, rgba(255,255,255,0.6) 0.5px, transparent 0.5px);
+    background-size:3px 3px; mix-blend-mode:overlay;
+  }
+  .v12:hover {
+    color:rgba(255,255,255,0.8);
+    transform:rotate(var(--r,0deg)) translateY(calc(var(--y,0px) - 1.5px));
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.35), 0 3.5px 0 #0a0a0a, 0 4.5px 8px rgba(0,0,0,0.8);
+  }
+  .v12:active {
+    color:rgba(255,255,255,0.4);
+    transform:rotate(var(--r,0deg)) translateY(calc(var(--y,0px) + 1.5px));
+    box-shadow: inset 0 2px 3px rgba(0,0,0,0.55), 0 0 0 #0a0a0a, 0 1px 2px rgba(0,0,0,0.5);
+    transition-duration:40ms;
+  }
+  .v12:focus-visible { outline:none; box-shadow: inset 0 1px 2px rgba(0,0,0,0.45), 0 2px 0 #0a0a0a, 0 0 0 2px rgba(255,255,255,0.12); }
+  .v12-cta { background:#222; border-color:rgba(255,255,255,0.1); color:rgba(255,255,255,0.78); padding:7px 18px 6px; }
+  .nav--v12 button:nth-child(1){--r:0.3deg;--y:1px;--o:0.93}
+  .nav--v12 button:nth-child(2){--r:-0.5deg;--y:-0.5px;--o:0.88}
+  .nav--v12 button:nth-child(3){--r:0.6deg;--y:0px;--o:0.95}
+  .nav--v12 button:nth-child(4){--r:-0.35deg;--y:1.5px;--o:0.9}
+  .nav--v12 button:nth-child(5){--r:-0.2deg;--y:-1px}
+
+
+  /* ============================================
+     A13 — STENCIL CUT
+     Dashed border, transparent bg. CTA gets fill.
+     Bone dry, flat, military.
+     ============================================ */
+  .v13 {
+    all:unset; cursor:pointer; display:inline-block; position:relative;
+    font-family: "Source Code Pro", monospace;
+    font-size: 9.5px; font-weight: 500;
+    letter-spacing: 0.3em; text-transform: uppercase;
+    line-height:1; white-space:nowrap; user-select:none;
+    color: rgba(255,255,255,0.6);
+    padding: 7px 14px 6px;
+    border-radius: 1px;
+    background: rgba(255,255,255,0.025);
+    border: 1.5px dashed rgba(255,255,255,0.18);
+    box-shadow:
+      0 2px 0 rgba(255,255,255,0.02),
+      0 3px 5px rgba(0,0,0,0.6);
+    text-shadow: 0.4px 0 0 rgba(255,255,255,0.03);
+    transition: transform 100ms ease, box-shadow 100ms ease, color 160ms ease, border-color 160ms ease;
+    transform: rotate(var(--r,0deg)) translateY(var(--y,0px));
+    opacity: var(--o,1);
+  }
+  .v13:hover {
+    color:rgba(255,255,255,0.82);
+    border-color:rgba(255,255,255,0.3);
+    transform:rotate(var(--r,0deg)) translateY(calc(var(--y,0px) - 1.5px));
+    box-shadow: 0 3.5px 0 rgba(255,255,255,0.03), 0 5px 8px rgba(0,0,0,0.7);
+  }
+  .v13:active {
+    color:rgba(255,255,255,0.4);
+    border-color:rgba(255,255,255,0.1);
+    transform:rotate(var(--r,0deg)) translateY(calc(var(--y,0px) + 1px));
+    box-shadow: 0 0.5px 0 rgba(255,255,255,0.01), 0 1px 2px rgba(0,0,0,0.5);
+    transition-duration:40ms;
+  }
+  .v13:focus-visible { outline:none; box-shadow: 0 2px 0 rgba(255,255,255,0.02), 0 0 0 2px rgba(255,255,255,0.14); }
+  .v13-cta { border-style:solid; border-color:rgba(255,255,255,0.22); background:rgba(255,255,255,0.05); color:rgba(255,255,255,0.78); padding:7px 18px 6px; }
+  .nav--v13 button:nth-child(1){--r:0.5deg;--y:0px;--o:0.94}
+  .nav--v13 button:nth-child(2){--r:-0.3deg;--y:1px;--o:1}
+  .nav--v13 button:nth-child(3){--r:0.8deg;--y:-1.5px;--o:0.91}
+  .nav--v13 button:nth-child(4){--r:-0.6deg;--y:0.5px;--o:0.96}
+  .nav--v13 button:nth-child(5){--r:-0.35deg;--y:-0.5px}
+
+
+  /* ============================================
+     A14 — ENGRAVED NAMEPLATE
+     Brushed horizontal texture. Gradient face.
+     Wider, more premium. Equipment tag feel.
+     ============================================ */
+  .v14 {
+    all:unset; cursor:pointer; display:inline-block; position:relative;
+    font-family: "Inter", sans-serif;
+    font-size: 9.5px; font-weight: 600;
+    letter-spacing: 0.24em; text-transform: uppercase;
+    line-height:1; white-space:nowrap; user-select:none;
+    color: rgba(215,213,210,0.6);
+    padding: 7px 16px 6px;
+    border-radius: 2px;
+    background: linear-gradient(180deg, #232323 0%, #1b1b1b 100%);
+    border: 1px solid rgba(255,255,255,0.08);
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.06),
+      inset 0 -1px 0 rgba(0,0,0,0.25),
+      0 2.5px 0 #0c0c0c,
+      0 3.5px 6px rgba(0,0,0,0.8);
+    text-shadow:
+      0 1px 0 rgba(255,255,255,0.06),
+      0 -1px 1px rgba(0,0,0,0.7);
+    transition: transform 100ms ease, box-shadow 100ms ease, color 140ms ease;
+    transform: rotate(var(--r,0deg)) translateY(var(--y,0px));
+    opacity: var(--o,1);
+  }
+  .v14::before {
+    content:""; position:absolute; inset:0; border-radius:inherit; pointer-events:none;
+    opacity:0.06;
+    background: repeating-linear-gradient(0deg, transparent 0px, transparent 1px, rgba(255,255,255,0.15) 1px, rgba(255,255,255,0.15) 2px);
+    mix-blend-mode:overlay;
+  }
+  .v14:hover {
+    color:rgba(215,213,210,0.82);
+    transform:rotate(var(--r,0deg)) translateY(calc(var(--y,0px) - 2px));
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.08), inset 0 -1px 0 rgba(0,0,0,0.18), 0 4.5px 0 #0c0c0c, 0 5.5px 9px rgba(0,0,0,0.85);
+  }
+  .v14:active {
+    color:rgba(215,213,210,0.38);
+    transform:rotate(var(--r,0deg)) translateY(calc(var(--y,0px) + 1.5px));
+    box-shadow: inset 0 2px 3px rgba(0,0,0,0.55), 0 0 0 #0c0c0c, 0 1px 2px rgba(0,0,0,0.5);
+    transition-duration:40ms;
+  }
+  .v14:focus-visible { outline:none; box-shadow: inset 0 1px 0 rgba(255,255,255,0.06), 0 2.5px 0 #0c0c0c, 0 0 0 2px rgba(255,255,255,0.12); }
+  .v14-cta { background:linear-gradient(180deg,#2c2c2c 0%,#242424 100%); border-color:rgba(255,255,255,0.13); color:rgba(215,213,210,0.78); padding:7px 20px 6px; }
+  .nav--v14 button:nth-child(1){--r:0.45deg;--y:-0.5px;--o:0.95}
+  .nav--v14 button:nth-child(2){--r:-0.4deg;--y:1.5px;--o:1}
+  .nav--v14 button:nth-child(3){--r:0.65deg;--y:0px;--o:0.92}
+  .nav--v14 button:nth-child(4){--r:-0.5deg;--y:1px;--o:0.96}
+  .nav--v14 button:nth-child(5){--r:-0.3deg;--y:-1px}
+
+
+  @media (max-width: 680px) {
+    .section { padding:28px 24px 36px; }
+    .row { flex-wrap:wrap; }
+    .wm { margin-right:0; flex-basis:100%; margin-bottom:8px; }
+    .nav { gap:8px; flex-wrap:wrap; }
+  }
+</style>
+</head>
+<body>
+
+<div class="section">
+  <div class="section__label">A5 &mdash; Heavy Emboss (deeper deboss, stronger grain)</div>
+  <div class="row"><div class="wm">Hayden Baxter</div>
+    <nav class="nav nav--v5"><button class="v5">Work</button><button class="v5">About</button><button class="v5">Contact</button><button class="v5">Resume</button><button class="v5 v5-cta">Book a Call</button></nav>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section__label">A6 &mdash; Cassette Label (warm amber tint, wider, retro audio)</div>
+  <div class="row"><div class="wm">Hayden Baxter</div>
+    <nav class="nav nav--v6"><button class="v6">Work</button><button class="v6">About</button><button class="v6">Contact</button><button class="v6">Resume</button><button class="v6 v6-cta">Book a Call</button></nav>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section__label">A7 &mdash; VHS Spine (tall, narrow, top-border accent)</div>
+  <div class="row"><div class="wm">Hayden Baxter</div>
+    <nav class="nav nav--v7"><button class="v7">Work</button><button class="v7">About</button><button class="v7">Contact</button><button class="v7">Resume</button><button class="v7 v7-cta">Book a Call</button></nav>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section__label">A8 &mdash; Floppy Disk Label (double border, 80s office)</div>
+  <div class="row"><div class="wm">Hayden Baxter</div>
+    <nav class="nav nav--v8"><button class="v8">Work</button><button class="v8">About</button><button class="v8">Contact</button><button class="v8">Resume</button><button class="v8 v8-cta">Book a Call</button></nav>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section__label">A9 &mdash; PCB Silkscreen (green tint, technical, dot grid)</div>
+  <div class="row"><div class="wm">Hayden Baxter</div>
+    <nav class="nav nav--v9"><button class="v9">Work</button><button class="v9">About</button><button class="v9">Contact</button><button class="v9">Resume</button><button class="v9 v9-cta">Book a Call</button></nav>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section__label">A10 &mdash; Filing Tab (top-heavy, rounded top, archival)</div>
+  <div class="row"><div class="wm">Hayden Baxter</div>
+    <nav class="nav nav--v10"><button class="v10">Work</button><button class="v10">About</button><button class="v10">Contact</button><button class="v10">Resume</button><button class="v10 v10-cta">Book a Call</button></nav>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section__label">A11 &mdash; Stamped Steel (cool blue-grey, brushed diagonal)</div>
+  <div class="row"><div class="wm">Hayden Baxter</div>
+    <nav class="nav nav--v11"><button class="v11">Work</button><button class="v11">About</button><button class="v11">Contact</button><button class="v11">Resume</button><button class="v11 v11-cta">Book a Call</button></nav>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section__label">A12 &mdash; Dot Matrix (fuzzy glow, dot grid, old printer)</div>
+  <div class="row"><div class="wm">Hayden Baxter</div>
+    <nav class="nav nav--v12"><button class="v12">Work</button><button class="v12">About</button><button class="v12">Contact</button><button class="v12">Resume</button><button class="v12 v12-cta">Book a Call</button></nav>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section__label">A13 &mdash; Stencil Cut (dashed border, transparent, military)</div>
+  <div class="row"><div class="wm">Hayden Baxter</div>
+    <nav class="nav nav--v13"><button class="v13">Work</button><button class="v13">About</button><button class="v13">Contact</button><button class="v13">Resume</button><button class="v13 v13-cta">Book a Call</button></nav>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section__label">A14 &mdash; Engraved Nameplate (brushed metal, etched text)</div>
+  <div class="row"><div class="wm">Hayden Baxter</div>
+    <nav class="nav nav--v14"><button class="v14">Work</button><button class="v14">About</button><button class="v14">Contact</button><button class="v14">Resume</button><button class="v14 v14-cta">Book a Call</button></nav>
+  </div>
+</div>
+
+</body>
+</html>

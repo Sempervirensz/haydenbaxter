@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Typography Light-Up Lab</title>
+    <meta
+      name="description"
+      content="Premium typography interaction demo with scroll and hover light-up effects for sourcing/DPP brand exploration."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500;1,600&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./lab.css" />
+  </head>
+  <body>
+    <div class="tlab" id="typographyLightupLab" data-scroll-mode="ltr" data-hover-mode="spotlight">
+      <div class="tlab__veil" aria-hidden="true"></div>
+      <div class="tlab__grain" aria-hidden="true"></div>
+
+      <header class="tlab__header" aria-label="Typography interaction lab intro">
+        <p class="tlab__eyebrow">Typography Light-Up Lab</p>
+        <h1 class="tlab__title">Premium sourcing / DPP typography interaction study</h1>
+        <p class="tlab__subtitle">
+          Isolated demo route for cinematic dual-layer text reveals. Main homepage remains untouched.
+        </p>
+      </header>
+
+      <details class="controls" open>
+        <summary class="controls__summary">
+          <span>Iteration Playground</span>
+          <span class="controls__summaryMeta">scroll + hover modes + tuning</span>
+        </summary>
+        <div class="controls__panel" role="region" aria-label="Typography light-up controls">
+          <div class="controls__grid">
+            <label class="controls__field">
+              <span class="controls__label">Scroll Mode</span>
+              <select id="scrollMode">
+                <option value="ltr">Left-to-right reveal</option>
+                <option value="center">Center-out reveal</option>
+                <option value="sheen">Edge-sheen reveal</option>
+              </select>
+            </label>
+            <label class="controls__field">
+              <span class="controls__label">Hover Mode (Implemented)</span>
+              <select id="hoverMode" disabled>
+                <option value="spotlight" selected>Cursor spotlight reveal</option>
+              </select>
+            </label>
+            <label class="controls__field">
+              <span class="controls__label">Base Opacity <output for="baseOpacity" id="baseOpacityOut"></output></span>
+              <input id="baseOpacity" type="range" min="0.12" max="0.58" step="0.01" value="0.26" />
+            </label>
+            <label class="controls__field">
+              <span class="controls__label">Glow Strength <output for="glowStrength" id="glowStrengthOut"></output></span>
+              <input id="glowStrength" type="range" min="0" max="1" step="0.01" value="0.28" />
+            </label>
+            <label class="controls__field">
+              <span class="controls__label">Stagger Amount <output for="staggerAmount" id="staggerAmountOut"></output></span>
+              <input id="staggerAmount" type="range" min="0" max="0.2" step="0.005" value="0.07" />
+            </label>
+            <label class="controls__field">
+              <span class="controls__label">Smoothing Factor <output for="smoothingFactor" id="smoothingFactorOut"></output></span>
+              <input id="smoothingFactor" type="range" min="0.05" max="0.95" step="0.01" value="0.22" />
+            </label>
+            <label class="controls__field">
+              <span class="controls__label">Reveal Multiplier <output for="revealMultiplier" id="revealMultiplierOut"></output></span>
+              <input id="revealMultiplier" type="range" min="0.5" max="1.8" step="0.01" value="1" />
+            </label>
+            <label class="controls__field">
+              <span class="controls__label">Spotlight Size <output for="spotlightSize" id="spotlightSizeOut"></output></span>
+              <input id="spotlightSize" type="range" min="80" max="420" step="1" value="220" />
+            </label>
+            <label class="controls__field">
+              <span class="controls__label">Spotlight Softness <output for="spotlightSoftness" id="spotlightSoftnessOut"></output></span>
+              <input id="spotlightSoftness" type="range" min="0.1" max="0.95" step="0.01" value="0.58" />
+            </label>
+            <label class="controls__field">
+              <span class="controls__label">Line Fade (ms) <output for="lineFadeMs" id="lineFadeMsOut"></output></span>
+              <input id="lineFadeMs" type="range" min="80" max="1200" step="10" value="360" />
+            </label>
+            <label class="controls__field controls__field--wide">
+              <span class="controls__label">Sheen Intensity <output for="sheenIntensity" id="sheenIntensityOut"></output></span>
+              <input id="sheenIntensity" type="range" min="0" max="1" step="0.01" value="0.42" />
+            </label>
+          </div>
+          <p class="controls__note" id="controlsNote">
+            Pointer spotlight mode is active. Touch devices fall back to line-focused reveal behavior.
+          </p>
+        </div>
+      </details>
+
+      <main class="tlab__main">
+        <section class="demo demo--scroll" id="scrollDemo" aria-labelledby="scrollDemoTitle">
+          <div class="demo__sticky">
+            <div class="demo__shell">
+              <div class="demo__map" aria-hidden="true"></div>
+              <div class="demo__scan" aria-hidden="true"></div>
+              <div class="demo__headerRow">
+                <div>
+                  <p class="demo__tag">Section 01 · Scroll</p>
+                  <h2 class="demo__headline" id="scrollDemoTitle">Scroll-based light-up reveal</h2>
+                </div>
+                <p class="demo__micro">dual-layer text · local section progress · staggered lines</p>
+              </div>
+              <div class="type-stack type-stack--scroll" data-scroll-lines></div>
+              <p class="demo__hint">Scroll through this section to reveal lines sequentially. The effect tracks this section’s own progress.</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="demo demo--hover" id="hoverDemo" aria-labelledby="hoverDemoTitle">
+          <div class="demo__sticky demo__sticky--compact">
+            <div class="demo__shell">
+              <div class="demo__map" aria-hidden="true"></div>
+              <div class="demo__scan" aria-hidden="true"></div>
+              <div class="demo__headerRow">
+                <div>
+                  <p class="demo__tag">Section 02 · Hover / Pointer</p>
+                  <h2 class="demo__headline" id="hoverDemoTitle">Pointer-based light-up reveal</h2>
+                </div>
+                <p class="demo__micro">soft spotlight · line-hover modes · reduced-motion fallback</p>
+              </div>
+              <div class="type-stack type-stack--hover" data-hover-lines></div>
+              <p class="demo__hint" id="hoverHint">Move pointer across the text to reveal the lit layer. Hover modes can be changed in the controls.</p>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script type="module" src="./lab.js"></script>
+  </body>
+</html>

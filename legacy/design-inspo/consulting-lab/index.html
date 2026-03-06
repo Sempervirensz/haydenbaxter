@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Consulting Exploration Lab — Hayden Baxter</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Inter:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./lab.css?v=20260224-consultinglab8">
+</head>
+<body class="lab-body is-labels-visible is-preview-large theme-cyan">
+
+<header class="lab-toolbar" data-lab-toolbar>
+  <div class="lab-toolbar__inner">
+    <a class="lab-toolbar__home" href="../index.html">Hayden Baxter</a>
+    <div class="lab-toolbar__title">
+      <p class="lab-toolbar__eyebrow">Exploration Mode</p>
+      <h1 class="lab-toolbar__heading">Consulting Concept Gallery</h1>
+      <p class="lab-toolbar__sub">Scrollable lab page for comparing visual directions before choosing a final design.</p>
+    </div>
+    <div class="lab-toolbar__controls" aria-label="Gallery display controls">
+      <div class="lab-controlGroup" role="group" aria-label="Labels">
+        <span class="lab-controlGroup__label">Labels</span>
+        <button class="lab-toggle is-active" type="button" data-lab-toggle="labels" data-value="on" aria-pressed="true">On</button>
+        <button class="lab-toggle" type="button" data-lab-toggle="labels" data-value="off" aria-pressed="false">Off</button>
+      </div>
+      <div class="lab-controlGroup" role="group" aria-label="Preview size">
+        <span class="lab-controlGroup__label">Preview</span>
+        <button class="lab-toggle" type="button" data-lab-toggle="size" data-value="compact" aria-pressed="false">Compact</button>
+        <button class="lab-toggle is-active" type="button" data-lab-toggle="size" data-value="large" aria-pressed="true">Large</button>
+      </div>
+      <div class="lab-controlGroup" role="group" aria-label="Accent mode">
+        <span class="lab-controlGroup__label">Accent</span>
+        <button class="lab-toggle is-active" type="button" data-lab-toggle="accent" data-value="cyan" aria-pressed="true">Cyan</button>
+        <button class="lab-toggle" type="button" data-lab-toggle="accent" data-value="emerald" aria-pressed="false">Emerald</button>
+        <button class="lab-toggle" type="button" data-lab-toggle="accent" data-value="amber" aria-pressed="false">Amber</button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="lab-page">
+  <section class="lab-intro" aria-labelledby="lab-intro-title">
+    <div class="lab-intro__grid">
+      <div>
+        <p class="lab-intro__eyebrow">Goal</p>
+        <h2 class="lab-intro__title" id="lab-intro-title">Focused Round 2: tactile Earth globe directions (01, 07, and hybrids)</h2>
+        <p class="lab-intro__copy">This round narrows the exploration to the layouts that felt closest and upgrades the globe itself: finer interactive particles, local disturbance, smooth settling, and loose Earth-like continent silhouettes.</p>
+      </div>
+      <ul class="lab-intro__checks" aria-label="Exploration checklist">
+        <li>Viewport-framed single-page concepts (100vh mockups)</li>
+        <li>Consistent consulting messaging for apples-to-apples comparison</li>
+        <li>All variants use interactive Earth-like particle globes (different response styles)</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="lab-gallery" id="labGallery" aria-label="Consulting concept variants"></section>
+
+  <section class="lab-summary" id="labSummary" aria-labelledby="lab-summary-title">
+    <div class="lab-summary__frame">
+      <p class="lab-summary__eyebrow">Round 2 Summary</p>
+      <h2 class="lab-summary__title" id="lab-summary-title">Tactile globe-first recommendation</h2>
+      <div class="lab-summary__columns">
+        <div class="lab-summary__block">
+          <h3 class="lab-summary__blockTitle">Strongest 3 (with tactile Earth)</h3>
+          <ol class="lab-summary__list">
+            <li><strong>Variant 01</strong> — Center-stage globe with calm editorial command rail</li>
+            <li><strong>Variant 07</strong> — Mission-control composition with restrained chrome + interactive swirl</li>
+            <li><strong>Variant 11</strong> — Editorial core with bottom command strip and premium negative space</li>
+          </ol>
+        </div>
+        <div class="lab-summary__block">
+          <h3 class="lab-summary__blockTitle">What each does best</h3>
+          <ul class="lab-summary__list">
+            <li><strong>01:</strong> Best emotional centerpiece and brand signature; globe reads most like the primary object.</li>
+            <li><strong>07:</strong> Best execution credibility and interaction feel; strongest mission-control framing without clutter.</li>
+            <li><strong>11:</strong> Best premium calm and negative space while still keeping proof/CTA structure visible.</li>
+          </ul>
+        </div>
+        <div class="lab-summary__block">
+          <h3 class="lab-summary__blockTitle">Recommended hybrid</h3>
+          <p class="lab-summary__copy">Use Variant 01 as the base composition, keep Variant 07’s interaction tuning and command polish, and borrow Variant 11’s low proof strip. The final page should be globe-first: high-density interactive Earth particles, restrained chrome, and clear consulting messaging around the object.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<script type="module" src="./lab.js?v=20260224-consultinglab8"></script>
+
+</body>
+</html>

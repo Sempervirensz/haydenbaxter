@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Label Maker Variations</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  *,*::before,*::after { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    background: #000;
+    min-height: 100vh;
+    font-family: "Inter", sans-serif;
+    -webkit-font-smoothing: antialiased;
+    color: #fff;
+  }
+
+  .section {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 44px 48px 52px;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+  .section:last-child { border-bottom: none; }
+
+  .section__label {
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.25);
+    margin-bottom: 26px;
+    font-weight: 500;
+  }
+
+  .header {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+  }
+
+  .wordmark {
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    color: rgba(255,255,255,0.9);
+    white-space: nowrap;
+    margin-right: auto;
+  }
+
+  .nav { display: flex; align-items: center; gap: 10px; }
+
+
+  /* ============================================
+     SHARED: all variants get misregistration + press
+     ============================================ */
+  [class^="v"] {
+    all: unset;
+    cursor: pointer;
+    display: inline-block;
+    position: relative;
+    text-transform: uppercase;
+    line-height: 1;
+    white-space: nowrap;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    transform: rotate(var(--r, 0deg)) translateY(var(--y, 0px));
+    opacity: var(--o, 1);
+  }
+
+
+  /* ============================================
+
+     A1 — CLASSIC DYMO
+     The original A but tighter spacing, slightly
+     more visible emboss, thinner profile.
+
+     ============================================ */
+  .v1 {
+    font-family: "DM Mono", monospace;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.22em;
+    color: rgba(255,255,255,0.65);
+    padding: 5px 12px 4px;
+    border-radius: 2px;
+    background: #181818;
+    border: 1px solid rgba(255,255,255,0.04);
+    box-shadow:
+      inset 0 1.5px 3px rgba(0,0,0,0.7),
+      inset 0 -0.5px 0 rgba(255,255,255,0.03),
+      0 2px 0 #0a0a0a,
+      0 3px 5px rgba(0,0,0,0.85);
+    text-shadow: 0.4px 0 0 rgba(255,255,255,0.03);
+    transition: transform 100ms ease, box-shadow 100ms ease, color 140ms ease;
+  }
+
+  .v1::before {
+    content: "";
+    position: absolute; inset: 0;
+    border-radius: inherit; pointer-events: none;
+    opacity: 0.08;
+    background: repeating-conic-gradient(rgba(255,255,255,1) 0% 25%, transparent 0% 50%);
+    background-size: 2px 2px;
+    mix-blend-mode: overlay;
+  }
+
+  .v1:hover {
+    color: rgba(255,255,255,0.82);
+    transform: rotate(var(--r, 0deg)) translateY(calc(var(--y, 0px) - 2px));
+    box-shadow:
+      inset 0 1.5px 3px rgba(0,0,0,0.6),
+      inset 0 -0.5px 0 rgba(255,255,255,0.04),
+      0 4px 0 #0a0a0a,
+      0 5px 8px rgba(0,0,0,0.9);
+  }
+
+  .v1:active {
+    color: rgba(255,255,255,0.5);
+    transform: rotate(var(--r, 0deg)) translateY(calc(var(--y, 0px) + 2px));
+    box-shadow:
+      inset 0 2px 4px rgba(0,0,0,0.8),
+      0 0px 0 #0a0a0a,
+      0 0px 2px rgba(0,0,0,0.6);
+    transition-duration: 40ms;
+  }
+
+  .v1:focus-visible {
+    outline: none;
+    box-shadow: inset 0 1.5px 3px rgba(0,0,0,0.7), 0 2px 0 #0a0a0a, 0 0 0 2px rgba(255,255,255,0.12);
+  }
+
+  .v1-cta { background: #212121; border-color: rgba(255,255,255,0.07); color: rgba(255,255,255,0.78); padding: 6px 16px 5px; }
+
+  .nav--v1 [class^="v"]:nth-child(1) { --r: 0.4deg;  --y: 0px;   --o: 0.96; }
+  .nav--v1 [class^="v"]:nth-child(2) { --r: -0.5deg; --y: 1.5px; --o: 1;    }
+  .nav--v1 [class^="v"]:nth-child(3) { --r: 0.6deg;  --y: -1px;  --o: 0.93; }
+  .nav--v1 [class^="v"]:nth-child(4) { --r: -0.3deg; --y: 2px;   --o: 0.97; }
+  .nav--v1 [class^="v"]:nth-child(5) { --r: -0.35deg; --y: -0.5px; }
+
+
+  /* ============================================
+
+     A2 — THERMAL RECEIPT
+     Faded thermal print on dark stock. Slightly
+     washed out, wider, flatter. No hard depth edge —
+     just a soft contact shadow. Text fades unevenly.
+
+     ============================================ */
+  .v2 {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 10px;
+    font-weight: 400;
+    letter-spacing: 0.2em;
+    color: rgba(255,255,255,0.52);
+    padding: 6px 14px 5px;
+    border-radius: 2px;
+    background: #141414;
+    border: 1px solid rgba(255,255,255,0.03);
+    box-shadow:
+      inset 0 1px 2px rgba(0,0,0,0.5),
+      0 1px 4px rgba(0,0,0,0.6);
+    text-shadow:
+      0.5px 0.3px 0 rgba(255,255,255,0.025),
+      -0.3px 0 0 rgba(255,255,255,0.015);
+    transition: transform 120ms ease, box-shadow 120ms ease, color 180ms ease;
+  }
+
+  /* faded thermal streaks */
+  .v2::before {
+    content: "";
+    position: absolute; inset: 0;
+    border-radius: inherit; pointer-events: none;
+    opacity: 0.04;
+    background:
+      repeating-linear-gradient(
+        0deg,
+        transparent 0px,
+        transparent 2px,
+        rgba(255,255,255,0.3) 2px,
+        rgba(255,255,255,0.3) 3px
+      );
+    mix-blend-mode: overlay;
+  }
+
+  .v2:hover {
+    color: rgba(255,255,255,0.72);
+    transform: rotate(var(--r, 0deg)) translateY(calc(var(--y, 0px) - 1.5px));
+    box-shadow:
+      inset 0 1px 2px rgba(0,0,0,0.4),
+      0 3px 8px rgba(0,0,0,0.7);
+  }
+
+  .v2:active {
+    color: rgba(255,255,255,0.38);
+    transform: rotate(var(--r, 0deg)) translateY(calc(var(--y, 0px) + 1px));
+    box-shadow:
+      inset 0 1px 3px rgba(0,0,0,0.6),
+      0 0px 2px rgba(0,0,0,0.4);
+    transition-duration: 40ms;
+  }
+
+  .v2:focus-visible {
+    outline: none;
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.5), 0 0 0 2px rgba(255,255,255,0.1);
+  }
+
+  .v2-cta { color: rgba(255,255,255,0.68); border-color: rgba(255,255,255,0.06); background: #1a1a1a; padding: 6px 17px 5px; }
+
+  .nav--v2 [class^="v"]:nth-child(1) { --r: 0.3deg;  --y: 1px;    --o: 0.94; }
+  .nav--v2 [class^="v"]:nth-child(2) { --r: -0.5deg; --y: -0.5px; --o: 0.88; }
+  .nav--v2 [class^="v"]:nth-child(3) { --r: 0.7deg;  --y: 0px;    --o: 0.92; }
+  .nav--v2 [class^="v"]:nth-child(4) { --r: -0.4deg; --y: 1.5px;  --o: 0.96; }
+  .nav--v2 [class^="v"]:nth-child(5) { --r: -0.2deg; --y: -1px; }
+
+
+  /* ============================================
+
+     A3 — TYPEWRITER KEY
+     Rounder, more pronounced depth. Feels like
+     pressing a mechanical key. Slightly taller,
+     stronger deboss on press.
+
+     ============================================ */
+  .v3 {
+    font-family: "Space Mono", monospace;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    color: rgba(255,255,255,0.7);
+    padding: 7px 13px 6px;
+    border-radius: 5px;
+    background: linear-gradient(180deg, #222 0%, #1a1a1a 100%);
+    border: 1px solid rgba(255,255,255,0.05);
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.05),
+      inset 0 -1px 1px rgba(0,0,0,0.3),
+      0 3px 0 #0e0e0e,
+      0 4px 0 #080808,
+      0 5px 8px rgba(0,0,0,0.8);
+    text-shadow: 0.3px 0.2px 0 rgba(0,0,0,0.5);
+    transition: transform 80ms ease, box-shadow 80ms ease, color 120ms ease;
+  }
+
+  .v3::before {
+    content: "";
+    position: absolute; inset: 0;
+    border-radius: inherit; pointer-events: none;
+    opacity: 0.05;
+    background: repeating-conic-gradient(rgba(255,255,255,1) 0% 25%, transparent 0% 50%);
+    background-size: 2px 2px;
+    mix-blend-mode: overlay;
+  }
+
+  .v3:hover {
+    color: rgba(255,255,255,0.88);
+    transform: rotate(var(--r, 0deg)) translateY(calc(var(--y, 0px) - 2px));
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.07),
+      inset 0 -1px 1px rgba(0,0,0,0.2),
+      0 5px 0 #0e0e0e,
+      0 6px 0 #080808,
+      0 7px 12px rgba(0,0,0,0.9);
+  }
+
+  .v3:active {
+    color: rgba(255,255,255,0.55);
+    transform: rotate(var(--r, 0deg)) translateY(calc(var(--y, 0px) + 3px));
+    box-shadow:
+      inset 0 2px 3px rgba(0,0,0,0.6),
+      inset 0 -1px 0 rgba(255,255,255,0.02),
+      0 0px 0 #0e0e0e,
+      0 1px 3px rgba(0,0,0,0.6);
+    transition-duration: 40ms;
+  }
+
+  .v3:focus-visible {
+    outline: none;
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.05),
+      0 3px 0 #0e0e0e, 0 4px 0 #080808,
+      0 0 0 2px rgba(255,255,255,0.12);
+  }
+
+  .v3-cta {
+    background: linear-gradient(180deg, #2e2e2e 0%, #242424 100%);
+    border-color: rgba(255,255,255,0.08);
+    color: rgba(255,255,255,0.85);
+    padding: 7px 17px 6px;
+  }
+
+  .nav--v3 [class^="v"]:nth-child(1) { --r: 0.5deg;  --y: 0px;    --o: 0.95; }
+  .nav--v3 [class^="v"]:nth-child(2) { --r: -0.4deg; --y: 1px;    --o: 1;    }
+  .nav--v3 [class^="v"]:nth-child(3) { --r: 0.8deg;  --y: -1.5px; --o: 0.92; }
+  .nav--v3 [class^="v"]:nth-child(4) { --r: -0.6deg; --y: 2px;    --o: 0.97; }
+  .nav--v3 [class^="v"]:nth-child(5) { --r: -0.3deg; --y: -0.5px; }
+
+
+  /* ============================================
+
+     A4 — PUNCH TAPE
+     Retro data processing. Sharp square corners,
+     tight, dense. Thin mono type. Double-line
+     border like perforated card edge.
+
+     ============================================ */
+  .v4 {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 9.5px;
+    font-weight: 500;
+    letter-spacing: 0.24em;
+    color: rgba(255,255,255,0.6);
+    padding: 5px 12px 4px;
+    border-radius: 1px;
+    background: #151515;
+    border: 1px solid rgba(255,255,255,0.08);
+    box-shadow:
+      inset 0 0 0 1px rgba(255,255,255,0.03),
+      inset 0 1px 2px rgba(0,0,0,0.5),
+      0 2px 0 #090909,
+      0 3px 5px rgba(0,0,0,0.75);
+    text-shadow: 0.3px 0 0 rgba(255,255,255,0.02);
+    transition: transform 100ms ease, box-shadow 100ms ease, color 140ms ease;
+  }
+
+  /* horizontal perforation lines */
+  .v4::before {
+    content: "";
+    position: absolute; inset: 0;
+    border-radius: inherit; pointer-events: none;
+    opacity: 0.03;
+    background:
+      repeating-linear-gradient(
+        90deg,
+        transparent 0px,
+        transparent 4px,
+        rgba(255,255,255,0.5) 4px,
+        rgba(255,255,255,0.5) 5px
+      );
+    mix-blend-mode: overlay;
+  }
+
+  .v4:hover {
+    color: rgba(255,255,255,0.8);
+    border-color: rgba(255,255,255,0.14);
+    transform: rotate(var(--r, 0deg)) translateY(calc(var(--y, 0px) - 1.5px));
+    box-shadow:
+      inset 0 0 0 1px rgba(255,255,255,0.04),
+      inset 0 1px 2px rgba(0,0,0,0.4),
+      0 3px 0 #090909,
+      0 5px 8px rgba(0,0,0,0.85);
+  }
+
+  .v4:active {
+    color: rgba(255,255,255,0.42);
+    border-color: rgba(255,255,255,0.06);
+    transform: rotate(var(--r, 0deg)) translateY(calc(var(--y, 0px) + 1.5px));
+    box-shadow:
+      inset 0 1px 3px rgba(0,0,0,0.7),
+      0 0px 0 #090909,
+      0 1px 2px rgba(0,0,0,0.5);
+    transition-duration: 40ms;
+  }
+
+  .v4:focus-visible {
+    outline: none;
+    box-shadow:
+      inset 0 0 0 1px rgba(255,255,255,0.03),
+      0 2px 0 #090909,
+      0 0 0 2px rgba(255,255,255,0.12);
+  }
+
+  .v4-cta {
+    background: #1c1c1c;
+    border-color: rgba(255,255,255,0.14);
+    color: rgba(255,255,255,0.78);
+    padding: 5px 15px 4px;
+  }
+
+  .nav--v4 [class^="v"]:nth-child(1) { --r: 0.35deg;  --y: -0.5px; --o: 0.95; }
+  .nav--v4 [class^="v"]:nth-child(2) { --r: -0.45deg; --y: 1px;    --o: 1;    }
+  .nav--v4 [class^="v"]:nth-child(3) { --r: 0.6deg;   --y: 0px;    --o: 0.91; }
+  .nav--v4 [class^="v"]:nth-child(4) { --r: -0.5deg;  --y: 1.5px;  --o: 0.96; }
+  .nav--v4 [class^="v"]:nth-child(5) { --r: -0.25deg; --y: -1px; }
+
+
+  /* ============================================
+     RESPONSIVE
+     ============================================ */
+  @media (max-width: 680px) {
+    .section { padding: 32px 24px 40px; }
+    .header { flex-wrap: wrap; }
+    .wordmark { margin-right: 0; flex-basis: 100%; margin-bottom: 8px; }
+    .nav { gap: 8px; flex-wrap: wrap; }
+  }
+</style>
+</head>
+<body>
+
+<!-- A1: CLASSIC DYMO -->
+<div class="section">
+  <div class="section__label">A1 &mdash; Classic DYMO (tight emboss, thin profile)</div>
+  <div class="header">
+    <div class="wordmark">Hayden Baxter</div>
+    <nav class="nav nav--v1" aria-label="Nav A1">
+      <button class="v1" type="button">Work</button>
+      <button class="v1" type="button">About</button>
+      <button class="v1" type="button">Contact</button>
+      <button class="v1" type="button">Resume</button>
+      <button class="v1 v1-cta" type="button">Book a Call</button>
+    </nav>
+  </div>
+</div>
+
+<!-- A2: THERMAL RECEIPT -->
+<div class="section">
+  <div class="section__label">A2 &mdash; Thermal Print (faded receipt, soft shadow)</div>
+  <div class="header">
+    <div class="wordmark">Hayden Baxter</div>
+    <nav class="nav nav--v2" aria-label="Nav A2">
+      <button class="v2" type="button">Work</button>
+      <button class="v2" type="button">About</button>
+      <button class="v2" type="button">Contact</button>
+      <button class="v2" type="button">Resume</button>
+      <button class="v2 v2-cta" type="button">Book a Call</button>
+    </nav>
+  </div>
+</div>
+
+<!-- A3: TYPEWRITER KEY -->
+<div class="section">
+  <div class="section__label">A3 &mdash; Typewriter Key (deep press, mechanical)</div>
+  <div class="header">
+    <div class="wordmark">Hayden Baxter</div>
+    <nav class="nav nav--v3" aria-label="Nav A3">
+      <button class="v3" type="button">Work</button>
+      <button class="v3" type="button">About</button>
+      <button class="v3" type="button">Contact</button>
+      <button class="v3" type="button">Resume</button>
+      <button class="v3 v3-cta" type="button">Book a Call</button>
+    </nav>
+  </div>
+</div>
+
+<!-- A4: PUNCH TAPE -->
+<div class="section">
+  <div class="section__label">A4 &mdash; Punch Tape (data processing, sharp, dense)</div>
+  <div class="header">
+    <div class="wordmark">Hayden Baxter</div>
+    <nav class="nav nav--v4" aria-label="Nav A4">
+      <button class="v4" type="button">Work</button>
+      <button class="v4" type="button">About</button>
+      <button class="v4" type="button">Contact</button>
+      <button class="v4" type="button">Resume</button>
+      <button class="v4 v4-cta" type="button">Book a Call</button>
+    </nav>
+  </div>
+</div>
+
+</body>
+</html>
