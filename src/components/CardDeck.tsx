@@ -61,6 +61,7 @@ export default function CardDeck() {
       {/* Shared mobile caption — centered below the entire card row */}
       <div
         className="sm:hidden text-center px-6 h-14 flex flex-col items-center justify-start transition-all duration-500"
+        aria-live="polite"
         style={{
           opacity: showMobileCaption ? 1 : 0,
           transform: showMobileCaption ? "translateY(0)" : "translateY(-6px)",
