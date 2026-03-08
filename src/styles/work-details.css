@@ -159,8 +159,7 @@
 }
 
 .etb-barStack {
-  flex: 1;
-  min-height: 0;
+  min-height: clamp(260px, calc(100vh - 200px), 460px);
   display: flex;
   flex-direction: column;
   gap: 14px;
@@ -176,18 +175,18 @@
   flex: 1 1 0;
   min-height: 0;
   border-radius: 14px;
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.92) 0%, rgba(255, 255, 255, 0.12) 2px, transparent 6px),
-    linear-gradient(180deg, var(--etb-surface-2) 0%, var(--etb-surface) 100%);
-  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: linear-gradient(180deg, #fefefe 0%, #f6f5f2 100%);
+  border: 1px solid rgba(255, 255, 255, 0.28);
   box-shadow:
-    0 1px 0 rgba(255, 255, 255, 0.6) inset,
-    0 -1px 0 rgba(0, 0, 0, 0.06) inset,
-    0 6px 20px rgba(0, 0, 0, 0.5);
+    0 1px 0 rgba(255, 255, 255, 0.85) inset,
+    0 -1px 0 rgba(0, 0, 0, 0.04) inset,
+    0 4px 16px rgba(0, 0, 0, 0.45),
+    0 1px 3px rgba(0, 0, 0, 0.3);
   overflow: hidden;
   transform-origin: center center;
   transition:
     flex 440ms cubic-bezier(0.22, 1, 0.36, 1),
+    background 260ms ease,
     box-shadow 260ms ease,
     border-color 200ms ease,
     opacity 200ms ease,
@@ -223,7 +222,7 @@
 .etb-bar:hover .etb-bar__sheen,
 .etb-bar.is-hovered .etb-bar__sheen,
 .etb-bar:focus-within .etb-bar__sheen {
-  opacity: 0.65;
+  opacity: 0.5;
   transform: translateX(160%);
 }
 
@@ -272,24 +271,42 @@
   transition: color 200ms ease, transform 200ms ease;
 }
 
+/* Cobalt Select — blue fill on hover/focus */
 .etb-bar:hover,
 .etb-bar.is-hovered,
-.etb-bar:focus-within,
-.etb-bar.is-active {
-  border-color: rgba(104, 130, 216, 0.35);
+.etb-bar:focus-within {
+  background: linear-gradient(180deg, #2563eb 0%, #1d4ed8 100%);
+  border-color: rgba(37, 99, 235, 0.6);
   box-shadow:
-    0 1px 0 rgba(255, 255, 255, 0.7) inset,
-    0 -1px 0 rgba(0, 0, 0, 0.06) inset,
-    0 8px 28px rgba(0, 0, 0, 0.55),
-    0 0 0 1px rgba(104, 130, 216, 0.12);
+    0 1px 0 rgba(255, 255, 255, 0.2) inset,
+    0 -1px 0 rgba(0, 0, 0, 0.15) inset,
+    0 6px 24px rgba(29, 78, 216, 0.25),
+    0 2px 6px rgba(0, 0, 0, 0.4);
+}
+
+.etb-bar:hover .etb-bar__name,
+.etb-bar.is-hovered .etb-bar__name,
+.etb-bar:focus-within .etb-bar__name {
+  color: #fff;
+}
+
+.etb-bar:hover .etb-bar__summary,
+.etb-bar.is-hovered .etb-bar__summary,
+.etb-bar:focus-within .etb-bar__summary {
+  color: rgba(255, 255, 255, 0.72);
 }
 
 .etb-bar:hover .etb-bar__chevron,
 .etb-bar.is-hovered .etb-bar__chevron,
-.etb-bar:focus-within .etb-bar__chevron,
-.etb-bar.is-active .etb-bar__chevron {
-  color: #0a0a12;
+.etb-bar:focus-within .etb-bar__chevron {
+  color: rgba(255, 255, 255, 0.8);
   transform: translateX(2px);
+}
+
+.etb-bar:hover .etb-bar__sheen,
+.etb-bar.is-hovered .etb-bar__sheen,
+.etb-bar:focus-within .etb-bar__sheen {
+  background: linear-gradient(105deg, transparent 32%, rgba(255, 255, 255, 0.18) 46%, rgba(255, 255, 255, 0.04) 54%, transparent 66%);
 }
 
 .etb-barStack.has-hover:not(.has-expanded) .etb-bar.is-hovered {
@@ -303,10 +320,23 @@
   filter: saturate(0.85) brightness(0.97);
 }
 
+/* Cobalt Select — blue persists when expanded */
 .etb-bar.is-expanded {
   flex: 3.8 1 0;
   z-index: 3;
+  background: linear-gradient(180deg, #2563eb 0%, #1d4ed8 100%);
+  border-color: rgba(37, 99, 235, 0.6);
 }
+
+.etb-bar.is-expanded .etb-bar__name { color: #fff; }
+.etb-bar.is-expanded .etb-bar__summary { color: rgba(255, 255, 255, 0.65); }
+.etb-bar.is-expanded .etb-bar__chevron { color: rgba(255, 255, 255, 0.7); }
+.etb-bar.is-expanded .etb-bar__desc { color: rgba(255, 255, 255, 0.78); }
+.etb-bar.is-expanded .etb-bar__bullets li { color: rgba(255, 255, 255, 0.65); }
+.etb-bar.is-expanded .etb-bar__bulletsMore { color: rgba(255, 255, 255, 0.45) !important; }
+.etb-bar.is-expanded .etb-pill { color: rgba(255, 255, 255, 0.7); background: rgba(255, 255, 255, 0.1); border-color: rgba(255, 255, 255, 0.2); }
+.etb-bar.is-expanded .etb-bar__cta { color: #fff; border-color: rgba(255, 255, 255, 0.4); background: rgba(255, 255, 255, 0.12); }
+.etb-bar.is-expanded .etb-bar__dataMetaItem { color: rgba(255, 255, 255, 0.55); background: rgba(255, 255, 255, 0.08); border-color: rgba(255, 255, 255, 0.15); }
 
 .etb-barStack.has-expanded .etb-bar:not(.is-expanded) {
   flex: 0.55 1 0;
