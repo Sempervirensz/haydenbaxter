@@ -11,7 +11,7 @@ interface ConsultingDetailProps {
 }
 
 const GLOBE_SRC =
-  "/experiments/particle-globe-lab/dist/index.html?embed=1&v=20260224-pointer-flow";
+  "/experiments/particle-globe-lab/dist/?embed=1&v=20260224-pointer-flow";
 
 function statusClass(status: string): string {
   return status.toLowerCase() === "reserved"
