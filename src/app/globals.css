@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "../styles/work-details.css";
 
 /* Custom Properties */
 :root {
@@ -6,7 +7,7 @@
   --card-height: 395px;
   --card-border-radius: 12px;
   --flip-duration: 0.6s;
-  --flip-easing: cubic-bezier(0.4, 0, 0.2, 1);
+  --flip-easing: cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 /* Card column — locks width to card size so caption centers correctly */
@@ -23,9 +24,12 @@
 .card-caption {
   width: var(--card-width);
   text-align: center;
-  margin-top: 12px;
-  transition: opacity 0.5s ease, transform 0.5s ease;
+  margin-top: 8px;
+  padding-top: 6px;
+  transition: opacity 0.4s ease, transform 0.4s ease;
   overflow: hidden;
+  position: relative;
+  z-index: 5;
 }
 
 /* 3D Card System */
@@ -38,6 +42,9 @@
 }
 
 .card-hover-wrapper {
+  all: unset;
+  box-sizing: border-box;
+  display: block;
   width: 100%;
   height: 100%;
   cursor: pointer;
@@ -46,9 +53,15 @@
   /* Preserve 3D through the wrapper for iOS Safari */
   transform-style: preserve-3d;
   -webkit-transform-style: preserve-3d;
+  -webkit-tap-highlight-color: transparent;
 }
 .card-hover-wrapper:hover {
   transform: translateY(-12px);
+}
+.card-hover-wrapper:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.24);
+  outline-offset: 4px;
+  border-radius: 8px;
 }
 
 .card-inner {
@@ -90,21 +103,7 @@
   transform: rotateY(180deg);
 }
 
-/* Card Front Overlay */
-.card-overlay-banner {
-  bottom: 0;
-  border-top: 1px solid rgba(0, 0, 0, 0.08);
-}
-
-.card-overlay-title {
-  font-size: 1rem;
-  line-height: 1.2;
-}
-
-.card-overlay-desc {
-  font-size: 0.65rem;
-  opacity: 0.85;
-}
+/* (card-overlay-banner/title/desc removed — orphaned, never used) */
 
 /* Tooltip */
 .tooltip {
@@ -341,6 +340,24 @@
   margin-bottom: -4px;
 }
 
+.cd-slot::after {
+  content: "";
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 280px;
+  height: 28px;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(255, 255, 255, 0.06) 0%,
+    transparent 72%
+  );
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 0;
+}
+
 .cd-disc {
   position: absolute;
   top: 0;
@@ -363,6 +380,17 @@
 .work__screen--detail {
   background: #0a0a0a;
   overflow-y: auto;
+}
+
+.work__screen--detail::-webkit-scrollbar {
+  width: 4px;
+}
+.work__screen--detail::-webkit-scrollbar-track {
+  background: transparent;
+}
+.work__screen--detail::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 2px;
 }
 
 .work__detail-head {
@@ -396,49 +424,6 @@
   background: rgba(255, 255, 255, 0.12);
 }
 
-.work-detail-card {
-  margin-top: 18px;
-  background: #141414;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 14px;
-  padding: clamp(20px, 3vw, 36px);
-  max-width: 900px;
-}
-
-.work-detail-card__eyebrow {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.5);
-}
-
-.work-detail-card__desc {
-  margin-top: 12px;
-  font-family: var(--font-serif);
-  font-size: clamp(20px, 3vw, 34px);
-  line-height: 1.15;
-  color: #fff;
-}
-
-.work-detail-card__list {
-  margin-top: 20px;
-  list-style: none;
-  display: grid;
-  gap: 8px;
-}
-
-.work-detail-card__list li {
-  font-family: var(--font-sans);
-  font-size: 14px;
-  color: rgba(255, 255, 255, 0.72);
-}
-
-.work-detail-card__list li::before {
-  content: "• ";
-  color: rgba(255, 255, 255, 0.4);
-}
-
 /* Responsive */
 @media (max-width: 1024px) {
   :root {
@@ -450,12 +435,6 @@
   }
   .card-caption {
     margin-top: 8px;
-  }
-  .card-overlay-title {
-    font-size: 0.8rem;
-  }
-  .card-overlay-desc {
-    font-size: 0.55rem;
   }
   .cd-slot {
     width: clamp(360px, 65vw, 520px);
@@ -472,16 +451,6 @@
   }
   .card-hover-wrapper:hover {
     transform: none;
-  }
-  .card-overlay-title {
-    font-size: 0.55rem;
-  }
-  .card-overlay-desc {
-    font-size: 0.4rem;
-  }
-  .card-overlay-banner {
-    padding: 3px 4px;
-    gap: 1px;
   }
   .tag {
     font-size: 9px;
@@ -510,6 +479,9 @@
     transition-duration: 0.01ms !important;
   }
   .card-hover-wrapper {
+    transition-duration: 0.01ms !important;
+  }
+  .card-caption {
     transition-duration: 0.01ms !important;
   }
   .work__screen,

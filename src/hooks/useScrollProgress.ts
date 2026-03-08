@@ -10,6 +10,16 @@ export function useScrollProgress() {
     const el = ref.current;
     if (!el) return;
 
+    // Skip scroll listener entirely if user prefers reduced motion —
+    // cards start fully unbunched (progress = 1) with no animation overhead.
+    const prefersReduced = window.matchMedia(
+      "(prefers-reduced-motion: reduce)"
+    ).matches;
+    if (prefersReduced) {
+      setProgress(1);
+      return;
+    }
+
     let ticking = false;
 
     const updateProgress = () => {

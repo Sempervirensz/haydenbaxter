@@ -42,7 +42,7 @@ export default function PlayingCard({
   onFlip,
   scrollProgress,
 }: PlayingCardProps) {
-  const wrapperRef = useRef<HTMLDivElement>(null);
+  const wrapperRef = useRef<HTMLButtonElement>(null);
   const [transformScale, setTransformScale] = useState(1);
 
   useEffect(() => {
@@ -69,8 +69,15 @@ export default function PlayingCard({
 
   return (
     <div className="card-column">
-      <div ref={wrapperRef} className="card-perspective-wrapper">
-        <div className="card-hover-wrapper" onClick={onFlip}>
+      <div className="card-perspective-wrapper">
+        <button
+          ref={wrapperRef}
+          type="button"
+          className="card-hover-wrapper"
+          onClick={onFlip}
+          aria-label={`${card.title} — click to flip`}
+          aria-pressed={isFlipped}
+        >
           <Tooltip visible={!isFlipped} color={card.color} />
           <div className="card-inner" style={{ transform }}>
             {/* Front face — the card back design (initially visible) */}
@@ -82,7 +89,7 @@ export default function PlayingCard({
               <CardFront card={card} />
             </div>
           </div>
-        </div>
+        </button>
       </div>
       {/* Caption below card — desktop only (mobile uses shared caption in CardDeck) */}
       <div
