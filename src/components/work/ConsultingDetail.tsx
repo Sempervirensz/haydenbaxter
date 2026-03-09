@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { ConsultingData, ConsultingOffer } from "@/data/work";
 import DetailModal from "@/components/work/DetailModal";
 import GlyphBlock from "@/components/work/GlyphBlock";
@@ -10,8 +10,10 @@ interface ConsultingDetailProps {
   data: ConsultingData;
 }
 
-const GLOBE_SRC =
-  "/experiments/particle-globe-lab/dist/index?embed=1&v=20260224-pointer-flow";
+/* Vercel clean-URLs strips .html → serve at /dist/index.
+   next dev needs the explicit /dist/index.html.            */
+const GLOBE_PARAMS = "?embed=1&v=20260224-pointer-flow";
+const GLOBE_BASE = "/experiments/particle-globe-lab/dist/index";
 
 function statusClass(status: string): string {
   return status.toLowerCase() === "reserved"
@@ -20,6 +22,14 @@ function statusClass(status: string): string {
 }
 
 export default function ConsultingDetail({ data }: ConsultingDetailProps) {
+  const [globeSrc, setGlobeSrc] = useState(GLOBE_BASE + GLOBE_PARAMS);
+  useEffect(() => {
+    const h = window.location.hostname;
+    if (h === "localhost" || h === "127.0.0.1") {
+      setGlobeSrc(GLOBE_BASE + ".html" + GLOBE_PARAMS);
+    }
+  }, []);
+
   const defaultOfferId = data.offers[0]?.id ?? "";
   const [activeOfferId, setActiveOfferId] = useState(defaultOfferId);
   const [modalOfferId, setModalOfferId] = useState<string | null>(null);
@@ -53,7 +63,7 @@ export default function ConsultingDetail({ data }: ConsultingDetailProps) {
             <div className="cns-hero__orbHalo" aria-hidden="true" />
             <iframe
               className="cns-hero__orbEmbed"
-              src={GLOBE_SRC}
+              src={globeSrc}
               title="Interactive monochrome particle globe"
               loading="eager"
               scrolling="no"
