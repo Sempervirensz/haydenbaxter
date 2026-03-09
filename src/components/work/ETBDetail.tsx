@@ -162,7 +162,7 @@ export default function ETBDetail({ data }: ETBDetailProps) {
   }, [data.defaultSelectedId, sortedProjects]);
 
   const [hoveredId, setHoveredId] = useState<string | null>(null);
-  const [openDetailId, setOpenDetailId] = useState<string | null>(defaultSelectedId);
+  const [openDetailId, setOpenDetailId] = useState<string | null>(null);
   const [modalProjectId, setModalProjectId] = useState<string | null>(null);
   const [mediaStates, setMediaStates] = useState<Record<string, MediaState>>({});
 
