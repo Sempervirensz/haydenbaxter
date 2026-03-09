@@ -231,7 +231,11 @@
     visibility 0ms linear 650ms;
 }
 
+/* Landing screen visible by default (no JS needed for initial paint) */
 .work__screen--landing {
+  transform: translateY(0);
+  pointer-events: auto;
+  z-index: 2;
   background:
     radial-gradient(
       120% 90% at 50% -20%,
