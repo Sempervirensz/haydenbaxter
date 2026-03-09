@@ -36,8 +36,8 @@ export default function HeroSection() {
         <CardDeck />
       </div>
 
-      {/* Extra scroll space so cards can unbunch (reduced on mobile) */}
-      <div className="h-[15vh] sm:h-[50vh]" />
+      {/* Extra scroll space so cards can unbunch (desktop only; mobile scroll-space comes from the 2500vh work section) */}
+      <div className="hidden sm:block sm:h-[50vh]" />
     </section>
   );
 }
