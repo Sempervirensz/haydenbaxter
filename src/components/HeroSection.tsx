@@ -36,8 +36,8 @@ export default function HeroSection() {
         <CardDeck />
       </div>
 
-      {/* Extra scroll space so cards can unbunch */}
-      <div className="h-[50vh]" />
+      {/* Extra scroll space so cards can unbunch (reduced on mobile) */}
+      <div className="h-[15vh] sm:h-[50vh]" />
     </section>
   );
 }
