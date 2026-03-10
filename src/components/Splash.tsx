@@ -14,18 +14,21 @@ export default function Splash() {
     const splash = ref.current;
     if (!splash) return;
 
+    // Non-null alias so TypeScript knows it survives closures
+    const el = splash;
+
     // Respect reduced-motion: skip animation, quick fade
     const prefersReduced = window.matchMedia(
       "(prefers-reduced-motion: reduce)"
     ).matches;
 
     if (prefersReduced) {
-      splash.classList.add("is-fading");
-      setTimeout(() => splash.remove(), 100);
+      el.classList.add("is-fading");
+      setTimeout(() => el.remove(), 100);
       return;
     }
 
-    const words = splash.querySelectorAll<HTMLSpanElement>(".splash__word");
+    const words = el.querySelectorAll<HTMLSpanElement>(".splash__word");
     let i = 0;
 
     function showNext() {
@@ -40,8 +43,8 @@ export default function Splash() {
 
       // All words shown — pause, then fade out
       setTimeout(() => {
-        splash.classList.add("is-fading");
-        setTimeout(() => splash.remove(), FADE_DURATION);
+        el.classList.add("is-fading");
+        setTimeout(() => el.remove(), FADE_DURATION);
       }, PAUSE_AFTER);
     }
 
