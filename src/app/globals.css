@@ -477,6 +477,40 @@
   }
 }
 
+/* SPLASH — greeting flash */
+.splash {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 600ms ease;
+}
+
+.splash.is-fading {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.splash__word {
+  position: absolute;
+  font-family: var(--font-sans);
+  font-size: clamp(16px, 2.2vw, 24px);
+  font-weight: 300;
+  letter-spacing: 0.12em;
+  color: rgba(255, 255, 255, 0.8);
+  opacity: 0;
+  transform: scale(0.96);
+  transition: opacity 180ms ease, transform 180ms ease;
+}
+
+.splash__word.is-visible {
+  opacity: 1;
+  transform: scale(1);
+}
+
 /* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
   .card-inner {

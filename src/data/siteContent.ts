@@ -1,3 +1,5 @@
+export const SPLASH_WORDS = ["Hello", "你好", "Olá", "नमस्ते", "こんにちは"];
+
 export const SITE_CONTENT = {
   header: {
     wordmark: "Hayden Baxter",

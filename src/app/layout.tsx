@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { DM_Mono, DM_Sans, DM_Serif_Display, Permanent_Marker } from "next/font/google";
 import "./globals.css";
+import Splash from "@/components/Splash";
 
 const dmSerifDisplay = DM_Serif_Display({
   weight: "400",
@@ -49,6 +50,7 @@ export default function RootLayout({
         <link rel="preload" href="/cards/spades_ace.svg" as="image" />
       </head>
       <body className="bg-[#0a0a0a] text-white antialiased overflow-x-hidden">
+        <Splash />
         {children}
       </body>
     </html>
