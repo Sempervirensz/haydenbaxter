@@ -6,7 +6,7 @@ export default function HeroSection() {
   const { hero } = SITE_CONTENT;
 
   return (
-    <section className="min-h-screen flex flex-col items-center justify-between relative bg-[#0a0a0a]">
+    <section className="min-h-screen flex flex-col items-center justify-between relative bg-[#0a0a0a] overflow-hidden">
       <Navbar />
 
       {/* Subtle glow behind cards */}
