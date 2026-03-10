@@ -1,5 +1,7 @@
+import dynamic from "next/dynamic";
 import HeroSection from "@/components/HeroSection";
-import WorkSection from "@/components/WorkSection";
+
+const WorkSection = dynamic(() => import("@/components/WorkSection"));
 
 export default function Home() {
   return (

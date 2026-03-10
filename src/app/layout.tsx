@@ -40,16 +40,11 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${dmSerifDisplay.variable} ${dmSans.variable} ${dmMono.variable} ${permanentMarker.variable} overflow-x-hidden`}
+      className={`${dmSerifDisplay.variable} ${dmSans.variable} ${dmMono.variable} ${permanentMarker.variable}`}
+      style={{ overflowX: "clip" }}
     >
-      <head>
-        {/* Preload card face images so they're ready before first flip */}
-        <link rel="preload" href="/cards/clubs_jack.svg" as="image" />
-        <link rel="preload" href="/cards/hearts_queen.svg" as="image" />
-        <link rel="preload" href="/cards/diamonds_king.svg" as="image" />
-        <link rel="preload" href="/cards/spades_ace.svg" as="image" />
-      </head>
-      <body className="bg-[#0a0a0a] text-white antialiased overflow-x-hidden">
+      {/* Card-face SVGs removed from preload — only seen after user flip */}
+      <body className="bg-[#0a0a0a] text-white antialiased" style={{ overflowX: "clip" }}>
         <Splash />
         {children}
       </body>

@@ -1,20 +1,24 @@
+import Image from "next/image";
+
 interface CardBackProps {
   variant: "black" | "red";
 }
 
 export default function CardBack({ variant }: CardBackProps) {
-  // Use the user's custom card back images
   const src =
     variant === "red"
-      ? "/cards/back-red-custom.png"
-      : "/cards/back-blue-custom.png";
+      ? "/cards/back-red-custom.webp"
+      : "/cards/back-blue-custom.webp";
 
   return (
-    <div className="w-full h-full bg-white">
-      <img
+    <div className="w-full h-full bg-white relative">
+      <Image
         src={src}
         alt="Card back"
-        className="w-full h-full object-cover"
+        fill
+        sizes="(max-width: 640px) 25vw, 280px"
+        className="object-cover"
+        priority
         draggable={false}
       />
     </div>

@@ -16,7 +16,7 @@ function DetailBody({ screen, isActive }: { screen: WorkScreen; isActive: boolea
     case "supply-chain":
       return <SupplyChainDetail data={screen.supplyChain} isActive={isActive} />;
     case "consulting":
-      return <ConsultingDetail data={screen.consulting} />;
+      return <ConsultingDetail data={screen.consulting} isActive={isActive} />;
     default:
       return null;
   }

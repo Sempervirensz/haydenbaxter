@@ -394,7 +394,7 @@ export const WORK_SCREENS: WorkScreen[] = [
     supplyChain: {
       viewMode: "minimal-supply-chain-landing",
       heroArt: {
-        mapAsset: "/assets/mapmaster.jpeg",
+        mapAsset: "/assets/mapmaster.webp",
         layout: "pacific-master",
         mapScale: "232%",
         masterPacificX: "62%",

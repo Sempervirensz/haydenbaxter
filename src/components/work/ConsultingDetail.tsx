@@ -8,12 +8,11 @@ import TagPills from "@/components/work/TagPills";
 
 interface ConsultingDetailProps {
   data: ConsultingData;
+  isActive?: boolean;
 }
 
-/* Vercel clean-URLs strips .html → serve at /dist/index.
-   next dev needs the explicit /dist/index.html.            */
 const GLOBE_PARAMS = "?embed=1&v=20260224-pointer-flow";
-const GLOBE_BASE = "/experiments/particle-globe-lab/dist/index";
+const GLOBE_SRC = "/experiments/particle-globe-lab/dist/index.html" + GLOBE_PARAMS;
 
 function statusClass(status: string): string {
   return status.toLowerCase() === "reserved"
@@ -21,14 +20,12 @@ function statusClass(status: string): string {
     : "cns-badge cns-badge--offer";
 }
 
-export default function ConsultingDetail({ data }: ConsultingDetailProps) {
-  const [globeSrc, setGlobeSrc] = useState(GLOBE_BASE + GLOBE_PARAMS);
+export default function ConsultingDetail({ data, isActive }: ConsultingDetailProps) {
+  /* Load globe only once the Consulting screen has been shown */
+  const [showGlobe, setShowGlobe] = useState(false);
   useEffect(() => {
-    const h = window.location.hostname;
-    if (h === "localhost" || h === "127.0.0.1") {
-      setGlobeSrc(GLOBE_BASE + ".html" + GLOBE_PARAMS);
-    }
-  }, []);
+    if (isActive && !showGlobe) setShowGlobe(true);
+  }, [isActive, showGlobe]);
 
   const defaultOfferId = data.offers[0]?.id ?? "";
   const [activeOfferId, setActiveOfferId] = useState(defaultOfferId);
@@ -61,13 +58,15 @@ export default function ConsultingDetail({ data }: ConsultingDetailProps) {
         <div className="cns-hero__orbWrap" aria-label="Interactive particle globe preview">
           <div className="cns-hero__orbShell">
             <div className="cns-hero__orbHalo" aria-hidden="true" />
-            <iframe
-              className="cns-hero__orbEmbed"
-              src={globeSrc}
-              title="Interactive monochrome particle globe"
-              loading="eager"
-              scrolling="no"
-            />
+            {showGlobe && (
+              <iframe
+                className="cns-hero__orbEmbed"
+                src={GLOBE_SRC}
+                title="Interactive monochrome particle globe"
+                loading="lazy"
+                scrolling="no"
+              />
+            )}
           </div>
           <p className="cns-hero__orbLabel">Interactive signal field · pointer reactive</p>
         </div>
