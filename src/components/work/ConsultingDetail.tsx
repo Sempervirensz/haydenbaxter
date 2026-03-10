@@ -11,8 +11,16 @@ interface ConsultingDetailProps {
   isActive?: boolean;
 }
 
+const GLOBE_BASE = "/experiments/particle-globe-lab/dist/index";
 const GLOBE_PARAMS = "?embed=1&v=20260224-pointer-flow";
-const GLOBE_SRC = "/experiments/particle-globe-lab/dist/index.html" + GLOBE_PARAMS;
+
+/** Vercel clean-URLs serves /dist/index; local dev needs /dist/index.html */
+function globeSrc(): string {
+  const isLocal =
+    typeof window !== "undefined" &&
+    (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1");
+  return GLOBE_BASE + (isLocal ? ".html" : "") + GLOBE_PARAMS;
+}
 
 function statusClass(status: string): string {
   return status.toLowerCase() === "reserved"
@@ -61,7 +69,7 @@ export default function ConsultingDetail({ data, isActive }: ConsultingDetailPro
             {showGlobe && (
               <iframe
                 className="cns-hero__orbEmbed"
-                src={GLOBE_SRC}
+                src={globeSrc()}
                 title="Interactive monochrome particle globe"
                 loading="lazy"
                 scrolling="no"
