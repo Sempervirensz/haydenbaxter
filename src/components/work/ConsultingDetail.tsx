@@ -29,10 +29,11 @@ function statusClass(status: string): string {
 }
 
 export default function ConsultingDetail({ data, isActive }: ConsultingDetailProps) {
-  /* Load globe only once the Consulting screen has been shown */
+  /* Load globe once Consulting is shown (desktop) or immediately (mobile) */
   const [showGlobe, setShowGlobe] = useState(false);
   useEffect(() => {
-    if (isActive && !showGlobe) setShowGlobe(true);
+    const isMobile = window.matchMedia("(max-width: 640px)").matches;
+    if ((isActive || isMobile) && !showGlobe) setShowGlobe(true);
   }, [isActive, showGlobe]);
 
   const defaultOfferId = data.offers[0]?.id ?? "";

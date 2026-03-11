@@ -70,6 +70,13 @@ export function useWorkScroll() {
     const el = ref.current;
     if (!el) return;
 
+    // On mobile, skip scroll-driven interaction — CSS handles layout
+    const mq = window.matchMedia("(max-width: 640px)");
+    if (mq.matches) {
+      setState({ screenIndex: -1, cdDeg: 0, activeLabel: "", hintHidden: true });
+      return;
+    }
+
     let ticking = false;
 
     const update = () => {

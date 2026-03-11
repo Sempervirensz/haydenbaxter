@@ -16,4 +16,9 @@ export const SITE_CONTENT = {
     heading:
       "I build thoughtful products where data, design, and the real world meet.",
   },
+  brands: {
+    logos: ["Nike", "Disney", "Aosom"],
+    repeats: 4,
+    note: "Logos are trademarks of their respective owners. Shown for identification only.",
+  },
 };
