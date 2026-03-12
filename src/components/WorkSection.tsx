@@ -42,7 +42,7 @@ export default function WorkSection() {
           </div>
 
           <div className="cd-slot" aria-hidden="true">
-            <div className="cd-disc" style={{ transform: `rotate(${cdDeg}deg)` }} />
+            <div className="cd-disc" style={{ '--cd-deg': `${cdDeg}deg` } as React.CSSProperties} />
           </div>
           <div className="cd-active-label">{activeLabel}</div>
         </article>
