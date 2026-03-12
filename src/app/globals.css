@@ -429,8 +429,12 @@
   width: 100%;
   aspect-ratio: 1;
   border-radius: 50%;
-  background: url("/cd.png") center / cover no-repeat;
+  background: url("/cd.png") center / 128% no-repeat;
   transition: transform 800ms cubic-bezier(0.25, 0.1, 0.25, 1);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.55),
+    0 2px 8px rgba(0, 0, 0, 0.35),
+    0 20px 60px -10px rgba(0, 0, 0, 0.4);
 }
 
 .cd-active-label {
@@ -556,7 +560,7 @@
     display: none;
   }
   .cd-slot {
-    width: clamp(200px, 55vw, 300px);
+    width: clamp(200px, 60vw, 300px);
     aspect-ratio: 1;
     overflow: visible;
     margin: 24px auto 0;

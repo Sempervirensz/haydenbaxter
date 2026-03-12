@@ -178,7 +178,7 @@ export const WORK_LANDING = {
   title: "Work",
   quote: "Rooted in outcome and action.",
   scrollHint: "Scroll to explore",
-  activeLabel: "WorldPulse",
+  activeLabel: "",
 };
 
 export interface WorkScrollZone {
@@ -190,11 +190,12 @@ export interface WorkScrollZone {
 export const WORK_SCROLL_CONFIG = {
   screenBreaks: [0, 0.6, 0.7, 0.8, 0.9, 1],
   zones: [
-    { hold: [0.0, 0.22], deg: 0, label: "WorldPulse" },
-    { hold: [0.25, 0.47], deg: -90, label: "Emerging Tech" },
-    { hold: [0.5, 0.72], deg: -180, label: "Supply Chain" },
-    { hold: [0.75, 0.94], deg: -270, label: "Consulting" },
-    { hold: [0.97, 0.985], deg: -360, label: "WorldPulse" },
+    { hold: [0.0, 0.15], deg: 0, label: "" },                         // Angel at 12 (rest)
+    { hold: [0.18, 0.35], deg: -45, label: "WorldPulse" },            // ~1:30 → top
+    { hold: [0.38, 0.55], deg: -135, label: "Emerging Tech Builds" }, // ~4:30 → top
+    { hold: [0.58, 0.75], deg: -225, label: "Supply Chain" },         // ~7:30 → top
+    { hold: [0.78, 0.92], deg: -315, label: "Consulting" },           // ~10:30 → top
+    { hold: [0.96, 0.985], deg: -360, label: "" },                    // Return to angel
   ] as WorkScrollZone[],
 };
 
