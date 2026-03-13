@@ -54,6 +54,8 @@ function getCdState(progress: number, zones: WorkScrollZone[]) {
   return { deg: 0, label: WORK_LANDING.activeLabel };
 }
 
+const LERP_SPEED = 0.08;
+
 export function useWorkScroll() {
   const ref = useRef<HTMLElement>(null);
   const [state, setState] = useState<WorkScrollState>({
@@ -70,75 +72,86 @@ export function useWorkScroll() {
     const el = ref.current;
     if (!el) return;
 
-    // On mobile, skip scroll-driven interaction — CSS handles layout
-    const mq = window.matchMedia("(max-width: 640px)");
+    const mq = window.matchMedia(
+      "(max-width: 640px) and (hover: none), (max-width: 640px) and (pointer: coarse)"
+    );
     if (mq.matches) {
       setState({ screenIndex: -1, cdDeg: 0, activeLabel: "", hintHidden: true });
       return;
     }
 
-    let ticking = false;
+    let targetDeg = 0;
+    let currentDeg = 0;
+    let rafId = 0;
+    let lastScreenIndex = 0;
+    let lastLabel = WORK_LANDING.activeLabel;
+    let lastHintHidden = false;
 
-    const update = () => {
+    const discEl = el.querySelector<HTMLElement>(".cd-disc");
+    const labelEl = el.querySelector<HTMLElement>(".cd-active-label");
+
+    const getProgress = () => {
       const rect = el.getBoundingClientRect();
       const scrollHeight = Math.max(el.offsetHeight - window.innerHeight, 0);
       const scrolled = Math.max(0, Math.min(scrollHeight, -rect.top));
-      const progress = scrollHeight > 0 ? scrolled / scrollHeight : 0;
+      return scrollHeight > 0 ? scrolled / scrollHeight : 0;
+    };
+
+    const tick = () => {
+      const progress = getProgress();
 
       let nextScreenIndex = 0;
       for (let i = 1; i < screenBreaks.length; i += 1) {
         if (progress >= screenBreaks[i]) nextScreenIndex = i;
       }
-
       const maxScreenIndex = screenBreaks.length - 2;
       nextScreenIndex = Math.min(maxScreenIndex, nextScreenIndex);
 
       const nextHintHidden = progress > 0.08;
 
-      setState((prev) => {
-        let nextCdDeg = prev.cdDeg;
-        let nextLabel = prev.activeLabel;
+      if (nextScreenIndex === 0) {
+        const firstBreak = screenBreaks[1] || 1;
+        const landingProgress = firstBreak > 0 ? progress / firstBreak : 0;
+        const cdState = getCdState(landingProgress, zones);
+        targetDeg = cdState.deg;
 
-        if (nextScreenIndex === 0) {
-          const firstBreak = screenBreaks[1] || 1;
-          const landingProgress = firstBreak > 0 ? progress / firstBreak : 0;
-          const cdState = getCdState(landingProgress, zones);
-          nextCdDeg = cdState.deg;
-          nextLabel = cdState.label;
+        if (cdState.label !== lastLabel) {
+          lastLabel = cdState.label;
+          if (labelEl) labelEl.textContent = lastLabel;
         }
-
-        if (
-          prev.screenIndex === nextScreenIndex &&
-          prev.hintHidden === nextHintHidden &&
-          prev.cdDeg === nextCdDeg &&
-          prev.activeLabel === nextLabel
-        ) {
-          return prev;
-        }
-
-        return {
-          screenIndex: nextScreenIndex,
-          cdDeg: nextCdDeg,
-          activeLabel: nextLabel,
-          hintHidden: nextHintHidden,
-        };
-      });
-
-      ticking = false;
-    };
-
-    const onScroll = () => {
-      if (!ticking) {
-        ticking = true;
-        requestAnimationFrame(update);
       }
+
+      currentDeg += (targetDeg - currentDeg) * LERP_SPEED;
+
+      if (Math.abs(targetDeg - currentDeg) < 0.01) {
+        currentDeg = targetDeg;
+      }
+
+      if (discEl) {
+        discEl.style.setProperty("--cd-deg", `${currentDeg}deg`);
+      }
+
+      if (
+        nextScreenIndex !== lastScreenIndex ||
+        nextHintHidden !== lastHintHidden
+      ) {
+        lastScreenIndex = nextScreenIndex;
+        lastHintHidden = nextHintHidden;
+        setState({
+          screenIndex: nextScreenIndex,
+          cdDeg: currentDeg,
+          activeLabel: lastLabel,
+          hintHidden: nextHintHidden,
+        });
+      }
+
+      rafId = requestAnimationFrame(tick);
     };
 
-    update();
-    window.addEventListener("scroll", onScroll, { passive: true });
+    rafId = requestAnimationFrame(tick);
 
     return () => {
-      window.removeEventListener("scroll", onScroll);
+      cancelAnimationFrame(rafId);
     };
   }, [screenBreaks, zones]);
 
