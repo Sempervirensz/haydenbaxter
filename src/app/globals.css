@@ -587,16 +587,16 @@
   .cd-player-fg {
     display: none;
   }
+  .cd-player-shell {
+    display: block;
+  }
   .cd-disc-overlay {
-    position: relative;
-    top: auto;
-    left: auto;
-    transform: none;
-    width: clamp(220px, 65vw, 340px);
-    aspect-ratio: 1;
-    border-radius: 50%;
-    overflow: hidden;
-    margin: 24px auto 0;
+    position: absolute;
+    top: 55%;
+    left: 50.25%;
+    transform: translate(-50%, -50%);
+    width: 87%;
+    margin: 0;
   }
   .work__screen--detail {
     min-height: auto;
