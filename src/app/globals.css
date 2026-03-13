@@ -302,19 +302,7 @@
   transform: translateY(0);
   pointer-events: auto;
   z-index: 2;
-  background:
-    radial-gradient(
-      120% 90% at 50% -20%,
-      rgba(255, 255, 255, 0.1),
-      rgba(255, 255, 255, 0.02) 42%,
-      transparent 70%
-    ),
-    radial-gradient(
-      ellipse 80% 50% at 50% 90%,
-      rgba(180, 200, 255, 0.06) 0%,
-      transparent 60%
-    ),
-    linear-gradient(160deg, #0e1014 0%, #0b0d10 55%, #08090c 100%);
+  background: url("/Velvetbackground.png") center / cover no-repeat;
   border: 1px solid rgba(255, 255, 255, 0.10);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.10),
@@ -330,18 +318,6 @@
   overflow: hidden;
 }
 
-.work__screen--landing::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: 14px;
-  pointer-events: none;
-  opacity: 0.04;
-  background: repeating-conic-gradient(rgba(255,255,255,1) 0% 25%, transparent 0% 50%);
-  background-size: 2px 2px;
-  mix-blend-mode: overlay;
-  z-index: 1;
-}
 
 .wl-title {
   font-family: var(--font-serif);
@@ -420,91 +396,74 @@
   color: rgba(255, 255, 255, 0.52);
 }
 
-.cd-slot {
-  position: relative;
-  width: clamp(460px, 74vw, 800px);
-  aspect-ratio: 2 / 1;
-  overflow: hidden;
-  margin-top: auto;
-  margin-bottom: -4px;
-  perspective: 600px;
-  -webkit-perspective: 600px;
+/* CD player — desktop: foreground base + disc on top */
+.cd-player-wrap {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%) translateY(155px);
+  width: clamp(520px, 62%, 730px);
+  line-height: 0;
+  pointer-events: none;
+  z-index: 2;
 }
 
-.cd-slot::after {
-  content: "";
+.cd-player-shell {
+  display: none;
+}
+
+.cd-player-fg {
+  display: block;
+  width: 100%;
+  height: auto;
+  position: relative;
+  z-index: 1;
+}
+
+.cd-disc-overlay {
   position: absolute;
-  bottom: -8px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 320px;
-  height: 32px;
-  background: radial-gradient(
-    ellipse at center,
-    rgba(255, 255, 255, 0.05) 0%,
-    transparent 72%
-  );
+  top: 70%;
+  left: 51%;
+  transform: translate(-50%, -50%);
+  width: 92%;
+  aspect-ratio: 1;
   border-radius: 50%;
+  overflow: hidden;
   pointer-events: none;
-  z-index: 0;
+  z-index: 2;
 }
 
 .cd-disc {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  aspect-ratio: 1;
+  inset: 0;
   border-radius: 50%;
-  background: url("/cd.png") 52% center / cover no-repeat;
+  background: url("/cd-disc-final.png") center / cover no-repeat;
   --cd-deg: 0deg;
-  transform:
-    rotateX(8deg)
-    rotate(var(--cd-deg));
-  transform-style: preserve-3d;
-  -webkit-transform-style: preserve-3d;
+  transform: rotate(var(--cd-deg));
   transition: --cd-deg 800ms cubic-bezier(0.25, 0.1, 0.25, 1);
   will-change: transform;
-  animation: cd-float 6s ease-in-out infinite;
-  box-shadow:
-    0 2px 6px rgba(0, 0, 0, 0.4),
-    0 8px 24px rgba(0, 0, 0, 0.5),
-    0 24px 64px -8px rgba(0, 0, 0, 0.45),
-    0 40px 80px -16px rgba(0, 0, 0, 0.25);
-  border: 1px solid rgba(255, 255, 255, 0.04);
+  animation: cd-idle-rock 6s ease-in-out infinite;
 }
 
-@keyframes cd-float {
-  0%, 100% {
-    transform:
-      rotateX(8deg)
-      rotate(var(--cd-deg))
-      translateY(0px);
-    box-shadow:
-      0 2px 6px rgba(0, 0, 0, 0.4),
-      0 8px 24px rgba(0, 0, 0, 0.5),
-      0 24px 64px -8px rgba(0, 0, 0, 0.45),
-      0 40px 80px -16px rgba(0, 0, 0, 0.25);
-  }
-  50% {
-    transform:
-      rotateX(8deg)
-      rotate(var(--cd-deg))
-      translateY(-12px);
-    box-shadow:
-      0 6px 14px rgba(0, 0, 0, 0.3),
-      0 16px 40px rgba(0, 0, 0, 0.4),
-      0 40px 80px -8px rgba(0, 0, 0, 0.35),
-      0 64px 120px -24px rgba(0, 0, 0, 0.2);
-  }
+@keyframes cd-idle-rock {
+  0%   { transform: rotate(var(--cd-deg)) rotate(0deg); }
+  25%  { transform: rotate(var(--cd-deg)) rotate(3deg); }
+  50%  { transform: rotate(var(--cd-deg)) rotate(0deg); }
+  75%  { transform: rotate(var(--cd-deg)) rotate(-3deg); }
+  100% { transform: rotate(var(--cd-deg)) rotate(0deg); }
 }
 
 .cd-active-label {
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 4;
   font-family: var(--font-marker);
   font-size: clamp(14px, 2vw, 22px);
   color: rgba(255, 255, 255, 0.68);
   text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
-  margin-top: 16px;
+  white-space: nowrap;
 }
 
 .work__screen--detail {
@@ -566,9 +525,6 @@
   .card-caption {
     margin-top: 8px;
   }
-  .cd-slot {
-    width: clamp(380px, 68vw, 560px);
-  }
   .work__screen {
     padding: 32px 28px 24px;
   }
@@ -621,15 +577,26 @@
   .cd-active-label {
     display: none;
   }
-  .cd-slot {
+  .cd-player-wrap {
+    position: relative;
+    bottom: auto;
+    width: auto;
+    left: auto;
+    transform: none;
+  }
+  .cd-player-fg {
+    display: none;
+  }
+  .cd-disc-overlay {
+    position: relative;
+    top: auto;
+    left: auto;
+    transform: none;
     width: clamp(220px, 65vw, 340px);
     aspect-ratio: 1;
-    overflow: visible;
+    border-radius: 50%;
+    overflow: hidden;
     margin: 24px auto 0;
-    perspective: none;
-  }
-  .cd-disc {
-    animation-duration: 8s;
   }
   .work__screen--detail {
     min-height: auto;

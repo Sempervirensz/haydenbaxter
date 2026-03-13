@@ -41,8 +41,12 @@ export default function WorkSection() {
             <span className="scroll-hint__text">{WORK_LANDING.scrollHint}</span>
           </div>
 
-          <div className="cd-slot" aria-hidden="true">
-            <div className="cd-disc" style={{ '--cd-deg': `${cdDeg}deg` } as React.CSSProperties} />
+          <div className="cd-player-wrap" aria-hidden="true">
+            <img src="/playershellpngtransparent.png" alt="" className="cd-player-shell" />
+            <img src="/playerforeground.png" alt="" className="cd-player-fg" />
+            <div className="cd-disc-overlay">
+              <div className="cd-disc" style={{ '--cd-deg': `${cdDeg}deg` } as React.CSSProperties} />
+            </div>
           </div>
           <div className="cd-active-label">{activeLabel}</div>
         </article>
