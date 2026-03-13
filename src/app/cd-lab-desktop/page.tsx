@@ -39,7 +39,7 @@ const PRESETS = {
     cropTop: 0,
     rotation: -135,
   },
-} as const;
+};
 
 type PresetKey = keyof typeof PRESETS;
 

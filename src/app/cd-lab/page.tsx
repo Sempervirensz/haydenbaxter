@@ -39,7 +39,7 @@ const PRESETS = {
     showFg: false,
     rotation: -45,
   },
-} as const;
+};
 
 type PresetKey = keyof typeof PRESETS;
 
