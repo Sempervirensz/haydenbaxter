@@ -40,8 +40,6 @@
 
 /* 3D Card System */
 .card-perspective-wrapper {
-  perspective: 1200px;
-  -webkit-perspective: 1200px;
   width: 100%;
   height: var(--card-height);
   flex-shrink: 0;
@@ -55,8 +53,9 @@
   height: 100%;
   cursor: pointer;
   position: relative;
+  perspective: 1200px;
+  -webkit-perspective: 1200px;
   transition: transform 0.3s ease;
-  /* Preserve 3D through the wrapper for iOS Safari */
   transform-style: preserve-3d;
   -webkit-transform-style: preserve-3d;
   -webkit-tap-highlight-color: transparent;
@@ -92,6 +91,7 @@
     0 4px 24px rgba(0, 0, 0, 0.4),
     0 1px 4px rgba(0, 0, 0, 0.2);
   transition: box-shadow 0.3s ease;
+  will-change: transform;
 }
 
 .card-hover-wrapper:hover .card-face {
@@ -103,10 +103,11 @@
 
 .card-front {
   z-index: 1;
+  transform: translateZ(0);
 }
 
 .card-back {
-  transform: rotateY(180deg);
+  transform: rotateY(180deg) translateZ(0);
 }
 
 /* (card-overlay-banner/title/desc removed — orphaned, never used) */
@@ -534,6 +535,10 @@
     --card-width: calc((100vw - 48px) / 4);
     --card-height: calc(((100vw - 48px) / 4) * 1.41);
     --card-border-radius: 6px;
+  }
+  .card-hover-wrapper {
+    perspective: calc(var(--card-width) * 4.29);
+    -webkit-perspective: calc(var(--card-width) * 4.29);
   }
   .card-hover-wrapper:hover {
     transform: none;
