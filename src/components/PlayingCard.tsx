@@ -20,10 +20,9 @@ function easeOutCubic(t: number): number {
   return 1 - Math.pow(1 - t, 3);
 }
 
-function computeTransform(
+function computeUnveilTransform(
   progress: number,
   bunched: CardData["bunchedTransform"],
-  isFlipped: boolean,
   scale: number
 ): string {
   const t = easeOutCubic(Math.min(Math.max(progress, 0), 1));
@@ -31,8 +30,7 @@ function computeTransform(
   const ty = bunched.translateY * scale * (1 - t);
   const rot = bunched.rotate * (1 - t);
   const sc = bunched.scale + (1 - bunched.scale) * t;
-  const flipY = isFlipped ? 180 : 0;
-  return `translateX(${tx}px) translateY(${ty}px) rotate(${rot}deg) scale(${sc}) rotateY(${flipY}deg)`;
+  return `translateX(${tx}px) translateY(${ty}px) rotate(${rot}deg) scale(${sc})`;
 }
 
 export default function PlayingCard({
@@ -57,19 +55,19 @@ export default function PlayingCard({
     return () => window.removeEventListener("resize", updateScale);
   }, []);
 
-  const transform = computeTransform(
+  const unveilTransform = computeUnveilTransform(
     scrollProgress,
     card.bunchedTransform,
-    isFlipped,
     transformScale
   );
+  const flipTransform = `rotateY(${isFlipped ? 180 : 0}deg)`;
 
   const isRed = card.color === "red";
   const textColor = isRed ? "#b91c1c" : "#ffffff";
 
   return (
     <div className="card-column">
-      <div className="card-perspective-wrapper">
+      <div className="card-perspective-wrapper" style={{ transform: unveilTransform }}>
         <button
           ref={wrapperRef}
           type="button"
@@ -79,7 +77,7 @@ export default function PlayingCard({
           aria-pressed={isFlipped}
         >
           <Tooltip visible={!isFlipped} color={card.color} />
-          <div className="card-inner" style={{ transform }}>
+          <div className="card-inner" style={{ transform: flipTransform }}>
             {/* Front face — the card back design (initially visible) */}
             <div className="card-face card-front">
               <CardBack variant={card.backVariant} />
