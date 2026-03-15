@@ -17,6 +17,7 @@ interface WorldPulseScreen extends WorkScreenBase {
   type: "full";
   full: {
     image: { src: string; alt: string };
+    background?: string;
     role: string;
     caption: string;
     link: { href: string; label: string };
@@ -209,10 +210,11 @@ export const WORK_SCREENS: WorkScreen[] = [
     id: 1,
     name: "WorldPulse",
     number: "01 / 04",
-    logo: { src: "/worldpulse-logo.png", alt: "WorldPulse" },
+    logo: { src: "/WorldPulseLogo.png", alt: "WorldPulse" },
     type: "full",
     full: {
-      image: { src: "/origin-matters2.png", alt: "Origin Matters — WorldPulse" },
+      image: { src: "/Upscale Girl.png", alt: "WorldPulse Digital Product Passport" },
+      background: "/Use this background.png",
       role: "Founder at WorldPulse",
       caption:
         "Building design- and data-driven Digital Product Passports that show where products come from, how they\u2019re made, and who makes them.",

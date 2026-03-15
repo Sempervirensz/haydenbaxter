@@ -12,7 +12,19 @@ export default function WorldPulseDetail({ data }: WorldPulseDetailProps) {
   return (
     <div className="pd-full">
       <div className="pd-full__img">
-        <img src={data.image.src} alt={data.image.alt} />
+        {data.background && (
+          <img
+            src={data.background}
+            alt=""
+            aria-hidden="true"
+            className="pd-full__bg"
+          />
+        )}
+        <img
+          src={data.image.src}
+          alt={data.image.alt}
+          className={data.background ? "pd-full__hero" : undefined}
+        />
       </div>
       <div className="pd-full__bar">
         <div className="pd-full__info">

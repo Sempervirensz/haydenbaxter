@@ -11,6 +11,10 @@
   align-items: center;
 }
 
+.work__screen--detail:has(.pd-full) .detail-logo {
+  height: clamp(48px, 7vw, 80px);
+}
+
 /* WorldPulse */
 .pd-full {
   flex: 1;
@@ -39,17 +43,29 @@
   inset: 0;
 }
 
+.pd-full__bg {
+  z-index: 0;
+  object-position: center center;
+}
+
+.pd-full__hero {
+  z-index: 1;
+  object-fit: contain;
+  object-position: center 48%;
+}
+
 .pd-full__bar {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 24px;
-  padding: 24px 48px;
-  background: rgba(0, 0, 0, 0.65);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  padding: 20px 48px;
+  background: rgba(10, 10, 10, 0.75);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
   position: relative;
-  z-index: 1;
+  z-index: 3;
   flex-shrink: 0;
 }
 
