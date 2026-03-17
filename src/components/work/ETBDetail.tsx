@@ -257,59 +257,147 @@ export default function ETBDetail({ data }: ETBDetailProps) {
           );
         })}
 
-        {/* Overlay detail panel */}
+        {/* Overlay detail panel — System Dossier */}
         <aside
           className={`etb-overlay ${selectedProject ? "is-open" : ""}`}
           aria-hidden={!selectedProject}
         >
-          <div className="etb-detail-panel__header">
-            <button
-              className="etb-detail-panel__close"
-              type="button"
-              onClick={() => setOpenDetailId(null)}
-              aria-label="Close detail panel"
-            >
-              ×
-            </button>
-          </div>
+          {selectedProject ? (
+            <div className="etb-dos">
+              {/* Top bar */}
+              <div className="etb-dos__topbar">
+                <span className="etb-dos__eyebrow">Project File</span>
+                <button
+                  className="etb-dos__close"
+                  type="button"
+                  onClick={() => setOpenDetailId(null)}
+                  aria-label="Close detail panel"
+                >
+                  Close
+                </button>
+              </div>
 
-          <div className="etb-detail-panel__body">
-            {selectedProject ? (
-              <div className="etb-detail__project">
-                <h3 className="etb-detail__name">{selectedProject.name}</h3>
-                <p className="etb-detail__category">{selectedProject.category}</p>
-                <span className={renderStatus(selectedProject.status)}>
-                  {selectedProject.status}
-                </span>
-                <p className="etb-detail__desc">{selectedProject.oneLiner}</p>
-                <ul className="etb-detail__bullets">
-                  {selectedProject.bullets.map((line) => (
+              {/* Off-white dossier card */}
+              <div className="etb-dos__card">
+                {/* Metadata strip */}
+                <div className="etb-dos__meta">
+                  <span className={`etb-dos__status etb-dos__status--${toSlug(selectedProject.status)}`}>
+                    {selectedProject.status}
+                  </span>
+                  <span className="etb-dos__category">{selectedProject.category}</span>
+                </div>
+
+                {/* Title */}
+                <h3 className="etb-dos__title">{selectedProject.name}</h3>
+
+                {/* One-liner */}
+                <p className="etb-dos__oneLiner">{selectedProject.oneLiner}</p>
+
+                {/* Divider */}
+                <hr className="etb-dos__rule" />
+
+                {/* Capability bullets */}
+                <ul className="etb-dos__bullets">
+                  {selectedProject.bullets.slice(0, 3).map((line) => (
                     <li key={line}>{line}</li>
                   ))}
                 </ul>
-                <div className="etb-detail__tags">
-                  <TagPills tags={selectedProject.tags} className="etb-pill etb-pill--detail" />
+
+                {/* Tags */}
+                <div className="etb-dos__tags">
+                  {selectedProject.tags.map((tag) => (
+                    <span key={tag} className="etb-dos__tag">{tag}</span>
+                  ))}
                 </div>
-                <div className="etb-detail__snapshot">
-                  <h4 className="etb-detail__snapshotTitle">System Snapshot</h4>
-                  <ul className="etb-detail__snapshotList">
-                    {getSystemSnapshot(selectedProject).map((line) => (
+
+                {/* System notes */}
+                <div className="etb-dos__notes">
+                  <span className="etb-dos__notesLabel">System Notes</span>
+                  <ul className="etb-dos__notesList">
+                    {getSystemSnapshot(selectedProject).slice(0, 3).map((line) => (
                       <li key={line}>{line}</li>
                     ))}
                   </ul>
                 </div>
+
+                {/* CTA */}
                 <button
-                  className="etb-bar__cta"
+                  className="etb-dos__cta"
                   type="button"
                   onClick={() => setModalProjectId(selectedProject.id)}
                 >
-                  Open Detail →
+                  View Full Detail &rarr;
                 </button>
               </div>
-            ) : null}
-          </div>
+            </div>
+          ) : null}
         </aside>
       </div>
+
+      {/* Mobile: full-push dossier overlay (Variant C behavior) */}
+      {selectedProject ? (
+        <div
+          className="etb-mobileOverlay"
+          role="dialog"
+          aria-label={`${selectedProject.name} details`}
+        >
+          <div className="etb-dos">
+            <div className="etb-dos__topbar">
+              <span className="etb-dos__eyebrow">Project File</span>
+              <button
+                className="etb-dos__close"
+                type="button"
+                onClick={() => setOpenDetailId(null)}
+                aria-label="Close detail panel"
+              >
+                Close
+              </button>
+            </div>
+
+            <div className="etb-dos__card">
+              <div className="etb-dos__meta">
+                <span className={`etb-dos__status etb-dos__status--${toSlug(selectedProject.status)}`}>
+                  {selectedProject.status}
+                </span>
+                <span className="etb-dos__category">{selectedProject.category}</span>
+              </div>
+
+              <h3 className="etb-dos__title">{selectedProject.name}</h3>
+              <p className="etb-dos__oneLiner">{selectedProject.oneLiner}</p>
+              <hr className="etb-dos__rule" />
+
+              <ul className="etb-dos__bullets">
+                {selectedProject.bullets.slice(0, 3).map((line) => (
+                  <li key={line}>{line}</li>
+                ))}
+              </ul>
+
+              <div className="etb-dos__tags">
+                {selectedProject.tags.map((tag) => (
+                  <span key={tag} className="etb-dos__tag">{tag}</span>
+                ))}
+              </div>
+
+              <div className="etb-dos__notes">
+                <span className="etb-dos__notesLabel">System Notes</span>
+                <ul className="etb-dos__notesList">
+                  {getSystemSnapshot(selectedProject).slice(0, 3).map((line) => (
+                    <li key={line}>{line}</li>
+                  ))}
+                </ul>
+              </div>
+
+              <button
+                className="etb-dos__cta"
+                type="button"
+                onClick={() => setModalProjectId(selectedProject.id)}
+              >
+                View Full Detail &rarr;
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : null}
 
       <section className="etb-graduate" aria-label="Graduate work">
         <h4 className="etb-graduate__title">{data.graduateWork.title}</h4>

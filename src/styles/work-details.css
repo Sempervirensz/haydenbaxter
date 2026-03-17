@@ -412,15 +412,15 @@
   right: 0;
   top: 0;
   bottom: 0;
-  width: clamp(280px, 34vw, 420px);
+  width: clamp(280px, 35vw, 440px);
   border-radius: 16px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  background: rgba(7, 8, 11, 0.96);
-  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.42);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  background: rgba(7, 8, 11, 0.97);
+  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.45);
   transform: translateX(100%);
   opacity: 0;
   pointer-events: none;
-  overflow-y: auto;
+  overflow: hidden;
   z-index: 10;
   transition:
     transform 300ms cubic-bezier(0.22, 1, 0.36, 1),
@@ -431,6 +431,338 @@
   transform: translateX(0);
   opacity: 1;
   pointer-events: auto;
+}
+
+/* ---- System Dossier overlay ---- */
+
+.etb-dos {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.etb-dos__topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  flex-shrink: 0;
+}
+
+.etb-dos__eyebrow {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.38);
+}
+
+.etb-dos__close {
+  all: unset;
+  box-sizing: border-box;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.52);
+  cursor: pointer;
+  padding: 4px 10px;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.03);
+  transition: color 160ms ease, border-color 160ms ease;
+}
+
+.etb-dos__close:hover {
+  color: rgba(255, 255, 255, 0.85);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.etb-dos__close:focus-visible {
+  outline: 2px solid rgba(37, 99, 235, 0.6);
+  outline-offset: 2px;
+}
+
+/* Off-white dossier card */
+.etb-dos__card {
+  margin: 12px;
+  padding: 20px 18px 18px;
+  border-radius: 12px;
+  background: #f5f4f1;
+  border: 1px solid rgba(17, 17, 22, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex: 1;
+  overflow-y: auto;
+}
+
+/* Metadata strip */
+.etb-dos__meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.etb-dos__status {
+  font-family: var(--font-mono);
+  font-size: 8px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: 999px;
+  border: 1px solid rgba(17, 17, 22, 0.1);
+  color: rgba(17, 17, 22, 0.55);
+  background: rgba(17, 17, 22, 0.03);
+}
+
+.etb-dos__status--stealth {
+  border-color: rgba(37, 99, 235, 0.28);
+  color: rgba(37, 99, 235, 0.82);
+  background: rgba(37, 99, 235, 0.06);
+}
+
+.etb-dos__status--prototype {
+  border-color: rgba(37, 99, 235, 0.22);
+  color: rgba(37, 99, 235, 0.7);
+  background: rgba(37, 99, 235, 0.04);
+}
+
+.etb-dos__status--r-d {
+  border-color: rgba(37, 99, 235, 0.2);
+  color: rgba(37, 99, 235, 0.65);
+  background: rgba(37, 99, 235, 0.04);
+}
+
+.etb-dos__category {
+  font-family: var(--font-mono);
+  font-size: 8px;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(17, 17, 22, 0.42);
+}
+
+/* Title */
+.etb-dos__title {
+  margin: 0;
+  font-size: clamp(20px, 2.2vw, 26px);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  color: var(--etb-text);
+}
+
+/* One-liner */
+.etb-dos__oneLiner {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.48;
+  color: var(--etb-muted);
+}
+
+/* Divider */
+.etb-dos__rule {
+  border: none;
+  border-top: 1px solid rgba(17, 17, 22, 0.08);
+  margin: 2px 0;
+}
+
+/* Bullets */
+.etb-dos__bullets {
+  margin: 0;
+  padding-left: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.etb-dos__bullets li {
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--etb-muted);
+}
+
+/* Tags */
+.etb-dos__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.etb-dos__tag {
+  font-family: var(--font-mono);
+  font-size: 8px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 3px 7px 2px;
+  border-radius: 999px;
+  color: rgba(37, 99, 235, 0.72);
+  background: rgba(37, 99, 235, 0.06);
+  border: 1px solid rgba(37, 99, 235, 0.18);
+}
+
+/* System notes */
+.etb-dos__notes {
+  border-radius: 10px;
+  background: rgba(17, 17, 22, 0.025);
+  border: 1px solid rgba(17, 17, 22, 0.06);
+  padding: 10px 12px;
+}
+
+.etb-dos__notesLabel {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 8px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(17, 17, 22, 0.36);
+  margin-bottom: 6px;
+}
+
+.etb-dos__notesList {
+  margin: 0;
+  padding-left: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.etb-dos__notesList li {
+  font-size: 11px;
+  line-height: 1.38;
+  color: rgba(17, 17, 22, 0.52);
+}
+
+/* CTA */
+.etb-dos__cta {
+  all: unset;
+  box-sizing: border-box;
+  align-self: flex-start;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 8px 18px 7px;
+  border-radius: 999px;
+  cursor: pointer;
+  color: #2563eb;
+  border: 1px solid rgba(37, 99, 235, 0.25);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.15) 14%, transparent 40%),
+    rgba(37, 99, 235, 0.05);
+  transition: border-color 180ms ease, transform 180ms ease;
+}
+
+.etb-dos__cta:hover,
+.etb-dos__cta:focus-visible {
+  border-color: rgba(37, 99, 235, 0.45);
+  transform: translateY(-1px);
+}
+
+.etb-dos__cta:focus-visible {
+  outline: 2px solid rgba(37, 99, 235, 0.6);
+  outline-offset: 2px;
+}
+
+/* ---- Mobile: full-push dossier (Variant C behavior) ---- */
+
+/* Hide the mobile overlay on desktop */
+.etb-mobileOverlay {
+  display: none;
+}
+
+@media (max-width: 767px) {
+  /* Hide the inline desktop overlay on mobile */
+  .etb-overlay {
+    display: none;
+  }
+
+  /* Remove padding-right shift on mobile */
+  .etb-barStack.has-active {
+    padding-right: clamp(20px, 3vw, 40px);
+  }
+
+  /* Show the full-screen mobile overlay */
+  .etb-mobileOverlay {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 50;
+    background: rgba(7, 8, 11, 0.98);
+    overflow-y: auto;
+    animation: etb-mobileSlideIn 300ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  @keyframes etb-mobileSlideIn {
+    from { transform: translateX(100%); }
+    to { transform: translateX(0); }
+  }
+
+  /* Dossier card fills mobile screen */
+  .etb-mobileOverlay .etb-dos {
+    min-height: 100vh;
+  }
+
+  .etb-mobileOverlay .etb-dos__topbar {
+    padding: 16px 20px 12px;
+    position: sticky;
+    top: 0;
+    background: rgba(7, 8, 11, 0.98);
+    z-index: 2;
+  }
+
+  .etb-mobileOverlay .etb-dos__close {
+    font-size: 11px;
+    padding: 6px 14px;
+  }
+
+  .etb-mobileOverlay .etb-dos__card {
+    margin: 8px 16px 24px;
+    padding: 24px 20px 22px;
+    flex: 1;
+  }
+
+  .etb-mobileOverlay .etb-dos__title {
+    font-size: 24px;
+  }
+
+  .etb-mobileOverlay .etb-dos__oneLiner {
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  .etb-mobileOverlay .etb-dos__bullets li {
+    font-size: 13px;
+    line-height: 1.45;
+  }
+
+  .etb-mobileOverlay .etb-dos__notesList li {
+    font-size: 12px;
+  }
+
+  .etb-mobileOverlay .etb-dos__cta {
+    font-size: 11px;
+    padding: 10px 22px 9px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .etb-mobileOverlay {
+    animation: none;
+  }
+
+  .etb-dos__close,
+  .etb-dos__cta {
+    transition: none;
+  }
 }
 
 .etb-bar__body {
@@ -638,130 +970,7 @@
   background: rgba(210, 155, 40, 0.08);
 }
 
-.etb-detail-panel {
-  position: fixed;
-  top: 92px;
-  right: 20px;
-  width: clamp(280px, 32vw, 420px);
-  max-height: calc(100vh - 124px);
-  border-radius: 16px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  background: rgba(7, 8, 11, 0.95);
-  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.42);
-  overflow: hidden;
-  opacity: 0;
-  pointer-events: none;
-  transform: translateX(20px);
-  transition: opacity 220ms ease, transform 220ms ease;
-  z-index: 24;
-}
-
-.etb-detail-panel.is-open {
-  opacity: 1;
-  pointer-events: auto;
-  transform: translateX(0);
-}
-
-.etb-detail-panel__header {
-  display: flex;
-  justify-content: flex-end;
-  padding: 8px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-}
-
-.etb-detail-panel__close {
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  background: rgba(255, 255, 255, 0.03);
-  color: rgba(255, 255, 255, 0.9);
-  width: 30px;
-  height: 30px;
-  border-radius: 8px;
-  cursor: pointer;
-}
-
-.etb-detail-panel__body {
-  overflow: auto;
-  max-height: calc(100vh - 174px);
-  padding: 14px;
-}
-
-.etb-detail__project {
-  display: grid;
-  gap: 10px;
-}
-
-.etb-detail__name {
-  margin: 0;
-  font-size: 22px;
-  line-height: 1;
-  letter-spacing: -0.02em;
-  color: rgba(255, 255, 255, 0.95);
-}
-
-.etb-detail__category {
-  margin: 0;
-  font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.48);
-}
-
-.etb-detail__desc {
-  margin: 0;
-  font-size: 13px;
-  line-height: 1.45;
-  color: rgba(255, 255, 255, 0.8);
-}
-
-.etb-detail__bullets {
-  margin: 0;
-  padding-left: 18px;
-  display: grid;
-  gap: 6px;
-}
-
-.etb-detail__bullets li {
-  font-size: 12px;
-  line-height: 1.42;
-  color: rgba(255, 255, 255, 0.72);
-}
-
-.etb-detail__tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-}
-
-.etb-detail__snapshot {
-  border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  background: rgba(255, 255, 255, 0.02);
-  padding: 10px;
-}
-
-.etb-detail__snapshotTitle {
-  margin: 0 0 8px;
-  font-size: 10px;
-  font-family: var(--font-mono);
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.52);
-}
-
-.etb-detail__snapshotList {
-  margin: 0;
-  padding-left: 16px;
-  display: grid;
-  gap: 6px;
-}
-
-.etb-detail__snapshotList li,
-.etb-detail__empty {
-  font-size: 12px;
-  line-height: 1.4;
-  color: rgba(255, 255, 255, 0.65);
-}
+/* Legacy detail-panel classes removed — replaced by .etb-dos__* above */
 
 .etb-graduate {
   margin: 10px clamp(20px, 3vw, 40px) 18px;
