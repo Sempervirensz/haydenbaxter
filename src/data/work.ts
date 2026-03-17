@@ -213,8 +213,8 @@ export const WORK_SCREENS: WorkScreen[] = [
     logo: { src: "/WorldPulseLogo.png", alt: "WorldPulse" },
     type: "full",
     full: {
-      image: { src: "/Upscale Girl.png", alt: "WorldPulse Digital Product Passport" },
-      background: "/Use this background.png",
+      image: { src: "", alt: "" },
+      background: "/WorldPulseCostal3.0.png",
       role: "Founder at WorldPulse",
       caption:
         "Building design- and data-driven Digital Product Passports that show where products come from, how they\u2019re made, and who makes them.",

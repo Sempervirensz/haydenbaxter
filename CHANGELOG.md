@@ -2,6 +2,23 @@
 
 ## 2026-02-07
 
+### Fixed: Particle globe centering in consulting orb
+
+The embedded particle globe in the Consulting section could appear vertically offset inside its circular shell. The embed layout now enforces full-height containers and explicit centering so the globe stays centered in the orb across viewport sizes.
+
+**Changes:**
+
+#### `legacy/design-inspo/experiments/particle-globe-lab/src/styles.css`
+
+- Updated embed root containers (`html.lab-embed`, `body.lab-embed`, `#root.lab-embed-root`) to use full width/height.
+- Switched `.lab-page--embed` and `.lab-embed-shell` to explicit flex centering (`align-items: center; justify-content: center;`).
+
+#### `public/experiments/particle-globe-lab/dist/assets/index-lGCrUj85.css`
+
+- Applied the same embed centering and full-height fixes in the production-built CSS used by the live iframe.
+
+---
+
 ### Fixed: Caption not centered under each card (desktop + mobile)
 
 On desktop, the caption text below each card was not properly centered. The old approach used `absolute left-1/2 -translate-x-1/2` inside a flex wrapper, but the wrapper's width wasn't locked to the card width, causing misalignment — especially on edge cards.
