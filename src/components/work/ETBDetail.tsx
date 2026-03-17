@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import type { ETBData, ETBProject } from "@/data/work";
 import DetailModal from "@/components/work/DetailModal";
 import TagPills from "@/components/work/TagPills";
@@ -165,6 +165,7 @@ export default function ETBDetail({ data }: ETBDetailProps) {
   const [openDetailId, setOpenDetailId] = useState<string | null>(null);
   const [modalProjectId, setModalProjectId] = useState<string | null>(null);
   const [mediaStates, setMediaStates] = useState<Record<string, MediaState>>({});
+  const lastSelectedRef = useRef<string | null>(null);
 
   const selectedProject = useMemo(
     () => (openDetailId ? sortedProjects.find((project) => project.id === openDetailId) ?? null : null),
@@ -183,6 +184,28 @@ export default function ETBDetail({ data }: ETBDetailProps) {
     });
   };
 
+  // Track last selected for focus restore
+  useEffect(() => {
+    if (openDetailId) lastSelectedRef.current = openDetailId;
+  }, [openDetailId]);
+
+  // Escape key closes overlay
+  useEffect(() => {
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && openDetailId && !modalProjectId) {
+        setOpenDetailId(null);
+        if (lastSelectedRef.current) {
+          const bar = document.querySelector(
+            `[data-etb-bar="${lastSelectedRef.current}"] .etb-bar__head`,
+          ) as HTMLElement | null;
+          bar?.focus();
+        }
+      }
+    };
+    document.addEventListener("keydown", onKeyDown);
+    return () => document.removeEventListener("keydown", onKeyDown);
+  }, [openDetailId, modalProjectId]);
+
   return (
     <section className="etb" data-etb-section>
       <div className="etb-topStrip">
@@ -191,19 +214,19 @@ export default function ETBDetail({ data }: ETBDetailProps) {
       </div>
 
       <div
-        className={`etb-barStack ${hoveredId ? "has-hover" : ""} ${openDetailId ? "has-expanded" : ""}`}
+        className={`etb-barStack ${hoveredId ? "has-hover" : ""} ${openDetailId ? "has-active" : ""}`}
         data-etb-bars
         role="list"
         aria-label="Projects"
         onMouseLeave={() => setHoveredId(null)}
       >
         {sortedProjects.map((project) => {
-          const isExpanded = openDetailId === project.id;
+          const isActive = openDetailId === project.id;
           return (
             <div
               key={project.id}
               className={`etb-bar ${hoveredId === project.id ? "is-hovered" : ""} ${
-                isExpanded ? "is-expanded is-active" : ""
+                isActive ? "is-active" : ""
               }`}
               data-etb-bar={project.id}
               role="listitem"
@@ -212,9 +235,8 @@ export default function ETBDetail({ data }: ETBDetailProps) {
               <button
                 className="etb-bar__head"
                 type="button"
-                aria-expanded={isExpanded}
+                aria-pressed={isActive}
                 aria-label={project.name}
-                aria-controls={`etb-panel-${project.id}`}
                 onFocus={() => setHoveredId(project.id)}
                 onClick={() =>
                   setOpenDetailId((prev) => (prev === project.id ? null : project.id))
@@ -231,107 +253,63 @@ export default function ETBDetail({ data }: ETBDetailProps) {
                   ›
                 </span>
               </button>
-
-              <div
-                className="etb-bar__body"
-                id={`etb-panel-${project.id}`}
-                role="region"
-                aria-hidden={!isExpanded}
-                aria-label={`${project.name} details`}
-              >
-                <div className="etb-bar__bodyInner">
-                  <div className="etb-bar__copy">
-                    <p className="etb-bar__desc">{project.oneLiner}</p>
-                    <ul className="etb-bar__bullets">
-                      {project.bullets.slice(0, 4).map((line) => (
-                        <li key={line}>{line}</li>
-                      ))}
-                      {project.bullets.length > 4 ? (
-                        <li className="etb-bar__bulletsMore">
-                          +{project.bullets.length - 4} more in full detail
-                        </li>
-                      ) : null}
-                    </ul>
-                  </div>
-
-                  <div className="etb-bar__side">
-                    <div className="etb-bar__tags">
-                      <TagPills tags={project.tags} className="etb-pill" />
-                    </div>
-                    <div className="etb-bar__dataMeta">
-                      <span className="etb-bar__dataMetaItem">
-                        Bullets {project.bullets.length}
-                      </span>
-                      <span className="etb-bar__dataMetaItem">Tags {project.tags.length}</span>
-                      <span className="etb-bar__dataMetaItem">
-                        Complete {project.completenessScore}%
-                      </span>
-                    </div>
-                    <button
-                      className="etb-bar__cta"
-                      type="button"
-                      onClick={() => setModalProjectId(project.id)}
-                    >
-                      Open Detail →
-                    </button>
-                  </div>
-                </div>
-              </div>
             </div>
           );
         })}
-      </div>
 
-      <aside className={`etb-detail-panel ${selectedProject ? "is-open" : ""}`}>
-        <div className="etb-detail-panel__header">
-          <button
-            className="etb-detail-panel__close"
-            type="button"
-            onClick={() => setOpenDetailId(null)}
-            aria-label="Close detail panel"
-          >
-            ×
-          </button>
-        </div>
+        {/* Overlay detail panel */}
+        <aside
+          className={`etb-overlay ${selectedProject ? "is-open" : ""}`}
+          aria-hidden={!selectedProject}
+        >
+          <div className="etb-detail-panel__header">
+            <button
+              className="etb-detail-panel__close"
+              type="button"
+              onClick={() => setOpenDetailId(null)}
+              aria-label="Close detail panel"
+            >
+              ×
+            </button>
+          </div>
 
-        <div className="etb-detail-panel__body">
-          {selectedProject ? (
-            <div className="etb-detail__project">
-              <h3 className="etb-detail__name">{selectedProject.name}</h3>
-              <p className="etb-detail__category">{selectedProject.category}</p>
-              <span className={renderStatus(selectedProject.status)}>
-                {selectedProject.status}
-              </span>
-              <p className="etb-detail__desc">{selectedProject.oneLiner}</p>
-              <ul className="etb-detail__bullets">
-                {selectedProject.bullets.map((line) => (
-                  <li key={line}>{line}</li>
-                ))}
-              </ul>
-              <div className="etb-detail__tags">
-                <TagPills tags={selectedProject.tags} className="etb-pill etb-pill--detail" />
-              </div>
-              <div className="etb-detail__snapshot">
-                <h4 className="etb-detail__snapshotTitle">System Snapshot</h4>
-                <ul className="etb-detail__snapshotList">
-                  {getSystemSnapshot(selectedProject).map((line) => (
+          <div className="etb-detail-panel__body">
+            {selectedProject ? (
+              <div className="etb-detail__project">
+                <h3 className="etb-detail__name">{selectedProject.name}</h3>
+                <p className="etb-detail__category">{selectedProject.category}</p>
+                <span className={renderStatus(selectedProject.status)}>
+                  {selectedProject.status}
+                </span>
+                <p className="etb-detail__desc">{selectedProject.oneLiner}</p>
+                <ul className="etb-detail__bullets">
+                  {selectedProject.bullets.map((line) => (
                     <li key={line}>{line}</li>
                   ))}
                 </ul>
+                <div className="etb-detail__tags">
+                  <TagPills tags={selectedProject.tags} className="etb-pill etb-pill--detail" />
+                </div>
+                <div className="etb-detail__snapshot">
+                  <h4 className="etb-detail__snapshotTitle">System Snapshot</h4>
+                  <ul className="etb-detail__snapshotList">
+                    {getSystemSnapshot(selectedProject).map((line) => (
+                      <li key={line}>{line}</li>
+                    ))}
+                  </ul>
+                </div>
+                <button
+                  className="etb-bar__cta"
+                  type="button"
+                  onClick={() => setModalProjectId(selectedProject.id)}
+                >
+                  Open Detail →
+                </button>
               </div>
-              <button
-                className="etb-bar__cta"
-                type="button"
-                onClick={() => setModalProjectId(selectedProject.id)}
-              >
-                Open Detail →
-              </button>
-            </div>
-          ) : (
-            <div className="etb-detail__empty">Select a project to inspect details.</div>
-          )}
-        </div>
-      </aside>
+            ) : null}
+          </div>
+        </aside>
+      </div>
 
       <section className="etb-graduate" aria-label="Graduate work">
         <h4 className="etb-graduate__title">{data.graduateWork.title}</h4>
