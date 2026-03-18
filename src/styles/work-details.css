@@ -62,6 +62,69 @@
   text-shadow: 0 2px 20px rgba(0, 0, 0, 0.35);
 }
 
+/* Mobile: frosted glass pill — bottom-center, premium float */
+@media (max-width: 767px) {
+  .pd-full__tagline {
+    /* Compact pill centered at bottom */
+    right: auto;
+    left: 50%;
+    top: auto;
+    bottom: clamp(8px, 2vw, 16px);
+    transform: translateX(-50%);
+
+    /* Single horizontal line */
+    flex-direction: row;
+    gap: 0.38em;
+    justify-content: center;
+    align-items: center;
+    white-space: nowrap;
+
+    /* Small, refined type */
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    line-height: 1;
+
+    /* Frosted glass pill — matches Glass Pill Lab */
+    padding: 10px 20px;
+    min-width: 160px;
+    max-width: 300px;
+    border-radius: 999px;
+    background: rgba(180, 200, 220, 0.18);
+    backdrop-filter: blur(24px) saturate(1.6) brightness(1.06);
+    -webkit-backdrop-filter: blur(24px) saturate(1.6) brightness(1.06);
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    box-shadow:
+      0 2px 12px rgba(0, 0, 0, 0.12),
+      0 0.5px 0 rgba(255, 255, 255, 0.14) inset,
+      0 -0.5px 0 rgba(0, 0, 0, 0.06) inset;
+
+    pointer-events: auto;
+    cursor: default;
+    color: rgba(255, 255, 255, 0.92);
+    text-shadow: 0 0.5px 2px rgba(0, 0, 0, 0.12);
+
+    /* Pill + text float together (Iteration 1) */
+    animation: pd-pill-float 5s ease-in-out infinite;
+    will-change: transform;
+  }
+
+  .pd-full__tagline span {
+    display: inline-block;
+  }
+
+  @keyframes pd-pill-float {
+    0%, 100% { transform: translateX(-50%) translateY(0); }
+    50% { transform: translateX(-50%) translateY(-4px); }
+  }
+}
+
+@media (max-width: 767px) and (prefers-reduced-motion: reduce) {
+  .pd-full__tagline {
+    animation: none !important;
+  }
+}
+
 .pd-full__bg {
   z-index: 0;
   object-position: center center;
@@ -674,7 +737,7 @@
 
 /* ---- Mobile: full-push dossier (Variant C behavior) ---- */
 
-/* Hide the mobile overlay on desktop */
+/* Mobile overlay — portaled to document.body, hidden on desktop */
 .etb-mobileOverlay {
   display: none;
 }
@@ -690,15 +753,20 @@
     padding-right: clamp(20px, 3vw, 40px);
   }
 
-  /* Show the full-screen mobile overlay */
+  /* Full-screen mobile overlay — portaled to body, escapes all parent stacking */
   .etb-mobileOverlay {
     display: block;
     position: fixed;
     inset: 0;
-    z-index: 50;
-    background: rgba(7, 8, 11, 0.98);
+    z-index: 9999;
+    background: #07080b;
     overflow-y: auto;
+    overflow-x: hidden;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
     animation: etb-mobileSlideIn 300ms cubic-bezier(0.22, 1, 0.36, 1) both;
+    /* Isolate stacking context completely */
+    isolation: isolate;
   }
 
   @keyframes etb-mobileSlideIn {
@@ -709,13 +777,16 @@
   /* Dossier card fills mobile screen */
   .etb-mobileOverlay .etb-dos {
     min-height: 100vh;
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
   }
 
   .etb-mobileOverlay .etb-dos__topbar {
     padding: 16px 20px 12px;
     position: sticky;
     top: 0;
-    background: rgba(7, 8, 11, 0.98);
+    background: #07080b;
     z-index: 2;
   }
 
@@ -732,20 +803,24 @@
 
   .etb-mobileOverlay .etb-dos__title {
     font-size: 24px;
+    color: #111116;
   }
 
   .etb-mobileOverlay .etb-dos__oneLiner {
     font-size: 14px;
     line-height: 1.5;
+    color: rgba(17, 17, 22, 0.82);
   }
 
   .etb-mobileOverlay .etb-dos__bullets li {
     font-size: 13px;
     line-height: 1.45;
+    color: rgba(17, 17, 22, 0.82);
   }
 
   .etb-mobileOverlay .etb-dos__notesList li {
     font-size: 12px;
+    color: rgba(17, 17, 22, 0.72);
   }
 
   .etb-mobileOverlay .etb-dos__cta {
@@ -2747,12 +2822,7 @@
     min-height: clamp(320px, 62vw, 460px);
   }
 
-  .pd-full__tagline {
-    top: auto;
-    bottom: 8%;
-    transform: none;
-    font-size: clamp(1.8rem, 8vw, 2.8rem);
-  }
+  /* Glass pill styles handled by max-width: 767px block above */
 
   .pd-full__bar {
     padding: 14px 16px;

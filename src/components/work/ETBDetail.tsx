@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import type { ETBData, ETBProject } from "@/data/work";
 import DetailModal from "@/components/work/DetailModal";
 import TagPills from "@/components/work/TagPills";
@@ -165,7 +166,9 @@ export default function ETBDetail({ data }: ETBDetailProps) {
   const [openDetailId, setOpenDetailId] = useState<string | null>(null);
   const [modalProjectId, setModalProjectId] = useState<string | null>(null);
   const [mediaStates, setMediaStates] = useState<Record<string, MediaState>>({});
+  const [portalTarget, setPortalTarget] = useState<HTMLElement | null>(null);
   const lastSelectedRef = useRef<string | null>(null);
+  const savedScrollRef = useRef<number>(0);
 
   const selectedProject = useMemo(
     () => (openDetailId ? sortedProjects.find((project) => project.id === openDetailId) ?? null : null),
@@ -184,9 +187,42 @@ export default function ETBDetail({ data }: ETBDetailProps) {
     });
   };
 
+  // Set portal target after mount (client only)
+  useEffect(() => {
+    setPortalTarget(document.body);
+  }, []);
+
   // Track last selected for focus restore
   useEffect(() => {
     if (openDetailId) lastSelectedRef.current = openDetailId;
+  }, [openDetailId]);
+
+  // Lock scroll on ALL parent containers when mobile overlay is open
+  useEffect(() => {
+    if (!openDetailId) return;
+
+    const isMobile = window.matchMedia("(max-width: 767px)").matches;
+    if (!isMobile) return;
+
+    // Save scroll position of the detail screen
+    const section = document.querySelector("[data-etb-section]");
+    const scrollParent = section?.closest(".work__screen--detail") as HTMLElement | null;
+    if (scrollParent) {
+      savedScrollRef.current = scrollParent.scrollTop;
+      scrollParent.style.overflow = "hidden";
+    }
+
+    // Also lock document body to prevent any background scroll
+    const prevBodyOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      if (scrollParent) {
+        scrollParent.style.overflow = "";
+        scrollParent.scrollTop = savedScrollRef.current;
+      }
+      document.body.style.overflow = prevBodyOverflow;
+    };
   }, [openDetailId]);
 
   // Escape key closes overlay
@@ -334,91 +370,9 @@ export default function ETBDetail({ data }: ETBDetailProps) {
         </aside>
       </div>
 
-      {/* Mobile: full-push dossier overlay (Variant C behavior) */}
-      {selectedProject ? (
-        <div
-          className="etb-mobileOverlay"
-          role="dialog"
-          aria-label={`${selectedProject.name} details`}
-        >
-          <div className="etb-dos">
-            <div className="etb-dos__topbar">
-              <span className="etb-dos__eyebrow">Project File</span>
-              <button
-                className="etb-dos__close"
-                type="button"
-                onClick={() => setOpenDetailId(null)}
-                aria-label="Close detail panel"
-              >
-                Close
-              </button>
-            </div>
+      {/* Mobile overlay is portaled to document.body — see below */}
 
-            <div className="etb-dos__card">
-              <div className="etb-dos__meta">
-                <span className={`etb-dos__status etb-dos__status--${toSlug(selectedProject.status)}`}>
-                  {selectedProject.status}
-                </span>
-                <span className="etb-dos__category">{selectedProject.category}</span>
-              </div>
-
-              <h3 className="etb-dos__title">{selectedProject.name}</h3>
-              <p className="etb-dos__oneLiner">{selectedProject.oneLiner}</p>
-              <hr className="etb-dos__rule" />
-
-              <ul className="etb-dos__bullets">
-                {selectedProject.bullets.slice(0, 3).map((line) => (
-                  <li key={line}>{line}</li>
-                ))}
-              </ul>
-
-              <div className="etb-dos__tags">
-                {selectedProject.tags.map((tag) => (
-                  <span key={tag} className="etb-dos__tag">{tag}</span>
-                ))}
-              </div>
-
-              <div className="etb-dos__notes">
-                <span className="etb-dos__notesLabel">System Notes</span>
-                <ul className="etb-dos__notesList">
-                  {getSystemSnapshot(selectedProject).slice(0, 3).map((line) => (
-                    <li key={line}>{line}</li>
-                  ))}
-                </ul>
-              </div>
-
-              <button
-                className="etb-dos__cta"
-                type="button"
-                onClick={() => setModalProjectId(selectedProject.id)}
-              >
-                View Full Detail &rarr;
-              </button>
-            </div>
-          </div>
-        </div>
-      ) : null}
-
-      <section className="etb-graduate" aria-label="Graduate work">
-        <h4 className="etb-graduate__title">{data.graduateWork.title}</h4>
-        <p className="etb-graduate__subtitle">{data.graduateWork.subtitle}</p>
-        <div className="etb-graduate__grid">
-          {data.graduateWork.cards.map((card) => (
-            <article key={card.title} className="etb-graduateCard">
-              <h5 className="etb-graduateCard__title">{card.title}</h5>
-              <p className="etb-graduateCard__outcome">{card.outcomeLine}</p>
-              <ul className="etb-graduateCard__bullets">
-                {card.bullets.map((line) => (
-                  <li key={line}>{line}</li>
-                ))}
-              </ul>
-              <div className="etb-graduateCard__tags">
-                <TagPills tags={card.tags} className="etb-pill etb-pill--soft" />
-              </div>
-            </article>
-          ))}
-        </div>
-      </section>
+      {/* Graduate work section hidden — placeholder content removed */}
 
       <DetailModal
         isOpen={Boolean(modalProject)}
@@ -477,6 +431,74 @@ export default function ETBDetail({ data }: ETBDetailProps) {
           </>
         ) : null}
       </DetailModal>
+
+      {/* Mobile: full-push dossier — portaled to document.body to escape parent stacking/overflow */}
+      {portalTarget && selectedProject
+        ? createPortal(
+            <div
+              className="etb-mobileOverlay"
+              role="dialog"
+              aria-label={`${selectedProject.name} details`}
+            >
+              <div className="etb-dos">
+                <div className="etb-dos__topbar">
+                  <span className="etb-dos__eyebrow">Project File</span>
+                  <button
+                    className="etb-dos__close"
+                    type="button"
+                    onClick={() => setOpenDetailId(null)}
+                    aria-label="Close detail panel"
+                  >
+                    Close
+                  </button>
+                </div>
+
+                <div className="etb-dos__card">
+                  <div className="etb-dos__meta">
+                    <span className={`etb-dos__status etb-dos__status--${toSlug(selectedProject.status)}`}>
+                      {selectedProject.status}
+                    </span>
+                    <span className="etb-dos__category">{selectedProject.category}</span>
+                  </div>
+
+                  <h3 className="etb-dos__title">{selectedProject.name}</h3>
+                  <p className="etb-dos__oneLiner">{selectedProject.oneLiner}</p>
+                  <hr className="etb-dos__rule" />
+
+                  <ul className="etb-dos__bullets">
+                    {selectedProject.bullets.slice(0, 3).map((line) => (
+                      <li key={line}>{line}</li>
+                    ))}
+                  </ul>
+
+                  <div className="etb-dos__tags">
+                    {selectedProject.tags.map((tag) => (
+                      <span key={tag} className="etb-dos__tag">{tag}</span>
+                    ))}
+                  </div>
+
+                  <div className="etb-dos__notes">
+                    <span className="etb-dos__notesLabel">System Notes</span>
+                    <ul className="etb-dos__notesList">
+                      {getSystemSnapshot(selectedProject).slice(0, 3).map((line) => (
+                        <li key={line}>{line}</li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  <button
+                    className="etb-dos__cta"
+                    type="button"
+                    onClick={() => setModalProjectId(selectedProject.id)}
+                  >
+                    View Full Detail &rarr;
+                  </button>
+                </div>
+              </div>
+            </div>,
+            portalTarget,
+          )
+        : null}
     </section>
   );
 }
