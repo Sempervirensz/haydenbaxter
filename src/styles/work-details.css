@@ -2917,3 +2917,250 @@
     mask-image: none !important;
   }
 }
+
+/* ====================================================
+   Supply Chain — Journey Globe (Hybrid K, all-serif)
+   ==================================================== */
+
+.sc-journey {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  gap: 0;
+  min-height: 0;
+  flex: 1;
+}
+
+.sc-journey__globe {
+  flex: 1 1 0%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Floating glass card */
+.sc-journey__floatingCard {
+  position: absolute;
+  bottom: 40px;
+  right: 32px;
+  max-width: 300px;
+  padding: 20px 24px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+  pointer-events: none;
+  text-align: left;
+}
+
+.sc-journey__floatingCard.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.sc-journey__hint {
+  color: rgba(255, 255, 255, 0.45);
+  font-family: var(--font-serif, serif);
+  font-size: 13px;
+  font-style: italic;
+  letter-spacing: 0.01em;
+  margin: 0;
+}
+
+.sc-journey__year {
+  font-family: var(--font-serif, serif);
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  color: rgba(255, 255, 255, 0.45);
+  margin-bottom: 4px;
+}
+
+.sc-journey__cardTitle {
+  font-family: var(--font-serif, serif);
+  font-size: clamp(18px, 3vw, 24px);
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  margin: 0 0 8px;
+}
+
+.sc-journey__desc {
+  font-family: var(--font-serif, serif);
+  font-size: 13px;
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.7);
+  margin: 0;
+}
+
+/* Timeline sidebar */
+.sc-journey__sidebar {
+  width: 260px;
+  flex-shrink: 0;
+  padding: 40px 24px;
+  border-left: 1px solid rgba(255, 255, 255, 0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  overflow-y: auto;
+  z-index: 1;
+  background: #0a0a0a;
+}
+
+.sc-journey__sidebarTitle {
+  font-family: var(--font-serif, serif);
+  font-size: 20px;
+  font-style: italic;
+  letter-spacing: -0.02em;
+  margin-bottom: 32px;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.sc-journey__timelineItem {
+  display: flex;
+  gap: 16px;
+  padding: 16px 0;
+  background: none;
+  border: none;
+  border-left: 1px solid rgba(255, 255, 255, 0.08);
+  margin-left: 15px;
+  padding-left: 20px;
+  color: rgba(255, 255, 255, 0.35);
+  cursor: pointer;
+  text-align: left;
+  transition: color 0.3s ease, border-color 0.3s ease;
+  position: relative;
+}
+
+.sc-journey__timelineItem.is-visited {
+  color: rgba(255, 255, 255, 0.6);
+  border-left-color: rgba(255, 255, 255, 0.2);
+}
+
+.sc-journey__timelineItem.is-active {
+  color: #fff;
+  border-left-color: #fff;
+}
+
+.sc-journey__timelineItem.is-hidden {
+  opacity: 0;
+  transform: translateX(12px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+  pointer-events: none;
+}
+
+.sc-journey__timelineItem:not(.is-hidden) {
+  opacity: 1;
+  transform: translateX(0);
+  transition: opacity 0.5s ease, transform 0.5s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+.sc-journey__timelineDot {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1.5px solid currentColor;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-serif, serif);
+  font-size: 12px;
+  flex-shrink: 0;
+  position: absolute;
+  left: -15px;
+  background: #0a0a0a;
+  transition: background 0.3s ease, border-color 0.3s ease;
+}
+
+.sc-journey__timelineItem.is-active .sc-journey__timelineDot {
+  background: #fff;
+  color: #0a0a0a;
+  border-color: #fff;
+}
+
+.sc-journey__timelineContent {
+  padding-left: 24px;
+}
+
+.sc-journey__timelineYear {
+  font-family: var(--font-serif, serif);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  color: rgba(255, 255, 255, 0.45);
+  margin-bottom: 2px;
+}
+
+.sc-journey__timelineTitle {
+  font-family: var(--font-serif, serif);
+  font-size: 18px;
+  letter-spacing: -0.01em;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .sc-journey__floatingCard,
+  .sc-journey__timelineItem {
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .sc-journey {
+    flex-direction: column;
+    padding: 16px;
+    gap: 0;
+  }
+
+  .sc-journey__globe {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+
+  .sc-journey__globe > div {
+    width: 100%;
+    max-width: 340px;
+    margin: 0 auto;
+  }
+
+  .sc-journey__floatingCard {
+    position: absolute;
+    bottom: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    right: auto;
+    max-width: 300px;
+    width: calc(100% - 32px);
+    text-align: center;
+    padding: 16px 20px;
+  }
+
+  .sc-journey__floatingCard.is-visible {
+    transform: translateX(-50%) translateY(0);
+  }
+
+  .sc-journey__sidebar {
+    width: 100%;
+    border-left: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    padding: 20px 0 0;
+    margin-top: 16px;
+  }
+
+  .sc-journey__sidebarTitle {
+    margin-bottom: 16px;
+  }
+
+  .sc-journey__timelineItem {
+    padding: 12px 0;
+  }
+}
