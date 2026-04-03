@@ -3,7 +3,7 @@
 // ---------------------------------------------------------------------------
 
 // --- Variant IDs ---
-export const SC_LAB_VARIANTS = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K"] as const;
+export const SC_LAB_VARIANTS = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L"] as const;
 export type SCLabVariant = (typeof SC_LAB_VARIANTS)[number];
 
 // --- Text Treatment Modes ---
@@ -236,6 +236,7 @@ export const VARIANT_LABELS: Record<SCLabVariant, string> = {
   I: "I \u2014 Timeline",
   J: "J \u2014 Full-Bleed",
   K: "K \u2014 Hybrid",
+  L: "L \u2014 Top Nav",
 };
 
 // --- Text mode labels ---
