@@ -2919,34 +2919,144 @@
 }
 
 /* ====================================================
-   Supply Chain — Journey Globe (Hybrid K, all-serif)
+   Supply Chain — Journey Globe (Top Nav L, all-serif)
    ==================================================== */
 
 .sc-journey {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   align-items: stretch;
-  gap: 0;
   min-height: 0;
   flex: 1;
+  height: calc(100vh - 64px);
 }
 
-.sc-journey__globe {
+/* Horizontal timeline nav */
+.sc-journey__topbar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 12px 32px 0;
+  position: relative;
+}
+
+.sc-journey__topbarLine {
+  position: absolute;
+  top: 50%;
+  left: 10%;
+  right: 10%;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.1);
+  z-index: 0;
+  pointer-events: none;
+}
+
+.sc-journey__topbarItem {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 10px 20px;
+  background: none;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  color: rgba(255, 255, 255, 0.35);
+  cursor: pointer;
+  transition: color 0.3s ease, border-color 0.3s ease, background 0.3s ease, opacity 0.5s ease, transform 0.5s ease;
+  font-family: inherit;
+}
+
+.sc-journey__topbarItem:hover:not(:disabled) {
+  color: rgba(255, 255, 255, 0.7);
+  border-color: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.sc-journey__topbarItem.is-visited {
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.sc-journey__topbarItem.is-active {
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.sc-journey__topbarItem.is-hidden {
+  opacity: 0;
+  transform: translateY(-8px);
+  pointer-events: none;
+}
+
+.sc-journey__topbarDot {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono, monospace);
+  font-size: 11px;
+  transition: background 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+}
+
+.sc-journey__topbarItem.is-active .sc-journey__topbarDot {
+  background: #fff;
+  border-color: #fff;
+  color: #0a0a0a;
+}
+
+.sc-journey__topbarItem.is-visited .sc-journey__topbarDot {
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+.sc-journey__topbarLabel {
+  font-family: var(--font-serif, serif);
+  font-size: 14px;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+.sc-journey__topbarYear {
+  font-family: var(--font-mono, monospace);
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  opacity: 0.5;
+}
+
+/* Globe + card body */
+.sc-journey__topnavBody {
   flex: 1 1 0%;
   display: flex;
   align-items: center;
   justify-content: center;
-  min-width: 0;
   position: relative;
+  padding: 0 32px;
+  min-height: 0;
   overflow: hidden;
+}
+
+.sc-journey__globe {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  max-height: 100%;
+}
+
+.sc-journey__globe canvas {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
 }
 
 /* Floating glass card */
 .sc-journey__floatingCard {
-  position: absolute;
-  bottom: 40px;
-  right: 32px;
-  max-width: 300px;
   padding: 20px 24px;
   background: rgba(255, 255, 255, 0.04);
   border: 1px solid rgba(255, 255, 255, 0.08);
@@ -2954,16 +3064,30 @@
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   opacity: 0;
-  transform: translateY(12px);
   transition: opacity 0.5s ease, transform 0.5s ease;
   pointer-events: none;
-  text-align: left;
 }
 
 .sc-journey__floatingCard.is-visible {
   opacity: 1;
-  transform: translateY(0);
   pointer-events: auto;
+}
+
+/* Desktop: card floats to the right of globe */
+.sc-journey__floatingCard--center {
+  position: absolute;
+  bottom: 15%;
+  right: -20px;
+  transform: translateY(12px);
+  max-width: 320px;
+  width: max-content;
+  min-width: 240px;
+  text-align: left;
+  z-index: 2;
+}
+
+.sc-journey__floatingCard--center.is-visible {
+  transform: translateY(0);
 }
 
 .sc-journey__hint {
@@ -2999,113 +3123,10 @@
   margin: 0;
 }
 
-/* Timeline sidebar */
-.sc-journey__sidebar {
-  width: 260px;
-  flex-shrink: 0;
-  padding: 40px 24px;
-  border-left: 1px solid rgba(255, 255, 255, 0.06);
-  display: flex;
-  flex-direction: column;
-  gap: 0;
-  overflow-y: auto;
-  z-index: 1;
-  background: #0a0a0a;
-}
-
-.sc-journey__sidebarTitle {
-  font-family: var(--font-serif, serif);
-  font-size: 20px;
-  font-style: italic;
-  letter-spacing: -0.02em;
-  margin-bottom: 32px;
-  color: rgba(255, 255, 255, 0.45);
-}
-
-.sc-journey__timelineItem {
-  display: flex;
-  gap: 16px;
-  padding: 16px 0;
-  background: none;
-  border: none;
-  border-left: 1px solid rgba(255, 255, 255, 0.08);
-  margin-left: 15px;
-  padding-left: 20px;
-  color: rgba(255, 255, 255, 0.35);
-  cursor: pointer;
-  text-align: left;
-  transition: color 0.3s ease, border-color 0.3s ease;
-  position: relative;
-}
-
-.sc-journey__timelineItem.is-visited {
-  color: rgba(255, 255, 255, 0.6);
-  border-left-color: rgba(255, 255, 255, 0.2);
-}
-
-.sc-journey__timelineItem.is-active {
-  color: #fff;
-  border-left-color: #fff;
-}
-
-.sc-journey__timelineItem.is-hidden {
-  opacity: 0;
-  transform: translateX(12px);
-  transition: opacity 0.5s ease, transform 0.5s ease;
-  pointer-events: none;
-}
-
-.sc-journey__timelineItem:not(.is-hidden) {
-  opacity: 1;
-  transform: translateX(0);
-  transition: opacity 0.5s ease, transform 0.5s ease, color 0.3s ease, border-color 0.3s ease;
-}
-
-.sc-journey__timelineDot {
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  border: 1.5px solid currentColor;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: var(--font-serif, serif);
-  font-size: 12px;
-  flex-shrink: 0;
-  position: absolute;
-  left: -15px;
-  background: #0a0a0a;
-  transition: background 0.3s ease, border-color 0.3s ease;
-}
-
-.sc-journey__timelineItem.is-active .sc-journey__timelineDot {
-  background: #fff;
-  color: #0a0a0a;
-  border-color: #fff;
-}
-
-.sc-journey__timelineContent {
-  padding-left: 24px;
-}
-
-.sc-journey__timelineYear {
-  font-family: var(--font-serif, serif);
-  font-size: 12px;
-  letter-spacing: 0.04em;
-  color: rgba(255, 255, 255, 0.45);
-  margin-bottom: 2px;
-}
-
-.sc-journey__timelineTitle {
-  font-family: var(--font-serif, serif);
-  font-size: 18px;
-  letter-spacing: -0.01em;
-}
-
 /* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
   .sc-journey__floatingCard,
-  .sc-journey__timelineItem {
+  .sc-journey__topbarItem {
     transition-duration: 0.01ms !important;
   }
 }
@@ -3113,54 +3134,65 @@
 /* Mobile */
 @media (max-width: 768px) {
   .sc-journey {
-    flex-direction: column;
-    padding: 16px;
+    height: auto;
+    min-height: 0;
+    padding: 16px 0;
+    gap: 8px;
+  }
+
+  .sc-journey__topbar {
     gap: 0;
+    padding: 8px 8px;
+  }
+
+  .sc-journey__topbarItem {
+    padding: 6px 8px;
+  }
+
+  .sc-journey__topbarLabel {
+    font-size: 11px;
+  }
+
+  .sc-journey__topbarDot {
+    width: 24px;
+    height: 24px;
+    font-size: 10px;
+  }
+
+  .sc-journey__topbarYear {
+    display: none;
+  }
+
+  .sc-journey__topnavBody {
+    flex: 0 0 auto;
+    padding: 0 16px 24px;
   }
 
   .sc-journey__globe {
     width: 100%;
-    display: flex;
-    align-items: center;
     justify-content: center;
-    position: relative;
   }
 
-  .sc-journey__globe > div {
+  .sc-journey__globe > div:first-child {
     width: 100%;
-    max-width: 340px;
+    max-width: 320px;
     margin: 0 auto;
   }
 
-  .sc-journey__floatingCard {
+  .sc-journey__floatingCard--center {
     position: absolute;
-    bottom: 12px;
-    left: 50%;
-    transform: translateX(-50%);
+    bottom: 50%;
     right: auto;
-    max-width: 300px;
-    width: calc(100% - 32px);
+    left: 50%;
+    transform: translate(-50%, 50%) translateY(8px);
+    max-width: calc(100% - 32px);
+    min-width: 0;
+    width: 280px;
     text-align: center;
-    padding: 16px 20px;
+    padding: 14px 18px;
   }
 
-  .sc-journey__floatingCard.is-visible {
-    transform: translateX(-50%) translateY(0);
-  }
-
-  .sc-journey__sidebar {
-    width: 100%;
-    border-left: none;
-    border-top: 1px solid rgba(255, 255, 255, 0.06);
-    padding: 20px 0 0;
-    margin-top: 16px;
-  }
-
-  .sc-journey__sidebarTitle {
-    margin-bottom: 16px;
-  }
-
-  .sc-journey__timelineItem {
-    padding: 12px 0;
+  .sc-journey__floatingCard--center.is-visible {
+    transform: translate(-50%, 50%);
   }
 }

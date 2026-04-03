@@ -25,7 +25,11 @@ export default function SupplyChainDetail({ data, isActive }: SupplyChainDetailP
     const timer = setInterval(() => {
       i++;
       setRevealedCount(i);
-      if (i >= JOURNEY_STOPS.length) clearInterval(timer);
+      if (i >= JOURNEY_STOPS.length) {
+        clearInterval(timer);
+        // Auto-select first stop after all dots revealed
+        setTimeout(() => setSelectedStop(0), 600);
+      }
     }, 800);
     return () => clearInterval(timer);
   }, [isActive]);
@@ -55,55 +59,54 @@ export default function SupplyChainDetail({ data, isActive }: SupplyChainDetailP
 
   return (
     <section className="sc-journey" aria-label="Supply chain journey">
-      <div className="sc-journey__globe">
-        <RotatingEarth
-          width={480}
-          height={480}
-          autoRotate={selectedStop === undefined}
-          transparentBg
-          journeyDots={journeyDots}
-          selectedDot={selectedStop}
-          journeyArcs={visibleArcs}
-          onDotClick={handleDotClick}
-        />
-        {/* Floating glass card */}
-        <div
-          className={`sc-journey__floatingCard ${activeStop ? "is-visible" : ""}`}
-        >
-          {activeStop ? (
-            <>
-              <div className="sc-journey__year">{activeStop.year}</div>
-              <h3 className="sc-journey__cardTitle">{activeStop.title}</h3>
-              <p className="sc-journey__desc">{activeStop.description}</p>
-            </>
-          ) : (
-            <p className="sc-journey__hint">Select a stop to explore</p>
-          )}
-        </div>
-      </div>
-
-      <div className="sc-journey__sidebar">
-        <div className="sc-journey__sidebarTitle">Journey</div>
+      {/* Horizontal timeline nav */}
+      <nav className="sc-journey__topbar" aria-label="Journey stops">
         {JOURNEY_STOPS.map((stop, i) => {
           const revealed = i < revealedCount;
           return (
             <button
               key={stop.id}
               type="button"
-              className={`sc-journey__timelineItem ${selectedStop === i ? "is-active" : ""} ${selectedStop !== undefined && i <= selectedStop ? "is-visited" : ""} ${!revealed ? "is-hidden" : ""}`}
+              className={`sc-journey__topbarItem ${selectedStop === i ? "is-active" : ""} ${selectedStop !== undefined && i <= selectedStop ? "is-visited" : ""} ${!revealed ? "is-hidden" : ""}`}
               onClick={() => revealed && setSelectedStop(i)}
               disabled={!revealed}
             >
-              <div className="sc-journey__timelineDot">
-                <span>{i + 1}</span>
-              </div>
-              <div className="sc-journey__timelineContent">
-                <div className="sc-journey__timelineYear">{stop.year}</div>
-                <div className="sc-journey__timelineTitle">{stop.title}</div>
-              </div>
+              <span className="sc-journey__topbarDot">{i + 1}</span>
+              <span className="sc-journey__topbarLabel">{stop.label}</span>
+              <span className="sc-journey__topbarYear">{stop.year}</span>
             </button>
           );
         })}
+        <div className="sc-journey__topbarLine" />
+      </nav>
+
+      {/* Globe + floating glass card */}
+      <div className="sc-journey__topnavBody">
+        <div className="sc-journey__globe">
+          <RotatingEarth
+            width={500}
+            height={500}
+            autoRotate={selectedStop === undefined}
+            transparentBg
+            journeyDots={journeyDots}
+            selectedDot={selectedStop}
+            journeyArcs={visibleArcs}
+            onDotClick={handleDotClick}
+          />
+          <div
+            className={`sc-journey__floatingCard sc-journey__floatingCard--center ${activeStop ? "is-visible" : ""}`}
+          >
+            {activeStop ? (
+              <>
+                <div className="sc-journey__year">{activeStop.year}</div>
+                <h3 className="sc-journey__cardTitle">{activeStop.title}</h3>
+                <p className="sc-journey__desc">{activeStop.description}</p>
+              </>
+            ) : (
+              <p className="sc-journey__hint">Select a stop to explore</p>
+            )}
+          </div>
+        </div>
       </div>
     </section>
   );
