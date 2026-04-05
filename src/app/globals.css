@@ -292,10 +292,7 @@
 .work__screen.is-past {
   transform: translateY(-100%);
   z-index: 1;
-  visibility: hidden;
-  transition:
-    transform 900ms cubic-bezier(0.22, 0.61, 0.36, 1),
-    visibility 0ms linear 900ms;
+  pointer-events: none;
 }
 
 /* Landing screen visible by default (no JS needed for initial paint) */
@@ -551,6 +548,24 @@
   .tag--cta {
     display: none;
   }
+  .tag--connect {
+    font-size: 10px;
+    padding: 10px 14px 9px;
+  }
+  .connect__grid {
+    gap: 10px;
+  }
+  .about__gallery {
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  .about__photo--2,
+  .about__photo--5 {
+    grid-column: span 2;
+  }
+  .journal__card-body {
+    padding: 16px 18px 20px;
+  }
   /* ── Mobile: regular vertical scroll (no sticky/CD interaction) ── */
   .work {
     height: auto;
@@ -653,6 +668,281 @@
   }
 }
 
+/* Connect section */
+.connect {
+  background: #0a0a0a;
+  padding: clamp(64px, 10vw, 140px) 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.connect__heading {
+  font-family: var(--font-serif);
+  font-size: clamp(40px, 7vw, 80px);
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.92);
+  margin-bottom: clamp(32px, 5vw, 56px);
+}
+
+.connect__grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 14px;
+  max-width: 640px;
+}
+
+.tag--connect {
+  font-size: 11px;
+  padding: 11px 18px 10px;
+  letter-spacing: 0.18em;
+}
+
+.tag--display {
+  cursor: default;
+}
+
+.tag--display:hover {
+  transform: inherit;
+  box-shadow:
+    inset 0 2px 4px rgba(0, 0, 0, 0.75),
+    0 3px 0 #0b0b0b,
+    0 4px 8px rgba(0, 0, 0, 0.7);
+}
+
+.connect__id {
+  font-size: 9px;
+  color: rgba(255, 255, 255, 0.35);
+  margin-left: 8px;
+  letter-spacing: 0.12em;
+}
+
+.connect__calendly {
+  width: 100%;
+  max-width: 700px;
+  min-width: 320px;
+  height: 700px;
+  margin-top: clamp(40px, 6vw, 72px);
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+/* About section */
+.about {
+  background: #0a0a0a;
+  padding: clamp(64px, 10vw, 140px) 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.about__heading {
+  font-family: var(--font-serif);
+  font-size: clamp(40px, 7vw, 80px);
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.92);
+  margin-bottom: clamp(24px, 4vw, 48px);
+  text-align: center;
+}
+
+.about__intro {
+  font-family: var(--font-sans);
+  font-size: clamp(14px, 1.4vw, 18px);
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.55);
+  max-width: 640px;
+  text-align: center;
+  margin-bottom: clamp(40px, 6vw, 80px);
+}
+
+.about__gallery {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: auto auto;
+  gap: 12px;
+  max-width: 900px;
+  width: 100%;
+}
+
+.about__photo {
+  position: relative;
+  overflow: hidden;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(255, 255, 255, 0.03);
+  aspect-ratio: 4 / 3;
+}
+
+.about__photo--2 {
+  grid-column: span 2;
+  aspect-ratio: 16 / 9;
+}
+
+.about__photo--5 {
+  grid-column: span 2;
+  aspect-ratio: 16 / 9;
+}
+
+.about__photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.about__photo-empty {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 16px;
+}
+
+.about__photo-empty span {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.15);
+}
+
+/* Hide placeholder text when image loads */
+.about__photo img[src]:not([src=""]) ~ .about__photo-empty {
+  display: none;
+}
+
+/* Journal section */
+.journal {
+  background: #000;
+  padding: clamp(64px, 10vw, 140px) 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.journal__heading {
+  font-family: var(--font-serif);
+  font-size: clamp(40px, 7vw, 80px);
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.92);
+  margin-bottom: 12px;
+  text-align: center;
+}
+
+.journal__subline {
+  font-family: var(--font-sans);
+  font-size: clamp(13px, 1.2vw, 16px);
+  color: rgba(255, 255, 255, 0.38);
+  text-align: center;
+  max-width: 480px;
+  margin-bottom: clamp(32px, 5vw, 56px);
+}
+
+.journal__posts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+  max-width: 900px;
+  width: 100%;
+  margin-bottom: clamp(32px, 5vw, 56px);
+}
+
+.journal__card {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 420px;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.03);
+  text-decoration: none;
+  transition: border-color 300ms ease, box-shadow 300ms ease, transform 200ms ease;
+}
+
+.journal__card:hover {
+  border-color: rgba(255, 255, 255, 0.16);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+  transform: translateY(-4px);
+}
+
+.journal__card:focus-visible {
+  outline: none;
+  box-shadow:
+    0 12px 40px rgba(0, 0, 0, 0.5),
+    0 0 0 2px rgba(255, 255, 255, 0.14);
+}
+
+.journal__card-img {
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.journal__card-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.journal__card-body {
+  padding: 20px 24px 24px;
+}
+
+.journal__card-date {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.3);
+  display: block;
+  margin-bottom: 8px;
+}
+
+.journal__card-title {
+  font-family: var(--font-serif);
+  font-size: clamp(18px, 2vw, 22px);
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.88);
+  line-height: 1.3;
+  margin-bottom: 10px;
+}
+
+.journal__card-excerpt {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.4);
+  margin-bottom: 16px;
+}
+
+.journal__card-cta {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.5);
+  transition: color 200ms ease;
+}
+
+.journal__card:hover .journal__card-cta {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.tag--journal {
+  font-size: 11px;
+  padding: 12px 22px 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
 /* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
   .card-inner {
@@ -675,5 +965,12 @@
   }
   .brands__track {
     animation: none !important;
+  }
+  .tag--connect {
+    transform: none !important;
+  }
+  .journal__card {
+    transition: none !important;
+    transform: none !important;
   }
 }

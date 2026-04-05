@@ -5,8 +5,8 @@ export const SITE_CONTENT = {
     wordmark: "Hayden Baxter",
     navLinks: [
       { label: "Work", href: "#work" },
-      { label: "About", href: "#" },
-      { label: "Connect", href: "#" },
+      { label: "About", href: "#about" },
+      { label: "Connect", href: "#connect" },
       { label: "Journal", href: "https://journal.haydenbaxter.com", external: true },
       { label: "Book a Call", href: "#", cta: true },
     ],

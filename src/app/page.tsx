@@ -2,6 +2,9 @@ import dynamic from "next/dynamic";
 import HeroSection from "@/components/HeroSection";
 import CardDeck from "@/components/CardDeck";
 import BrandsCarousel from "@/components/BrandsCarousel";
+import ConnectSection from "@/components/ConnectSection";
+import AboutSection from "@/components/AboutSection";
+import JournalSection from "@/components/JournalSection";
 
 const WorkSection = dynamic(() => import("@/components/WorkSection"));
 
@@ -18,6 +21,9 @@ export default function Home() {
       </section>
       <BrandsCarousel />
       <WorkSection />
+      <ConnectSection />
+      <AboutSection />
+      <JournalSection />
     </main>
   );
 }
