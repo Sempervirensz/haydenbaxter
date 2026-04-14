@@ -110,6 +110,9 @@ export const CHOREOGRAPHY_TIMING = [3500, 3000, 2500, 4000];
 export interface JourneyStop {
   id: string;
   coords: [number, number];
+  /** Accomplishment headline shown as primary timeline label */
+  headline: string;
+  /** Short location tag shown under the headline */
   label: string;
   title: string;
   description: string;
@@ -120,6 +123,7 @@ export const JOURNEY_STOPS: JourneyStop[] = [
   {
     id: "new-york",
     coords: [-74, 40.7],
+    headline: "Broke into Fortune 100",
     label: "NYC",
     title: "New York",
     description: "Fortune 100 HQ. Started in procurement strategy at enterprise scale.",
@@ -128,7 +132,8 @@ export const JOURNEY_STOPS: JourneyStop[] = [
   {
     id: "taiwan",
     coords: [121, 23.5],
-    label: "TAIWAN",
+    headline: "Moved ops into Asia",
+    label: "Taiwan",
     title: "Taiwan",
     description: "First move into Asia-Pacific sourcing. Semiconductor and electronics supply chains.",
     year: "2017",
@@ -136,7 +141,8 @@ export const JOURNEY_STOPS: JourneyStop[] = [
   {
     id: "china",
     coords: [104, 35],
-    label: "CHINA",
+    headline: "Became fluent in Mandarin",
+    label: "China",
     title: "China",
     description: "Deep operations across mainland China. Fluent in Mandarin. Supplier onboarding and governance.",
     year: "2018",
@@ -144,7 +150,8 @@ export const JOURNEY_STOPS: JourneyStop[] = [
   {
     id: "network",
     coords: [108, 10],
-    label: "NETWORK",
+    headline: "Built supplier networks",
+    label: "SE Asia",
     title: "Supplier Networks",
     description: "Built cross-border supplier networks spanning China, Vietnam, and Indonesia. Traceability and compliance systems.",
     year: "2020–Present",

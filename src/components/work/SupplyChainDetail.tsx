@@ -82,7 +82,7 @@ export default function SupplyChainDetail({ data, isActive }: SupplyChainDetailP
   return (
     <section className="sc-journey" aria-label="Supply chain journey">
       {/* Horizontal timeline nav */}
-      <nav className="sc-journey__topbar" aria-label="Journey stops">
+      <nav className="sc-journey__topbar sc-journey__topbar--stacked" aria-label="Journey stops">
         {JOURNEY_STOPS.map((stop, i) => {
           const revealed = i < revealedCount;
           return (
@@ -94,8 +94,12 @@ export default function SupplyChainDetail({ data, isActive }: SupplyChainDetailP
               disabled={!revealed}
             >
               <span className="sc-journey__topbarDot">{i + 1}</span>
-              <span className="sc-journey__topbarLabel">{stop.label}</span>
-              <span className="sc-journey__topbarYear">{stop.year}</span>
+              <span className="sc-journey__topbarStack">
+                <span className="sc-journey__topbarHeadline">{stop.headline}</span>
+                <span className="sc-journey__topbarSub">
+                  {stop.label} · {stop.year}
+                </span>
+              </span>
             </button>
           );
         })}

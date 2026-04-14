@@ -3029,6 +3029,39 @@
   opacity: 0.5;
 }
 
+/* Stacked label: accomplishment headline over location subtitle */
+.sc-journey__topbar--stacked {
+  gap: 32px;
+}
+
+.sc-journey__topbarStack {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  line-height: 1.15;
+}
+
+.sc-journey__topbarHeadline {
+  font-family: var(--font-serif, Georgia, serif);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.005em;
+  white-space: normal;
+  max-width: 180px;
+  text-align: center;
+  text-transform: none;
+}
+
+.sc-journey__topbarSub {
+  font-family: var(--font-mono, monospace);
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.5);
+  white-space: nowrap;
+}
+
 /* Globe + card body */
 .sc-journey__topnavBody {
   flex: 1 1 0%;
@@ -3176,6 +3209,19 @@
   }
 
   .sc-journey__topbarYear {
+    display: none;
+  }
+
+  .sc-journey__topbar--stacked {
+    gap: 12px;
+  }
+
+  .sc-journey__topbarHeadline {
+    font-size: 10px;
+    max-width: 90px;
+  }
+
+  .sc-journey__topbarSub {
     display: none;
   }
 
