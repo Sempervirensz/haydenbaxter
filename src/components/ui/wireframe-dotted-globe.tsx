@@ -27,6 +27,8 @@ interface RotatingEarthProps {
   journeyArcs?: { from: number; to: number }[]
   /** Called when a journey dot is clicked */
   onDotClick?: (index: number) => void
+  /** When true, disables drag-to-rotate and scroll-to-zoom (globe still responds to selectedDot) */
+  frozen?: boolean
 }
 
 function lerp(a: number, b: number, t: number) {
@@ -59,6 +61,7 @@ export default function RotatingEarth({
   selectedDot,
   journeyArcs,
   onDotClick,
+  frozen = false,
 }: RotatingEarthProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const [isLoading, setIsLoading] = useState(true)
@@ -71,8 +74,10 @@ export default function RotatingEarth({
   const selectedDotRef = useRef(selectedDot)
   const journeyArcsRef = useRef(journeyArcs)
   const onDotClickRef = useRef(onDotClick)
+  const frozenRef = useRef(frozen)
 
   useEffect(() => { cueRef.current = cue }, [cue])
+  useEffect(() => { frozenRef.current = frozen }, [frozen])
   useEffect(() => { pulsDotsRef.current = showPulseDots }, [showPulseDots])
   useEffect(() => { arcsRef.current = showArcs }, [showArcs])
   useEffect(() => { autoRotateRef.current = autoRotateProp }, [autoRotateProp])
@@ -627,6 +632,9 @@ export default function RotatingEarth({
         }
       }
 
+      // When frozen, only allow dot clicks (handled above), no drag
+      if (frozenRef.current) return
+
       isDragging = true
       const startX = event.clientX
       const startY = event.clientY
@@ -655,6 +663,7 @@ export default function RotatingEarth({
     }
 
     const handleWheel = (event: WheelEvent) => {
+      if (frozenRef.current) return
       event.preventDefault()
       const sf = event.deltaY > 0 ? 0.9 : 1.1
       currentZoom = Math.max(0.5, Math.min(3, currentZoom * sf))
@@ -676,7 +685,7 @@ export default function RotatingEarth({
         const dy = my - proj[1]
         if (dx * dx + dy * dy < 18 * 18) { overDot = true; break }
       }
-      canvas.style.cursor = overDot ? "pointer" : "grab"
+      canvas.style.cursor = overDot ? "pointer" : frozenRef.current ? "default" : "grab"
     }
 
     canvas.addEventListener("mousedown", handleMouseDown)

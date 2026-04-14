@@ -1,9 +1,14 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { JOURNEY_STOPS, JOURNEY_ARCS } from "@/data/scLab";
-import RotatingEarth from "@/components/ui/wireframe-dotted-globe";
+import dynamic from "next/dynamic";
 import type { SupplyChainData } from "@/data/work";
+
+const RealisticGlobe = dynamic(
+  () => import("@/components/ui/realistic-globe"),
+  { ssr: false }
+);
 
 interface SupplyChainDetailProps {
   data: SupplyChainData;
@@ -13,13 +18,30 @@ interface SupplyChainDetailProps {
 export default function SupplyChainDetail({ data, isActive }: SupplyChainDetailProps) {
   const [selectedStop, setSelectedStop] = useState<number | undefined>();
   const [revealedCount, setRevealedCount] = useState(0);
+  const hasPlayed = useRef(false);
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
-    if (!isActive) {
-      setRevealedCount(0);
-      setSelectedStop(undefined);
+    const mq = window.matchMedia("(max-width: 768px)");
+    setIsMobile(mq.matches);
+    const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches);
+    mq.addEventListener("change", handler);
+    return () => mq.removeEventListener("change", handler);
+  }, []);
+
+  const globeSize = isMobile ? 200 : 500;
+
+  useEffect(() => {
+    if (!isActive) return;
+
+    // Skip reveal animation on revisit — show everything immediately
+    if (hasPlayed.current) {
+      setRevealedCount(JOURNEY_STOPS.length);
+      if (selectedStop === undefined) setSelectedStop(0);
       return;
     }
+
+    hasPlayed.current = true;
     setRevealedCount(0);
     let i = 0;
     const timer = setInterval(() => {
@@ -83,29 +105,32 @@ export default function SupplyChainDetail({ data, isActive }: SupplyChainDetailP
       {/* Globe + floating glass card */}
       <div className="sc-journey__topnavBody">
         <div className="sc-journey__globe">
-          <RotatingEarth
-            width={500}
-            height={500}
+          <RealisticGlobe
+            width={globeSize}
+            height={globeSize}
             autoRotate={selectedStop === undefined}
-            transparentBg
+            frozen
+            visualStyle="clouds"
+            lonOffset={-69}
+            latOffset={40}
             journeyDots={journeyDots}
             selectedDot={selectedStop}
             journeyArcs={visibleArcs}
             onDotClick={handleDotClick}
           />
-          <div
-            className={`sc-journey__floatingCard sc-journey__floatingCard--center ${activeStop ? "is-visible" : ""}`}
-          >
-            {activeStop ? (
-              <>
-                <div className="sc-journey__year">{activeStop.year}</div>
-                <h3 className="sc-journey__cardTitle">{activeStop.title}</h3>
-                <p className="sc-journey__desc">{activeStop.description}</p>
-              </>
-            ) : (
-              <p className="sc-journey__hint">Select a stop to explore</p>
-            )}
-          </div>
+        </div>
+        <div
+          className={`sc-journey__floatingCard sc-journey__floatingCard--bottomRight ${activeStop ? "is-visible" : ""}`}
+        >
+          {activeStop ? (
+            <>
+              <div className="sc-journey__year">{activeStop.year}</div>
+              <h3 className="sc-journey__cardTitle">{activeStop.title}</h3>
+              <p className="sc-journey__desc">{activeStop.description}</p>
+            </>
+          ) : (
+            <p className="sc-journey__hint">Select a stop to explore</p>
+          )}
         </div>
       </div>
     </section>

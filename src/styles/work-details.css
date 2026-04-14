@@ -3036,7 +3036,7 @@
   align-items: center;
   justify-content: center;
   position: relative;
-  padding: 0 32px;
+  padding: 0;
   min-height: 0;
   overflow: hidden;
 }
@@ -3047,10 +3047,10 @@
   justify-content: center;
   position: relative;
   max-height: 100%;
+  max-width: 100%;
 }
 
 .sc-journey__globe canvas {
-  max-width: 100%;
   max-height: 100%;
   object-fit: contain;
 }
@@ -3073,20 +3073,36 @@
   pointer-events: auto;
 }
 
-/* Desktop: card floats to the right of globe */
+/* Desktop: card floats to the right, outside the globe */
 .sc-journey__floatingCard--center {
   position: absolute;
-  bottom: 15%;
-  right: -20px;
-  transform: translateY(12px);
-  max-width: 320px;
+  right: 32px;
+  top: 50%;
+  transform: translateY(-50%) translateX(12px);
+  max-width: 300px;
   width: max-content;
-  min-width: 240px;
+  min-width: 220px;
   text-align: left;
   z-index: 2;
 }
 
 .sc-journey__floatingCard--center.is-visible {
+  transform: translateY(-50%) translateX(0);
+}
+
+.sc-journey__floatingCard--bottomRight {
+  position: absolute;
+  right: 24px;
+  bottom: 24px;
+  max-width: 300px;
+  transform: translateY(12px);
+  background: rgba(180, 200, 220, 0.12);
+  border-color: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(24px) saturate(1.4);
+  -webkit-backdrop-filter: blur(24px) saturate(1.4);
+}
+
+.sc-journey__floatingCard--bottomRight.is-visible {
   transform: translateY(0);
 }
 
@@ -3164,8 +3180,9 @@
   }
 
   .sc-journey__topnavBody {
-    flex: 0 0 auto;
-    padding: 0 16px 24px;
+    flex: 1 1 0%;
+    padding: 0;
+    min-height: 0;
   }
 
   .sc-journey__globe {
@@ -3173,26 +3190,28 @@
     justify-content: center;
   }
 
-  .sc-journey__globe > div:first-child {
-    width: 100%;
-    max-width: 320px;
-    margin: 0 auto;
-  }
-
   .sc-journey__floatingCard--center {
     position: absolute;
-    bottom: 50%;
-    right: auto;
-    left: 50%;
-    transform: translate(-50%, 50%) translateY(8px);
-    max-width: calc(100% - 32px);
+    top: auto;
+    bottom: 16px;
+    right: 16px;
+    left: auto;
+    transform: translateY(8px);
+    max-width: 260px;
     min-width: 0;
-    width: 280px;
-    text-align: center;
+    width: auto;
+    text-align: left;
     padding: 14px 18px;
   }
 
   .sc-journey__floatingCard--center.is-visible {
-    transform: translate(-50%, 50%);
+    transform: translateY(0);
+  }
+
+  .sc-journey__floatingCard--bottomRight {
+    right: 16px;
+    bottom: 16px;
+    max-width: 240px;
+    padding: 14px 18px;
   }
 }
