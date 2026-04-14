@@ -474,6 +474,10 @@
   border-color: rgba(255, 255, 255, 0.65);
 }
 
+.work__screen--detail:has(.sc-journey) {
+  background: #000;
+}
+
 /* Top glow */
 .work__screen--detail::before {
   content: "";

@@ -2929,6 +2929,8 @@
   min-height: 0;
   flex: 1;
   height: calc(100vh - 64px);
+  background: #000;
+  border-radius: 20px;
 }
 
 /* Horizontal timeline nav */
