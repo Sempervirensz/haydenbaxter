@@ -27,12 +27,8 @@ export default function WorkSection() {
 
   return (
     <section id="work" ref={ref} className="work">
-      <div className="work__inner">
-        <article
-          className={`work__screen work__screen--landing ${
-            screenIndex === 0 ? "is-active" : ""
-          } ${screenIndex > 0 ? "is-past" : ""}`}
-        >
+      <div className="work__chapter work__chapter--landing" style={{ zIndex: 1 }}>
+        <article className="work__screen work__screen--landing">
           <h2 className="wl-title">{WORK_LANDING.title}</h2>
           <p className="wl-quote">{WORK_LANDING.quote}</p>
 
@@ -50,18 +46,19 @@ export default function WorkSection() {
           </div>
           <div className="cd-active-label">{activeLabel}</div>
         </article>
+      </div>
 
-        {WORK_SCREENS.map((screen, idx) => {
-          const detailScreenIndex = idx + 1;
-          const isActive = screenIndex === detailScreenIndex;
+      {WORK_SCREENS.map((screen, idx) => {
+        const detailScreenIndex = idx + 1;
+        const isActive = screenIndex === detailScreenIndex;
 
-          return (
-            <article
-              key={screen.id}
-              className={`work__screen work__screen--detail ${
-                isActive ? "is-active" : ""
-              } ${screenIndex > detailScreenIndex ? "is-past" : ""}`}
-            >
+        return (
+          <div
+            key={screen.id}
+            className="work__chapter work__chapter--detail"
+            style={{ zIndex: idx + 2 }}
+          >
+            <article className="work__screen work__screen--detail">
               <header className="work__detail-head">
                 <span className="work__detail-num">{screen.number}</span>
                 <h3 className="work__detail-name">
@@ -80,9 +77,9 @@ export default function WorkSection() {
 
               <DetailBody screen={screen} isActive={isActive} />
             </article>
-          );
-        })}
-      </div>
+          </div>
+        );
+      })}
     </section>
   );
 }

@@ -255,51 +255,41 @@
   padding: 0 16px;
 }
 
-/* Work + CD scroll */
+/* Work + CD scroll — sticky-stack layout */
 .work {
-  height: 2500vh;
   position: relative;
   background: #000;
 }
 
-.work__inner {
-  position: sticky;
-  top: 0;
-  height: 100vh;
-  max-width: 1200px;
-  margin: 0 auto;
-  overflow: hidden;
+.work__chapter {
+  position: relative;
+}
+
+.work__chapter--landing {
+  height: 500vh;
+}
+
+.work__chapter--detail {
+  height: 300vh;
+}
+
+.work__chapter--detail:last-child {
+  height: 94vh;
 }
 
 .work__screen {
-  position: absolute;
-  inset: 0;
-  padding: 48px 48px 32px;
+  position: sticky;
+  top: 6vh;
+  height: 88vh;
+  max-width: none;
+  margin: 0 auto;
+  padding: 24px 24px;
   display: flex;
   flex-direction: column;
-  transform: translateY(100%);
-  transition: transform 900ms cubic-bezier(0.22, 0.61, 0.36, 1);
-  pointer-events: none;
-  will-change: transform;
 }
 
-.work__screen.is-active {
-  transform: translateY(0);
-  pointer-events: auto;
-  z-index: 2;
-}
-
-.work__screen.is-past {
-  transform: translateY(-100%);
-  z-index: 1;
-  pointer-events: none;
-}
-
-/* Landing screen visible by default (no JS needed for initial paint) */
+/* Landing screen */
 .work__screen--landing {
-  transform: translateY(0);
-  pointer-events: auto;
-  z-index: 2;
   background: url("/usethisbackground.png") center / cover no-repeat;
   border: 1px solid rgba(255, 255, 255, 0.10);
   box-shadow:
@@ -308,7 +298,6 @@
     0 14px 48px rgba(0, 0, 0, 0.5);
   border-radius: 14px;
   margin: 6px;
-  inset: 6px;
   align-items: center;
   justify-content: center;
   text-align: center;
@@ -464,9 +453,52 @@
   white-space: nowrap;
 }
 
+/* Glass theme + lighting from lab */
 .work__screen--detail {
-  background: #0a0a0a;
-  overflow-y: auto;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(24px) saturate(1.4);
+  -webkit-backdrop-filter: blur(24px) saturate(1.4);
+  border: 1.5px solid rgba(255, 255, 255, 0.51);
+  border-radius: 32px;
+  box-shadow:
+    inset 0 1.5px 0 rgba(255, 255, 255, 0.765),
+    inset 0 0 100px rgba(0, 0, 0, 0.5),
+    0 60px 100px rgba(0, 0, 0, 0.6),
+    0 0 45px rgba(255, 255, 255, 0.2);
+  overflow-y: clip;
+  margin: 12px;
+  transition: border-color 300ms ease;
+}
+
+.work__screen--detail:hover {
+  border-color: rgba(255, 255, 255, 0.65);
+}
+
+/* Top glow */
+.work__screen--detail::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 30%;
+  right: 30%;
+  height: 120px;
+  background: radial-gradient(100% 100% at 50% 0%, rgba(255, 255, 255, 0.05) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 3;
+  border-radius: 32px 32px 0 0;
+}
+
+/* Ambient light + vignette overlay */
+.work__screen--detail::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 32px;
+  background:
+    radial-gradient(circle 60% at 50% 30%, rgba(255, 255, 255, 0.22) 0%, transparent 70%),
+    radial-gradient(ellipse 110% 90% at 50% 50%, transparent 40%, rgba(0, 0, 0, 1) 100%);
+  pointer-events: none;
+  z-index: 1;
 }
 
 .work__screen--detail::-webkit-scrollbar {
@@ -570,13 +602,12 @@
   .work {
     height: auto;
   }
-  .work__inner {
-    position: static;
-    height: auto;
-    overflow: visible;
+  .work__chapter {
+    height: auto !important;
   }
   .work__screen {
     position: static;
+    height: auto;
     transform: none !important;
     pointer-events: auto;
     visibility: visible !important;
@@ -587,11 +618,22 @@
   .work__screen--landing {
     min-height: auto;
     margin: 0;
-    inset: auto;
     padding: 48px 20px 32px;
     border-radius: 0;
     border: none;
     box-shadow: none;
+  }
+  .work__screen--detail {
+    border-radius: 0;
+    margin: 0;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    background: #0a0a0a;
+    border: none;
+    box-shadow: none;
+  }
+  .work__screen--detail::after {
+    display: none;
   }
   .scroll-hint,
   .cd-active-label {

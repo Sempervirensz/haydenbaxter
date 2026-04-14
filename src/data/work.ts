@@ -189,7 +189,7 @@ export interface WorkScrollZone {
 }
 
 export const WORK_SCROLL_CONFIG = {
-  screenBreaks: [0, 0.6, 0.7, 0.8, 0.9, 1],
+  screenBreaks: [0, 0.35, 0.56, 0.77, 0.95, 1],
   zones: [
     { hold: [0.0, 0.15], deg: 0, label: "" },                         // Angel at 12 (rest)
     { hold: [0.18, 0.35], deg: -45, label: "WorldPulse" },            // ~1:30 → top
