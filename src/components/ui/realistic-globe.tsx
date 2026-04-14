@@ -150,29 +150,28 @@ function ArcLine({
   radius: number;
   color?: string;
 }) {
-  const points = useMemo(() => {
+  const lineObj = useMemo(() => {
     const start = latLonToVec3(from[1], from[0], radius);
     const end = latLonToVec3(to[1], to[0], radius);
     const mid = start.clone().add(end).multiplyScalar(0.5).normalize().multiplyScalar(radius * 1.15);
     const curve = new THREE.QuadraticBezierCurve3(start, mid, end);
-    return curve.getPoints(64);
-  }, [from, to, radius]);
-
-  const lineRef = useRef<THREE.Line>(null);
+    const points = curve.getPoints(64);
+    const geometry = new THREE.BufferGeometry().setFromPoints(points);
+    const material = new THREE.LineBasicMaterial({
+      color,
+      transparent: true,
+      opacity: 0.5,
+      depthWrite: false,
+    });
+    return new THREE.Line(geometry, material);
+  }, [from, to, radius, color]);
 
   useFrame(({ clock }) => {
-    if (!lineRef.current) return;
-    const mat = lineRef.current.material as THREE.LineBasicMaterial;
+    const mat = lineObj.material as THREE.LineBasicMaterial;
     mat.opacity = 0.4 + 0.2 * Math.sin(clock.getElapsedTime() * 1.5);
   });
 
-  const geometry = useMemo(() => new THREE.BufferGeometry().setFromPoints(points), [points]);
-
-  return (
-    <line ref={lineRef as any} geometry={geometry}>
-      <lineBasicMaterial color={color} transparent opacity={0.5} depthWrite={false} />
-    </line>
-  );
+  return <primitive object={lineObj} />;
 }
 
 /* ── Style configs ── */
