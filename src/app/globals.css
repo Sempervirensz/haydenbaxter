@@ -517,13 +517,17 @@
   color: rgba(255, 255, 255, 0.52);
 }
 
-/* CD player — desktop: foreground base + disc on top */
+/* CD player — desktop: foreground base + disc on top.
+   Size and offset are viewport-height driven so the CD always parks below
+   the tracklist (which lives in the upper 40% of the card) regardless of
+   how tall the window is. Bottom half is allowed to overflow the card
+   edge — that's the intentional "hanging disc" framing. */
 .cd-player-wrap {
   position: absolute;
   bottom: 0;
   left: 50%;
-  transform: translateX(-50%) translateY(155px);
-  width: clamp(520px, 62%, 730px);
+  transform: translateX(-50%) translateY(22vh);
+  width: clamp(360px, 58vh, 620px);
   line-height: 0;
   pointer-events: none;
   z-index: 2;
@@ -587,9 +591,9 @@
   white-space: nowrap;
 }
 
-/* Short-viewport refinements — MUST come after the default `.cd-player-wrap`
-   and `.wl-c2__*` rules to win the cascade (equal specificity → last wins).
-   Applies when scroll-lock interaction is active (min-width: 641px). */
+/* Short-viewport list refinements — the CD sizing is already viewport-height
+   driven in the default rule above, so we only need to tighten list spacing
+   here. MUST come after default `.wl-c2__*` rules to win the cascade. */
 @media (max-height: 820px) and (min-width: 641px) {
   .wl-c2__list {
     top: clamp(18px, 3.5vh, 36px);
@@ -603,12 +607,6 @@
   .wl-c2__name {
     font-size: clamp(18px, 2.2vw, 24px);
   }
-  /* Scale CD off viewport height so it never exceeds card vertical capacity.
-     At 720px → ~460px wide; at 560px → ~360px wide. */
-  .cd-player-wrap {
-    width: clamp(360px, 64vh, 620px);
-    transform: translateX(-50%) translateY(28vh);
-  }
 }
 
 @media (max-height: 640px) and (min-width: 641px) {
@@ -620,10 +618,6 @@
   }
   .wl-c2__name {
     font-size: clamp(16px, 2vw, 20px);
-  }
-  .cd-player-wrap {
-    width: clamp(320px, 58vh, 520px);
-    transform: translateX(-50%) translateY(32vh);
   }
 }
 
