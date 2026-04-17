@@ -9,7 +9,7 @@ export default function Navbar() {
       style={{ fontFamily: "var(--font-sans)" }}
     >
       <span className="text-white text-xs sm:text-sm font-medium tracking-wide">{wordmark}</span>
-      <div className="flex items-center gap-2 sm:gap-3">
+      <div className="nav-tags flex items-center gap-2 sm:gap-3">
         {navLinks.map((link) => (
           <a
             key={link.label}

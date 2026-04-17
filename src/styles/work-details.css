@@ -3263,3 +3263,336 @@
     padding: 14px 18px;
   }
 }
+
+/* ──────────────────────────────────────────────────────────
+   Consulting — photo background + drawer (in-card)
+   ────────────────────────────────────────────────────────── */
+
+.cns-photo {
+  position: relative;
+  flex: 1;
+  overflow: hidden;
+  border-radius: 24px;
+}
+
+.cns-photo__img {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  display: block;
+  pointer-events: none;
+}
+
+/* Override the glass card's overlays so photo reads clearly */
+.work__screen--detail:has(.cns-photo)::after {
+  display: none;
+}
+.work__screen--detail:has(.cns-photo)::before {
+  display: none;
+}
+
+/* Menu button — positioned inside card */
+.cns-photo__menu {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 12;
+  cursor: pointer;
+  transition: color 160ms ease, box-shadow 100ms ease;
+}
+.cns-photo__menu:hover { color: #fff; }
+
+/* Backdrop inside card */
+.cns-photo__backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 8;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 320ms ease;
+  border-radius: 24px;
+}
+.cns-photo__backdrop.is-open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Drawer — slides from right, contained in card */
+.cns-photo__drawer {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 10;
+  width: min(460px, 85%);
+  background: rgba(10, 10, 10, 0.96);
+  border-left: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 0 24px 24px 0;
+  transform: translateX(100%);
+  transition: transform 360ms cubic-bezier(0.32, 0.72, 0, 1);
+  overflow: hidden;
+}
+.cns-photo__drawer.is-open {
+  transform: translateX(0);
+}
+
+.cns-photo__scroll {
+  height: 100%;
+  overflow-y: auto;
+  padding: 48px 24px 36px;
+  -webkit-overflow-scrolling: touch;
+}
+.cns-photo__scroll::-webkit-scrollbar { width: 4px; }
+.cns-photo__scroll::-webkit-scrollbar-track { background: transparent; }
+.cns-photo__scroll::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.08); border-radius: 2px; }
+
+/* Header */
+.cns-photo__header { margin-bottom: 32px; }
+
+.cns-photo__eyebrow {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.35);
+  margin-bottom: 10px;
+}
+
+.cns-photo__title {
+  font-family: var(--font-serif);
+  font-size: clamp(24px, 4vw, 36px);
+  font-weight: 400;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  color: rgba(255, 255, 255, 0.92);
+  margin: 0 0 8px;
+}
+
+.cns-photo__subtitle {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.45);
+  margin: 0;
+}
+
+/* Offer cards */
+.cns-photo__offers {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 32px;
+}
+
+.cns-photo__card {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.03);
+  transition: border-color 200ms ease, background 200ms ease;
+}
+.cns-photo__card.is-active,
+.cns-photo__card:hover {
+  border-color: rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.cns-photo__card-btn {
+  all: unset;
+  box-sizing: border-box;
+  display: block;
+  width: 100%;
+  padding: 16px 18px;
+  cursor: pointer;
+  text-align: left;
+}
+.cns-photo__card-btn:focus-visible {
+  outline: 1px solid rgba(255, 255, 255, 0.32);
+  outline-offset: -1px;
+  border-radius: 10px;
+}
+
+.cns-photo__card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+
+.cns-photo__card-title {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.88);
+  margin: 0;
+}
+
+.cns-photo__card-liner {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.42);
+  margin: 0 0 8px;
+}
+
+.cns-photo__card-deliverables {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 8px;
+}
+.cns-photo__card-deliverables li {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.35);
+  padding-left: 14px;
+  position: relative;
+}
+.cns-photo__card-deliverables li::before {
+  content: "—";
+  position: absolute;
+  left: 0;
+  color: rgba(255, 255, 255, 0.18);
+}
+
+.cns-photo__card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+/* Reuse existing cns-badge + cns-pill from above */
+
+/* Proof section */
+.cns-photo__proof { margin-bottom: 32px; }
+
+.cns-photo__section-title {
+  font-family: var(--font-serif);
+  font-size: clamp(18px, 2.5vw, 24px);
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.88);
+  margin: 0 0 4px;
+}
+
+.cns-photo__section-sub {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.28);
+  margin: 0 0 16px;
+}
+
+.cns-photo__proof-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.cns-photo__proof-card {
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 8px;
+  padding: 16px 18px;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.cns-photo__proof-name {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.72);
+  margin-bottom: 2px;
+}
+
+.cns-photo__proof-client {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.25);
+  margin-bottom: 12px;
+}
+
+.cns-photo__proof-row { margin-bottom: 6px; }
+.cns-photo__proof-row:last-child { margin-bottom: 0; }
+
+.cns-photo__proof-row span {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.3);
+  margin-bottom: 2px;
+}
+
+.cns-photo__proof-row p {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.42);
+  margin: 0;
+}
+
+/* Connect */
+.cns-photo__connect { margin-bottom: 32px; }
+
+.cns-photo__connect-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.cns-photo__calendly {
+  width: 100%;
+  min-width: 280px;
+  height: 580px;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+/* Footer */
+.cns-photo__footer {
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.cns-photo__identity {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.32);
+  margin: 0 0 4px;
+}
+
+.cns-photo__founder {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.22);
+  margin: 0;
+}
+
+/* Mobile */
+@media (max-width: 640px) {
+  .cns-photo__drawer { width: 100%; border-radius: 0; }
+  .cns-photo__scroll { padding: 44px 18px 32px; }
+  .cns-photo__menu { top: 6px; right: 6px; }
+  .cns-photo__backdrop { border-radius: 0; }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .cns-photo__backdrop,
+  .cns-photo__drawer,
+  .cns-photo__card {
+    transition: none !important;
+  }
+}

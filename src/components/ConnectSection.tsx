@@ -3,8 +3,6 @@
 import { useEffect, useState } from "react";
 import { CONNECT_LINKS, WECHAT_ID, CALENDLY_URL } from "@/data/connect";
 
-const ROTATIONS = [-1.2, 0.8, -0.6, 1.4, -1.0];
-
 export default function ConnectSection() {
   const [mounted, setMounted] = useState(false);
 
@@ -24,15 +22,12 @@ export default function ConnectSection() {
       <h2 className="connect__heading">Connect</h2>
 
       <div className="connect__grid">
-        {CONNECT_LINKS.map((link, i) => {
-          const rotation = ROTATIONS[i % ROTATIONS.length];
-
+        {CONNECT_LINKS.map((link) => {
           if (link.href === null) {
             return (
               <span
                 key={link.id}
                 className="tag tag--connect tag--display"
-                style={{ transform: `rotate(${rotation}deg)` }}
               >
                 {link.label}
                 <span className="connect__id">{WECHAT_ID}</span>
@@ -45,7 +40,6 @@ export default function ConnectSection() {
               key={link.id}
               href={link.href}
               className="tag tag--connect"
-              style={{ transform: `rotate(${rotation}deg)` }}
               {...(link.external
                 ? { target: "_blank", rel: "noopener noreferrer" }
                 : {})}

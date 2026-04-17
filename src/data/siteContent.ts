@@ -1,5 +1,11 @@
 export const SPLASH_WORDS = ["Hello", "你好", "Olá", "नमस्ते", "こんにちは"];
 
+/** Text label, or image asset path under /public */
+export type BrandLogo = {
+  label: string;
+  imageSrc?: string;
+};
+
 export const SITE_CONTENT = {
   header: {
     wordmark: "Hayden Baxter",
@@ -17,7 +23,11 @@ export const SITE_CONTENT = {
       "I build thoughtful products where data, design, and the real world meet.",
   },
   brands: {
-    logos: ["Nike", "Disney", "Aosom"],
+    logos: [
+      { label: "Nike" },
+      { label: "Disney" },
+      { label: "Aosom", imageSrc: "/brands/aosom-logo.png" },
+    ] satisfies BrandLogo[],
     repeats: 4,
     note: "Logos are trademarks of their respective owners. Shown for identification only.",
   },
