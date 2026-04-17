@@ -1,6 +1,6 @@
 "use client";
 
-import { WORK_LANDING, WORK_SCREENS, type WorkScreen } from "@/data/work";
+import { WORK_LANDING, WORK_SCREENS, WORK_SCROLL_CONFIG, type WorkScreen } from "@/data/work";
 import { useWorkScroll } from "@/hooks/useWorkScroll";
 import WorldPulseDetail from "@/components/work/WorldPulseDetail";
 import ETBDetail from "@/components/work/ETBDetail";
@@ -23,19 +23,30 @@ function DetailBody({ screen, isActive }: { screen: WorkScreen; isActive: boolea
 }
 
 export default function WorkSection() {
-  const { ref, screenIndex, cdDeg, activeLabel, hintHidden } = useWorkScroll();
+  const { ref, screenIndex, cdDeg, activeLabel } = useWorkScroll();
+
+  const trackList = WORK_SCROLL_CONFIG.zones.filter((z) => z.label !== "");
 
   return (
     <section id="work" ref={ref} className="work">
       <div className="work__chapter work__chapter--landing" style={{ zIndex: 1 }}>
         <article className="work__screen work__screen--landing">
-          <h2 className="wl-title">{WORK_LANDING.title}</h2>
-          <p className="wl-quote">{WORK_LANDING.quote}</p>
-
-          <div className={`scroll-hint ${hintHidden ? "is-hidden" : ""}`}>
-            <div className="scroll-hint__mouse" />
-            <span className="scroll-hint__text">{WORK_LANDING.scrollHint}</span>
-          </div>
+          <ol className="wl-c2__list" aria-label={WORK_LANDING.title}>
+            {trackList.map((zone, i) => {
+              const isActive = zone.label === activeLabel;
+              return (
+                <li
+                  key={zone.label}
+                  className={`wl-c2__item ${isActive ? "is-active" : ""}`}
+                >
+                  <span className="wl-c2__num">
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                  <span className="wl-c2__name">{zone.label}</span>
+                </li>
+              );
+            })}
+          </ol>
 
           <div className="cd-player-wrap" aria-hidden="true">
             <img src="/playershellpngtransparent.png" alt="" className="cd-player-shell" />
@@ -44,7 +55,6 @@ export default function WorkSection() {
               <div className="cd-disc" style={{ '--cd-deg': `${cdDeg}deg` } as React.CSSProperties} />
             </div>
           </div>
-          <div className="cd-active-label">{activeLabel}</div>
         </article>
       </div>
 

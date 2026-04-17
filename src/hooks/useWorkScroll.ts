@@ -85,6 +85,7 @@ export function useWorkScroll() {
     let rafId = 0;
     let lastScreenIndex = 0;
     let lastLabel = WORK_LANDING.activeLabel;
+    let lastStateLabel = WORK_LANDING.activeLabel;
     let lastHintHidden = false;
 
     const discEl = el.querySelector<HTMLElement>(".cd-disc");
@@ -133,10 +134,12 @@ export function useWorkScroll() {
 
       if (
         nextScreenIndex !== lastScreenIndex ||
-        nextHintHidden !== lastHintHidden
+        nextHintHidden !== lastHintHidden ||
+        lastLabel !== lastStateLabel
       ) {
         lastScreenIndex = nextScreenIndex;
         lastHintHidden = nextHintHidden;
+        lastStateLabel = lastLabel;
         setState({
           screenIndex: nextScreenIndex,
           cdDeg: currentDeg,

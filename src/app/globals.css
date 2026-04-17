@@ -376,22 +376,86 @@
 }
 
 
-.wl-title {
+/* Concept C2 (Hush) — minimalist numbered contents list driven by scroll */
+.wl-c2__list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  margin: 0;
+  width: min(560px, 72%);
+  text-align: left;
+  /* Anchor to the upper region of the landing card so the CD player can own
+     the lower half without overlapping (or getting overlapped by) list items.
+     Mobile fork below re-flows this into normal document order. */
+  position: absolute;
+  top: clamp(48px, 9vh, 110px);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 3;
+}
+
+.wl-c2__item {
+  display: grid;
+  grid-template-columns: 56px 1fr;
+  align-items: baseline;
+  gap: 22px;
+  /* Vertical padding scales with card height so short screens (1024×768)
+     stay compact while tall ones (1440×900, 1920×1080) breathe. */
+  padding: clamp(8px, 1.4vh, 14px) 0;
+  border-bottom: 1px solid rgba(243, 243, 243, 0.08);
+  opacity: 0.22;
+  transform: translateX(0);
+  transition:
+    opacity 320ms ease,
+    transform 320ms cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.wl-c2__item.is-active {
+  opacity: 1;
+  transform: translateX(4px);
+}
+
+.wl-c2__num {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  color: rgba(243, 243, 243, 0.32);
+  transition: color 320ms ease;
+}
+
+.wl-c2__item.is-active .wl-c2__num {
+  color: #cba86a;
+}
+
+.wl-c2__name {
   font-family: var(--font-serif);
-  font-size: clamp(56px, 10vw, 130px);
+  font-size: clamp(20px, 2.6vw, 30px);
   font-weight: 400;
-  line-height: 0.9;
-  letter-spacing: -0.04em;
+  letter-spacing: -0.02em;
+  color: rgba(243, 243, 243, 0.62);
+  line-height: 1.05;
+  transition: color 320ms ease;
+}
+
+.wl-c2__item.is-active .wl-c2__name {
   color: #f3f3f3;
 }
 
-.wl-quote {
-  font-family: var(--font-serif);
-  font-size: clamp(14px, 1.6vw, 18px);
-  color: rgba(255, 255, 255, 0.48);
-  margin-top: 14px;
-  margin-bottom: 24px;
+@media (prefers-reduced-motion: reduce) {
+  .wl-c2__item {
+    transition: opacity 200ms ease;
+    transform: none;
+  }
+  .wl-c2__item.is-active {
+    transform: none;
+  }
 }
+
+/* Short-viewport overrides for C2 list live AFTER the CD player rules below
+   (see block below that ends with `.cd-active-label { ... }`) so they win
+   the cascade over the default `.cd-player-wrap` width. */
 
 .scroll-hint {
   display: flex;
@@ -521,6 +585,46 @@
   color: rgba(255, 255, 255, 0.68);
   text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
   white-space: nowrap;
+}
+
+/* Short-viewport refinements — MUST come after the default `.cd-player-wrap`
+   and `.wl-c2__*` rules to win the cascade (equal specificity → last wins).
+   Applies when scroll-lock interaction is active (min-width: 641px). */
+@media (max-height: 820px) and (min-width: 641px) {
+  .wl-c2__list {
+    top: clamp(18px, 3.5vh, 36px);
+    width: min(520px, 64%);
+  }
+  .wl-c2__item {
+    padding: clamp(4px, 0.9vh, 10px) 0;
+    grid-template-columns: 46px 1fr;
+    gap: 18px;
+  }
+  .wl-c2__name {
+    font-size: clamp(18px, 2.2vw, 24px);
+  }
+  /* Scale CD off viewport height so it never exceeds card vertical capacity.
+     At 720px → ~460px wide; at 560px → ~360px wide. */
+  .cd-player-wrap {
+    width: clamp(360px, 64vh, 620px);
+    transform: translateX(-50%) translateY(28vh);
+  }
+}
+
+@media (max-height: 640px) and (min-width: 641px) {
+  .wl-c2__list {
+    top: 12px;
+  }
+  .wl-c2__item {
+    padding: 3px 0;
+  }
+  .wl-c2__name {
+    font-size: clamp(16px, 2vw, 20px);
+  }
+  .cd-player-wrap {
+    width: clamp(320px, 58vh, 520px);
+    transform: translateX(-50%) translateY(32vh);
+  }
 }
 
 /* Glass theme + lighting from lab */
@@ -716,6 +820,38 @@
   .scroll-hint,
   .cd-active-label {
     display: none;
+  }
+  /* Mobile: no scroll-lock → activeLabel stays empty. Render C2 as a static,
+     readable table of contents rather than a dimmed list waiting for input.
+     Re-flow the list back into normal document order since the CD player
+     becomes a relative-positioned block below. */
+  .wl-c2__list {
+    position: static;
+    transform: none;
+    top: auto;
+    left: auto;
+    width: 100%;
+    margin-top: clamp(16px, 4vh, 40px);
+    margin-bottom: clamp(24px, 6vh, 48px);
+  }
+  .wl-c2__item {
+    grid-template-columns: 40px 1fr;
+    gap: 14px;
+    padding: 14px 0;
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .wl-c2__item.is-active {
+    transform: none;
+  }
+  .wl-c2__num {
+    font-size: 10px;
+    color: #cba86a;
+  }
+  .wl-c2__name {
+    font-size: clamp(22px, 5.6vw, 28px);
+    color: #f3f3f3;
   }
   .cd-player-wrap {
     position: relative;
