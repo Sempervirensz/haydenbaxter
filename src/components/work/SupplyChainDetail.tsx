@@ -41,6 +41,16 @@ export default function SupplyChainDetail({
   const globeSize = isMobile ? 200 : 500;
 
   useEffect(() => {
+    // On mobile the Work scroll hook short-circuits (screenIndex stays -1),
+    // so `isActive` never flips true. The rail layout doesn't need staged
+    // reveal anyway — show everything immediately and auto-select stop 0.
+    if (isMobile) {
+      setRevealedCount(JOURNEY_STOPS.length);
+      if (selectedStop === undefined) setSelectedStop(0);
+      hasPlayed.current = true;
+      return;
+    }
+
     if (!isActive) return;
 
     // Skip reveal animation on revisit — show everything immediately
@@ -72,7 +82,7 @@ export default function SupplyChainDetail({
       clearInterval(timer);
       if (selectTimeout) clearTimeout(selectTimeout);
     };
-  }, [isActive, revealIntervalMs, autoSelectDelayMs]);
+  }, [isActive, isMobile, revealIntervalMs, autoSelectDelayMs]);
 
   const handleDotClick = useCallback(
     (i: number) => {
