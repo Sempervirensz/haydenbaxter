@@ -4,7 +4,8 @@ import { useEffect, useRef } from "react";
 import { SPLASH_WORDS } from "@/data/siteContent";
 
 const INTERVAL = 320; // ms between words
-const PAUSE_AFTER = 400; // ms after last word before fade
+const FINAL_HOLD = 1400; // extra ms to linger on the last (CTA) word
+const PAUSE_AFTER = 1000; // ms after last word before fade
 const FADE_DURATION = 700; // ms for the overlay to fade out
 
 export default function Splash() {
@@ -32,12 +33,16 @@ export default function Splash() {
     let i = 0;
 
     function showNext() {
-      if (i > 0) words[i - 1].classList.remove("is-visible");
+      // Keep the final (CTA) word on screen through the pause + fade —
+      // only hide the previous word when advancing between greetings.
+      if (i > 0 && i < words.length) words[i - 1].classList.remove("is-visible");
 
       if (i < words.length) {
         words[i].classList.add("is-visible");
         i += 1;
-        setTimeout(showNext, INTERVAL);
+        // Linger longer on the final CTA before starting the fade sequence.
+        const delay = i === words.length ? INTERVAL + FINAL_HOLD : INTERVAL;
+        setTimeout(showNext, delay);
         return;
       }
 
