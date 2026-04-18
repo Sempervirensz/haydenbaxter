@@ -15,7 +15,7 @@ export default function BrandsCarousel() {
       <div className="brands__track">
         {items.map((brand, idx) =>
           brand.imageSrc ? (
-            <span key={idx} className="brands__logo brands__logo--img">
+            <span key={idx} className="brands__logo brands__logo--img" data-brand={brand.label.toLowerCase()}>
               <img src={brand.imageSrc} alt={brand.label} loading="lazy" decoding="async" />
             </span>
           ) : (

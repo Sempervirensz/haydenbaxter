@@ -1,4 +1,4 @@
-export const SPLASH_WORDS = ["Hello", "你好", "Olá", "नमस्ते", "こんにちは"];
+export const SPLASH_WORDS = ["Hello", "你好", "Olá", "नमस्ते", "こんにちは", "Scroll + click to explore"];
 
 /** Text label, or image asset path under /public */
 export type BrandLogo = {
@@ -24,9 +24,9 @@ export const SITE_CONTENT = {
   },
   brands: {
     logos: [
-      { label: "Nike" },
-      { label: "Disney" },
-      { label: "Aosom", imageSrc: "/brands/aosom-logo.png" },
+      { label: "Nike", imageSrc: "/brands/nike-logo.svg" },
+      { label: "Disney", imageSrc: "/brands/disney-logo.png" },
+      { label: "Aosom", imageSrc: "/brands/aosom-logo.svg" },
     ] satisfies BrandLogo[],
     repeats: 4,
     note: "Logos are trademarks of their respective owners. Shown for identification only.",
