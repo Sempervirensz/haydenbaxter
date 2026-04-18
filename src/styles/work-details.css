@@ -2943,13 +2943,17 @@
   position: relative;
 }
 
+/* Illumination values locked to "Snappy + bright" preset (see
+   /supply-chain-lab). Inactive/visited text runs high so all four labels
+   read confidently at a glance; reveal/color transitions are shorter so
+   the sequence feels snappy. */
 .sc-journey__topbarLine {
   position: absolute;
   top: 50%;
   left: 10%;
   right: 10%;
   height: 1px;
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.28);
   z-index: 0;
   pointer-events: none;
 }
@@ -2965,26 +2969,26 @@
   background: none;
   border: 1px solid transparent;
   border-radius: 8px;
-  color: rgba(255, 255, 255, 0.35);
+  color: rgba(255, 255, 255, 0.92);
   cursor: pointer;
-  transition: color 0.3s ease, border-color 0.3s ease, background 0.3s ease, opacity 0.5s ease, transform 0.5s ease;
+  transition: color 0.14s ease, border-color 0.14s ease, background 0.14s ease, opacity 0.24s ease, transform 0.24s ease;
   font-family: inherit;
 }
 
 .sc-journey__topbarItem:hover:not(:disabled) {
-  color: rgba(255, 255, 255, 0.7);
-  border-color: rgba(255, 255, 255, 0.1);
-  background: rgba(255, 255, 255, 0.03);
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.05);
 }
 
 .sc-journey__topbarItem.is-visited {
-  color: rgba(255, 255, 255, 0.55);
+  color: rgba(255, 255, 255, 0.96);
 }
 
 .sc-journey__topbarItem.is-active {
   color: #fff;
-  border-color: rgba(255, 255, 255, 0.15);
-  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.36);
+  background: rgba(255, 255, 255, 0.14);
 }
 
 .sc-journey__topbarItem.is-hidden {
@@ -2997,13 +3001,13 @@
   width: 28px;
   height: 28px;
   border-radius: 50%;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.55);
   display: flex;
   align-items: center;
   justify-content: center;
   font-family: var(--font-mono, monospace);
   font-size: 11px;
-  transition: background 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+  transition: background 0.14s ease, border-color 0.14s ease, color 0.14s ease;
 }
 
 .sc-journey__topbarItem.is-active .sc-journey__topbarDot {
@@ -3013,7 +3017,7 @@
 }
 
 .sc-journey__topbarItem.is-visited .sc-journey__topbarDot {
-  border-color: rgba(255, 255, 255, 0.4);
+  border-color: rgba(255, 255, 255, 0.75);
 }
 
 .sc-journey__topbarLabel {

@@ -13,9 +13,18 @@ const RealisticGlobe = dynamic(
 interface SupplyChainDetailProps {
   data: SupplyChainData;
   isActive: boolean;
+  /** ms between each dot reveal. Default 320 (Snappy + bright). */
+  revealIntervalMs?: number;
+  /** ms to wait after last reveal before auto-selecting stop 0. Default 200. */
+  autoSelectDelayMs?: number;
 }
 
-export default function SupplyChainDetail({ data, isActive }: SupplyChainDetailProps) {
+export default function SupplyChainDetail({
+  data,
+  isActive,
+  revealIntervalMs = 320,
+  autoSelectDelayMs = 200,
+}: SupplyChainDetailProps) {
   const [selectedStop, setSelectedStop] = useState<number | undefined>();
   const [revealedCount, setRevealedCount] = useState(0);
   const hasPlayed = useRef(false);
@@ -41,20 +50,29 @@ export default function SupplyChainDetail({ data, isActive }: SupplyChainDetailP
       return;
     }
 
-    hasPlayed.current = true;
+    // Reset and start reveal. hasPlayed is only marked true AFTER the
+    // sequence finishes, so:
+    //   (a) React Strict Mode's double-effect in dev doesn't short-circuit
+    //       to "already played" before the first tick fires.
+    //   (b) If the user scrolls away mid-reveal, they still get the full
+    //       animation on their next visit.
     setRevealedCount(0);
     let i = 0;
+    let selectTimeout: ReturnType<typeof setTimeout> | null = null;
     const timer = setInterval(() => {
       i++;
       setRevealedCount(i);
       if (i >= JOURNEY_STOPS.length) {
         clearInterval(timer);
-        // Auto-select first stop after all dots revealed
-        setTimeout(() => setSelectedStop(0), 600);
+        hasPlayed.current = true;
+        selectTimeout = setTimeout(() => setSelectedStop(0), autoSelectDelayMs);
       }
-    }, 800);
-    return () => clearInterval(timer);
-  }, [isActive]);
+    }, revealIntervalMs);
+    return () => {
+      clearInterval(timer);
+      if (selectTimeout) clearTimeout(selectTimeout);
+    };
+  }, [isActive, revealIntervalMs, autoSelectDelayMs]);
 
   const handleDotClick = useCallback(
     (i: number) => {
