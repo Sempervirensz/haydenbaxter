@@ -277,7 +277,7 @@
   align-items: center;
   gap: clamp(40px, 8vw, 80px);
   width: max-content;
-  animation: scroll-brands 18s linear infinite;
+  animation: scroll-brands 28s linear infinite;
 }
 @keyframes scroll-brands {
   0% { transform: translateX(0); }
