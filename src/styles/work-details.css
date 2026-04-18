@@ -3186,85 +3186,171 @@
   }
 }
 
-/* Mobile */
-@media (max-width: 768px) {
-  .sc-journey {
-    height: auto;
-    min-height: 0;
-    padding: 16px 0;
-    gap: 8px;
-  }
+/* ──────────────────────────────────────────────────────────
+   Mobile: vertical rail layout
+   Component switches to this JSX under `isMobile` (≤768px).
+   Globe pinned top, scrolling timeline rail below with
+   dot-on-line treatment. Active row expands to reveal copy.
+   ────────────────────────────────────────────────────────── */
 
-  .sc-journey__topbar {
-    gap: 0;
-    padding: 8px 8px;
-  }
+.sc-journey--rail {
+  height: auto;
+  min-height: 0;
+  flex: 1;
+  padding: 8px 0 0;
+  gap: 0;
+  overflow: hidden;
+}
 
-  .sc-journey__topbarItem {
-    padding: 6px 8px;
-  }
+.sc-journey__railGlobe {
+  flex: 0 0 auto;
+  height: 240px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 4px 0 8px;
+}
 
-  .sc-journey__topbarLabel {
-    font-size: 11px;
-  }
+.sc-journey__rail {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  list-style: none;
+  margin: 0;
+  padding: 18px 18px 32px 38px;
+  position: relative;
+  -webkit-overflow-scrolling: touch;
+}
 
-  .sc-journey__topbarDot {
-    width: 24px;
-    height: 24px;
-    font-size: 10px;
-  }
+/* Vertical line running down the left edge of the rail */
+.sc-journey__rail::before {
+  content: "";
+  position: absolute;
+  left: 22px;
+  top: 26px;
+  bottom: 26px;
+  width: 1px;
+  background: rgba(255, 255, 255, 0.28);
+  pointer-events: none;
+}
 
-  .sc-journey__topbarYear {
-    display: none;
-  }
+.sc-journey__railRow {
+  margin: 0;
+  padding: 0;
+}
 
-  .sc-journey__topbar--stacked {
-    gap: 12px;
-  }
+.sc-journey__railItem {
+  position: relative;
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: transparent;
+  border: 0;
+  padding: 10px 0 18px;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  transition: opacity 0.24s ease, transform 0.24s ease;
+}
 
-  .sc-journey__topbarHeadline {
-    font-size: 10px;
-    max-width: 90px;
-  }
+.sc-journey__railItem.is-hidden {
+  opacity: 0;
+  transform: translateY(6px);
+  pointer-events: none;
+}
 
-  .sc-journey__topbarSub {
-    display: none;
-  }
+.sc-journey__railItem:disabled {
+  cursor: default;
+}
 
-  .sc-journey__topnavBody {
-    flex: 1 1 0%;
-    padding: 0;
-    min-height: 0;
-  }
+/* Dot sitting on the vertical line */
+.sc-journey__railDot {
+  position: absolute;
+  left: -20px;
+  top: 16px;
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background: #0a0a0a;
+  border: 2px solid rgba(255, 255, 255, 0.55);
+  box-sizing: border-box;
+  transition: border-color 0.14s ease, background 0.14s ease,
+    box-shadow 0.14s ease, transform 0.14s ease;
+}
 
-  .sc-journey__globe {
-    width: 100%;
-    justify-content: center;
-  }
+.sc-journey__railItem.is-visited .sc-journey__railDot {
+  border-color: rgba(255, 255, 255, 0.75);
+}
 
-  .sc-journey__floatingCard--center {
-    position: absolute;
-    top: auto;
-    bottom: 16px;
-    right: 16px;
-    left: auto;
-    transform: translateY(8px);
-    max-width: 260px;
-    min-width: 0;
-    width: auto;
-    text-align: left;
-    padding: 14px 18px;
-  }
+.sc-journey__railItem.is-active .sc-journey__railDot {
+  background: #f3f3f3;
+  border-color: #f3f3f3;
+  box-shadow: 0 0 12px rgba(255, 255, 255, 0.45);
+  transform: scale(1.08);
+}
 
-  .sc-journey__floatingCard--center.is-visible {
-    transform: translateY(0);
-  }
+.sc-journey__railBody {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
 
-  .sc-journey__floatingCard--bottomRight {
-    right: 16px;
-    bottom: 16px;
-    max-width: 240px;
-    padding: 14px 18px;
+.sc-journey__railMeta {
+  font-family: var(--font-mono, ui-monospace, Menlo, monospace);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.55);
+  transition: color 0.14s ease;
+}
+
+.sc-journey__railItem.is-visited .sc-journey__railMeta {
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.sc-journey__railItem.is-active .sc-journey__railMeta {
+  color: rgba(255, 255, 255, 0.96);
+}
+
+.sc-journey__railHeadline {
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 1.25;
+  color: rgba(255, 255, 255, 0.92);
+  transition: color 0.14s ease;
+}
+
+.sc-journey__railItem.is-active .sc-journey__railHeadline {
+  color: #ffffff;
+}
+
+/* Description collapses when inactive, expands when active */
+.sc-journey__railDesc {
+  font-size: 13px;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.72);
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  margin-top: 0;
+  transition: max-height 0.28s ease, opacity 0.2s ease, margin-top 0.24s ease;
+}
+
+.sc-journey__railItem.is-active .sc-journey__railDesc {
+  max-height: 240px;
+  opacity: 1;
+  margin-top: 8px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sc-journey__railItem,
+  .sc-journey__railDot,
+  .sc-journey__railMeta,
+  .sc-journey__railHeadline,
+  .sc-journey__railDesc {
+    transition: none !important;
   }
 }
 

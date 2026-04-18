@@ -97,6 +97,61 @@ export default function SupplyChainDetail({
   const activeStop =
     selectedStop !== undefined ? JOURNEY_STOPS[selectedStop] : null;
 
+  // ── Mobile: vertical rail layout ────────────────────────────────────
+  // Globe pinned at top, scrolling timeline below. One stop per row with
+  // a dot on a vertical line. Active stop expands to reveal description.
+  // Desktop keeps the horizontal topbar + floating card layout unchanged.
+  if (isMobile) {
+    return (
+      <section className="sc-journey sc-journey--rail" aria-label="Supply chain journey">
+        <div className="sc-journey__railGlobe">
+          <RealisticGlobe
+            width={globeSize}
+            height={globeSize}
+            autoRotate={selectedStop === undefined}
+            frozen
+            visualStyle="clouds"
+            lonOffset={-69}
+            latOffset={40}
+            journeyDots={journeyDots}
+            selectedDot={selectedStop}
+            journeyArcs={visibleArcs}
+            onDotClick={handleDotClick}
+          />
+        </div>
+
+        <ol className="sc-journey__rail" aria-label="Journey stops">
+          {JOURNEY_STOPS.map((stop, i) => {
+            const revealed = i < revealedCount;
+            const active = selectedStop === i;
+            const visited = selectedStop !== undefined && i <= selectedStop;
+            return (
+              <li key={stop.id} className="sc-journey__railRow">
+                <button
+                  type="button"
+                  className={`sc-journey__railItem ${active ? "is-active" : ""} ${visited ? "is-visited" : ""} ${!revealed ? "is-hidden" : ""}`}
+                  onClick={() => revealed && setSelectedStop(i)}
+                  disabled={!revealed}
+                  aria-current={active ? "step" : undefined}
+                >
+                  <span className="sc-journey__railDot" aria-hidden="true" />
+                  <span className="sc-journey__railBody">
+                    <span className="sc-journey__railMeta">
+                      {stop.year} · {stop.label}
+                    </span>
+                    <span className="sc-journey__railHeadline">{stop.headline}</span>
+                    <span className="sc-journey__railDesc">{stop.description}</span>
+                  </span>
+                </button>
+              </li>
+            );
+          })}
+        </ol>
+      </section>
+    );
+  }
+
+  // ── Desktop: horizontal topbar + floating card ───────────────────────
   return (
     <section className="sc-journey" aria-label="Supply chain journey">
       {/* Horizontal timeline nav */}
