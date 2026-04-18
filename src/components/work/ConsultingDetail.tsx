@@ -43,11 +43,17 @@ export default function ConsultingDetail({ data, isActive }: ConsultingDetailPro
 
   return (
     <section className="cns-photo" data-cns-section>
-      <img
-        className="cns-photo__img"
-        src="/consulting-hero.png"
-        alt="Night cityscape"
-      />
+      <picture>
+        <source
+          media="(max-width: 640px)"
+          srcSet="/Mobile%20Statue%20Consulting.png"
+        />
+        <img
+          className="cns-photo__img"
+          src="/consulting-hero.png"
+          alt="Night cityscape"
+        />
+      </picture>
 
       {/* Menu button */}
       <button
