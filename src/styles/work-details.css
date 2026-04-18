@@ -3285,9 +3285,18 @@
 }
 
 /* Mobile swaps to a portrait statue/city composition (see <picture>
-   source in ConsultingDetail.tsx). The portrait aspect needs cover
-   behavior so the statue stays framed instead of clipping off the top. */
+   source in ConsultingDetail.tsx). The mobile work layout strips
+   `flex: 1` semantics from the card (see globals.css mobile work
+   block), so `.cns-photo` collapses to 0 without an explicit size.
+   Give it a portrait aspect so the absolutely-positioned image has
+   height to render into, and switch the img to object-fit: cover so
+   the statue stays framed instead of clipping off the top. */
 @media (max-width: 640px) {
+  .cns-photo {
+    aspect-ratio: 9 / 16;
+    max-height: 82vh;
+    width: 100%;
+  }
   .cns-photo__img {
     top: 0;
     bottom: 0;
