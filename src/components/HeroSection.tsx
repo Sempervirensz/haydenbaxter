@@ -11,7 +11,7 @@ export default function HeroSection() {
       {/* Hero text */}
       <div className="flex flex-col items-center justify-center text-center px-5 sm:px-4 pt-20 sm:pt-32 pb-12 sm:pb-20">
         <p
-          className="text-[10px] sm:text-sm tracking-[0.12em] sm:tracking-[0.2em] uppercase text-white/60 mb-3 sm:mb-6"
+          className="text-[10px] sm:text-sm tracking-[0.04em] text-white/60 mb-3 sm:mb-6"
           style={{ fontFamily: "var(--font-sans)" }}
         >
           {hero.eyebrow}

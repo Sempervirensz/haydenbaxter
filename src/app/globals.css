@@ -328,6 +328,14 @@
 .brands__logo--img[data-brand="aosom"] img {
   height: clamp(16px, 2.2vw, 24px);
 }
+.brands__context {
+  text-align: center;
+  font-size: clamp(14px, 1.4vw, 18px);
+  color: rgba(255, 255, 255, 0.75);
+  margin-top: clamp(16px, 2vw, 24px);
+  padding: 0 16px;
+}
+
 .brands__note {
   text-align: center;
   font-size: clamp(9px, 0.7vw, 10px);

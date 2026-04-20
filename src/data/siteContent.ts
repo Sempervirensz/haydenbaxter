@@ -18,9 +18,8 @@ export const SITE_CONTENT = {
     ],
   },
   hero: {
-    eyebrow: "I'm Hayden — Founder & Product Builder.",
-    heading:
-      "I build thoughtful products where data, design, and the real world meet.",
+    eyebrow: "Explore the builds, the supply chain background, and where WorldPulse fits in.",
+    heading: "I build AI products and supply chain systems where data, design, and the real world meet.",
   },
   brands: {
     logos: [
@@ -29,6 +28,7 @@ export const SITE_CONTENT = {
       { label: "Aosom", imageSrc: "/brands/aosom-logo.svg" },
     ] satisfies BrandLogo[],
     repeats: 4,
-    note: "Logos are trademarks of their respective owners. Shown for identification only.",
+    context: "Past employers that shaped how I build.",
+    note: "Logos are trademarks of their respective owners and are shown for identification only. No endorsement implied.",
   },
 };

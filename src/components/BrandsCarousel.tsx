@@ -1,7 +1,7 @@
 import { SITE_CONTENT, type BrandLogo } from "@/data/siteContent";
 
 export default function BrandsCarousel() {
-  const { logos, repeats, note } = SITE_CONTENT.brands;
+  const { logos, repeats, context, note } = SITE_CONTENT.brands;
 
   const items: BrandLogo[] = [];
   for (let i = 0; i < repeats; i++) {
@@ -25,6 +25,7 @@ export default function BrandsCarousel() {
           )
         )}
       </div>
+      <p className="brands__context">{context}</p>
       <p className="brands__note">{note}</p>
     </section>
   );
