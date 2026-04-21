@@ -121,47 +121,47 @@ export interface JourneyStop {
 
 export const JOURNEY_STOPS: JourneyStop[] = [
   {
-    id: "new-york",
-    coords: [-74, 40.7],
-    headline: "Broke into Fortune 100",
-    label: "NYC",
-    title: "New York",
-    description: "Fortune 100 HQ. Started in procurement strategy at enterprise scale.",
-    year: "2015",
-  },
-  {
     id: "taiwan",
     coords: [121, 23.5],
-    headline: "Moved ops into Asia",
+    headline: "Became fluent in Mandarin",
     label: "Taiwan",
-    title: "Taiwan",
-    description: "First move into Asia-Pacific sourcing. Semiconductor and electronics supply chains.",
-    year: "2017",
+    title: "Language & Cultural Fluency",
+    description: "Taiwan gave me the language, cultural fluency, and confidence that later became a real advantage in supplier relationships and cross-border work.",
+    year: "2012",
   },
   {
     id: "china",
     coords: [104, 35],
-    headline: "Became fluent in Mandarin",
+    headline: "Learned sourcing on the ground",
     label: "China",
-    title: "China",
-    description: "Deep operations across mainland China. Fluent in Mandarin. Supplier onboarding and governance.",
-    year: "2018",
+    title: "Ground-Level Sourcing",
+    description: "At Three Tree, I worked directly with manufacturers—negotiating deals, aligning specs, and visiting factories to strengthen quality and accountability.",
+    year: "2016",
   },
   {
-    id: "network",
+    id: "new-york",
+    coords: [-74, 40.7],
+    headline: "Broke into Fortune 100 procurement",
+    label: "New York",
+    title: "Fortune 100 Procurement",
+    description: "At Disney, I worked across procurement, finance, and legal to improve vendor agreements, onboard partners, and deliver measurable savings.",
+    year: "2022",
+  },
+  {
+    id: "se-asia",
     coords: [108, 10],
-    headline: "Built supplier networks",
+    headline: "Built traceable supplier systems",
     label: "SE Asia",
-    title: "Supplier Networks",
-    description: "Built cross-border supplier networks spanning China, Vietnam, and Indonesia. Traceability and compliance systems.",
-    year: "2020–Present",
+    title: "Traceable Supplier Systems",
+    description: "Helped onboard factories and strengthen supplier compliance, governance, and traceability across Nike's growing network in Southeast Asia.",
+    year: "2023–2024",
   },
 ];
 
 export const JOURNEY_ARCS = [
-  { from: 0, to: 1 }, // NYC → Taiwan
-  { from: 1, to: 2 }, // Taiwan → China
-  { from: 2, to: 3 }, // China → Network hub
+  { from: 0, to: 1 }, // Taiwan → China
+  { from: 1, to: 2 }, // China → New York
+  { from: 2, to: 3 }, // New York → SE Asia
 ];
 
 // --- Motion Intensity ---
