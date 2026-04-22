@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { DM_Mono, DM_Sans, DM_Serif_Display, Permanent_Marker } from "next/font/google";
+import { Caveat, DM_Mono, DM_Sans, DM_Serif_Display, Permanent_Marker } from "next/font/google";
 import "./globals.css";
 import Splash from "@/components/Splash";
 
@@ -27,6 +27,12 @@ const permanentMarker = Permanent_Marker({
   variable: "--font-marker",
 });
 
+const caveat = Caveat({
+  weight: ["500", "600"],
+  subsets: ["latin"],
+  variable: "--font-cursive",
+});
+
 export const metadata: Metadata = {
   title: "Portfolio",
   description: "I Create Designs That Appeal, Engage & Sell",
@@ -40,7 +46,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${dmSerifDisplay.variable} ${dmSans.variable} ${dmMono.variable} ${permanentMarker.variable}`}
+      className={`${dmSerifDisplay.variable} ${dmSans.variable} ${dmMono.variable} ${permanentMarker.variable} ${caveat.variable}`}
       style={{ overflowX: "clip" }}
     >
       {/* Card-face SVGs removed from preload — only seen after user flip */}

@@ -5,7 +5,7 @@ import { useWorkScroll } from "@/hooks/useWorkScroll";
 import WorldPulseDetail from "@/components/work/WorldPulseDetail";
 import ETBDetail from "@/components/work/ETBDetail";
 import SupplyChainDetail from "@/components/work/SupplyChainDetail";
-import ConsultingDetail from "@/components/work/ConsultingDetail";
+import ConsultingHeroStage from "@/components/work/ConsultingHeroStage";
 
 function DetailBody({ screen, isActive }: { screen: WorkScreen; isActive: boolean }) {
   switch (screen.type) {
@@ -16,7 +16,7 @@ function DetailBody({ screen, isActive }: { screen: WorkScreen; isActive: boolea
     case "supply-chain":
       return <SupplyChainDetail data={screen.supplyChain} isActive={isActive} />;
     case "consulting":
-      return <ConsultingDetail data={screen.consulting} isActive={isActive} />;
+      return <ConsultingHeroStage isActive={isActive} />;
     default:
       return null;
   }
