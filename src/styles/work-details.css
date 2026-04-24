@@ -16,6 +16,25 @@
   filter: drop-shadow(0 6px 18px rgba(0, 0, 0, 0.45));
 }
 
+/* WorldPulse — top description (mirrors etb-description / sc-journey__description) */
+.wp-description {
+  padding: clamp(8px, 1.4vw, 20px) clamp(20px, 3vw, 36px) clamp(8px, 1vw, 16px);
+  width: 100%;
+  flex-shrink: 0;
+}
+
+.wp-description p {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 15px;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.55);
+  letter-spacing: 0;
+  max-width: none;
+  width: 100%;
+  font-weight: 400;
+}
+
 /* WorldPulse */
 .pd-full {
   flex: 1;
@@ -2930,10 +2949,14 @@
   flex-direction: column;
   align-items: stretch;
   min-height: 0;
-  flex: 1;
-  height: calc(100vh - 64px);
+  flex: 1 1 0%;
+  /* Inherit height from the sticky .work__screen parent (88vh). The previous
+     `calc(100vh - 64px)` overshot the parent and pushed the globe past the
+     bottom of the card on short viewports — the actual available space is
+     governed by flex:1 inside the sticky container. */
   background: #000;
   border-radius: 20px;
+  overflow: hidden;
 }
 
 /* Horizontal timeline nav */
@@ -3090,11 +3113,15 @@
   position: relative;
   max-height: 100%;
   max-width: 100%;
+  flex-shrink: 0;
 }
 
+/* Canvas is rendered at the exact pixel size measured from
+   .sc-journey__topnavBody, so no CSS scaling is needed. Keep `display:
+   block` to drop the inline-baseline gap that can otherwise add a couple
+   of phantom pixels and trigger overflow clipping. */
 .sc-journey__globe canvas {
-  max-height: 100%;
-  object-fit: contain;
+  display: block;
 }
 
 /* Floating glass card */
@@ -3207,12 +3234,20 @@
 
 .sc-journey__railGlobe {
   flex: 0 0 auto;
-  height: 240px;
+  /* Responsive height — small phones get a tighter globe, larger phones /
+     foldables open up. The component measures this box and renders the
+     canvas at the exact pixel size, so the sphere is always crisp and
+     never clipped at the top or bottom. */
+  height: clamp(180px, 32vh, 280px);
   display: flex;
   align-items: center;
   justify-content: center;
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   padding: 4px 0 8px;
+}
+
+.sc-journey__railGlobe canvas {
+  display: block;
 }
 
 .sc-journey__rail {

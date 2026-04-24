@@ -29,6 +29,8 @@ export default function SupplyChainDetail({
   const [revealedCount, setRevealedCount] = useState(0);
   const hasPlayed = useRef(false);
   const [isMobile, setIsMobile] = useState(false);
+  const globeContainerRef = useRef<HTMLDivElement>(null);
+  const [globeSize, setGlobeSize] = useState(360);
 
   useEffect(() => {
     const mq = window.matchMedia("(max-width: 768px)");
@@ -38,7 +40,42 @@ export default function SupplyChainDetail({
     return () => mq.removeEventListener("change", handler);
   }, []);
 
-  const globeSize = isMobile ? 200 : 500;
+  // Measure the globe container and size the canvas to fit cleanly on every
+  // viewport. Three.js renders at the *exact* pixel size we pass — CSS
+  // scaling on a fixed-size canvas blurs the texture and misaligns the
+  // dot/arc projections. Sizing dynamically keeps the sphere sharp and
+  // prevents top/bottom clipping when the parent card is short.
+  useEffect(() => {
+    const el = globeContainerRef.current;
+    if (!el) return;
+
+    const compute = () => {
+      const rect = el.getBoundingClientRect();
+      if (rect.width < 1 || rect.height < 1) return;
+
+      // Reserve a margin so the sphere's halo/dots never touch the card
+      // edge, and so the desktop floating-card overlay has breathing room.
+      const margin = isMobile ? 12 : 28;
+      const available = Math.min(rect.width, rect.height) - margin * 2;
+
+      // Clamp so the globe stays readable on tiny phones and doesn't
+      // overwhelm 4K monitors.
+      const minSize = isMobile ? 160 : 280;
+      const maxSize = isMobile ? 320 : 640;
+      const next = Math.round(Math.max(minSize, Math.min(maxSize, available)));
+
+      setGlobeSize((prev) => (Math.abs(prev - next) > 2 ? next : prev));
+    };
+
+    compute();
+    const ro = new ResizeObserver(compute);
+    ro.observe(el);
+    window.addEventListener("resize", compute);
+    return () => {
+      ro.disconnect();
+      window.removeEventListener("resize", compute);
+    };
+  }, [isMobile]);
 
   useEffect(() => {
     // On mobile the Work scroll hook short-circuits (screenIndex stays -1),
@@ -119,7 +156,7 @@ export default function SupplyChainDetail({
             <p>{data.description}</p>
           </div>
         )}
-        <div className="sc-journey__railGlobe">
+        <div className="sc-journey__railGlobe" ref={globeContainerRef}>
           <RealisticGlobe
             width={globeSize}
             height={globeSize}
@@ -200,7 +237,7 @@ export default function SupplyChainDetail({
       </nav>
 
       {/* Globe + floating glass card */}
-      <div className="sc-journey__topnavBody">
+      <div className="sc-journey__topnavBody" ref={globeContainerRef}>
         <div className="sc-journey__globe">
           <RealisticGlobe
             width={globeSize}
