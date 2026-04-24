@@ -41,7 +41,11 @@
   display: flex;
   flex-direction: column;
   min-height: 0;
-  margin: 0 -48px -32px;
+  /* Match the 24px horizontal padding on .work__screen so the image bleeds
+     exactly to the inner card edge without escaping the border-radius.
+     The ≤1024px (-28px) and ≤640px (-16px) breakpoints below already match
+     their respective padding breakpoints. */
+  margin: 0 -24px -32px;
   overflow: hidden;
   position: relative;
 }
