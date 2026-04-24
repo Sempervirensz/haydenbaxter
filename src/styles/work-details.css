@@ -167,11 +167,12 @@
 }
 
 .pd-full__caption {
-  font-size: 11px;
+  font-family: var(--font-sans);
+  font-size: 15px;
   font-weight: 400;
   line-height: 1.5;
-  letter-spacing: 0.01em;
-  color: rgba(255, 255, 255, 0.56);
+  letter-spacing: 0;
+  color: rgba(255, 255, 255, 0.55);
 }
 
 .pd-full__link {
@@ -230,8 +231,9 @@
   align-items: baseline;
   justify-content: space-between;
   gap: 16px;
-  padding: 20px clamp(20px, 3vw, 36px) 10px;
+  padding: 12px clamp(20px, 3vw, 36px) 10px;
   flex-shrink: 0;
+  min-width: 0;
 }
 
 .etb-topStrip__title,
@@ -254,6 +256,7 @@
   color: rgba(255, 255, 255, 0.28);
   font-weight: 400;
   white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .etb-barStack {
@@ -3725,4 +3728,40 @@
   .cns-photo__card {
     transition: none !important;
   }
+}
+
+/* ── Section descriptions ─────────────────────────────────────────────────── */
+
+.etb-description {
+  padding: clamp(8px, 1.4vw, 20px) clamp(20px, 3vw, 36px) clamp(16px, 2vw, 28px);
+  width: 100%;
+}
+
+.sc-journey__description {
+  padding: clamp(8px, 1.4vw, 20px) clamp(20px, 3vw, 36px) clamp(16px, 2vw, 28px);
+  width: 100%;
+}
+
+.etb-description p {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 15px;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.55);
+  letter-spacing: 0;
+  max-width: none;
+  width: 100%;
+  font-weight: 400;
+}
+
+.sc-journey__description p {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 15px;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.55);
+  letter-spacing: 0;
+  max-width: none;
+  width: 100%;
+  font-weight: 400;
 }

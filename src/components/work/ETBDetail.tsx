@@ -212,8 +212,14 @@ export default function ETBDetail({ data }: ETBDetailProps) {
       scrollParent.style.overflow = "hidden";
     }
 
-    // Also lock document body to prevent any background scroll
+    // Also lock document body to prevent any background scroll.
+    // Compensate for scrollbar removal so the page doesn't shift horizontally.
     const prevBodyOverflow = document.body.style.overflow;
+    const prevBodyPaddingRight = document.body.style.paddingRight;
+    const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+    if (scrollbarWidth > 0) {
+      document.body.style.paddingRight = `${scrollbarWidth}px`;
+    }
     document.body.style.overflow = "hidden";
 
     return () => {
@@ -222,6 +228,7 @@ export default function ETBDetail({ data }: ETBDetailProps) {
         scrollParent.scrollTop = savedScrollRef.current;
       }
       document.body.style.overflow = prevBodyOverflow;
+      document.body.style.paddingRight = prevBodyPaddingRight;
     };
   }, [openDetailId]);
 
@@ -244,10 +251,11 @@ export default function ETBDetail({ data }: ETBDetailProps) {
 
   return (
     <section className="etb" data-etb-section>
-      <div className="etb-topStrip">
-        <h4 className="etb-topStrip__title">{data.title}</h4>
-        <span className="etb-topStrip__cred">{data.credibilityLine}</span>
-      </div>
+      {data.description && (
+        <div className="etb-description">
+          <p>{data.description}</p>
+        </div>
+      )}
 
       <div
         className={`etb-barStack ${hoveredId ? "has-hover" : ""} ${openDetailId ? "has-active" : ""}`}

@@ -51,6 +51,7 @@ export interface ETBData {
   title: string;
   credibilityLine: string;
   intro: string;
+  description?: string;
   filters: string[];
   sortOptions: { label: string; field: string }[];
   defaultFilter: string;
@@ -94,6 +95,7 @@ export interface SupplyChainItem {
 }
 
 export interface SupplyChainData {
+  description?: string;
   viewMode: string;
   heroArt: {
     mapAsset: string;
@@ -217,7 +219,7 @@ export const WORK_SCREENS: WorkScreen[] = [
       background: "/WorldPulseCostal3.0.png",
       role: "Founder at WorldPulse",
       caption:
-        "Building design- and data-driven Digital Product Passports that show where products come from, how they\u2019re made, and who makes them.",
+        "Building digital product passports that make compliance more human. We turn complex supply chain data into visual, engaging stories.",
       link: {
         href: "https://worldxpulse.com",
         label: "Learn more at WORLDXPULSE.com",
@@ -228,13 +230,14 @@ export const WORK_SCREENS: WorkScreen[] = [
   // ── Screen 2 — Emerging Tech Builds ────────────────────────────────────
   {
     id: 2,
-    name: "Emerging Tech",
+    name: "Emerging Tech Builds",
     number: "02 / 04",
     type: "emerging-tech-builds",
     etb: {
       title: "Emerging Tech Builds",
       credibilityLine: "M.S. in Artificial Intelligence in Business (ASU)",
       intro: "Usable AI systems, not slideware.",
+      description: "Builder in AI and emerging tech, focused on practical tools with real-world use. These projects include live demos, working prototypes, and systems already in use.",
       filters: [
         "All",
         "Agents",
@@ -395,6 +398,7 @@ export const WORK_SCREENS: WorkScreen[] = [
     number: "03 / 04",
     type: "supply-chain",
     supplyChain: {
+      description: "A look at my work in global supply chains, sourcing, and traceability. Ideas, systems, and lessons from the world behind the products we use every day.",
       viewMode: "minimal-supply-chain-landing",
       heroArt: {
         mapAsset: "/assets/mapmaster.webp",
@@ -457,9 +461,9 @@ export const WORK_SCREENS: WorkScreen[] = [
           },
         ],
       },
-      eyebrow: "Procurement strategy + supplier operations",
+      eyebrow: "Global supply chains, sourcing, and traceability.",
       intro:
-        "Operator depth translated into clean systems: sourcing decisions, supplier workflows, data governance, and execution under real constraints.",
+        "A look at my work in global supply chains, sourcing, and traceability. Ideas, systems, and lessons from the world behind the products we use every day.",
       bridgeLine:
         "AI fits best after the operating model is clear. I design the workflow and data shape first, then layer automation where it compounds.",
       featured: {

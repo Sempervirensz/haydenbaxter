@@ -114,6 +114,11 @@ export default function SupplyChainDetail({
   if (isMobile) {
     return (
       <section className="sc-journey sc-journey--rail" aria-label="Supply chain journey">
+        {data.description && (
+          <div className="sc-journey__description">
+            <p>{data.description}</p>
+          </div>
+        )}
         <div className="sc-journey__railGlobe">
           <RealisticGlobe
             width={globeSize}
@@ -164,6 +169,11 @@ export default function SupplyChainDetail({
   // ── Desktop: horizontal topbar + floating card ───────────────────────
   return (
     <section className="sc-journey" aria-label="Supply chain journey">
+      {data.description && (
+        <div className="sc-journey__description">
+          <p>{data.description}</p>
+        </div>
+      )}
       {/* Horizontal timeline nav */}
       <nav className="sc-journey__topbar sc-journey__topbar--stacked" aria-label="Journey stops">
         {JOURNEY_STOPS.map((stop, i) => {

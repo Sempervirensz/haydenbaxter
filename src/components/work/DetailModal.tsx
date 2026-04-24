@@ -47,6 +47,13 @@ export default function DetailModal({
     bodyOverflowRef.current = document.body.style.overflow || "";
     screenOverflowRef.current = screenEl?.style.overflow || "";
 
+    // Compensate for scrollbar disappearance to avoid horizontal shift.
+    // Safe even with `scrollbar-gutter: stable` on html (will be 0 there).
+    const prevPaddingRight = document.body.style.paddingRight;
+    const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+    if (scrollbarWidth > 0) {
+      document.body.style.paddingRight = `${scrollbarWidth}px`;
+    }
     document.body.style.overflow = "hidden";
     if (screenEl) screenEl.style.overflow = "hidden";
 
@@ -91,6 +98,7 @@ export default function DetailModal({
       cancelAnimationFrame(raf);
       document.removeEventListener("keydown", onKeyDown);
       document.body.style.overflow = bodyOverflowRef.current;
+      document.body.style.paddingRight = prevPaddingRight;
       if (screenEl) screenEl.style.overflow = screenOverflowRef.current;
       if (
         restoreFocusRef.current &&
