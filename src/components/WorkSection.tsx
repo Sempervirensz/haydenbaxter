@@ -23,7 +23,7 @@ function DetailBody({ screen, isActive }: { screen: WorkScreen; isActive: boolea
 }
 
 export default function WorkSection() {
-  const { ref, screenIndex, cdDeg, activeLabel } = useWorkScroll();
+  const { ref, screenIndex, activeLabel } = useWorkScroll();
 
   const trackList = WORK_SCROLL_CONFIG.zones.filter((z) => z.label !== "");
 
@@ -52,7 +52,7 @@ export default function WorkSection() {
             <img src="/playershellpngtransparent.png" alt="" className="cd-player-shell" />
             <img src="/playerforeground.png" alt="" className="cd-player-fg" />
             <div className="cd-disc-overlay">
-              <div className="cd-disc" style={{ '--cd-deg': `${cdDeg}deg` } as React.CSSProperties} />
+              <div className="cd-disc" />
             </div>
           </div>
         </article>

@@ -207,12 +207,19 @@
 .cht-bg {
   position: absolute;
   inset: 0;
-  background-image: url("/consulting-hero.png");
+  background-image: url("/consulting/hero-2.png");
   background-size: cover;
   background-position: center 62%;
   transform: scale(1.01);
   z-index: 0;
   /* No dimming/vignette — keep original brightness and clarity */
+}
+
+@media (max-width: 640px) {
+  .cht-bg {
+    background-image: url("/consulting/mobile-statue.png");
+    background-position: center center;
+  }
 }
 
 /* Frosted overlay appears in state 2 — pure blur wash, no darkening */

@@ -5,7 +5,6 @@ import { WORK_LANDING, WORK_SCROLL_CONFIG, type WorkScrollZone } from "@/data/wo
 
 interface WorkScrollState {
   screenIndex: number;
-  cdDeg: number;
   activeLabel: string;
   hintHidden: boolean;
 }
@@ -60,7 +59,6 @@ export function useWorkScroll() {
   const ref = useRef<HTMLElement>(null);
   const [state, setState] = useState<WorkScrollState>({
     screenIndex: 0,
-    cdDeg: 0,
     activeLabel: WORK_LANDING.activeLabel,
     hintHidden: false,
   });
@@ -76,7 +74,7 @@ export function useWorkScroll() {
       "(max-width: 640px) and (hover: none), (max-width: 640px) and (pointer: coarse)"
     );
     if (mq.matches) {
-      setState({ screenIndex: -1, cdDeg: 0, activeLabel: "", hintHidden: true });
+      setState({ screenIndex: -1, activeLabel: "", hintHidden: true });
       return;
     }
 
@@ -142,7 +140,6 @@ export function useWorkScroll() {
         lastStateLabel = lastLabel;
         setState({
           screenIndex: nextScreenIndex,
-          cdDeg: currentDeg,
           activeLabel: lastLabel,
           hintHidden: nextHintHidden,
         });
