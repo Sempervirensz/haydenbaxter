@@ -28,7 +28,7 @@ export const DEFAULT_STATE: HeroTransitionState = {
 };
 
 export const HERO_QUOTE = "The best way to predict the future is to create it.";
-export const HERO_CTA_LABEL = "Explore your path";
+export const HERO_CTA_LABEL = "Explore What's Possible";
 
 export interface HeroPath {
   id: string;
@@ -37,7 +37,7 @@ export interface HeroPath {
 }
 
 export const HERO_PATHS: HeroPath[] = [
-  { id: "ai", label: "AI Implementation", href: "#ai-implementation" },
-  { id: "supply", label: "Supply Chain", href: "#supply-chain" },
+  { id: "ai", label: "AI Systems & Integration", href: "#ai-systems" },
+  { id: "supply", label: "Supply Chain & Traceability", href: "#supply-chain" },
   { id: "worldpulse", label: "WorldPulse", href: "#worldpulse" },
 ];

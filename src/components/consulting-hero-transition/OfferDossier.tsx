@@ -1,17 +1,11 @@
 "use client";
 
-// Consulting Offer Dossier — structural clone of ETB's OverlayDossier, but the
-// dark outer shell is gone. What remains is the off-white "file" card hovering
-// over the blurred background, with the close control tucked into the card.
+// Consulting offer dossier — off-white "file" card hovering over the blurred
+// hero. Content is intentionally concise: capability title, descriptor, six
+// bullets, then a single "Start a conversation" CTA group with two actions.
 
 import type { ConsultingOffer } from "@/data/consultingOffers";
-
-function toSlug(v: string) {
-  return v
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "");
-}
+import { CALENDLY_URL, CONNECT_LINKS } from "@/data/connect";
 
 interface Props {
   offer: ConsultingOffer;
@@ -19,11 +13,15 @@ interface Props {
 }
 
 export default function OfferDossier({ offer, onClose }: Props) {
+  const emailHref =
+    CONNECT_LINKS.find((l) => l.id === "email")?.href ??
+    "mailto:haydenjbaxter@gmail.com";
+
   return (
     <div className="cht-dos">
       <div className="cht-dos__card">
         <div className="cht-dos__cardHead">
-          <span className="cht-dos__eyebrow">Offer File</span>
+          <span className="cht-dos__eyebrow">Capability</span>
           <button
             type="button"
             className="cht-dos__close"
@@ -34,45 +32,37 @@ export default function OfferDossier({ offer, onClose }: Props) {
           </button>
         </div>
 
-        <div className="cht-dos__meta">
-          <span
-            className={`cht-dos__status cht-dos__status--${toSlug(offer.status)}`}
-          >
-            {offer.status}
-          </span>
-          <span className="cht-dos__category">{offer.category}</span>
-        </div>
-
         <h3 className="cht-dos__title">{offer.name}</h3>
-        <p className="cht-dos__oneLiner">{offer.oneLiner}</p>
-        <hr className="cht-dos__rule" />
+        <p className="cht-dos__descriptor">{offer.descriptor}</p>
 
         <ul className="cht-dos__bullets">
-          {offer.bullets.slice(0, 3).map((line) => (
+          {offer.bullets.map((line) => (
             <li key={line}>{line}</li>
           ))}
         </ul>
 
-        <div className="cht-dos__tags">
-          {offer.tags.map((tag) => (
-            <span key={tag} className="cht-dos__tag">
-              {tag}
-            </span>
-          ))}
+        <div className="cht-dos__convo">
+          <h4 className="cht-dos__convoHeading">Start a Conversation</h4>
+          <p className="cht-dos__convoSupport">
+            Exploring a project, workflow, or idea? Let&rsquo;s talk through it.
+          </p>
+          <div className="cht-dos__convoActions">
+            <a
+              className="cht-dos__convoBtn cht-dos__convoBtn--primary"
+              href={CALENDLY_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Book a 30-Minute Call
+            </a>
+            <a
+              className="cht-dos__convoBtn cht-dos__convoBtn--ghost"
+              href={emailHref}
+            >
+              Send an Email
+            </a>
+          </div>
         </div>
-
-        <div className="cht-dos__notes">
-          <span className="cht-dos__notesLabel">Engagement Notes</span>
-          <ul className="cht-dos__notesList">
-            {offer.systemNotes.slice(0, 3).map((line) => (
-              <li key={line}>{line}</li>
-            ))}
-          </ul>
-        </div>
-
-        <button type="button" className="cht-dos__cta">
-          Start a conversation &rarr;
-        </button>
       </div>
     </div>
   );
