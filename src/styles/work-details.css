@@ -3033,8 +3033,8 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 6px;
-  padding: 12px 22px;
+  gap: 4px;
+  padding: 10px 20px;
   background: none;
   border: 1px solid transparent;
   border-radius: 8px;
@@ -3067,15 +3067,15 @@
 }
 
 .sc-journey__topbarDot {
-  width: 26px;
-  height: 26px;
+  width: 28px;
+  height: 28px;
   border-radius: 50%;
   border: 1px solid rgba(255, 255, 255, 0.55);
   display: flex;
   align-items: center;
   justify-content: center;
   font-family: var(--font-mono, monospace);
-  font-size: 10.5px;
+  font-size: 11px;
   transition: background 0.14s ease, border-color 0.14s ease, color 0.14s ease;
 }
 
@@ -3119,18 +3119,18 @@
 
 .sc-journey__topbarHeadline {
   font-family: var(--font-serif, Georgia, serif);
-  font-size: 14.5px;
+  font-size: 13px;
   font-weight: 500;
   letter-spacing: 0.005em;
   white-space: normal;
-  max-width: 200px;
+  max-width: 180px;
   text-align: center;
   text-transform: none;
 }
 
 .sc-journey__topbarSub {
   font-family: var(--font-mono, monospace);
-  font-size: 10px;
+  font-size: 9px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: rgba(255, 255, 255, 0.5);
@@ -3206,7 +3206,7 @@
   position: absolute;
   right: 24px;
   bottom: 24px;
-  max-width: 340px;
+  max-width: 300px;
   transform: translateY(12px);
   background: rgba(180, 200, 220, 0.12);
   border-color: rgba(255, 255, 255, 0.15);
@@ -3229,15 +3229,15 @@
 
 .sc-journey__year {
   font-family: var(--font-serif, serif);
-  font-size: 13px;
+  font-size: 12px;
   letter-spacing: 0.06em;
-  color: rgba(255, 255, 255, 0.5);
+  color: rgba(255, 255, 255, 0.45);
   margin-bottom: 4px;
 }
 
 .sc-journey__cardTitle {
   font-family: var(--font-serif, serif);
-  font-size: clamp(19px, 3vw, 25px);
+  font-size: clamp(18px, 3vw, 24px);
   font-weight: 400;
   letter-spacing: -0.02em;
   margin: 0 0 8px;
@@ -3245,9 +3245,9 @@
 
 .sc-journey__desc {
   font-family: var(--font-serif, serif);
-  font-size: 14.5px;
+  font-size: 13px;
   line-height: 1.55;
-  color: rgba(255, 255, 255, 0.78);
+  color: rgba(255, 255, 255, 0.7);
   margin: 0;
 }
 
@@ -3502,13 +3502,16 @@
 /* Mobile: the work section is unfrozen here, so .work__screen--detail
    becomes statically-positioned by the global mobile rule. Re-establish
    it as a positioned containing block and give the card explicit height
-   so the absolute photo has room to fill. */
+   so the absolute photo has room to fill. No aspect-ratio constraint —
+   it conflicts with min-height and creates visible bands. */
 @media (max-width: 640px) {
   .work__screen--detail:has(.cns-photo--hero) {
     position: relative;
-    min-height: 88vh;
-    aspect-ratio: 9 / 16;
-    max-height: 88vh;
+    min-height: 100vh;
+    overflow: hidden;
+  }
+  .cns-photo--hero {
+    overflow: hidden;
   }
 }
 @media (max-width: 640px) {
