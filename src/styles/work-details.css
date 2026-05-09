@@ -3478,36 +3478,37 @@
   }
 }
 
-/* ConsultingHeroStage — desktop: photo fills the entire card surface
-   (absolute inset:0) so the blue background reads as one continuous
-   image with no top/edge color band. The detail header floats over it
-   via z-index. Mobile keeps a static 9/16 frame because the work
-   section is unfrozen and stacks vertically there. */
+/* ConsultingHeroStage — photo fills the entire card surface at every
+   viewport. The detail header floats over it via z-index so the blue
+   background reads as one continuous image with no top/edge color band. */
 .cns-photo--hero {
   display: flex;
   flex-direction: column;
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  border-radius: inherit;
 }
 .cns-photo--hero .cht-stage {
   min-height: 0;
   flex: 1;
   border-radius: 0;
 }
-@media (min-width: 641px) {
-  .work__screen--detail:has(.cns-photo--hero) .work__detail-head {
-    position: relative;
-    z-index: 5;
-  }
-  .cns-photo--hero {
-    position: absolute;
-    inset: 0;
-    margin: 0;
-    border-radius: inherit;
-  }
+.work__screen--detail:has(.cns-photo--hero) .work__detail-head {
+  position: relative;
+  z-index: 5;
 }
+
+/* Mobile: the work section is unfrozen here, so .work__screen--detail
+   becomes statically-positioned by the global mobile rule. Re-establish
+   it as a positioned containing block and give the card explicit height
+   so the absolute photo has room to fill. */
 @media (max-width: 640px) {
-  .cns-photo--hero {
+  .work__screen--detail:has(.cns-photo--hero) {
+    position: relative;
+    min-height: 88vh;
     aspect-ratio: 9 / 16;
-    max-height: 82vh;
+    max-height: 88vh;
   }
 }
 @media (max-width: 640px) {
