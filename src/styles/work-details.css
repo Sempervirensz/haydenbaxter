@@ -156,7 +156,7 @@
 .pd-full__hero {
   z-index: 1;
   object-fit: contain;
-  object-position: center 48%;
+  object-position: center 36%;
 }
 
 .pd-full__bar {
@@ -199,19 +199,55 @@
 }
 
 .pd-full__link {
-  font-size: 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 11.5px;
   font-weight: 600;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.72);
+  color: rgba(255, 255, 255, 0.92);
   text-decoration: none;
   white-space: nowrap;
-  transition: color 0.2s ease;
+  padding: 11px 18px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  background: rgba(255, 255, 255, 0.04);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.06),
+    0 6px 18px rgba(0, 0, 0, 0.35);
+  transition:
+    color 180ms ease,
+    border-color 180ms ease,
+    background 180ms ease,
+    box-shadow 220ms ease,
+    transform 180ms ease;
+}
+
+.pd-full__linkArrow {
+  display: inline-block;
+  font-size: 13px;
+  letter-spacing: 0;
+  transition: transform 180ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .pd-full__link:hover,
 .pd-full__link:focus-visible {
   color: #fff;
+  border-color: rgba(255, 255, 255, 0.55);
+  background: rgba(255, 255, 255, 0.09);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.12),
+    0 0 0 1px rgba(255, 255, 255, 0.08),
+    0 10px 28px rgba(255, 255, 255, 0.06),
+    0 8px 22px rgba(0, 0, 0, 0.4);
+  transform: translateY(-1px);
+  outline: none;
+}
+
+.pd-full__link:hover .pd-full__linkArrow,
+.pd-full__link:focus-visible .pd-full__linkArrow {
+  transform: translateX(3px);
 }
 
 /* Emerging Tech Builds */
@@ -227,7 +263,10 @@
   display: flex;
   flex-direction: column;
   min-height: 100%;
-  background: #030304;
+  /* Transparent so the glassy outer card surface reads through evenly —
+     unifies the previous mismatched blacks (off-black header strip vs.
+     pure-black inner). The ::before grid texture below still renders. */
+  background: transparent;
   border: 1px solid rgba(255, 255, 255, 0.05);
   border-radius: 14px;
   padding: 0;
@@ -2994,8 +3033,8 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4px;
-  padding: 10px 20px;
+  gap: 6px;
+  padding: 12px 22px;
   background: none;
   border: 1px solid transparent;
   border-radius: 8px;
@@ -3028,15 +3067,15 @@
 }
 
 .sc-journey__topbarDot {
-  width: 28px;
-  height: 28px;
+  width: 26px;
+  height: 26px;
   border-radius: 50%;
   border: 1px solid rgba(255, 255, 255, 0.55);
   display: flex;
   align-items: center;
   justify-content: center;
   font-family: var(--font-mono, monospace);
-  font-size: 11px;
+  font-size: 10.5px;
   transition: background 0.14s ease, border-color 0.14s ease, color 0.14s ease;
 }
 
@@ -3080,18 +3119,18 @@
 
 .sc-journey__topbarHeadline {
   font-family: var(--font-serif, Georgia, serif);
-  font-size: 13px;
+  font-size: 14.5px;
   font-weight: 500;
   letter-spacing: 0.005em;
   white-space: normal;
-  max-width: 180px;
+  max-width: 200px;
   text-align: center;
   text-transform: none;
 }
 
 .sc-journey__topbarSub {
   font-family: var(--font-mono, monospace);
-  font-size: 9px;
+  font-size: 10px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: rgba(255, 255, 255, 0.5);
@@ -3167,7 +3206,7 @@
   position: absolute;
   right: 24px;
   bottom: 24px;
-  max-width: 300px;
+  max-width: 340px;
   transform: translateY(12px);
   background: rgba(180, 200, 220, 0.12);
   border-color: rgba(255, 255, 255, 0.15);
@@ -3190,15 +3229,15 @@
 
 .sc-journey__year {
   font-family: var(--font-serif, serif);
-  font-size: 12px;
+  font-size: 13px;
   letter-spacing: 0.06em;
-  color: rgba(255, 255, 255, 0.45);
+  color: rgba(255, 255, 255, 0.5);
   margin-bottom: 4px;
 }
 
 .sc-journey__cardTitle {
   font-family: var(--font-serif, serif);
-  font-size: clamp(18px, 3vw, 24px);
+  font-size: clamp(19px, 3vw, 25px);
   font-weight: 400;
   letter-spacing: -0.02em;
   margin: 0 0 8px;
@@ -3206,9 +3245,9 @@
 
 .sc-journey__desc {
   font-family: var(--font-serif, serif);
-  font-size: 13px;
+  font-size: 14.5px;
   line-height: 1.55;
-  color: rgba(255, 255, 255, 0.7);
+  color: rgba(255, 255, 255, 0.78);
   margin: 0;
 }
 
@@ -3439,15 +3478,29 @@
   }
 }
 
-/* ConsultingHeroStage — fills card below the detail header */
+/* ConsultingHeroStage — fills card below the detail header. Bleeds to the
+   card edges (mirrors the .pd-full pattern) so the consulting hero photo
+   reads as one continuous surface instead of leaving #02021E patches in
+   the work__screen padding gutter. */
 .cns-photo--hero {
   display: flex;
   flex-direction: column;
+  margin: 0 -24px -24px;
 }
 .cns-photo--hero .cht-stage {
   min-height: 0;
   flex: 1;
   border-radius: 0;
+}
+@media (max-width: 1024px) {
+  .cns-photo--hero {
+    margin: 0 -28px -24px;
+  }
+}
+@media (max-width: 640px) {
+  .cns-photo--hero {
+    margin: 0 -16px -16px;
+  }
 }
 @media (max-width: 640px) {
   .cns-photo--hero {

@@ -74,7 +74,6 @@ export default function Stage({
         </button>
       )}
 
-      <span className="cht-section-label">Consulting</span>
       <QuoteText animation={state.textAnimation} replayKey={replayKey} />
 
       {/* CTA — state 1 only, disappears on reveal */}

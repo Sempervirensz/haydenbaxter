@@ -217,9 +217,9 @@ export const WORK_SCREENS: WorkScreen[] = [
     full: {
       image: { src: "", alt: "" },
       background: "/WorldPulseCostal3.0.png",
-      role: "Founder at WorldPulse",
+      role: "",
       caption:
-        "Building digital product passports that make compliance more human. We turn complex supply chain data into visual, engaging stories.",
+        "Hayden Baxter, Founder of WorldPulse — building digital product passports that make compliance more human. We turn complex supply chain data into visual, engaging stories.",
       link: {
         href: "https://worldxpulse.com",
         label: "Learn more at WORLDXPULSE.com",

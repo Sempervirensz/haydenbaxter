@@ -39,9 +39,11 @@ export default function WorldPulseDetail({ data }: WorldPulseDetailProps) {
           </div>
         </div>
         <div className="pd-full__bar">
-          <div className="pd-full__info">
-            <span className="pd-full__role">{data.role}</span>
-          </div>
+          {data.role && (
+            <div className="pd-full__info">
+              <span className="pd-full__role">{data.role}</span>
+            </div>
+          )}
           <a
             href={data.link.href}
             className="pd-full__link"
@@ -49,6 +51,7 @@ export default function WorldPulseDetail({ data }: WorldPulseDetailProps) {
             rel="noopener noreferrer"
           >
             {data.link.label}
+            <span aria-hidden="true" className="pd-full__linkArrow">&rarr;</span>
           </a>
         </div>
       </div>
