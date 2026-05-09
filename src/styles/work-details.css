@@ -3478,28 +3478,36 @@
   }
 }
 
-/* ConsultingHeroStage — fills card below the detail header. Bleeds to the
-   card edges (mirrors the .pd-full pattern) so the consulting hero photo
-   reads as one continuous surface instead of leaving #02021E patches in
-   the work__screen padding gutter. */
+/* ConsultingHeroStage — desktop: photo fills the entire card surface
+   (absolute inset:0) so the blue background reads as one continuous
+   image with no top/edge color band. The detail header floats over it
+   via z-index. Mobile keeps a static 9/16 frame because the work
+   section is unfrozen and stacks vertically there. */
 .cns-photo--hero {
   display: flex;
   flex-direction: column;
-  margin: 0 -24px -24px;
 }
 .cns-photo--hero .cht-stage {
   min-height: 0;
   flex: 1;
   border-radius: 0;
 }
-@media (max-width: 1024px) {
+@media (min-width: 641px) {
+  .work__screen--detail:has(.cns-photo--hero) .work__detail-head {
+    position: relative;
+    z-index: 5;
+  }
   .cns-photo--hero {
-    margin: 0 -28px -24px;
+    position: absolute;
+    inset: 0;
+    margin: 0;
+    border-radius: inherit;
   }
 }
 @media (max-width: 640px) {
   .cns-photo--hero {
-    margin: 0 -16px -16px;
+    aspect-ratio: 9 / 16;
+    max-height: 82vh;
   }
 }
 @media (max-width: 640px) {

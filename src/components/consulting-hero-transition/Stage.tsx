@@ -4,7 +4,6 @@ import { useEffect, useRef } from "react";
 import {
   HERO_CTA_LABEL,
   HERO_PATHS,
-  HERO_QUOTE,
   type HeroTransitionState,
 } from "@/data/consultingHeroTransition";
 import { CONSULTING_OFFERS } from "@/data/consultingOffers";
@@ -74,8 +73,6 @@ export default function Stage({
         </button>
       )}
 
-      <QuoteText animation={state.textAnimation} replayKey={replayKey} />
-
       {/* CTA — state 1 only, disappears on reveal */}
       <div className="cht-cta-wrap">
         <button
@@ -131,34 +128,3 @@ export default function Stage({
   );
 }
 
-function QuoteText({
-  animation,
-  replayKey,
-}: {
-  animation: HeroTransitionState["textAnimation"];
-  replayKey: number;
-}) {
-  if (animation === "cursive") {
-    return (
-      <p key={`cursive-${replayKey}`} className="cht-quote is-cursive">
-        {HERO_QUOTE}
-      </p>
-    );
-  }
-
-  const words = HERO_QUOTE.split(" ");
-  return (
-    <p key={`${animation}-${replayKey}`} className={`cht-quote is-${animation}`}>
-      {words.map((word, i) => (
-        <span
-          key={i}
-          className="cht-word"
-          style={{ ["--word-index" as string]: i }}
-        >
-          {word}
-          {i < words.length - 1 ? "\u00a0" : ""}
-        </span>
-      ))}
-    </p>
-  );
-}
