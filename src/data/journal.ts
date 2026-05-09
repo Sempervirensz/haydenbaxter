@@ -1,25 +1,60 @@
+// Internal blog data. New posts are added by /admin/compose (dev-only) — the
+// composer copies a snippet to the clipboard which is pasted directly below
+// the COMPOSE_INSERT_BELOW marker.
+
+export type BlogBlock =
+  | { type: "paragraph"; text: string }
+  | { type: "heading"; text: string };
+
 export interface JournalPost {
+  slug: string;
   title: string;
   date: string;
   excerpt: string;
-  href: string;
-  image: string;
+  tags: string[];
+  thumbnail: string;
+  hero: string;
+  author: string;
+  body: BlogBlock[];
 }
 
-export const JOURNAL_DATA = {
+export const JOURNAL_COPY = {
   heading: "Journal",
-  subline: "Long-form thinking on AI, supply chain, and building products that matter.",
-  blogUrl: "https://journal.haydenbaxter.com",
-  blogLabel: "Read the full journal",
-  posts: [
-    {
-      title: "Artificial Intelligence and the Architecture of Industry",
-      date: "Mar 6, 2026",
-      excerpt:
-        "How AI reshapes industrial structures, organizational frameworks, and the operating logic behind modern supply chains.",
-      href: "https://journal.haydenbaxter.com/p/artificial-intelligence-and-the-architecture-of-industry",
-      image:
-        "https://beehiiv-images-production.s3.amazonaws.com/uploads/publication/thumbnail/7126350d-f53b-47b2-bd7f-7df9d174530b/landscape_hf_20260219_214719_e56c2594-5d63-4cd8-8161-f495032a10eb.jpeg",
-    },
-  ] as JournalPost[],
+  subline:
+    "Long-form thinking on AI, supply chain, and building products that matter.",
+  ctaLabel: "Read the full journal",
+  ctaHref: "/blog",
+};
+
+export const BLOG_POSTS: JournalPost[] = [
+  // <COMPOSE_INSERT_BELOW> — do not remove; /admin/compose pastes new posts after this line.
+  {
+    slug: "test",
+    title: "test",
+    date: "May 9, 2026",
+    excerpt: "test",
+    tags: [
+      "test",
+    ],
+    thumbnail: "/images/blog/test.png",
+    hero: "/images/blog/test.png",
+    author: "Hayden Baxter",
+    body: [
+      { type: "paragraph", text: `test` },
+    ],
+  },
+];
+
+export function getBlogPostBySlug(slug: string): JournalPost | undefined {
+  return BLOG_POSTS.find((p) => p.slug === slug);
+}
+
+// Legacy compatibility for the home-page <JournalSection />.
+// Maps the new shape onto the older surface the section was built for.
+export const JOURNAL_DATA = {
+  heading: JOURNAL_COPY.heading,
+  subline: JOURNAL_COPY.subline,
+  blogUrl: JOURNAL_COPY.ctaHref,
+  blogLabel: JOURNAL_COPY.ctaLabel,
+  posts: BLOG_POSTS,
 };
