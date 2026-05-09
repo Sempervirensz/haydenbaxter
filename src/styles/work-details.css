@@ -3494,33 +3494,39 @@
   flex: 1;
   border-radius: 0;
 }
+.work__screen--consulting .work__detail-head,
 .work__screen--detail:has(.cns-photo--hero) .work__detail-head {
   position: relative;
   z-index: 5;
 }
 
-/* Mobile: the work section is unfrozen here, so .work__screen--detail
-   becomes statically-positioned by the global mobile rule. Re-establish
-   it as a positioned containing block and give the card explicit height
-   so the absolute photo has room to fill. No aspect-ratio constraint —
-   it conflicts with min-height and creates visible bands. */
+/* Mobile: photo fills the entire card via absolute inset:0. Card gets
+   relative positioning + 88vh min-height so the absolute child has a
+   defined containing box. 88vh keeps the card inside its chapter on
+   every viewport (the last-child chapter is 94vh on desktop) so no
+   navy band can show below the card. */
 @media (max-width: 640px) {
+  .work__screen--consulting,
   .work__screen--detail:has(.cns-photo--hero) {
     position: relative;
-    min-height: 100vh;
+    min-height: 88vh;
     overflow: hidden;
+    background: #02021E;
   }
-  .cns-photo--hero {
+  .work__screen--consulting .cns-photo--hero,
+  .work__screen--detail:has(.cns-photo--hero) .cns-photo--hero {
+    position: absolute;
+    inset: 0;
+    margin: 0;
+    border-radius: 0;
     overflow: hidden;
+    /* Override the .cns-photo mobile rule above so the hero variant
+       fills the card instead of being clamped to 9/16 + 82vh. */
+    aspect-ratio: auto;
+    max-height: none;
+    width: auto;
   }
 }
-@media (max-width: 640px) {
-  .cns-photo--hero {
-    aspect-ratio: 9 / 16;
-    max-height: 82vh;
-  }
-}
-
 /* Override the glass card's overlays so photo reads clearly */
 .work__screen--detail:has(.cns-photo)::after {
   display: none;

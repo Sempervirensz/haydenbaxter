@@ -62,13 +62,16 @@ export default function WorkSection() {
         const detailScreenIndex = idx + 1;
         const isActive = screenIndex === detailScreenIndex;
 
+        const screenModifier =
+          screen.type === "consulting" ? " work__screen--consulting" : "";
+
         return (
           <div
             key={screen.id}
             className="work__chapter work__chapter--detail"
             style={{ zIndex: idx + 2 }}
           >
-            <article className="work__screen work__screen--detail">
+            <article className={`work__screen work__screen--detail${screenModifier}`}>
               <header className="work__detail-head">
                 <span className="work__detail-num">{screen.number}</span>
                 <h3 className="work__detail-name">
