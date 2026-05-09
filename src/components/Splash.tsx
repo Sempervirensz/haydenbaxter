@@ -25,7 +25,10 @@ export default function Splash() {
 
     if (prefersReduced) {
       el.classList.add("is-fading");
-      setTimeout(() => el.remove(), 100);
+      // Don't physically remove from DOM — that breaks React reconciliation
+      // on client-side route changes (Splash is rendered by RootLayout, so
+      // React still has it in its tree). Hide via class instead.
+      el.classList.add("is-hidden");
       return;
     }
 
@@ -46,10 +49,11 @@ export default function Splash() {
         return;
       }
 
-      // All words shown — pause, then fade out
+      // All words shown — pause, then fade out. Don't .remove() the node —
+      // see comment above; CSS handles visibility once is-fading lands.
       setTimeout(() => {
         el.classList.add("is-fading");
-        setTimeout(() => el.remove(), FADE_DURATION);
+        setTimeout(() => el.classList.add("is-hidden"), FADE_DURATION);
       }, PAUSE_AFTER);
     }
 

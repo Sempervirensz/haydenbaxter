@@ -1072,6 +1072,15 @@ html {
   pointer-events: none;
 }
 
+/* Once the fade transition finishes, fully take the splash out of the
+   layout and pointer surface. Keeps it in the React tree (so client-side
+   route changes don't crash React's reconciler) but invisible. */
+.splash.is-hidden {
+  visibility: hidden;
+  pointer-events: none;
+  display: none;
+}
+
 .splash__word {
   position: absolute;
   font-family: var(--font-sans);

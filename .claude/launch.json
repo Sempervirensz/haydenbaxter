@@ -9,6 +9,13 @@
       "autoPort": true
     },
     {
+      "name": "static-export",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["--yes", "serve", "out"],
+      "port": 3000,
+      "autoPort": true
+    },
+    {
       "name": "design-inspo",
       "runtimeExecutable": "python3",
       "runtimeArgs": ["-m", "http.server", "8002", "--directory", "legacy/design-inspo"],
