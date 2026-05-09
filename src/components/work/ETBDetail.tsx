@@ -1,10 +1,43 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import type { ETBData, ETBProject } from "@/data/work";
 import DetailModal from "@/components/work/DetailModal";
 import TagPills from "@/components/work/TagPills";
+
+/** Project IDs with a standalone /emerging-tech-builds/{slug} detail page.
+ *  Anything not listed here renders a disabled "Coming Soon" CTA. */
+const ETB_DETAIL_ROUTES: Record<string, string> = {
+  casebrief: "/emerging-tech-builds/casebrief",
+  atomicos: "/emerging-tech-builds/atomic-os",
+};
+
+function ProjectCTA({ project }: { project: ETBProject }) {
+  const route = ETB_DETAIL_ROUTES[project.id];
+  if (route) {
+    return (
+      <Link
+        href={route}
+        className="etb-dos__cta"
+        aria-label={`View full detail for ${project.name}`}
+      >
+        View Full Detail &rarr;
+      </Link>
+    );
+  }
+  return (
+    <button
+      type="button"
+      className="etb-dos__cta etb-dos__cta--disabled"
+      disabled
+      aria-disabled="true"
+    >
+      Coming Soon
+    </button>
+  );
+}
 
 interface ETBDetailProps {
   data: ETBData;
@@ -365,13 +398,7 @@ export default function ETBDetail({ data }: ETBDetailProps) {
                 </div>
 
                 {/* CTA */}
-                <button
-                  className="etb-dos__cta"
-                  type="button"
-                  onClick={() => setModalProjectId(selectedProject.id)}
-                >
-                  View Full Detail &rarr;
-                </button>
+                <ProjectCTA project={selectedProject} />
               </div>
             </div>
           ) : null}
@@ -494,13 +521,7 @@ export default function ETBDetail({ data }: ETBDetailProps) {
                     </ul>
                   </div>
 
-                  <button
-                    className="etb-dos__cta"
-                    type="button"
-                    onClick={() => setModalProjectId(selectedProject.id)}
-                  >
-                    View Full Detail &rarr;
-                  </button>
+                  <ProjectCTA project={selectedProject} />
                 </div>
               </div>
             </div>,

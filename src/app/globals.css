@@ -1097,6 +1097,186 @@ html {
   }
 }
 
+/* ──────────────────────────────────────────────────────────
+   Emerging Tech Builds — standalone gallery + detail pages
+   ────────────────────────────────────────────────────────── */
+.etb-gallery {
+  min-height: 100vh;
+  padding: clamp(24px, 4vw, 56px) clamp(16px, 4vw, 56px) 64px;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(16px, 3vw, 28px);
+}
+.etb-gallery__shell {
+  /* Mimic the framing the ETBDetail component expects on the homepage —
+     a glass card surface so existing layout/styling reads correctly. */
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  border-radius: 24px;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.32),
+    inset 0 0 80px rgba(0, 0, 0, 0.4),
+    0 30px 60px rgba(0, 0, 0, 0.55);
+  padding: clamp(20px, 3vw, 32px);
+  overflow: clip;
+}
+.etb-gallery__back,
+.etb-page__back,
+.etb-page__backFooter {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  align-self: flex-start;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  padding: 10px 16px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.03);
+  color: rgba(255, 255, 255, 0.78);
+  text-decoration: none;
+  transition: border-color 180ms ease, background 180ms ease, color 180ms ease, transform 160ms ease;
+}
+.etb-gallery__back:hover,
+.etb-page__back:hover,
+.etb-page__backFooter:hover,
+.etb-gallery__back:focus-visible,
+.etb-page__back:focus-visible,
+.etb-page__backFooter:focus-visible {
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.42);
+  background: rgba(255, 255, 255, 0.07);
+  transform: translateY(-1px);
+  outline: none;
+}
+
+.etb-page {
+  max-width: 880px;
+  margin: 0 auto;
+  padding: clamp(24px, 4vw, 56px) clamp(16px, 4vw, 32px) 96px;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(28px, 4vw, 48px);
+}
+.etb-page__hero {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding-bottom: clamp(20px, 3vw, 32px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+.etb-page__category {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.45);
+}
+.etb-page__title {
+  font-family: var(--font-serif);
+  font-size: clamp(40px, 7vw, 72px);
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: rgba(255, 255, 255, 0.96);
+  margin: 0;
+}
+.etb-page__oneLiner {
+  font-family: var(--font-sans);
+  font-size: clamp(16px, 1.6vw, 19px);
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.7);
+  max-width: 56ch;
+  margin: 0;
+}
+.etb-page__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 6px;
+}
+.etb-page__tag {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(104, 130, 216, 0.32);
+  background: rgba(104, 130, 216, 0.08);
+  color: rgba(186, 200, 240, 0.92);
+}
+
+.etb-page__section {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.etb-page__sectionTitle {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.55);
+  margin: 0;
+}
+.etb-page__placeholder {
+  border: 1px dashed rgba(255, 255, 255, 0.14);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.02);
+  padding: clamp(20px, 3vw, 32px);
+  font-family: var(--font-sans);
+  font-size: 13px;
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.48);
+}
+.etb-page__placeholder--media {
+  min-height: clamp(200px, 32vw, 320px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.36);
+}
+
+.etb-page__backFooter {
+  margin-top: clamp(16px, 3vw, 24px);
+}
+
+@media (max-width: 640px) {
+  .etb-gallery {
+    padding: 16px 12px 48px;
+  }
+  .etb-gallery__shell {
+    padding: 14px;
+    border-radius: 18px;
+  }
+  .etb-page {
+    padding: 20px 16px 64px;
+  }
+}
+
+/* Disabled "Coming Soon" CTA — mutes the cobalt fill of .etb-dos__cta */
+.etb-dos__cta--disabled,
+.etb-dos__cta--disabled:hover,
+.etb-dos__cta--disabled:focus-visible {
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(255, 255, 255, 0.42);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
 /* Connect section */
 .connect {
   background: #0a0a0a;
