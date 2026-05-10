@@ -59,9 +59,10 @@ export default function SupplyChainDetail({
       const available = Math.min(rect.width, rect.height) - margin * 2;
 
       // Clamp so the globe stays readable on tiny phones and doesn't
-      // overwhelm 4K monitors.
-      const minSize = isMobile ? 160 : 280;
-      const maxSize = isMobile ? 320 : 640;
+      // overwhelm 4K monitors. Cap is intentionally tighter than the
+      // available space so the timeline copy beside it stays legible.
+      const minSize = isMobile ? 160 : 260;
+      const maxSize = isMobile ? 240 : 520;
       const next = Math.round(Math.max(minSize, Math.min(maxSize, available)));
 
       setGlobeSize((prev) => (Math.abs(prev - next) > 2 ? next : prev));

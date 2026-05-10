@@ -3236,21 +3236,22 @@
 
 .sc-journey__topbarHeadline {
   font-family: var(--font-serif, Georgia, serif);
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 500;
   letter-spacing: 0.005em;
+  line-height: 1.25;
   white-space: normal;
-  max-width: 180px;
+  max-width: 200px;
   text-align: center;
   text-transform: none;
 }
 
 .sc-journey__topbarSub {
   font-family: var(--font-mono, monospace);
-  font-size: 9px;
+  font-size: 11px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.5);
+  color: rgba(255, 255, 255, 0.6);
   white-space: nowrap;
 }
 
@@ -3323,7 +3324,7 @@
   position: absolute;
   right: 24px;
   bottom: 24px;
-  max-width: 300px;
+  max-width: 340px;
   transform: translateY(12px);
   background: rgba(180, 200, 220, 0.12);
   border-color: rgba(255, 255, 255, 0.15);
@@ -3346,25 +3347,25 @@
 
 .sc-journey__year {
   font-family: var(--font-serif, serif);
-  font-size: 12px;
+  font-size: 13px;
   letter-spacing: 0.06em;
-  color: rgba(255, 255, 255, 0.45);
+  color: rgba(255, 255, 255, 0.55);
   margin-bottom: 4px;
 }
 
 .sc-journey__cardTitle {
   font-family: var(--font-serif, serif);
-  font-size: clamp(18px, 3vw, 24px);
+  font-size: clamp(20px, 3vw, 26px);
   font-weight: 400;
   letter-spacing: -0.02em;
-  margin: 0 0 8px;
+  margin: 0 0 10px;
 }
 
 .sc-journey__desc {
   font-family: var(--font-serif, serif);
-  font-size: 13px;
-  line-height: 1.55;
-  color: rgba(255, 255, 255, 0.7);
+  font-size: 15px;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.78);
   margin: 0;
 }
 
@@ -3397,8 +3398,10 @@
   /* Responsive height — small phones get a tighter globe, larger phones /
      foldables open up. The component measures this box and renders the
      canvas at the exact pixel size, so the sphere is always crisp and
-     never clipped at the top or bottom. */
-  height: clamp(180px, 32vh, 280px);
+     never clipped at the top or bottom. Slightly tighter than before so
+     the larger timeline text below has more breathing room without the
+     reader having to scroll. */
+  height: clamp(160px, 26vh, 240px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -3446,7 +3449,7 @@
   text-align: left;
   background: transparent;
   border: 0;
-  padding: 10px 0 18px;
+  padding: 12px 0 22px;
   color: inherit;
   font: inherit;
   cursor: pointer;
@@ -3497,10 +3500,10 @@
 
 .sc-journey__railMeta {
   font-family: var(--font-mono, ui-monospace, Menlo, monospace);
-  font-size: 10px;
+  font-size: 11px;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.55);
+  color: rgba(255, 255, 255, 0.6);
   transition: color 0.14s ease;
 }
 
@@ -3513,10 +3516,10 @@
 }
 
 .sc-journey__railHeadline {
-  font-size: 17px;
+  font-size: 19px;
   font-weight: 600;
-  line-height: 1.25;
-  color: rgba(255, 255, 255, 0.92);
+  line-height: 1.3;
+  color: rgba(255, 255, 255, 0.94);
   transition: color 0.14s ease;
 }
 
@@ -3526,9 +3529,9 @@
 
 /* Description collapses when inactive, expands when active */
 .sc-journey__railDesc {
-  font-size: 13px;
-  line-height: 1.5;
-  color: rgba(255, 255, 255, 0.72);
+  font-size: 15px;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.78);
   max-height: 0;
   opacity: 0;
   overflow: hidden;
@@ -3537,9 +3540,9 @@
 }
 
 .sc-journey__railItem.is-active .sc-journey__railDesc {
-  max-height: 240px;
+  max-height: 280px;
   opacity: 1;
-  margin-top: 8px;
+  margin-top: 10px;
 }
 
 @media (prefers-reduced-motion: reduce) {
