@@ -72,6 +72,10 @@ function getBriefSummary(project: ETBProject): string {
 }
 
 function getSystemSnapshot(project: ETBProject): string[] {
+  if (project.systemSnapshot?.length) {
+    return project.systemSnapshot;
+  }
+
   const common = [
     "UX loop tuned for fast iteration + readable outputs",
     "State and decisions shaped for repeatable handoff",
@@ -450,6 +454,9 @@ export default function ETBDetail({ data }: ETBDetailProps) {
                 <div className="etb-modal__tags">
                   <TagPills tags={modalProject.tags} className="etb-pill etb-pill--preview" />
                 </div>
+                {modalProject.detailFooter ? (
+                  <p className="etb-modal__statusLine">{modalProject.detailFooter}</p>
+                ) : null}
               </section>
 
               <aside className="etb-modal__aside">

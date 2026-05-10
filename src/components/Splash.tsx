@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { usePathname } from "next/navigation";
 import { SPLASH_WORDS } from "@/data/siteContent";
 
 const INTERVAL = 320; // ms between words
@@ -8,7 +9,11 @@ const FINAL_HOLD = 1400; // extra ms to linger on the last (CTA) word
 const PAUSE_AFTER = 1000; // ms after last word before fade
 const FADE_DURATION = 700; // ms for the overlay to fade out
 
+// Routes where the splash should never appear (standalone previews, embeds, etc.)
+const NO_SPLASH_ROUTES = ["/procurebridge-preview"];
+
 export default function Splash() {
+  const pathname = usePathname();
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -17,6 +22,12 @@ export default function Splash() {
 
     // Non-null alias so TypeScript knows it survives closures
     const el = splash;
+
+    // Skip splash entirely on preview/embed routes
+    if (NO_SPLASH_ROUTES.some((route) => pathname.startsWith(route))) {
+      el.remove();
+      return;
+    }
 
     // Respect reduced-motion: skip animation, quick fade
     const prefersReduced = window.matchMedia(

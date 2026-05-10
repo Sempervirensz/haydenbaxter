@@ -35,6 +35,11 @@ export interface ETBProject {
   bullets: string[];
   tags: string[];
   screenshot: string;
+  previewUrl?: string;
+  previewLabel?: string;
+  comingSoon?: boolean;
+  detailFooter?: string;
+  systemSnapshot?: string[];
   completenessScore: number;
   technicalScore: number;
   recencyScore: number;
@@ -237,7 +242,8 @@ export const WORK_SCREENS: WorkScreen[] = [
       title: "Emerging Tech Builds",
       credibilityLine: "M.S. in Artificial Intelligence in Business (ASU)",
       intro: "Usable AI systems, not slideware.",
-      description: "Builder in AI and emerging tech, focused on practical tools with real-world use. These projects include live demos, working prototypes, and systems already in use.",
+      description:
+        "Applied emerging tech builds focused on clear workflows and useful interfaces. Case Brief and Atomic OS currently have active front-end implementations; Procurement and Open Claw are concept-stage.",
       filters: [
         "All",
         "Agents",
@@ -258,41 +264,49 @@ export const WORK_SCREENS: WorkScreen[] = [
         {
           id: "atomicos",
           name: "AtomicOS",
-          status: "Stealth",
+          status: "Front-end Build",
           category: "Agents",
           oneLiner:
-            "Atomic Habits-style behavior agent: routines, friction controls, accountability, reflection cadence.",
+            "A personal operating system for focus, routines, and daily accountability.",
           bullets: [
-            "Turns goals into tiny behaviors with triggers + environment design",
-            "Tracks adherence + fatigue, adjusts recommendations",
-            "Weekly ritual: review \u2192 plan \u2192 next steps",
+            "Daily check-ins capture energy, focus, and execution signals",
+            "One dashboard for routines, priorities, and operating patterns",
+            "Foundation for an AI coaching layer over time",
           ],
-          tags: [
-            "Agents",
-            "Behavior Design",
-            "Automation",
-            "Habit Loops",
-            "Evaluation",
+          tags: ["Personal OS", "Behavior Design", "Pattern Tracking"],
+          screenshot: "/assets/atomic-os-preview.png",
+          systemSnapshot: [
+            "Check-ins turn daily behavior into structured operating data",
+            "Trends surface momentum shifts in energy and follow-through",
+            "Designed to extend into context-aware coaching prompts",
           ],
-          screenshot: "/assets/atomicos.png",
           completenessScore: 82,
           technicalScore: 89,
           recencyScore: 89,
+          previewUrl: "/atomicos-preview",
+          previewLabel: "View preview",
         },
         {
           id: "casebrief",
           name: "CaseBrief",
-          status: "Stealth",
+          status: "Front-end Build",
           category: "NLP/Privacy",
           oneLiner:
-            "Medical record summarizer for law firms: chronology-first outputs built for controlled environments.",
+            "AI-assisted legal research that turns dense case material into clear, structured briefs.",
           bullets: [
-            "Summaries + timelines aligned to litigation review workflows",
-            "Structured outputs with consistent claim tracing",
-            "Designed for privacy constraints and long documents",
+            "Long case documents condensed into structured summaries",
+            "Cleaner workflow for review, chronology, and key takeaways",
+            "Built to assist comprehension, not replace counsel",
           ],
-          tags: ["NLP", "Summarization", "Long-Context", "Redaction", "QA"],
-          screenshot: "/assets/casebrief.png",
+          tags: ["Legal Research", "Summarization", "AI Assist"],
+          screenshot: "/assets/casebrief-preview.png",
+          previewLabel: "View concept",
+          detailFooter: "Research and organization support only. Not legal advice.",
+          systemSnapshot: [
+            "Document intake handles long-form legal material",
+            "Outputs shaped into reviewable, structured briefs",
+            "Assists comprehension and workflow, not judgment",
+          ],
           completenessScore: 85,
           technicalScore: 95,
           recencyScore: 87,
@@ -300,49 +314,53 @@ export const WORK_SCREENS: WorkScreen[] = [
         {
           id: "procurebridge",
           name: "ProcureBridge",
-          status: "Prototype",
+          status: "Concept",
           category: "Supply Chain Apps",
           oneLiner:
-            "International procurement workflow app: supplier intake, scoring, sourcing stages, documentation.",
+            "A procurement intelligence concept for evaluating suppliers and clearer sourcing decisions.",
           bullets: [
-            "Supplier onboarding + scoring rubric + lifecycle tracking",
-            "Docs + status workflows for sourcing decisions",
-            "Built around real procurement constraints",
+            "Supplier evaluation and sourcing comparison framing",
+            "Fragmented purchasing data shaped into clearer calls",
+            "Concept-stage exploration of practical decision support",
           ],
-          tags: [
-            "Procurement",
-            "Supply Chain",
-            "Workflow",
-            "Data Model",
-            "Risk",
+          tags: ["Procurement", "Sourcing", "Decision Support"],
+          screenshot: "",
+          comingSoon: true,
+          previewLabel: "Demo Coming Soon",
+          detailFooter: "Coming soon.",
+          systemSnapshot: [
+            "Workflow centered on supplier comparison and sourcing decisions",
+            "Model unifies vendor docs, pricing, and risk signals",
+            "Early concept; preview shows direction, not a live system",
           ],
-          screenshot: "/assets/procurebridge.png",
-          completenessScore: 91,
-          technicalScore: 80,
-          recencyScore: 84,
+          completenessScore: 35,
+          technicalScore: 62,
+          recencyScore: 78,
         },
         {
           id: "openclaw",
           name: "OpenClaw",
-          status: "R&D",
+          status: "Concept",
           category: "R&D",
           oneLiner:
-            "Agentic build system: tool orchestration + reusable workflows for faster shipping.",
+            "An R&D concept for open-ended agentic workflows that turn rough ideas into usable tools.",
           bullets: [
-            "Agent templates for research \u2192 build \u2192 test loops",
-            "Tool-calling patterns + guardrails for consistent outputs",
-            "Optimized for speed without losing reliability",
+            "Agentic blocks for research, build, and iteration loops",
+            "Lightweight orchestration for fast concept-to-output cycles",
+            "Currently exploratory R&D framing",
           ],
-          tags: [
-            "R&D",
-            "Agents",
-            "Tool Calling",
-            "Guardrails",
-            "Iteration",
+          tags: ["Agentic Workflows", "Tooling", "Experimentation"],
+          screenshot: "",
+          comingSoon: true,
+          previewLabel: "Demo Coming Soon",
+          detailFooter: "Coming soon.",
+          systemSnapshot: [
+            "Modular blocks for open-ended AI build processes",
+            "Low-friction orchestration with repeatable structure",
+            "Exploratory state; no production build yet",
           ],
-          screenshot: "/assets/openclaw.png",
-          completenessScore: 74,
-          technicalScore: 97,
+          completenessScore: 28,
+          technicalScore: 74,
           recencyScore: 96,
         },
       ],
