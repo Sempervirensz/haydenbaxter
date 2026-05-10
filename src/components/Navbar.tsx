@@ -26,19 +26,22 @@ export default function Navbar() {
           {wordmark}
         </span>
         <div className="nav-tags flex items-center gap-2 sm:gap-3">
-          {navLinks.map((link) => (
-            <a
-              key={link.label}
-              href={link.href}
-              className={`tag ${link.cta ? "tag--cta" : "tag--nav"}`}
-              {...(link.external && {
-                target: "_blank",
-                rel: "noopener noreferrer",
-              })}
-            >
-              {link.label}
-            </a>
-          ))}
+          {navLinks.map((link) => {
+            const isExternal = /^https?:\/\//.test(link.href);
+            return (
+              <a
+                key={link.label}
+                href={link.href}
+                className={`tag ${link.cta ? "tag--cta" : "tag--nav"}`}
+                {...(isExternal && {
+                  target: "_blank",
+                  rel: "noopener noreferrer",
+                })}
+              >
+                {link.label}
+              </a>
+            );
+          })}
         </div>
       </nav>
 
@@ -60,21 +63,24 @@ export default function Navbar() {
         role="menu"
         aria-hidden={!open}
       >
-        {navLinks.map((link) => (
-          <a
-            key={link.label}
-            href={link.href}
-            className="nav-mobile__link"
-            onClick={() => setOpen(false)}
-            role="menuitem"
-            {...(link.external && {
-              target: "_blank",
-              rel: "noopener noreferrer",
-            })}
-          >
-            {link.label}
-          </a>
-        ))}
+        {navLinks.map((link) => {
+          const isExternal = /^https?:\/\//.test(link.href);
+          return (
+            <a
+              key={link.label}
+              href={link.href}
+              className="nav-mobile__link"
+              onClick={() => setOpen(false)}
+              role="menuitem"
+              {...(isExternal && {
+                target: "_blank",
+                rel: "noopener noreferrer",
+              })}
+            >
+              {link.label}
+            </a>
+          );
+        })}
       </div>
     </>
   );
