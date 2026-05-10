@@ -10,7 +10,11 @@ const PAUSE_AFTER = 1000; // ms after last word before fade
 const FADE_DURATION = 700; // ms for the overlay to fade out
 
 // Routes where the splash should never appear (standalone previews, embeds, etc.)
-const NO_SPLASH_ROUTES = ["/procurebridge-preview"];
+const NO_SPLASH_ROUTES = [
+  "/procurebridge-preview",
+  "/emerging-tech-builds",
+  "/atomicos-preview",
+];
 
 export default function Splash() {
   const pathname = usePathname();
