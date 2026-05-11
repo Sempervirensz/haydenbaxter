@@ -809,6 +809,36 @@ html {
   border-color: rgba(255, 255, 255, 0.65);
 }
 
+/* ── Safari-only: kill the glass blur on sticky Work cards ────────────────
+   `backdrop-filter` on an 88vh `position: sticky` surface, stacked across
+   multiple chapters, makes Safari recomposite the blurred backdrop every
+   scroll frame and tanks the framerate. Chrome handles it fine, so we only
+   short-circuit Safari. The cards still read as dark glass via a semi-opaque
+   background + the existing borders/shadows/overlays. */
+.is-safari .work__screen--detail {
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  background: rgba(18, 18, 22, 0.92);
+  /* Drop the heaviest shadow layers (60px drop + 45px white glow). Each one
+     forces Safari to repaint an offscreen blur on every scroll frame; with
+     sticky cards stacked across chapters this is the dominant scroll cost. */
+  box-shadow:
+    inset 0 1.5px 0 rgba(255, 255, 255, 0.6),
+    inset 0 0 60px rgba(0, 0, 0, 0.5);
+}
+.is-safari .work__screen--detail:has(.sc-journey) {
+  background: #000;
+}
+.is-safari .work__screen--detail:has(.cns-photo) {
+  background: #02021E;
+}
+/* Ambient-light overlay is a full-card radial gradient pseudo — cheap to
+   hide in Safari, removes another repaint per frame. The top glow ::before
+   stays since it's small. */
+.is-safari .work__screen--detail::after {
+  display: none;
+}
+
 .work__screen--detail:has(.sc-journey) {
   background: #000;
 }
@@ -884,6 +914,22 @@ html {
   flex: 1;
   height: 1px;
   background: rgba(255, 255, 255, 0.12);
+}
+
+.work__detail-intro {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  color: rgba(255, 255, 255, 0.5);
+  white-space: nowrap;
+}
+
+@media (max-width: 640px) {
+  .work__detail-intro {
+    font-size: 10px;
+    white-space: normal;
+  }
 }
 
 /* Responsive */

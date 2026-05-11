@@ -48,9 +48,20 @@ export default function RootLayout({
       lang="en"
       className={`${dmSerifDisplay.variable} ${dmSans.variable} ${dmMono.variable} ${permanentMarker.variable} ${caveat.variable}`}
       style={{ overflowX: "clip" }}
+      suppressHydrationWarning
     >
       {/* Card-face SVGs removed from preload — only seen after user flip */}
       <body className="bg-[#0a0a0a] text-white antialiased" style={{ overflowX: "clip" }}>
+        {/* Safari (desktop+iOS) struggles with backdrop-filter on tall sticky
+            glass cards — causes severe scroll jitter through the Work section.
+            Tag <html> synchronously so a Safari-only CSS override can simplify
+            those surfaces without affecting Chrome/Firefox. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html:
+              "try{var u=navigator.userAgent;if(/^((?!chrome|crios|fxios|android).)*safari/i.test(u)){document.documentElement.classList.add('is-safari');}}catch(e){}",
+          }}
+        />
         <Splash />
         {children}
       </body>
