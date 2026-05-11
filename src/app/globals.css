@@ -839,6 +839,25 @@ html {
   display: none;
 }
 
+/* Isolate each sticky Work card to its own compositor layer + paint scope
+   in Safari. Without this, when one chapter's sticky card hands off to the
+   next, Safari rebuilds layer trees and repaints adjacent cards, which
+   reads as a jolt at every chapter boundary. `contain: paint` keeps the
+   card's paint local; `translate3d` promotes it to its own GPU layer. */
+.is-safari .work__screen {
+  contain: paint;
+  transform: translate3d(0, 0, 0);
+}
+
+/* Safari only: the CD overlay was round-clipping the spinning disc every
+   frame (overflow:hidden + border-radius:50%). The disc itself has
+   border-radius:50%, so the parent clip is redundant for the visual.
+   Letting Safari skip the mask removes the dominant per-frame cost of
+   the rotation animation. */
+.is-safari .cd-disc-overlay {
+  overflow: visible;
+}
+
 .work__screen--detail:has(.sc-journey) {
   background: #000;
 }

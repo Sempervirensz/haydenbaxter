@@ -127,7 +127,10 @@ export function useWorkScroll() {
       }
 
       if (discEl) {
-        discEl.style.setProperty("--cd-deg", `${currentDeg}deg`);
+        // Direct transform write (rather than animating a CSS custom property
+        // via `--cd-deg`) — Safari has a significant perf cliff animating
+        // `rotate(var(--prop))` per frame. Chrome is equally fast either way.
+        discEl.style.transform = `translateZ(0) rotate(${currentDeg}deg)`;
       }
 
       if (
