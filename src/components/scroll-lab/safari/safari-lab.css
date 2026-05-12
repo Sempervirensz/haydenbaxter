@@ -1,0 +1,103 @@
+/* Safari scroll lab — variant overrides.
+ *
+ * Selectors target data-attributes set by LabWorkSection. Each rule undoes or
+ * replaces something the production stylesheet does, so the lab can isolate
+ * which surface change is responsible for the scroll feel.
+ *
+ * These rules only apply inside the [data-lab="safari-scroll"] subtree, except
+ * the html.lab-* rules which need to live on the root element to affect
+ * scrollport behaviour.
+ */
+
+/* ── safariCards: no-blur ─────────────────────────────────────────────────
+ * Already the default in production for Safari (.is-safari rules). Re-asserted
+ * here in case rootCss variant or non-Safari testing wants the same surface.
+ */
+.is-safari [data-lab-cards="no-blur"] .work__screen--detail,
+[data-lab-cards="no-blur"] .work__screen--detail {
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  background: rgba(18, 18, 22, 0.92);
+}
+
+/* ── safariCards: no-shadow-no-blur ───────────────────────────────────────
+ * Strip every paint-heavy surface effect. If scroll feels meaningfully
+ * smoother with this on but not on no-blur, shadows are the cost — not blur.
+ */
+.is-safari [data-lab-cards="no-shadow-no-blur"] .work__screen--detail,
+[data-lab-cards="no-shadow-no-blur"] .work__screen--detail {
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  background: rgba(18, 18, 22, 0.92);
+  box-shadow: none;
+  border-color: rgba(255, 255, 255, 0.18);
+}
+.is-safari [data-lab-cards="no-shadow-no-blur"] .work__screen--detail::after,
+[data-lab-cards="no-shadow-no-blur"] .work__screen--detail::after {
+  display: none;
+}
+
+/* ── safariCards: default ─────────────────────────────────────────────────
+ * Explicitly re-enable the production glass on Safari (overrides .is-safari
+ * blanket simplification). Useful as A/B against no-blur.
+ */
+.is-safari [data-lab-cards="default"] .work__screen--detail {
+  backdrop-filter: blur(24px) saturate(1.4);
+  -webkit-backdrop-filter: blur(24px) saturate(1.4);
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow:
+    inset 0 1.5px 0 rgba(255, 255, 255, 0.765),
+    inset 0 0 100px rgba(0, 0, 0, 0.5),
+    0 60px 100px rgba(0, 0, 0, 0.6),
+    0 0 45px rgba(255, 255, 255, 0.2);
+}
+.is-safari [data-lab-cards="default"] .work__screen--detail::after {
+  display: block;
+}
+
+/* ── compositing: none ──────────────────────────────────────────────────── */
+[data-lab-compositing="none"] .work__screen {
+  contain: none;
+  transform: none;
+}
+[data-lab-compositing="none"] .cd-disc {
+  will-change: auto;
+}
+
+/* ── compositing: will-change-transform ─────────────────────────────────── */
+[data-lab-compositing="will-change-transform"] .work__screen {
+  contain: none;
+  transform: none;
+  will-change: transform;
+}
+
+/* ── compositing: contain-paint (matches production) ────────────────────── */
+[data-lab-compositing="contain-paint"] .work__screen {
+  contain: paint;
+  transform: translate3d(0, 0, 0);
+}
+
+/* ── sticky: px-top ─────────────────────────────────────────────────────── */
+[data-lab-sticky="px-top"] .work__screen {
+  top: 56px;
+  height: calc(100vh - 112px);
+}
+
+/* ── rootCss variants — applied to <html> via JS in LabWorkSection ──────── */
+
+/* Re-assert default for clarity when not in a special root variant. */
+html.lab-scroll-active {
+  /* no-op marker class */
+}
+
+/* safari-no-gutter: drop scrollbar-gutter, keep overscroll containment. */
+html.lab-safari-no-gutter {
+  scrollbar-gutter: auto;
+}
+
+/* safari-no-clip: release overflow-x: clip on root + body (set inline in
+ * layout.tsx). Test whether clip is the WebKit sticky stressor. */
+html.lab-safari-no-clip,
+html.lab-safari-no-clip body {
+  overflow-x: visible !important;
+}

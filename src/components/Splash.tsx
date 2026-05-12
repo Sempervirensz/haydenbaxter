@@ -14,6 +14,7 @@ const NO_SPLASH_ROUTES = [
   "/procurebridge-preview",
   "/emerging-tech-builds",
   "/atomicos-preview",
+  "/lab/scroll",
 ];
 
 export default function Splash() {
