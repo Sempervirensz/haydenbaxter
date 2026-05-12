@@ -809,6 +809,20 @@ html {
   border-color: rgba(255, 255, 255, 0.65);
 }
 
+/* ── Safari-only: release root overflow-x clip ──────────────────────────────
+   `overflow-x: clip` on <html> + <body> (set inline in layout.tsx for the
+   horizontal-bleed safety net) was the dominant cause of vertical scroll
+   jitter through the Work section in WebKit. Releasing it on Safari
+   eliminates the jiggle.
+   Safe because every element that bleeds horizontally on the site (brands
+   carousel track, etb-bar sheen, etb-overlay) is already locally clipped by
+   its immediate parent — the root clip is redundant for those surfaces.
+   !important is required to defeat the inline declaration. */
+html.is-safari,
+html.is-safari body {
+  overflow-x: visible !important;
+}
+
 /* ── Safari-only: kill the glass blur on sticky Work cards ────────────────
    `backdrop-filter` on an 88vh `position: sticky` surface, stacked across
    multiple chapters, makes Safari recomposite the blurred backdrop every
