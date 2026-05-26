@@ -45,8 +45,8 @@ export interface ETBScreenshot {
 export interface ETBDemoDetail {
   /** Short kicker shown above the showcase (e.g. "Demo showcase"). */
   badge?: string;
-  /** Marketing-but-honest note clarifying this is a demo, not the live UI. */
-  disclaimer: string;
+  /** Optional callout note shown above the showcase. */
+  disclaimer?: string;
   /** Intro paragraph for the showcase. */
   summary?: string;
   /** Optional link to an interactive, clickable demo. */

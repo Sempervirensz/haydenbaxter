@@ -29,7 +29,7 @@ export default function ProjectDetailPage({ project }: Props) {
       </header>
 
       {project.demo ? (
-        <DemoShowcase demo={project.demo} projectName={project.name} />
+        <DemoShowcase demo={project.demo} />
       ) : (
         <PlaceholderSections />
       )}
@@ -42,21 +42,19 @@ export default function ProjectDetailPage({ project }: Props) {
   );
 }
 
-function DemoShowcase({
-  demo,
-  projectName,
-}: {
-  demo: ETBDemoDetail;
-  projectName: string;
-}) {
+function DemoShowcase({ demo }: { demo: ETBDemoDetail }) {
   return (
     <>
-      <aside className="etb-page__demoNote" role="note">
-        {demo.badge ? (
-          <span className="etb-page__demoBadge">{demo.badge}</span>
-        ) : null}
-        <p className="etb-page__demoNoteText">{demo.disclaimer}</p>
-      </aside>
+      {demo.disclaimer || demo.badge ? (
+        <aside className="etb-page__demoNote" role="note">
+          {demo.badge ? (
+            <span className="etb-page__demoBadge">{demo.badge}</span>
+          ) : null}
+          {demo.disclaimer ? (
+            <p className="etb-page__demoNoteText">{demo.disclaimer}</p>
+          ) : null}
+        </aside>
+      ) : null}
 
       {demo.summary ? (
         <p className="etb-page__lede">{demo.summary}</p>
@@ -69,7 +67,7 @@ function DemoShowcase({
           target="_blank"
           rel="noopener noreferrer"
         >
-          <span>{demo.liveLabel ?? "Open live demo"}</span>
+          <span>{demo.liveLabel ?? "Open"}</span>
           <span aria-hidden="true">&rarr;</span>
         </a>
       ) : null}
@@ -90,11 +88,6 @@ function DemoShowcase({
         label="Lessons learned"
         items={demo.lessonsLearned}
       />
-
-      <p className="etb-page__demoFootnote">
-        {projectName} demo · synthetic sample data only — not the live app
-        interface.
-      </p>
     </>
   );
 }

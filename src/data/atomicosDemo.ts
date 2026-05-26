@@ -2,18 +2,9 @@ import type { ETBDemoDetail } from "@/data/work";
 
 const A = "/assets/atomicos-demo";
 
-/** "View full details" showcase for AtomicOS — built from the public, demo-mode
- *  build of the "Check On Me Every Hour" app. Every figure shown is synthetic
- *  sample data, not the production UI or any real personal information. */
+/** "View full details" content for AtomicOS — built from the "Check On Me
+ *  Every Hour" app. */
 export const ATOMICOS_DEMO: ETBDemoDetail = {
-  badge: "Demo showcase",
-  disclaimer:
-    "Marketing demo, not the production app. Every habit, number, and message below is synthetic sample data generated for the showcase — not the final live interface or any real personal information.",
-  // Use the explicit index.html so the link works in dev too (Next dev doesn't
-  // auto-resolve directory indexes for /public files). Static hosting in prod
-  // will also serve this path correctly.
-  liveUrl: "/atomic-os-demo/index.html",
-  liveLabel: "Open live demo",
   summary:
     "“Check On Me Every Hour” is the check-in engine behind AtomicOS — a personal operating system that turns daily intentions into a measurable system. It tracks habits and streaks, when things actually get done, calories and weight, journaling, and the interaction effects between behaviors, all surfaced through a clean analytics dashboard and an automated bot that checks in throughout the day and parses natural-language replies into structured data.",
   screenshots: [
@@ -69,7 +60,7 @@ export const ATOMICOS_DEMO: ETBDemoDetail = {
     "Next.js 15 and React 19 dashboard, styled with Tailwind; analytics views render with Recharts.",
     "Supabase (Postgres) backs habits, check-ins, meals, weight, and journal entries; Edge Functions run the server-side check-in bot.",
     "A Telegram bot delivers timed check-ins and parses natural-language replies into structured habit, finance, and health data.",
-    "Demo mode generates synthetic data entirely client-side, so the public showcase never touches a real database.",
+    "A synthetic-data mode generates all sample content client-side, so the publicly shareable build never touches a real database.",
   ],
   outcomes: [
     "A single operating view that turns scattered daily behavior into structured, trackable signals.",
@@ -77,7 +68,7 @@ export const ATOMICOS_DEMO: ETBDemoDetail = {
     "Low-friction logging: check-ins reach an 88% response rate in the sample data, with most entries captured in a few taps.",
   ],
   lessonsLearned: [
-    "Defaulting to demo mode — synthetic data unless real credentials are explicitly provided — makes the build safe to share publicly by design.",
+    "Defaulting to synthetic data unless real credentials are explicitly provided makes the build safe to share publicly by design.",
     "Natural-language check-ins lower the friction of logging far more than forms; parsing reliability is the hard part.",
     "Surfacing interaction effects is where the data gets genuinely useful — raw streaks alone don't change behavior.",
   ],
