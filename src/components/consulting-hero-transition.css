@@ -147,10 +147,12 @@
   padding: clamp(24px, 4vw, 48px);
 }
 
-/* Back button — top-left, appears on stages 2 and 3 */
+/* Back button — top-left, appears on stages 2 and 3.
+   Pushed below the card's "04 / 04 Consulting" section header so the pill
+   doesn't collide with the chapter title. */
 .cht-back {
   position: absolute;
-  top: 20px;
+  top: 80px;
   left: 22px;
   z-index: 6;
   display: inline-flex;
