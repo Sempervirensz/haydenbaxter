@@ -2,6 +2,8 @@
 // Work section data — discriminated-union screen types + full content
 // ---------------------------------------------------------------------------
 
+import { ATOMICOS_DEMO } from "@/data/atomicosDemo";
+
 // ---- Shared base ----
 
 interface WorkScreenBase {
@@ -26,6 +28,36 @@ interface WorldPulseScreen extends WorkScreenBase {
 
 // ---- Screen 2: Emerging Tech Builds ----
 
+export interface ETBScreenshot {
+  src: string;
+  alt: string;
+  caption?: string;
+  /** Intrinsic pixel dimensions — set both to lock aspect ratio / avoid CLS. */
+  width: number;
+  height: number;
+  /** "phone" renders a narrow portrait frame; default is a wide landscape frame. */
+  variant?: "wide" | "phone";
+}
+
+/** Rich "view full details" content for an ETB project. When present, the
+ *  detail page renders a real showcase instead of the "coming soon"
+ *  placeholders. */
+export interface ETBDemoDetail {
+  /** Short kicker shown above the showcase (e.g. "Demo showcase"). */
+  badge?: string;
+  /** Marketing-but-honest note clarifying this is a demo, not the live UI. */
+  disclaimer: string;
+  /** Intro paragraph for the showcase. */
+  summary?: string;
+  /** Optional link to an interactive, clickable demo. */
+  liveUrl?: string;
+  liveLabel?: string;
+  screenshots: ETBScreenshot[];
+  techBreakdown: string[];
+  outcomes: string[];
+  lessonsLearned: string[];
+}
+
 export interface ETBProject {
   id: string;
   name: string;
@@ -43,6 +75,7 @@ export interface ETBProject {
   completenessScore: number;
   technicalScore: number;
   recencyScore: number;
+  demo?: ETBDemoDetail;
 }
 
 interface ETBGraduateCard {
@@ -274,7 +307,7 @@ export const WORK_SCREENS: WorkScreen[] = [
             "Foundation for an AI coaching layer over time",
           ],
           tags: ["Personal OS", "Behavior Design", "Pattern Tracking"],
-          screenshot: "/assets/atomic-os-preview.png",
+          screenshot: "/assets/atomicos-demo/atomicos-overview.webp",
           systemSnapshot: [
             "Check-ins turn daily behavior into structured operating data",
             "Trends surface momentum shifts in energy and follow-through",
@@ -285,6 +318,7 @@ export const WORK_SCREENS: WorkScreen[] = [
           recencyScore: 89,
           previewUrl: "/atomicos-preview",
           previewLabel: "View preview",
+          demo: ATOMICOS_DEMO,
         },
         {
           id: "casebrief",
