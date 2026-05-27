@@ -5,8 +5,8 @@ import { usePathname } from "next/navigation";
 import { SPLASH_WORDS } from "@/data/siteContent";
 
 const INTERVAL = 320; // ms between words
-const FINAL_HOLD = 1400; // extra ms to linger on the last (CTA) word
-const PAUSE_AFTER = 1000; // ms after last word before fade
+const FINAL_HOLD = 3500; // extra ms to linger on the last (instruction) word
+const PAUSE_AFTER = 1200; // ms after last word before fade
 const FADE_DURATION = 700; // ms for the overlay to fade out
 
 // Routes where the splash should never appear (standalone previews, embeds, etc.)
