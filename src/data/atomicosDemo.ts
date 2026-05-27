@@ -15,6 +15,9 @@ export const ATOMICOS_DEMO: ETBDemoDetail = {
         "Daily dashboard — today's habits, energy, sleep, last check-in, and last meal at a glance.",
       width: 2912,
       height: 1470,
+      mobileSrc: `${A}/atomicos-overview-mobile.webp`,
+      mobileWidth: 750,
+      mobileHeight: 3640,
     },
     {
       src: `${A}/atomicos-habits.png`,
@@ -22,6 +25,9 @@ export const ATOMICOS_DEMO: ETBDemoDetail = {
       caption: "60-day completion grid with live streaks across every tracked habit.",
       width: 2912,
       height: 1384,
+      mobileSrc: `${A}/atomicos-habits-mobile.webp`,
+      mobileWidth: 750,
+      mobileHeight: 1456,
     },
     {
       src: `${A}/atomicos-heatmap.webp`,
@@ -30,6 +36,9 @@ export const ATOMICOS_DEMO: ETBDemoDetail = {
         "Activity heatmap — when habits and routines actually get done across hours and weekdays.",
       width: 2912,
       height: 850,
+      mobileSrc: `${A}/atomicos-heatmap-mobile.webp`,
+      mobileWidth: 750,
+      mobileHeight: 1478,
     },
     {
       src: `${A}/atomicos-loop-drivers.webp`,
@@ -38,6 +47,9 @@ export const ATOMICOS_DEMO: ETBDemoDetail = {
         "Loop drivers — which habits make each routine more or less likely to close.",
       width: 2912,
       height: 1520,
+      mobileSrc: `${A}/atomicos-loop-drivers-mobile.webp`,
+      mobileWidth: 750,
+      mobileHeight: 2916,
     },
     {
       src: `${A}/atomicos-checkins.webp`,
@@ -45,6 +57,9 @@ export const ATOMICOS_DEMO: ETBDemoDetail = {
       caption: "Check-in analytics — response rate, latency, and a log of recent replies.",
       width: 2912,
       height: 1930,
+      mobileSrc: `${A}/atomicos-checkins-mobile.webp`,
+      mobileWidth: 750,
+      mobileHeight: 2446,
     },
     {
       src: `${A}/atomicos-checkin-thread.webp`,

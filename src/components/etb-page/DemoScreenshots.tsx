@@ -71,15 +71,25 @@ export default function DemoScreenshots({ screenshots }: Props) {
               }}
             >
               <span className="etb-shot__frame">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  className="etb-shot__img"
-                  src={shot.src}
-                  alt={shot.alt}
-                  width={shot.width}
-                  height={shot.height}
-                  loading="lazy"
-                />
+                <picture>
+                  {shot.mobileSrc ? (
+                    <source
+                      media="(max-width: 640px)"
+                      srcSet={shot.mobileSrc}
+                      width={shot.mobileWidth}
+                      height={shot.mobileHeight}
+                    />
+                  ) : null}
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    className="etb-shot__img"
+                    src={shot.src}
+                    alt={shot.alt}
+                    width={shot.width}
+                    height={shot.height}
+                    loading="lazy"
+                  />
+                </picture>
               </span>
               <span className="etb-shot__zoom" aria-hidden="true">
                 Click to zoom
@@ -130,14 +140,24 @@ export default function DemoScreenshots({ screenshots }: Props) {
             className={`etb-lightbox__figure etb-lightbox__figure--${active.variant ?? "wide"}`}
             onClick={(e) => e.stopPropagation()}
           >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              className="etb-lightbox__img"
-              src={active.src}
-              alt={active.alt}
-              width={active.width}
-              height={active.height}
-            />
+            <picture>
+              {active.mobileSrc ? (
+                <source
+                  media="(max-width: 640px)"
+                  srcSet={active.mobileSrc}
+                  width={active.mobileWidth}
+                  height={active.mobileHeight}
+                />
+              ) : null}
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                className="etb-lightbox__img"
+                src={active.src}
+                alt={active.alt}
+                width={active.width}
+                height={active.height}
+              />
+            </picture>
             {active.caption ? (
               <figcaption className="etb-lightbox__caption">
                 {active.caption}

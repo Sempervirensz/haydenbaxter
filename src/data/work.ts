@@ -37,6 +37,11 @@ export interface ETBScreenshot {
   height: number;
   /** "phone" renders a narrow portrait frame; default is a wide landscape frame. */
   variant?: "wide" | "phone";
+  /** Optional art-directed mobile capture. When present, swapped in below
+   *  640px so the screenshot stays readable on small viewports. */
+  mobileSrc?: string;
+  mobileWidth?: number;
+  mobileHeight?: number;
 }
 
 /** Rich "view full details" content for an ETB project. When present, the
