@@ -1460,6 +1460,97 @@ html.is-safari body {
   }
 }
 
+/* ---- Headline stat tiles ("by the numbers") ---- */
+.etb-stats {
+  margin: 0;
+}
+.etb-stats__grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(10px, 1.4vw, 14px);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.etb-stat {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: clamp(14px, 1.8vw, 18px) clamp(14px, 1.8vw, 18px)
+    clamp(14px, 1.8vw, 18px);
+  border-radius: 10px;
+  background: #131313;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow:
+    inset 0 2px 4px rgba(0, 0, 0, 0.7),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.04),
+    0 2px 0 #060606,
+    0 6px 14px rgba(0, 0, 0, 0.55);
+  transition: transform 160ms ease, border-color 160ms ease,
+    box-shadow 160ms ease;
+}
+.etb-stat:hover {
+  transform: translateY(-1px);
+  border-color: rgba(104, 130, 216, 0.4);
+  box-shadow:
+    inset 0 2px 4px rgba(0, 0, 0, 0.7),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.04),
+    0 2px 0 #060606,
+    0 10px 22px rgba(0, 0, 0, 0.65);
+}
+.etb-stat__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: rgba(104, 130, 216, 0.12);
+  border: 1px solid rgba(104, 130, 216, 0.28);
+  color: rgba(186, 200, 240, 0.95);
+  margin-bottom: 4px;
+}
+.etb-stat__label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.5);
+}
+.etb-stat__value {
+  font-family: var(--font-serif, var(--font-sans));
+  font-size: clamp(28px, 3.4vw, 38px);
+  font-weight: 500;
+  line-height: 1.05;
+  color: #fff;
+  letter-spacing: -0.01em;
+}
+.etb-stat__detail {
+  font-family: var(--font-sans);
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.6);
+}
+@media (max-width: 880px) {
+  .etb-stats__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 420px) {
+  .etb-stats__grid {
+    grid-template-columns: 1fr;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .etb-stat,
+  .etb-stat:hover {
+    transition: none;
+    transform: none;
+  }
+}
+
 .etb-shots {
   display: flex;
   flex-direction: column;

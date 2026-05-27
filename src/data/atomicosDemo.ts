@@ -7,6 +7,32 @@ const A = "/assets/atomicos-demo";
 export const ATOMICOS_DEMO: ETBDemoDetail = {
   summary:
     "“Check On Me Every Hour” is the check-in engine behind AtomicOS — a personal operating system that turns daily intentions into a measurable system. It tracks habits and streaks, when things actually get done, calories and weight, journaling, and the interaction effects between behaviors, all surfaced through a clean analytics dashboard and an automated bot that checks in throughout the day and parses natural-language replies into structured data.",
+  stats: [
+    {
+      value: "88%",
+      label: "Response rate",
+      detail: "Automated check-ins answered, sample data",
+      icon: "pulse",
+    },
+    {
+      value: "+22pp",
+      label: "Deep work lift",
+      detail: "Day after a Sleep Wind-Down",
+      icon: "trend-up",
+    },
+    {
+      value: "60d",
+      label: "Tracking window",
+      detail: "Habits, streaks, and interactions at a glance",
+      icon: "calendar",
+    },
+    {
+      value: "22",
+      label: "Habits tracked",
+      detail: "Behaviors turned into structured signals",
+      icon: "checklist",
+    },
+  ],
   screenshots: [
     {
       src: `${A}/atomicos-overview.webp`,

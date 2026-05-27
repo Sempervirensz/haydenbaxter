@@ -44,6 +44,19 @@ export interface ETBScreenshot {
   mobileHeight?: number;
 }
 
+/** "By the numbers" stat tile for a project showcase. Big editorial
+ *  value + mono label + one supporting line, with an optional icon. */
+export interface ETBStat {
+  /** Big foreground number/value (e.g. "88%", "+22pp", "60d"). */
+  value: string;
+  /** Mono uppercase label above the value. */
+  label: string;
+  /** One short supporting line beneath the value. */
+  detail: string;
+  /** Icon key — see EtbStatIcon for the rendered set. */
+  icon?: "pulse" | "trend-up" | "calendar" | "checklist" | "spark" | "bot";
+}
+
 /** Rich "view full details" content for an ETB project. When present, the
  *  detail page renders a real showcase instead of the "coming soon"
  *  placeholders. */
@@ -54,6 +67,9 @@ export interface ETBDemoDetail {
   disclaimer?: string;
   /** Intro paragraph for the showcase. */
   summary?: string;
+  /** Headline metrics rendered as DYMO-flavored stat tiles before the
+   *  screenshots — quick, glanceable proof of what the system delivers. */
+  stats?: ETBStat[];
   /** Optional link to an interactive, clickable demo. */
   liveUrl?: string;
   liveLabel?: string;

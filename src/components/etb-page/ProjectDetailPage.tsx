@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { ETBDemoDetail, ETBProject } from "@/data/work";
 import DemoScreenshots from "@/components/etb-page/DemoScreenshots";
+import DemoStats from "@/components/etb-page/DemoStats";
 
 interface Props {
   project: ETBProject;
@@ -68,6 +69,10 @@ function DemoShowcase({ demo }: { demo: ETBDemoDetail }) {
 
       {demo.summary ? (
         <p className="etb-page__lede">{demo.summary}</p>
+      ) : null}
+
+      {demo.stats && demo.stats.length > 0 ? (
+        <DemoStats stats={demo.stats} />
       ) : null}
 
       {demo.liveUrl ? (
