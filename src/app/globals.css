@@ -1256,6 +1256,18 @@ html.is-safari body {
   padding-bottom: clamp(20px, 3vw, 32px);
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
+/* Embroidered project mark — sits as an editorial seal above the kicker.
+   The image's dark fabric blends with the page so the cream stitching
+   reads as a floating sigil. */
+.etb-page__mark {
+  align-self: flex-start;
+  width: clamp(72px, 8vw, 96px);
+  height: auto;
+  margin-bottom: 6px;
+  border-radius: 12px;
+  filter: drop-shadow(0 6px 18px rgba(0, 0, 0, 0.55));
+  opacity: 0.94;
+}
 .etb-page__category {
   font-family: var(--font-mono);
   font-size: 10px;

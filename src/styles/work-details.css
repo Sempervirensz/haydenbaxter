@@ -617,6 +617,7 @@
 
 /* Off-white dossier card */
 .etb-dos__card {
+  position: relative;
   margin: 12px;
   padding: 20px 18px 18px;
   border-radius: 12px;
@@ -627,6 +628,36 @@
   gap: 12px;
   flex: 1;
   overflow-y: auto;
+}
+
+/* Project mark — small embroidered patch in the dossier card's top-right
+   corner. Dark fabric sits as a stamped emblem against the off-white
+   letter. Inset slightly from the rounded corner. */
+.etb-dos__mark {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 52px;
+  height: 52px;
+  border-radius: 10px;
+  box-shadow: 0 4px 14px rgba(17, 17, 22, 0.18),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.04);
+  pointer-events: none;
+}
+/* Reserve room so the metadata strip doesn't run under the mark on narrow
+   layouts — only when a mark is actually present. */
+.etb-dos__card:has(> .etb-dos__mark) .etb-dos__meta {
+  padding-right: 64px;
+}
+
+/* Project mark in the mobile-modal title row — small brand-lockup patch
+   next to the project name. */
+.etb-modal__mark {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  box-shadow: 0 3px 10px rgba(17, 17, 22, 0.16);
+  flex-shrink: 0;
 }
 
 /* Metadata strip */

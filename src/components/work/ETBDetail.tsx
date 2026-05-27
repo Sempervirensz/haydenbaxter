@@ -360,6 +360,18 @@ export default function ETBDetail({ data }: ETBDetailProps) {
 
               {/* Off-white dossier card */}
               <div className="etb-dos__card">
+                {selectedProject.mark ? (
+                  /* eslint-disable-next-line @next/next/no-img-element */
+                  <img
+                    className="etb-dos__mark"
+                    src={selectedProject.mark.src}
+                    alt={selectedProject.mark.alt}
+                    width={selectedProject.mark.width}
+                    height={selectedProject.mark.height}
+                    aria-hidden="true"
+                  />
+                ) : null}
+
                 {/* Metadata strip */}
                 <div className="etb-dos__meta">
                   <span className={`etb-dos__status etb-dos__status--${toSlug(selectedProject.status)}`}>
@@ -435,6 +447,17 @@ export default function ETBDetail({ data }: ETBDetailProps) {
             <div className="etb-modal__layout">
               <section className="etb-modal__main">
                 <div className="etb-modal__titleRow">
+                  {modalProject.mark ? (
+                    /* eslint-disable-next-line @next/next/no-img-element */
+                    <img
+                      className="etb-modal__mark"
+                      src={modalProject.mark.src}
+                      alt={modalProject.mark.alt}
+                      width={modalProject.mark.width}
+                      height={modalProject.mark.height}
+                      aria-hidden="true"
+                    />
+                  ) : null}
                   <h3 className="etb-modal__title" id="etb-modal-title">
                     {modalProject.name}
                   </h3>
@@ -496,6 +519,18 @@ export default function ETBDetail({ data }: ETBDetailProps) {
                 </div>
 
                 <div className="etb-dos__card">
+                  {selectedProject.mark ? (
+                    /* eslint-disable-next-line @next/next/no-img-element */
+                    <img
+                      className="etb-dos__mark"
+                      src={selectedProject.mark.src}
+                      alt={selectedProject.mark.alt}
+                      width={selectedProject.mark.width}
+                      height={selectedProject.mark.height}
+                      aria-hidden="true"
+                    />
+                  ) : null}
+
                   <div className="etb-dos__meta">
                     <span className={`etb-dos__status etb-dos__status--${toSlug(selectedProject.status)}`}>
                       {selectedProject.status}

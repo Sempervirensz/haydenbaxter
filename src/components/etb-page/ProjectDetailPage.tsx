@@ -18,6 +18,16 @@ export default function ProjectDetailPage({ project }: Props) {
       </Link>
 
       <header className="etb-page__hero">
+        {project.mark ? (
+          /* eslint-disable-next-line @next/next/no-img-element */
+          <img
+            className="etb-page__mark"
+            src={project.mark.src}
+            alt={project.mark.alt}
+            width={project.mark.width}
+            height={project.mark.height}
+          />
+        ) : null}
         <span className="etb-page__category">{project.category}</span>
         <h1 className="etb-page__title">{project.name}</h1>
         <p className="etb-page__oneLiner">{project.oneLiner}</p>

@@ -76,6 +76,10 @@ export interface ETBProject {
   technicalScore: number;
   recencyScore: number;
   demo?: ETBDemoDetail;
+  /** Small brand mark / sigil shown alongside the project name in the
+   *  dossier, modal, and detail-page hero. Square asset; intrinsic
+   *  dimensions used to lock aspect. */
+  mark?: { src: string; alt: string; width: number; height: number };
 }
 
 interface ETBGraduateCard {
@@ -319,6 +323,12 @@ export const WORK_SCREENS: WorkScreen[] = [
           previewUrl: "/atomicos-preview",
           previewLabel: "View preview",
           demo: ATOMICOS_DEMO,
+          mark: {
+            src: "/assets/atomicos-mark.webp",
+            alt: "AtomicOS embroidered atom mark",
+            width: 1024,
+            height: 1024,
+          },
         },
         {
           id: "casebrief",
