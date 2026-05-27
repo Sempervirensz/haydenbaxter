@@ -823,6 +823,20 @@ html.is-safari body {
   overflow-x: visible !important;
 }
 
+/* ── Mobile Safari: re-clamp the root overflow-x clip ─────────────────────
+   The escape hatch above also targets iOS Safari (same UA pattern), where
+   wide intentional bleed (hero glow, .cd-player-wrap clamped to 360px min,
+   etc.) becomes horizontally pannable on a ~375px viewport — users see the
+   page shift right and expose a black margin while scrolling vertically.
+   Restore the clip on small viewports only. Desktop Safari (>640px) keeps
+   the jitter fix intact. */
+@media (max-width: 640px) {
+  html.is-safari,
+  html.is-safari body {
+    overflow-x: clip !important;
+  }
+}
+
 /* ── Safari-only: kill the glass blur on sticky Work cards ────────────────
    `backdrop-filter` on an 88vh `position: sticky` surface, stacked across
    multiple chapters, makes Safari recomposite the blurred backdrop every
