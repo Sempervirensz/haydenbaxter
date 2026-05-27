@@ -1177,6 +1177,17 @@ html.is-safari body {
   transform: scale(1);
 }
 
+/* Final splash word is the multi-line instruction block — center the lines,
+   preserve the \n separators, and keep the same font treatment as the
+   greetings. */
+.splash__word:last-child {
+  white-space: pre-line;
+  text-align: center;
+  line-height: 1.55;
+  max-width: 52ch;
+  padding: 0 24px;
+}
+
 @keyframes splash-failsafe {
   to {
     opacity: 0;

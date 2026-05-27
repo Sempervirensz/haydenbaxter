@@ -1,4 +1,11 @@
-export const SPLASH_WORDS = ["Hello", "你好", "Olá", "नमस्ते", "こんにちは", "Scroll + click to explore"];
+export const SPLASH_WORDS = [
+  "Hello",
+  "你好",
+  "Olá",
+  "नमस्ते",
+  "こんにちは",
+  "Explore the Site\n\nScroll through each section.\nClick cards to flip them.\nUse the globe timeline to move through the journey.\n\nStart Exploring ↓",
+];
 
 /** Text label, or image asset path under /public */
 export type BrandLogo = {
