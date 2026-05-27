@@ -380,6 +380,12 @@ export const WORK_SCREENS: WorkScreen[] = [
           completenessScore: 35,
           technicalScore: 62,
           recencyScore: 78,
+          mark: {
+            src: "/assets/procurebridge-mark.webp",
+            alt: "ProcureBridge embroidered globe-and-bridge mark",
+            width: 1024,
+            height: 1024,
+          },
         },
         {
           id: "openclaw",
