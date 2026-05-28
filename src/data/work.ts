@@ -3,6 +3,7 @@
 // ---------------------------------------------------------------------------
 
 import { ATOMICOS_DEMO } from "@/data/atomicosDemo";
+import { CORTEX_DEMO } from "@/data/cortexDemo";
 
 // ---- Shared base ----
 
@@ -308,6 +309,7 @@ export const WORK_SCREENS: WorkScreen[] = [
         "NLP/Privacy",
         "Voice/Video",
         "Supply Chain Apps",
+        "Editorial Systems",
         "R&D",
       ],
       sortOptions: [
@@ -375,6 +377,38 @@ export const WORK_SCREENS: WorkScreen[] = [
           completenessScore: 85,
           technicalScore: 95,
           recencyScore: 87,
+        },
+        {
+          id: "cortex",
+          name: "Cortex",
+          status: "Prototype",
+          category: "Editorial Systems",
+          oneLiner:
+            "An evidence-first editorial brain for sustainable apparel reporting — every published claim walks back to a primary source in under thirty seconds.",
+          bullets: [
+            "Custom Obsidian plugin triages sources and routes them by editorial group",
+            "Progressively-enriched frontmatter turns raw files into queryable, attributable claims",
+            "Four-stage pipeline (Source → Note → Quote/Claim → Draft) encoded in folder topology",
+          ],
+          tags: ["Editorial AI", "Knowledge Graph", "Provenance"],
+          screenshot: "/assets/cortex-demo/cortex-dashboard-overview.png",
+          previewLabel: "View full detail",
+          detailFooter: "Populated working system — 93 source notes, 39 concepts, 9 topic maps.",
+          systemSnapshot: [
+            "Triage plugin drafts classifications inside controlled vocabularies",
+            "Multi-axis Dataview indexes expose one corpus through eight access paths",
+            "Failed-source folder keeps a public audit of coverage gaps",
+          ],
+          completenessScore: 78,
+          technicalScore: 88,
+          recencyScore: 97,
+          demo: CORTEX_DEMO,
+          mark: {
+            src: "/assets/cortex-mark.webp",
+            alt: "Cortex embroidered brain mark",
+            width: 1024,
+            height: 1024,
+          },
         },
         {
           id: "procurebridge",

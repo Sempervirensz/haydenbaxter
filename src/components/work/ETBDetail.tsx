@@ -12,6 +12,7 @@ import TagPills from "@/components/work/TagPills";
 const ETB_DETAIL_ROUTES: Record<string, string> = {
   casebrief: "/emerging-tech-builds/casebrief",
   atomicos: "/emerging-tech-builds/atomic-os",
+  cortex: "/emerging-tech-builds/cortex",
 };
 
 function ProjectCTA({ project }: { project: ETBProject }) {

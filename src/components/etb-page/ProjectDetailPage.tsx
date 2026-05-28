@@ -87,10 +87,12 @@ function DemoShowcase({ demo }: { demo: ETBDemoDetail }) {
         </a>
       ) : null}
 
-      <section className="etb-page__section" aria-label="Screenshots">
-        <h2 className="etb-page__sectionTitle">Screenshots</h2>
-        <DemoScreenshots screenshots={demo.screenshots} />
-      </section>
+      {demo.screenshots.length > 0 ? (
+        <section className="etb-page__section" aria-label="Screenshots">
+          <h2 className="etb-page__sectionTitle">Screenshots</h2>
+          <DemoScreenshots screenshots={demo.screenshots} />
+        </section>
+      ) : null}
 
       <DetailList
         title="Technical breakdown"
