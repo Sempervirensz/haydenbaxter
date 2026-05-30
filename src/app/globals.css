@@ -1556,6 +1556,99 @@ html.is-safari body {
   flex-direction: column;
   gap: clamp(20px, 3vw, 32px);
 }
+
+/* Screenshot carousel — one slide visible at a time, click to zoom. */
+.etb-carousel {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.etb-carousel__viewport {
+  overflow: hidden;
+  border-radius: 16px;
+}
+.etb-carousel__track {
+  display: flex;
+  transition: transform 420ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+.etb-carousel__slide {
+  flex: 0 0 100%;
+  min-width: 0;
+  padding: 2px;
+}
+/* Uniform slide height so mixed aspect ratios (wide + tall phone) align. */
+.etb-carousel .etb-shot__frame {
+  height: clamp(260px, 54vh, 580px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.etb-carousel .etb-shot__trigger,
+.etb-carousel .etb-shot--phone .etb-shot__trigger {
+  width: 100%;
+}
+.etb-carousel .etb-shot__frame > picture {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.etb-carousel .etb-shot__img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.etb-carousel__controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+}
+.etb-carousel__btn {
+  cursor: pointer;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 15px;
+  transition: background 150ms ease, border-color 150ms ease;
+}
+.etb-carousel__btn:hover {
+  background: rgba(104, 130, 216, 0.16);
+  border-color: rgba(104, 130, 216, 0.5);
+}
+.etb-carousel__btn:focus-visible {
+  outline: 2px solid rgba(104, 130, 216, 0.7);
+  outline-offset: 2px;
+}
+.etb-carousel__dots {
+  display: flex;
+  gap: 8px;
+}
+.etb-carousel__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.22);
+  transition: background 150ms ease, transform 150ms ease;
+}
+.etb-carousel__dot:hover {
+  background: rgba(255, 255, 255, 0.45);
+}
+.etb-carousel__dot.is-active {
+  background: rgba(104, 130, 216, 0.95);
+  transform: scale(1.3);
+}
+.etb-carousel__count {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  color: rgba(255, 255, 255, 0.4);
+}
 .etb-shot {
   display: flex;
   flex-direction: column;
@@ -1737,7 +1830,10 @@ html.is-safari body {
   .etb-shot__frame,
   .etb-shot__zoom,
   .etb-lightbox__close,
-  .etb-lightbox__nav {
+  .etb-lightbox__nav,
+  .etb-carousel__track,
+  .etb-carousel__btn,
+  .etb-carousel__dot {
     transition: none;
   }
   .etb-shot__zoom {
@@ -1784,6 +1880,70 @@ html.is-safari body {
   border-radius: 999px;
   background: rgba(104, 130, 216, 0.85);
 }
+
+/* Accordion — collapsible detail sections (screenshots, breakdown, etc.) */
+.etb-page__acc {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.etb-page__accItem {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.02);
+  overflow: hidden;
+}
+.etb-page__accItem[open] {
+  border-color: rgba(104, 130, 216, 0.28);
+  background: rgba(255, 255, 255, 0.03);
+}
+.etb-page__accHead {
+  cursor: pointer;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px clamp(16px, 2.4vw, 20px);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.6);
+  transition: color 0.15s ease;
+}
+.etb-page__accHead:hover {
+  color: rgba(255, 255, 255, 0.9);
+}
+.etb-page__accItem[open] .etb-page__accHead {
+  color: rgba(186, 200, 240, 0.95);
+}
+.etb-page__accHead::-webkit-details-marker {
+  display: none;
+}
+.etb-page__accHead::after {
+  content: "+";
+  font-family: var(--font-mono);
+  font-size: 16px;
+  line-height: 1;
+  color: rgba(104, 130, 216, 0.9);
+}
+.etb-page__accItem[open] .etb-page__accHead::after {
+  content: "\2212";
+}
+.etb-page__accHead:focus-visible {
+  outline: 2px solid rgba(104, 130, 216, 0.6);
+  outline-offset: -2px;
+  border-radius: 12px;
+}
+.etb-page__accBody {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 4px clamp(16px, 2.4vw, 20px) clamp(18px, 2.6vw, 22px);
+}
+
 .etb-page__demoFootnote {
   margin: 0;
   font-family: var(--font-mono);

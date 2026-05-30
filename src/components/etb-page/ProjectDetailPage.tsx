@@ -87,48 +87,39 @@ function DemoShowcase({ demo }: { demo: ETBDemoDetail }) {
         </a>
       ) : null}
 
-      {demo.screenshots.length > 0 ? (
-        <section className="etb-page__section" aria-label="Screenshots">
-          <h2 className="etb-page__sectionTitle">Screenshots</h2>
-          <DemoScreenshots screenshots={demo.screenshots} />
-        </section>
-      ) : null}
+      <div className="etb-page__acc">
+        {demo.screenshots.length > 0 ? (
+          <details className="etb-page__accItem" open>
+            <summary className="etb-page__accHead">Screenshots</summary>
+            <div className="etb-page__accBody">
+              <DemoScreenshots screenshots={demo.screenshots} />
+            </div>
+          </details>
+        ) : null}
 
-      <DetailList
-        title="Technical breakdown"
-        label="Technical breakdown"
-        items={demo.techBreakdown}
-      />
-      <DetailList title="Outcomes" label="Outcomes" items={demo.outcomes} />
-      <DetailList
-        title="Lessons learned"
-        label="Lessons learned"
-        items={demo.lessonsLearned}
-      />
+        <AccordionList title="Technical breakdown" items={demo.techBreakdown} />
+        <AccordionList title="Outcomes" items={demo.outcomes} />
+        <AccordionList title="Lessons learned" items={demo.lessonsLearned} />
+      </div>
     </>
   );
 }
 
-function DetailList({
-  title,
-  label,
-  items,
-}: {
-  title: string;
-  label: string;
-  items: string[];
-}) {
+function AccordionList({ title, items }: { title: string; items: string[] }) {
+  if (!items || items.length === 0) return null;
   return (
-    <section className="etb-page__section" aria-label={label}>
-      <h2 className="etb-page__sectionTitle">{title}</h2>
-      <ul className="etb-page__list">
-        {items.map((item) => (
-          <li key={item} className="etb-page__listItem">
-            {item}
-          </li>
-        ))}
-      </ul>
-    </section>
+    <details className="etb-page__accItem">
+      <summary className="etb-page__accHead">{title}</summary>
+      <div className="etb-page__accBody">
+        <ul className="etb-page__list">
+          {items.map((item) => (
+            <li key={item} className="etb-page__listItem">
+              {item}
+            </li>
+          ))}
+        </ul>
+      </div>
+    </details>
   );
 }
 

@@ -24,6 +24,14 @@ export default function DemoScreenshots({ screenshots }: Props) {
     [screenshots.length],
   );
 
+  // Inline carousel position (independent of the lightbox).
+  const [slide, setSlide] = useState(0);
+  const goSlide = useCallback(
+    (dir: number) =>
+      setSlide((i) => (i + dir + screenshots.length) % screenshots.length),
+    [screenshots.length],
+  );
+
   // Scroll lock + keyboard handling while the lightbox is open.
   useEffect(() => {
     if (!isOpen) return;
@@ -55,53 +63,104 @@ export default function DemoScreenshots({ screenshots }: Props) {
 
   return (
     <>
-      <div className="etb-shots">
-        {screenshots.map((shot, i) => (
-          <figure
-            key={shot.src}
-            className={`etb-shot etb-shot--${shot.variant ?? "wide"}`}
+      <div className="etb-carousel">
+        <div className="etb-carousel__viewport">
+          <div
+            className="etb-carousel__track"
+            style={{ transform: `translateX(-${slide * 100}%)` }}
           >
+            {screenshots.map((shot, i) => (
+              <div
+                className="etb-carousel__slide"
+                key={shot.src}
+                aria-hidden={i !== slide}
+              >
+                <figure className={`etb-shot etb-shot--${shot.variant ?? "wide"}`}>
+                  <button
+                    type="button"
+                    className="etb-shot__trigger"
+                    onClick={() => setOpenIndex(i)}
+                    aria-label={`Expand screenshot: ${shot.caption ?? shot.alt}`}
+                    tabIndex={i === slide ? 0 : -1}
+                    ref={(el) => {
+                      triggerRefs.current[i] = el;
+                    }}
+                  >
+                    <span className="etb-shot__frame">
+                      <picture>
+                        {shot.mobileSrc ? (
+                          <source
+                            media="(max-width: 640px)"
+                            srcSet={shot.mobileSrc}
+                            width={shot.mobileWidth}
+                            height={shot.mobileHeight}
+                          />
+                        ) : null}
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          className="etb-shot__img"
+                          src={shot.src}
+                          alt={shot.alt}
+                          width={shot.width}
+                          height={shot.height}
+                          loading="lazy"
+                        />
+                      </picture>
+                    </span>
+                    <span className="etb-shot__zoom" aria-hidden="true">
+                      Click to zoom
+                    </span>
+                  </button>
+                  {shot.caption ? (
+                    <figcaption className="etb-shot__caption">
+                      {shot.caption}
+                    </figcaption>
+                  ) : null}
+                </figure>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {screenshots.length > 1 ? (
+          <div className="etb-carousel__controls">
             <button
               type="button"
-              className="etb-shot__trigger"
-              onClick={() => setOpenIndex(i)}
-              aria-label={`Expand screenshot: ${shot.caption ?? shot.alt}`}
-              ref={(el) => {
-                triggerRefs.current[i] = el;
-              }}
+              className="etb-carousel__btn"
+              onClick={() => goSlide(-1)}
+              aria-label="Previous screenshot"
             >
-              <span className="etb-shot__frame">
-                <picture>
-                  {shot.mobileSrc ? (
-                    <source
-                      media="(max-width: 640px)"
-                      srcSet={shot.mobileSrc}
-                      width={shot.mobileWidth}
-                      height={shot.mobileHeight}
-                    />
-                  ) : null}
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    className="etb-shot__img"
-                    src={shot.src}
-                    alt={shot.alt}
-                    width={shot.width}
-                    height={shot.height}
-                    loading="lazy"
-                  />
-                </picture>
-              </span>
-              <span className="etb-shot__zoom" aria-hidden="true">
-                Click to zoom
-              </span>
+              <span aria-hidden="true">&larr;</span>
             </button>
-            {shot.caption ? (
-              <figcaption className="etb-shot__caption">
-                {shot.caption}
-              </figcaption>
-            ) : null}
-          </figure>
-        ))}
+            <div className="etb-carousel__dots">
+              {screenshots.map((shot, i) => (
+                <button
+                  key={shot.src}
+                  type="button"
+                  className={
+                    i === slide
+                      ? "etb-carousel__dot is-active"
+                      : "etb-carousel__dot"
+                  }
+                  onClick={() => setSlide(i)}
+                  aria-label={`Go to screenshot ${i + 1}`}
+                  aria-current={i === slide}
+                />
+              ))}
+            </div>
+            <button
+              type="button"
+              className="etb-carousel__btn"
+              onClick={() => goSlide(1)}
+              aria-label="Next screenshot"
+            >
+              <span aria-hidden="true">&rarr;</span>
+            </button>
+            <span className="etb-carousel__count">
+              {slide + 1} / {screenshots.length}
+            </span>
+          </div>
+        ) : null}
       </div>
 
       {active ? (
