@@ -1,0 +1,355 @@
+/* ===========================================================================
+   TEMPORARY BIRTHDAY PAGE: remove after Kemmerlee's birthday.
+   Scoped styles for /happybirthdaykemmerlee. Safe to delete this whole file
+   along with the route folder.
+   =========================================================================== */
+
+.bk-root {
+  --bk-navy-deep: #060a1f;
+  --bk-navy: #0b1330;
+  --bk-navy-soft: #131d44;
+  --bk-gold: #f6cf7a;
+  --bk-gold-bright: #ffe6a8;
+  --bk-gold-deep: #c79338;
+
+  position: relative;
+  min-height: 100svh;
+  width: 100%;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(1rem, 4vw, 3rem) 1rem calc(env(safe-area-inset-bottom, 0px) + 1.5rem);
+  background:
+    radial-gradient(120% 90% at 50% -10%, #1a2350 0%, rgba(26, 35, 80, 0) 55%),
+    radial-gradient(140% 120% at 80% 110%, #1d1640 0%, rgba(29, 22, 64, 0) 50%),
+    linear-gradient(180deg, #0a1234 0%, #070b22 55%, #04060f 100%);
+  color: #f4f1ff;
+  font-family: var(--font-sans, system-ui, sans-serif);
+  text-align: center;
+}
+
+/* ---- Starfield ---------------------------------------------------------- */
+.bk-stars {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+.bk-star {
+  position: absolute;
+  border-radius: 50%;
+  background: #fff;
+  opacity: 0;
+  box-shadow: 0 0 6px rgba(255, 255, 255, 0.8);
+  animation: bk-twinkle var(--dur, 4s) ease-in-out var(--delay, 0s) infinite;
+}
+.bk-star--gold {
+  background: var(--bk-gold-bright);
+  box-shadow: 0 0 8px rgba(255, 220, 150, 0.9);
+}
+@keyframes bk-twinkle {
+  0%, 100% { opacity: 0.15; transform: scale(0.7); }
+  50% { opacity: 1; transform: scale(1.15); }
+}
+
+/* Soft glow orbs evoking moon / planets from the card */
+.bk-glow {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(40px);
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0;
+  animation: bk-fade-in 2.4s ease forwards 0.2s;
+}
+.bk-glow--moon {
+  width: 38vmin; height: 38vmin;
+  top: 8%; left: -8%;
+  background: radial-gradient(circle at 40% 40%, rgba(160, 195, 255, 0.5), rgba(70, 110, 200, 0.08) 60%, transparent 72%);
+}
+.bk-glow--planet {
+  width: 46vmin; height: 46vmin;
+  bottom: -14%; right: -12%;
+  background: radial-gradient(circle at 50% 50%, rgba(90, 80, 140, 0.55), rgba(40, 36, 80, 0.1) 60%, transparent 72%);
+}
+
+/* ---- Stage / content ---------------------------------------------------- */
+.bk-stage {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(0.7rem, 2.4vw, 1.2rem);
+  width: 100%;
+  max-width: 520px;
+}
+
+.bk-card {
+  position: relative;
+  width: min(70vw, 320px);
+  max-height: 56svh;
+  border-radius: 22px;
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(18px) scale(0.97);
+  animation: bk-card-in 1.6s cubic-bezier(0.22, 1, 0.36, 1) forwards 0.5s;
+  box-shadow:
+    0 0 0 1px rgba(246, 207, 122, 0.35),
+    0 18px 60px rgba(0, 0, 0, 0.55),
+    0 0 60px rgba(246, 207, 122, 0.18);
+}
+.bk-card::after {
+  /* gentle continuous gold glow pulse around the card */
+  content: "";
+  position: absolute;
+  inset: -2px;
+  border-radius: 24px;
+  pointer-events: none;
+  box-shadow: 0 0 40px rgba(246, 207, 122, 0.35);
+  animation: bk-glow-pulse 5s ease-in-out infinite 2s;
+}
+.bk-card__img {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+.bk-card--float {
+  animation:
+    bk-card-in 1.6s cubic-bezier(0.22, 1, 0.36, 1) forwards 0.5s,
+    bk-float 7s ease-in-out infinite 2.2s;
+}
+
+.bk-subtitle {
+  font-family: var(--font-cursive, cursive);
+  font-size: clamp(1.15rem, 4.5vw, 1.6rem);
+  font-weight: 600;
+  color: var(--bk-gold-bright);
+  text-shadow: 0 0 18px rgba(246, 207, 122, 0.5);
+  opacity: 0;
+  margin: 0;
+  animation: bk-fade-in 1.4s ease forwards 1.4s;
+}
+
+/* Magical companion video of Kemmerlee among the stars */
+.bk-portal {
+  position: relative;
+  width: min(32vw, 116px);
+  aspect-ratio: 3 / 4;
+  border-radius: 16px;
+  overflow: hidden;
+  opacity: 0;
+  border: 1px solid rgba(246, 207, 122, 0.45);
+  box-shadow: 0 0 28px rgba(246, 207, 122, 0.25), 0 10px 30px rgba(0, 0, 0, 0.5);
+  animation: bk-fade-in 1.6s ease forwards 2s;
+}
+.bk-portal video,
+.bk-portal img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* ---- Button ------------------------------------------------------------- */
+.bk-cta {
+  position: relative;
+  z-index: 3;
+  margin-top: 0.4rem;
+  font-family: var(--font-mono, monospace);
+  font-size: clamp(0.92rem, 3.4vw, 1.05rem);
+  letter-spacing: 0.02em;
+  font-weight: 500;
+  color: #1a1206;
+  padding: 0.95rem 1.5rem;
+  min-height: 52px;
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+  background: linear-gradient(180deg, var(--bk-gold-bright) 0%, var(--bk-gold) 50%, var(--bk-gold-deep) 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.6),
+    0 8px 24px rgba(246, 207, 122, 0.4),
+    0 0 0 1px rgba(199, 147, 56, 0.6);
+  opacity: 0;
+  transform: translateY(40px);
+  animation:
+    bk-rise 1s cubic-bezier(0.22, 1, 0.36, 1) forwards 2.6s,
+    bk-btn-pulse 4s ease-in-out infinite 4s;
+  transition: transform 0.18s ease, box-shadow 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+.bk-cta:hover { transform: translateY(0) scale(1.03); }
+.bk-cta:active { transform: translateY(0) scale(0.98); }
+.bk-cta:focus-visible {
+  outline: 2px solid var(--bk-gold-bright);
+  outline-offset: 3px;
+}
+
+/* ---- Pass modal --------------------------------------------------------- */
+.bk-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: clamp(1rem, 4vw, 2.5rem) 1rem;
+  overflow-y: auto;
+  background: rgba(3, 6, 18, 0.82);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  animation: bk-fade-in 0.4s ease forwards;
+}
+
+.bk-pass {
+  position: relative;
+  width: min(92vw, 420px);
+  margin: auto 0;
+  text-align: center;
+  animation: bk-card-in 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+.bk-pass__art {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 18px;
+  box-shadow:
+    0 0 0 1px rgba(246, 207, 122, 0.45),
+    0 24px 70px rgba(0, 0, 0, 0.6),
+    0 0 60px rgba(246, 207, 122, 0.18);
+}
+.bk-pass__coords {
+  display: inline-block;
+  margin-top: 1rem;
+  font-family: var(--font-mono, monospace);
+  font-size: 0.82rem;
+  letter-spacing: 0.04em;
+  color: var(--bk-gold-bright);
+  text-decoration: none;
+  padding: 0.55rem 1.1rem;
+  border-radius: 999px;
+  border: 1px solid rgba(246, 207, 122, 0.45);
+  background: rgba(246, 207, 122, 0.06);
+}
+.bk-pass__coords:focus-visible {
+  outline: 2px solid var(--bk-gold-bright);
+  outline-offset: 2px;
+}
+
+.bk-pass__actions {
+  display: flex;
+  gap: 0.6rem;
+  justify-content: center;
+  margin-top: 1.5rem;
+  flex-wrap: wrap;
+}
+.bk-pass__btn {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.82rem;
+  letter-spacing: 0.02em;
+  padding: 0.7rem 1.2rem;
+  min-height: 44px;
+  border-radius: 999px;
+  cursor: pointer;
+  border: 1px solid rgba(246, 207, 122, 0.5);
+  background: transparent;
+  color: var(--bk-gold-bright);
+  transition: background 0.18s ease, transform 0.15s ease;
+}
+.bk-pass__btn:active { transform: scale(0.97); }
+.bk-pass__btn--print {
+  background: linear-gradient(180deg, var(--bk-gold-bright), var(--bk-gold-deep));
+  color: #1a1206;
+  border-color: rgba(199, 147, 56, 0.6);
+}
+.bk-pass__btn:focus-visible {
+  outline: 2px solid var(--bk-gold-bright);
+  outline-offset: 2px;
+}
+
+/* ---- Ended state -------------------------------------------------------- */
+.bk-ended {
+  position: relative;
+  z-index: 2;
+  max-width: 26ch;
+}
+.bk-ended__title {
+  font-family: var(--font-serif, serif);
+  font-size: clamp(1.4rem, 6vw, 2rem);
+  color: var(--bk-gold-bright);
+  text-shadow: 0 0 24px rgba(246, 207, 122, 0.4);
+  margin: 0;
+}
+
+/* ---- Hidden print-only pass -------------------------------------------- */
+.bk-print { display: none; }
+
+/* ---- Keyframes ---------------------------------------------------------- */
+@keyframes bk-fade-in { to { opacity: 1; } }
+@keyframes bk-card-in {
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes bk-rise {
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes bk-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+@keyframes bk-glow-pulse {
+  0%, 100% { box-shadow: 0 0 30px rgba(246, 207, 122, 0.25); }
+  50% { box-shadow: 0 0 55px rgba(246, 207, 122, 0.5); }
+}
+@keyframes bk-btn-pulse {
+  0%, 100% { box-shadow: inset 0 1px 0 rgba(255,255,255,0.6), 0 8px 24px rgba(246,207,122,0.4), 0 0 0 1px rgba(199,147,56,0.6); }
+  50% { box-shadow: inset 0 1px 0 rgba(255,255,255,0.6), 0 8px 34px rgba(246,207,122,0.7), 0 0 0 1px rgba(199,147,56,0.6); }
+}
+
+/* ---- Reduced motion ----------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  .bk-root *,
+  .bk-root *::after,
+  .bk-root *::before {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    animation-delay: 0s !important;
+    transition: none !important;
+  }
+  .bk-star { opacity: 0.55; }
+  .bk-glow, .bk-card, .bk-subtitle, .bk-portal, .bk-cta { opacity: 1 !important; transform: none !important; }
+}
+
+/* ---- Print: show only the adventure pass artwork ------------------------ */
+@media print {
+  body { visibility: hidden !important; background: #fff !important; }
+  .bk-print {
+    display: block !important;
+    visibility: visible !important;
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%;
+    background: #fff !important;
+    text-align: center;
+  }
+  .bk-print * { visibility: visible !important; }
+  .bk-print .bk-pass {
+    width: 100%;
+    margin: 0 auto;
+    animation: none !important;
+  }
+  .bk-print .bk-pass__art {
+    width: auto;
+    max-width: 100%;
+    max-height: 96vh;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  .bk-print .bk-pass__coords { display: none !important; }
+  @page { margin: 8mm; }
+}
