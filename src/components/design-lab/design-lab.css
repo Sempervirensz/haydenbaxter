@@ -1,0 +1,514 @@
+/* Design Lab — scoped under .dlab. Dark, editorial serif headings, mono labels,
+   grounded motion. Reuses the global card system for the threshold. */
+
+.dlab {
+  min-height: 100vh;
+  background: #0a0a0a;
+  color: #f3f3f3;
+  padding: clamp(48px, 9vh, 120px) clamp(20px, 5vw, 64px) 96px;
+  overflow-x: clip; /* card rows go full-bleed (100vw) — clip the overflow */
+}
+
+/* ---- Intro ---- */
+.dlab__intro {
+  max-width: 760px;
+  margin: 0 auto clamp(56px, 10vh, 120px);
+  text-align: center;
+}
+
+.dlab__kicker,
+.dlab__plannedKicker {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.dlab__title {
+  margin: 18px 0 0;
+  font-family: var(--font-serif);
+  font-size: clamp(36px, 6vw, 76px);
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+}
+
+.dlab__lede {
+  margin: 22px auto 0;
+  max-width: 600px;
+  font-family: var(--font-sans);
+  font-size: clamp(15px, 1.4vw, 18px);
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.62);
+}
+
+/* ---- Experiment frame ---- */
+.dlab__experiment {
+  max-width: 1100px;
+  margin: 0 auto clamp(64px, 12vh, 140px);
+}
+
+.dlab__expHead {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding-bottom: 18px;
+  margin-bottom: clamp(28px, 5vh, 56px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.dlab__expNum {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.dlab__expName {
+  color: rgba(255, 255, 255, 0.85);
+  flex: 1;
+}
+
+.dlab__expStatus {
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 9px;
+}
+
+.dlab__expStatus--live {
+  border-color: rgba(216, 177, 90, 0.7);
+  color: #f3e6c4;
+}
+
+/* ============================================================================
+   EXPERIMENT 01 — FOUR-CARD THRESHOLD
+   ========================================================================== */
+.dlab-thresh {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.dlab-thresh__head {
+  text-align: center;
+  max-width: 640px;
+}
+
+.dlab-thresh__kicker {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.dlab-thresh__title {
+  margin: 14px 0 0;
+  font-family: var(--font-serif);
+  font-size: clamp(28px, 4vw, 48px);
+  line-height: 1.06;
+  letter-spacing: -0.02em;
+}
+
+.dlab-thresh__instruction {
+  margin: 14px 0 0;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.55);
+  transition: color 400ms ease;
+}
+
+.dlab-thresh.is-open .dlab-thresh__instruction {
+  color: #f3e6c4;
+}
+
+.dlab-thresh__meter {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin: 22px 0 0;
+}
+
+.dlab-thresh__pip {
+  width: 28px;
+  height: 3px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.16);
+  transition: background 450ms ease, box-shadow 450ms ease;
+}
+
+.dlab-thresh__pip.is-on {
+  background: #d8b15a;
+  box-shadow: 0 0 14px rgba(216, 177, 90, 0.5);
+}
+
+/* Single fanned row like the homepage deck — full-bleed so all four fit and
+   never wrap; cards (flex-shrink:1, --card-width) scale down on narrow screens. */
+.dlab-thresh__row {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: center;
+  align-items: flex-end;
+  gap: clamp(4px, 1.4vw, 24px);
+  margin-top: clamp(36px, 6vh, 64px);
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  padding: 0 clamp(12px, 4vw, 56px);
+  box-sizing: border-box;
+}
+
+/* Mobile shared caption (PlayingCard's own caption is hidden below sm). */
+.dlab-thresh__mobileCaption {
+  min-height: 56px;
+  margin-top: 18px;
+  text-align: center;
+  padding: 0 24px;
+}
+
+.dlab-thresh__mobileCaption h3 {
+  font-family: var(--font-serif);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.dlab-thresh__mobileCaption p {
+  margin-top: 4px;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* Completion — fades + lifts in once the threshold clears. */
+.dlab-thresh__open {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+  margin-top: clamp(40px, 7vh, 72px);
+  opacity: 0;
+  transform: translateY(12px);
+  pointer-events: none;
+  transition: opacity 600ms ease, transform 600ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.dlab-thresh.is-open .dlab-thresh__open {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.dlab-thresh__openLabel {
+  font-family: var(--font-serif);
+  font-size: clamp(22px, 3vw, 36px);
+  letter-spacing: -0.01em;
+}
+
+.dlab-thresh__enter {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 26px;
+  border-radius: 999px;
+  border: 1px solid rgba(216, 177, 90, 0.6);
+  background: rgba(216, 177, 90, 0.08);
+  color: #f3e6c4;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: background 200ms ease, border-color 200ms ease, transform 200ms ease;
+}
+
+.dlab-thresh__enter:hover {
+  background: rgba(216, 177, 90, 0.16);
+  border-color: rgba(216, 177, 90, 0.9);
+  transform: translateY(-1px);
+}
+
+/* ============================================================================
+   EXPERIMENT 02 — SOFT-LOCK ENTRY (homepage prototype)
+   ========================================================================== */
+.dlab-soft {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.dlab-soft__eyebrow {
+  font-family: var(--font-sans);
+  font-size: clamp(10px, 1vw, 13px);
+  letter-spacing: 0.04em;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.dlab-soft__hero {
+  margin: 12px auto 0;
+  max-width: 880px;
+  font-family: var(--font-serif);
+  font-size: clamp(26px, 4.4vw, 60px);
+  line-height: 1.08;
+  letter-spacing: -0.01em;
+}
+
+.dlab-soft__row {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: center;
+  align-items: flex-end;
+  gap: clamp(4px, 1.4vw, 24px);
+  margin-top: clamp(32px, 6vh, 60px);
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  padding: 0 clamp(12px, 4vw, 56px);
+  box-sizing: border-box;
+}
+
+.dlab-soft__mobileCaption {
+  min-height: 52px;
+  margin-top: 16px;
+  padding: 0 24px;
+}
+.dlab-soft__mobileCaption h3 {
+  font-family: var(--font-serif);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+.dlab-soft__mobileCaption p {
+  margin-top: 4px;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* The soft lock lives in the black space under the cards. */
+.dlab-soft__guide {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  min-height: 150px;
+  margin-top: clamp(28px, 5vh, 52px);
+  justify-content: flex-start;
+}
+
+.dlab-soft__cue {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.4);
+  animation: dlab-soft-pulse 2.6s ease-in-out infinite;
+}
+
+.dlab-soft__prompt {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: clamp(18px, 2.2vw, 26px);
+  letter-spacing: -0.01em;
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.dlab-soft__prompt--open {
+  color: #f3e6c4;
+}
+
+.dlab-soft__hint {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.dlab-soft__skip {
+  margin-top: 6px;
+  padding: 9px 18px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: transparent;
+  color: rgba(255, 255, 255, 0.7);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: border-color 200ms ease, color 200ms ease, background 200ms ease;
+}
+.dlab-soft__skip:hover {
+  border-color: rgba(255, 255, 255, 0.4);
+  color: #fff;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.dlab-soft__scroll {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.5);
+  animation: dlab-soft-bob 2.2s ease-in-out infinite;
+}
+
+@keyframes dlab-soft-pulse {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 0.85; }
+}
+@keyframes dlab-soft-bob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(4px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .dlab-soft__cue,
+  .dlab-soft__scroll {
+    animation: none;
+  }
+}
+
+/* ============================================================================
+   PLANNED EXPERIMENTS — quiet placeholder cards
+   ========================================================================== */
+.dlab__planned {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.dlab__plannedKicker {
+  text-align: center;
+  margin-bottom: clamp(24px, 4vh, 40px);
+}
+
+.dlab__plannedGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+}
+
+.dlab__card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 22px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.02);
+  transition: border-color 200ms ease, background 200ms ease, transform 200ms ease;
+}
+
+.dlab__card:hover {
+  border-color: rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.04);
+  transform: translateY(-2px);
+}
+
+.dlab__cardTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.dlab__cardStatus {
+  padding: 3px 9px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.dlab__cardTitle {
+  font-family: var(--font-serif);
+  font-size: 19px;
+  letter-spacing: -0.01em;
+}
+
+.dlab__cardBlurb {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.dlab__foot {
+  max-width: 1100px;
+  margin: clamp(56px, 10vh, 110px) auto 0;
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.3);
+}
+
+/* ---- Full-page experiment open link (shown in the lab shell) ---- */
+.dlab__fullLink {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 18px;
+}
+.dlab__fullBlurb {
+  max-width: 620px;
+  font-family: var(--font-sans);
+  font-size: 15px;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.6);
+}
+.dlab__openBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 24px;
+  border-radius: 999px;
+  border: 1px solid rgba(216, 177, 90, 0.6);
+  background: rgba(216, 177, 90, 0.08);
+  color: #f3e6c4;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: background 200ms ease, border-color 200ms ease, transform 200ms ease;
+}
+.dlab__openBtn:hover {
+  background: rgba(216, 177, 90, 0.16);
+  border-color: rgba(216, 177, 90, 0.9);
+  transform: translateY(-1px);
+}
+
+/* ============================================================================
+   SOFT-LOCK FULL-PAGE MIRROR (.dlab-mirror) — real HeroSection + real CardDeck
+   ========================================================================== */
+.dlab-mirror {
+  background: #0a0a0a;
+  color: #f3f3f3;
+}
+.dlab-mirror .dlab-soft__guide {
+  padding: clamp(24px, 6vh, 64px) 24px clamp(40px, 8vh, 88px);
+  text-align: center;
+}
+
+/* Gated sections — fade + lift in once the soft lock releases. */
+.dlab-gate__content {
+  animation: dlab-gate-in 700ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+@keyframes dlab-gate-in {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .dlab-gate__content {
+    animation: none;
+  }
+}

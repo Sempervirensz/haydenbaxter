@@ -1,0 +1,67 @@
+"use client";
+
+// Soft-lock gate. Renders the real card-deck section + the soft lock, and holds
+// the rest of the page (`children`) back until the visitor flips all four cards
+// OR presses Skip. This makes the lock REAL on every device (mobile included) —
+// you can't scroll past the entry until you engage or skip — while staying soft
+// (Skip is always right there). The gated sections are passed as children from
+// the server page, so no server/client import issues.
+
+import { useCallback, useState } from "react";
+import CardDeck from "@/components/CardDeck";
+import "./design-lab.css";
+
+export default function SoftLockGate({ children }: { children: React.ReactNode }) {
+  const [revealedCount, setRevealedCount] = useState(0);
+  const [released, setReleased] = useState(false); // latches once all four flip
+  const [skipped, setSkipped] = useState(false);
+
+  const handleRevealed = useCallback((count: number) => {
+    setRevealedCount(count);
+    if (count >= 4) setReleased(true);
+  }, []);
+
+  const open = released || skipped;
+
+  return (
+    <>
+      {/* Real homepage card-deck section — unchanged markup. */}
+      <section className="bg-[#0a0a0a] relative pb-8">
+        <div
+          className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] rounded-full opacity-20 blur-[120px] pointer-events-none"
+          style={{ background: "radial-gradient(ellipse, rgba(255,255,255,0.15), transparent)" }}
+        />
+        <CardDeck onRevealedChange={handleRevealed} />
+      </section>
+
+      {/* Soft lock — instructions in the black space right under the cards. */}
+      <div className={`dlab-soft__guide ${open ? "is-open" : ""}`} aria-live="polite">
+        {!open ? (
+          <>
+            <span className="dlab-soft__cue">Begin here</span>
+            <p className="dlab-soft__prompt">Flip the four cards to open the site.</p>
+            <p className="dlab-soft__hint">
+              Tap each card to reveal it
+              {revealedCount > 0 ? ` — ${revealedCount} of 4` : ""}
+            </p>
+            <button type="button" className="dlab-soft__skip" onClick={() => setSkipped(true)}>
+              Skip the intro <span aria-hidden="true">→</span>
+            </button>
+          </>
+        ) : (
+          <>
+            <p className="dlab-soft__prompt dlab-soft__prompt--open">
+              {skipped && !released ? "Explore freely." : "The system is open."}
+            </p>
+            <span className="dlab-soft__scroll" aria-hidden="true">
+              Scroll to explore ↓
+            </span>
+          </>
+        )}
+      </div>
+
+      {/* Locked until released — the rest of the site reveals on flip-all / skip. */}
+      {open && <div className="dlab-gate__content">{children}</div>}
+    </>
+  );
+}
