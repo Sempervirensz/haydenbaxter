@@ -517,6 +517,13 @@ html {
   height: 94vh;
 }
 
+/* Cinematic consulting chapter — tall track so the sticky card pins and the
+   scroll budget drives the four-act parallax (see consulting-cinema.css).
+   Must out-rank the :last-child 94vh rule above. */
+.work__chapter--detail.work__chapter--cinema {
+  height: 420vh;
+}
+
 .work__screen {
   position: sticky;
   top: 6vh;

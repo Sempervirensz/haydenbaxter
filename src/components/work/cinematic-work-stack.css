@@ -1,0 +1,609 @@
+/* Cinematic Work Stack — borderless full-bleed depth-handoff cards.
+   Everything is scoped under .cstack so nothing leaks to production. */
+
+.cstack {
+  position: relative;
+  background: #050608;
+  color: #f3f3f3;
+}
+
+/* ---- Control dock ---- */
+.cstack__dock {
+  position: fixed;
+  top: 14px;
+  right: 14px;
+  z-index: 200;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 210px;
+  padding: 14px;
+  border-radius: 14px;
+  background: rgba(10, 11, 15, 0.82);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+.cstack__dockTitle {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.cstack__dial {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.cstack__dialMeta {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.cstack__dial input {
+  width: 100%;
+  accent-color: #d8b15a;
+}
+
+.cstack__toggle {
+  display: block;
+  text-align: center;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(255, 255, 255, 0.78);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  cursor: pointer;
+  text-decoration: none;
+  transition: border-color 160ms ease, background 160ms ease, color 160ms ease;
+}
+
+.cstack__toggle:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.cstack__toggle.is-on {
+  border-color: rgba(216, 177, 90, 0.7);
+  color: #f3e6c4;
+}
+
+/* ---- Intro / outro ---- */
+.cstack__intro,
+.cstack__outro {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  min-height: 92vh;
+  padding: 0 6vw;
+}
+
+.cstack__outro {
+  min-height: 60vh;
+}
+
+.cstack__kicker {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.45);
+  margin-bottom: 22px;
+}
+
+.cstack__title {
+  font-family: var(--font-serif);
+  font-size: clamp(44px, 8vw, 116px);
+  letter-spacing: -0.02em;
+  line-height: 0.98;
+  margin: 0;
+}
+
+.cstack__lede {
+  max-width: 680px;
+  margin: 26px 0 0;
+  font-family: var(--font-sans);
+  font-size: clamp(15px, 1.4vw, 18px);
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.62);
+}
+
+.cstack__hint {
+  margin-top: 40px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.cstack__outro p {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+/* ---- Chapters + cards ---- */
+.cstack__chapter {
+  position: relative;
+  height: 150vh;
+}
+
+.cstack__card {
+  position: sticky;
+  top: 5vh;
+  height: 90vh;
+  margin: 8px;
+  border-radius: 26px;
+  overflow: hidden;
+  background: #0a0b0f;
+  transform-origin: 50% 14%;
+  will-change: transform;
+  /* Borderless: hairline edge + filmic float instead of a hard border. */
+  outline: 1px solid rgba(255, 255, 255, 0.06);
+  outline-offset: -1px;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.05) inset,
+    0 0 130px 8px rgba(0, 0, 0, 0.5) inset,
+    0 54px 130px -34px rgba(0, 0, 0, 0.9),
+    0 14px 50px -18px rgba(0, 0, 0, 0.7);
+}
+
+/* ---- Hero planes ---- */
+.cstack__hero {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.cstack__heroImg {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  transform: scale(1.12);
+  will-change: transform;
+}
+
+.cstack__scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background: linear-gradient(
+    180deg,
+    rgba(4, 5, 10, 0.5) 0%,
+    transparent 30%,
+    transparent 56%,
+    rgba(4, 5, 10, 0.82) 100%
+  );
+}
+
+/* Header-only scrim (consulting cityscape sits behind its own stage). */
+.cstack__scrim--head {
+  background: linear-gradient(180deg, rgba(4, 5, 10, 0.6) 0%, transparent 18%);
+}
+
+/* ---- Header ---- */
+.cstack__head {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 6;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: clamp(22px, 3vw, 40px);
+}
+
+.cstack__num {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.82);
+  white-space: nowrap;
+}
+
+.cstack__line {
+  flex: 1;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* ---- Footer caption + info trigger ---- */
+/* Bottom-left stack on every size so the glass panel always blooms from the
+   same anchor and stays inside the card (no edge bleed). */
+.cstack__foot {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 6;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 18px;
+  padding: clamp(28px, 4vw, 60px);
+}
+
+.cstack__caption {
+  margin: 0;
+  max-width: min(640px, 80%);
+  font-family: var(--font-serif);
+  font-size: clamp(28px, 3.6vw, 56px);
+  line-height: 1.04;
+  letter-spacing: -0.02em;
+  text-shadow: 0 4px 30px rgba(0, 0, 0, 0.8);
+  will-change: transform;
+  transition: opacity 300ms ease;
+}
+
+/* While the info panel is open, fade the headline so they don't collide.
+   (Opacity only — the rAF loop owns the caption's transform.) */
+.cstack__card--1:has(.cstack__infoWrap.is-peek) .cstack__caption,
+.cstack__card--1:has(.cstack__infoWrap:focus-within) .cstack__caption {
+  opacity: 0;
+}
+@media (hover: hover) {
+  .cstack__card--1:has(.cstack__infoWrap:hover) .cstack__caption {
+    opacity: 0;
+  }
+}
+
+/* ---- WorldPulse (card 01): hover-revealed frosted-glass info panel ----
+   The trigger button anchors the panel; hover / keyboard focus / tap (is-peek)
+   reveals a frosted-glass card holding the full dossier. No click-through. */
+.cstack__infoWrap {
+  position: relative;
+  display: inline-flex;
+  flex-shrink: 0;
+}
+
+.cstack__infoBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 20px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  background: rgba(10, 11, 15, 0.5);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: #fff;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 180ms ease, border-color 180ms ease, transform 180ms ease;
+}
+
+.cstack__infoBtn span {
+  transition: transform 220ms ease;
+}
+
+.cstack__infoWrap:hover .cstack__infoBtn,
+.cstack__infoWrap:focus-within .cstack__infoBtn,
+.cstack__infoWrap.is-peek .cstack__infoBtn {
+  background: rgba(255, 255, 255, 0.14);
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+.cstack__infoWrap:hover .cstack__infoBtn span,
+.cstack__infoWrap:focus-within .cstack__infoBtn span,
+.cstack__infoWrap.is-peek .cstack__infoBtn span {
+  transform: rotate(90deg);
+}
+
+/* The frosted-glass panel — liquid-glass body holding the full dossier. */
+.cstack__glass {
+  position: absolute;
+  bottom: calc(100% + 14px);
+  left: 0;
+  /* Capped to the card's inner width (viewport minus card margin + foot pad)
+     so it never overflows the card edge at any size. */
+  width: min(420px, calc(100vw - 2 * clamp(28px, 4vw, 60px) - 24px));
+  max-height: min(58vh, 480px);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 22px 24px;
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  backdrop-filter: blur(26px) saturate(1.7);
+  -webkit-backdrop-filter: blur(26px) saturate(1.7);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.5),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.12),
+    0 30px 70px -26px rgba(0, 0, 0, 0.85);
+  transform-origin: 28px 100%;
+  transform: scale(0.6) translateY(12px);
+  opacity: 0;
+  pointer-events: none;
+  transition: transform 360ms cubic-bezier(0.22, 1, 0.36, 1), opacity 240ms ease;
+}
+
+/* Reveal on keyboard focus or forced (tap / viewer preview) everywhere; on a
+   real pointer device, also on hover. */
+.cstack__infoWrap:focus-within .cstack__glass,
+.cstack__infoWrap.is-peek .cstack__glass {
+  transform: scale(1) translateY(0);
+  opacity: 1;
+  pointer-events: auto;
+}
+
+@media (hover: hover) {
+  .cstack__infoWrap:hover .cstack__glass {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+    pointer-events: auto;
+  }
+}
+
+/* Glossy diagonal sweep — the "liquid" refraction highlight. */
+.cstack__glassSheen {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: linear-gradient(
+    130deg,
+    rgba(255, 255, 255, 0.42) 0%,
+    rgba(255, 255, 255, 0.05) 30%,
+    transparent 52%
+  );
+  mix-blend-mode: screen;
+}
+
+.cstack__glassLabel {
+  position: relative;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.82);
+}
+
+.cstack__glassText {
+  position: relative;
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.cstack__glassLink {
+  position: relative;
+  align-self: flex-start;
+  margin-top: 2px;
+  padding: 9px 16px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: background 160ms ease, border-color 160ms ease;
+}
+
+.cstack__glassLink:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.7);
+}
+
+/* ---- Panel cards (ETB / Supply Chain) — wrap the real deployed component ---- */
+.cstack__card--panel {
+  background:
+    radial-gradient(120% 90% at 80% 6%, rgba(60, 70, 120, 0.16), transparent 60%),
+    linear-gradient(160deg, #0b0c12 0%, #07080c 100%);
+}
+
+.cstack__panelBody {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: clamp(64px, 9vh, 104px) clamp(20px, 4vw, 56px) clamp(28px, 4vh, 56px);
+  overflow: hidden;
+}
+
+.cstack__panelBody--sc {
+  padding-bottom: 0;
+}
+
+/* Neutralize the homepage glass shell so the cinematic card is the only frame,
+   while keeping the padding/layout context ETBDetail expects. */
+.cstack__etbShell {
+  border: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+/* ---- Consulting fills the whole card with its own stage ---- */
+.cstack__consulting {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+}
+
+.cstack__consulting .cns-photo--hero {
+  width: 100%;
+  height: 100%;
+}
+
+/* ---- Per-frame darkening as the next chapter covers this card ---- */
+.cstack__dim {
+  position: absolute;
+  inset: 0;
+  z-index: 30;
+  background: #04050a;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* ============================================================================
+   MERGED WORK SECTION BRIDGE (.work--cinematic)
+   The cinematic cards live inside the CD-scroll's .work__chapter--detail tracks.
+   That stack's last chapter is only 94vh, leaving the Consulting card no scroll
+   budget for parallax. Restore a full track for it (scoped here only, so the
+   original WorkSection stays untouched) so the cityscape drift has room.
+   ========================================================================== */
+.work--cinematic .work__chapter--detail:last-child {
+  height: 300vh;
+}
+
+/* ---- Reduced motion ---- */
+.cstack--off .cstack__card {
+  transform: none !important;
+}
+.cstack--off .cstack__heroImg {
+  transform: scale(1.05) !important;
+}
+
+/* ============================================================================
+   RESPONSIVE
+   ========================================================================== */
+
+/* Tablet + small laptop */
+@media (max-width: 900px) {
+  .cstack__dock {
+    width: 168px;
+    padding: 11px;
+    gap: 8px;
+  }
+  .cstack__card {
+    top: 3vh;
+    height: 92vh;
+    margin: 6px;
+    border-radius: 22px;
+  }
+  .cstack__caption {
+    max-width: 80%;
+  }
+  .cstack__foot {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+  /* Tablet/portrait: pull the crop toward the phone + face so the narrower
+     frame still reads as the brand moment, not a face close-up. */
+  .cstack__card--1 .cstack__heroImg {
+    background-position: 42% 42%;
+  }
+}
+
+/* Phone */
+@media (max-width: 600px) {
+  /* Dock collapses to a slim bar pinned bottom-center so it never covers a card
+     corner or the expand controls. */
+  .cstack__dock {
+    top: auto;
+    bottom: 10px;
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%);
+    flex-direction: row;
+    align-items: center;
+    width: auto;
+    max-width: calc(100vw - 20px);
+    gap: 8px;
+    padding: 7px 10px;
+    border-radius: 999px;
+  }
+  .cstack__dockTitle,
+  .cstack__dial {
+    display: none;
+  }
+  .cstack__dock .cstack__toggle {
+    padding: 8px 14px;
+    white-space: nowrap;
+    border-radius: 999px;
+  }
+  /* Keep the bottom pill bar narrow on phones — drop the nav links, leave the
+     motion toggle. Navigation stays available via the desktop dock + viewer. */
+  .cstack__dock a.cstack__toggle {
+    display: none;
+  }
+
+  .cstack__card {
+    top: 2vh;
+    height: 94vh;
+    margin: 4px;
+    border-radius: 16px;
+  }
+
+  .cstack__head {
+    padding: 16px 18px;
+  }
+  .cstack__num {
+    font-size: 9px;
+    letter-spacing: 0.2em;
+  }
+
+  /* Lift the caption + expand control above the bottom-pinned dock bar. */
+  .cstack__foot {
+    padding: 20px 20px 84px;
+  }
+  .cstack__caption {
+    max-width: 100%;
+    font-size: clamp(22px, 7vw, 34px);
+  }
+
+  .cstack__panelBody {
+    padding: 56px 12px 16px;
+  }
+  .cstack__etbShell {
+    padding: 0;
+  }
+
+  .cstack__detailHead {
+    padding: 14px 18px;
+  }
+  .cstack__detailBody {
+    padding: 18px;
+  }
+
+  /* The intro headline shrinks so it never overflows a phone viewport. */
+  .cstack__title {
+    font-size: clamp(40px, 13vw, 64px);
+  }
+
+  /* WorldPulse hero: on a narrow frame a centered crop loses the phone (lower
+     left) and the WORLDPULSE logo. Bias the framing down-left so the phone and
+     logo stay in shot. */
+  .cstack__card--1 .cstack__heroImg {
+    background-position: 34% 58%;
+  }
+}

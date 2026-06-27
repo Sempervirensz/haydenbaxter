@@ -6,7 +6,7 @@ import ConnectSection from "@/components/ConnectSection";
 import AboutSection from "@/components/AboutSection";
 import JournalSection from "@/components/JournalSection";
 
-const WorkSection = dynamic(() => import("@/components/WorkSection"));
+const WorkSection = dynamic(() => import("@/components/work/WorkSectionResponsive"));
 
 export default function Home() {
   return (

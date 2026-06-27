@@ -9,7 +9,7 @@ const MORPH_DATA = CARDS.map((c) => ({
   name: c.name,
   desc:
     c.screen.type === "full"
-      ? c.screen.full.caption
+      ? c.screen.full.caption.join(" ")
       : c.screen.type === "consulting"
         ? c.screen.consulting.heroSubtitle
         : c.screen.type === "emerging-tech-builds"

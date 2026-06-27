@@ -11,9 +11,11 @@ interface WorldPulseDetailProps {
 export default function WorldPulseDetail({ data }: WorldPulseDetailProps) {
   return (
     <>
-      {data.caption && (
+      {data.caption.length > 0 && (
         <div className="wp-description">
-          <p>{data.caption}</p>
+          {data.caption.map((paragraph, i) => (
+            <p key={i}>{paragraph}</p>
+          ))}
         </div>
       )}
       <div className="pd-full">

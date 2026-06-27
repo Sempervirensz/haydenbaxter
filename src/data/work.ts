@@ -22,7 +22,7 @@ interface WorldPulseScreen extends WorkScreenBase {
     image: { src: string; alt: string };
     background?: string;
     role: string;
-    caption: string;
+    caption: string[];
     link: { href: string; label: string };
   };
 }
@@ -255,7 +255,13 @@ export interface WorkScrollZone {
 }
 
 export const WORK_SCROLL_CONFIG = {
-  screenBreaks: [0, 0.35, 0.56, 0.77, 0.95, 1],
+  // Chapter heights: landing 500vh + 3×300vh details + 420vh consulting
+  // cinema track (.work__chapter--cinema) = 1820vh; scrollable = 1720vh.
+  // Each break keeps the same absolute scroll position the hand-tuned
+  // pre-cinema values had (e.g. 0.35 × 1394vh = 488vh → 488/1720 = 0.2837),
+  // so every transition before Consulting is unchanged — the extra budget
+  // all lands in the pinned consulting scene.
+  screenBreaks: [0, 0.2837, 0.4539, 0.6241, 0.7699, 1],
   zones: [
     { hold: [0.0, 0.15], deg: 0, label: "" },                         // Angel at 12 (rest)
     { hold: [0.18, 0.35], deg: -45, label: "WorldPulse" },            // ~1:30 → top
@@ -282,11 +288,13 @@ export const WORK_SCREENS: WorkScreen[] = [
       image: { src: "", alt: "" },
       background: "/WorldPulseCostal3.0.png",
       role: "",
-      caption:
-        "Hayden Baxter, Founder of WorldPulse — building digital product passports that make compliance more human. We turn complex supply chain data into visual, engaging stories.",
+      caption: [
+        "Founder at WorldPulse, where we turn complex supply chain data into visual, engaging product stories.",
+        "WorldPulse proves that supply chain does not have to feel cold, hidden, or technical. We make product origin, compliance, and traceability easier to understand through design-driven Digital Product Passports.",
+      ],
       link: {
         href: "https://worldxpulse.com",
-        label: "Learn more at WORLDXPULSE.com",
+        label: "Learn more at WorldXPulse.com",
       },
     },
   },

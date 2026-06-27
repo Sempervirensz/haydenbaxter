@@ -1,0 +1,268 @@
+/* Responsive Viewer — device-frame preview shell for the Cinematic Work Stack. */
+
+.rv {
+  display: flex;
+  min-height: 100vh;
+  background:
+    radial-gradient(120% 90% at 20% 0%, rgba(60, 70, 120, 0.12), transparent 60%),
+    #050608;
+  color: #f3f3f3;
+}
+
+/* ---- Control panel ---- */
+.rv__panel {
+  position: sticky;
+  top: 0;
+  align-self: flex-start;
+  width: 248px;
+  flex-shrink: 0;
+  height: 100vh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 22px 18px;
+  background: rgba(10, 11, 15, 0.7);
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+.rv__brand {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.rv__brandTitle {
+  font-family: var(--font-serif);
+  font-size: 19px;
+  letter-spacing: -0.01em;
+}
+
+.rv__brandSub {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.rv__group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.rv__groupLabel {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.rv__presets {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.rv__preset {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 9px 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(255, 255, 255, 0.78);
+  cursor: pointer;
+  transition: border-color 150ms ease, background 150ms ease, color 150ms ease;
+}
+
+.rv__preset:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.rv__preset.is-on {
+  border-color: rgba(216, 177, 90, 0.7);
+  background: rgba(216, 177, 90, 0.12);
+  color: #f3e6c4;
+}
+
+.rv__presetName {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.rv__presetDim {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.rv__slider {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.rv__sliderMeta {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.62);
+}
+
+.rv__slider input {
+  width: 100%;
+  accent-color: #d8b15a;
+}
+
+.rv__chips {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
+
+.rv__chip {
+  padding: 8px 6px;
+  border-radius: 7px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(255, 255, 255, 0.74);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: border-color 150ms ease, background 150ms ease, color 150ms ease;
+}
+
+.rv__chip:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.rv__chip.is-on {
+  border-color: rgba(216, 177, 90, 0.7);
+  background: rgba(216, 177, 90, 0.12);
+  color: #f3e6c4;
+}
+
+.rv__row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.rv__btn {
+  flex: 1;
+  text-align: center;
+  padding: 9px 10px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(255, 255, 255, 0.8);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  cursor: pointer;
+  text-decoration: none;
+  transition: border-color 150ms ease, background 150ms ease, color 150ms ease;
+}
+
+.rv__btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.rv__btn.is-on {
+  border-color: rgba(216, 177, 90, 0.7);
+  color: #f3e6c4;
+}
+
+.rv__btn--wide {
+  flex: none;
+  width: 100%;
+}
+
+.rv__scale {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.55);
+  min-width: 44px;
+  text-align: right;
+}
+
+/* ---- Stage ---- */
+.rv__stage {
+  position: relative;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  overflow: auto;
+}
+
+.rv__slot {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.rv__frame {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform-origin: top left;
+  border-radius: 18px;
+  overflow: hidden;
+  background: #050608;
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.08),
+    0 40px 120px -30px rgba(0, 0, 0, 0.9);
+}
+
+.rv__iframe {
+  display: block;
+  border: 0;
+  background: #050608;
+}
+
+.rv__readout {
+  position: absolute;
+  bottom: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: rgba(10, 11, 15, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.6);
+  pointer-events: none;
+}
+
+/* On a phone the side panel stacks above the stage. */
+@media (max-width: 720px) {
+  .rv {
+    flex-direction: column;
+  }
+  .rv__panel {
+    position: static;
+    width: 100%;
+    height: auto;
+  }
+}

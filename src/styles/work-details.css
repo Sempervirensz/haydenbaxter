@@ -36,6 +36,10 @@
   font-weight: 400;
 }
 
+.wp-description p + p {
+  margin-top: 0.7em;
+}
+
 /* WorldPulse */
 .pd-full {
   flex: 1;

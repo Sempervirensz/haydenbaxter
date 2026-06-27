@@ -5,7 +5,14 @@ import { CARDS } from "@/data/cards";
 import { useScrollProgress } from "@/hooks/useScrollProgress";
 import PlayingCard from "./PlayingCard";
 
-export default function CardDeck() {
+// Optional `onRevealedChange` reports how many cards are currently face-up.
+// Unused on the homepage (default no-op), so behavior/look there is unchanged;
+// the Design Lab's soft-lock prototype uses it to know when all four are revealed.
+export default function CardDeck({
+  onRevealedChange,
+}: {
+  onRevealedChange?: (count: number) => void;
+} = {}) {
   const [flippedCards, setFlippedCards] = useState<Set<number>>(new Set());
   const [lastFlippedId, setLastFlippedId] = useState<number | null>(null);
   const [isMobile, setIsMobile] = useState(false);
@@ -17,6 +24,10 @@ export default function CardDeck() {
     window.addEventListener("resize", check);
     return () => window.removeEventListener("resize", check);
   }, []);
+
+  useEffect(() => {
+    onRevealedChange?.(flippedCards.size);
+  }, [flippedCards, onRevealedChange]);
 
   const handleFlip = useCallback((cardId: number) => {
     setFlippedCards((prev) => {
