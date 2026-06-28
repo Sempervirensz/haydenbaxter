@@ -60,8 +60,12 @@ export default function SoftLockGate({ children }: { children: React.ReactNode }
         )}
       </div>
 
-      {/* Locked until released — the rest of the site reveals on flip-all / skip. */}
-      {open && <div className="dlab-gate__content">{children}</div>}
+      {/* SEO-safe lock: the rest of the site is ALWAYS rendered (so it's in the
+          HTML for crawlers), just hidden until the lock releases on flip-all /
+          skip. aria-hidden keeps it out of the a11y tree + tab order while locked. */}
+      <div className={`dlab-gate__content ${open ? "is-open" : "is-locked"}`} aria-hidden={!open}>
+        {children}
+      </div>
     </>
   );
 }

@@ -989,8 +989,10 @@ html.is-safari body {
 /* Responsive */
 @media (max-width: 1024px) {
   :root {
-    --card-width: 200px;
-    --card-height: 282px;
+    /* Fit four cards within the viewport by width (covers tablets too), capped
+       at 200px. Keeps the deck from overflowing on tablet/mobile. */
+    --card-width: min(200px, calc((100vw - 64px) / 4));
+    --card-height: calc(var(--card-width) * 1.41);
   }
   .card-hover-wrapper:hover {
     transform: translateY(-8px);

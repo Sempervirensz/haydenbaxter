@@ -294,9 +294,11 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  text-align: center;
   gap: 10px;
-  min-height: 150px;
-  margin-top: clamp(28px, 5vh, 52px);
+  min-height: 118px;
+  margin-top: clamp(14px, 2.5vh, 28px);
+  padding: 0 20px clamp(20px, 5vh, 48px);
   justify-content: flex-start;
 }
 
@@ -499,8 +501,12 @@
   text-align: center;
 }
 
-/* Gated sections — fade + lift in once the soft lock releases. */
-.dlab-gate__content {
+/* SEO-safe gate: content stays in the HTML (crawlers index it) but is hidden
+   while locked, then fades + lifts in once the soft lock releases. */
+.dlab-gate__content.is-locked {
+  display: none;
+}
+.dlab-gate__content.is-open {
   animation: dlab-gate-in 700ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 @keyframes dlab-gate-in {
@@ -508,7 +514,7 @@
   to { opacity: 1; transform: translateY(0); }
 }
 @media (prefers-reduced-motion: reduce) {
-  .dlab-gate__content {
+  .dlab-gate__content.is-open {
     animation: none;
   }
 }
