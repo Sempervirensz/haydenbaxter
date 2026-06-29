@@ -5,6 +5,7 @@ import ConnectSection from "@/components/ConnectSection";
 import AboutSection from "@/components/AboutSection";
 import JournalSection from "@/components/JournalSection";
 import SiteFooter from "@/components/SiteFooter";
+import StructuredData from "@/components/StructuredData";
 import SoftLockGate from "@/components/design-lab/SoftLockGate";
 
 const WorkSection = dynamic(() => import("@/components/work/WorkSectionResponsive"));
@@ -12,6 +13,7 @@ const WorkSection = dynamic(() => import("@/components/work/WorkSectionResponsiv
 export default function Home() {
   return (
     <main>
+      <StructuredData />
       <HeroSection />
       {/* Soft lock: the card deck + entry prompt. Holds the rest of the page
           until all four cards are flipped or Skip is pressed. */}
