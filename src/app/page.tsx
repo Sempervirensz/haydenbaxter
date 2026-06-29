@@ -4,6 +4,7 @@ import BrandsCarousel from "@/components/BrandsCarousel";
 import ConnectSection from "@/components/ConnectSection";
 import AboutSection from "@/components/AboutSection";
 import JournalSection from "@/components/JournalSection";
+import SiteFooter from "@/components/SiteFooter";
 import SoftLockGate from "@/components/design-lab/SoftLockGate";
 
 const WorkSection = dynamic(() => import("@/components/work/WorkSectionResponsive"));
@@ -20,6 +21,7 @@ export default function Home() {
         <ConnectSection />
         <AboutSection />
         <JournalSection />
+        <SiteFooter />
       </SoftLockGate>
     </main>
   );

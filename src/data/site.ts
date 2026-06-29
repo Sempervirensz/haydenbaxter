@@ -1,0 +1,58 @@
+// Central site identity. SITE_URL is the canonical production origin used by
+// metadata, canonical tags, sitemap, robots, and OpenGraph. Override per
+// environment with NEXT_PUBLIC_SITE_URL (no trailing slash).
+
+export const SITE_URL = (
+  process.env.NEXT_PUBLIC_SITE_URL ?? "https://haydenbaxter.com"
+).replace(/\/$/, "");
+
+export const SITE_NAME = "Hayden Baxter";
+
+export const SITE_TITLE = "Hayden Baxter — Designer & Builder";
+
+export const SITE_DESCRIPTION =
+  "Hayden Baxter — designer and builder of brand systems, product interfaces, and emerging-tech tools. I create designs that appeal, engage, and sell.";
+
+// Public, indexable routes (used to generate the sitemap). Everything not
+// listed here — labs, sandboxes, previews, the private birthday page — is
+// kept out of the sitemap and disallowed in robots.
+export const PUBLIC_ROUTES = [
+  "/",
+  "/emerging-tech-builds",
+  "/emerging-tech-builds/cortex",
+  "/emerging-tech-builds/atomic-os",
+  "/emerging-tech-builds/casebrief",
+  "/blog",
+  "/privacy",
+] as const;
+
+// Non-public path prefixes: labs / sandboxes / previews / private pages.
+// Disallowed in robots.txt and given noindex where applicable.
+export const NON_PUBLIC_PREFIXES = [
+  "/admin",
+  "/lab/",
+  "/cd-lab",
+  "/cd-lab-desktop",
+  "/sc-lab",
+  "/supply-chain-lab",
+  "/supply-chain-mobile-lab",
+  "/consulting-lab",
+  "/consulting-hero-lab",
+  "/consulting-parallax-lab",
+  "/etb-lab",
+  "/etb-overlay-sandbox",
+  "/globe-sandbox",
+  "/globe-card-lab",
+  "/design-lab",
+  "/detail-lab",
+  "/description-lab",
+  "/narrative-lab",
+  "/handwriting-lab",
+  "/responsive-lab",
+  "/site-parallax-lab",
+  "/work-display-lab",
+  "/work-preview",
+  "/procurebridge-preview",
+  "/atomicos-preview",
+  "/happybirthdaykemmerlee",
+] as const;

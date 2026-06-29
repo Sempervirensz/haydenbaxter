@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Caveat, DM_Mono, DM_Sans, DM_Serif_Display, Permanent_Marker } from "next/font/google";
 import "./globals.css";
 import Splash from "@/components/Splash";
+import { SITE_URL, SITE_NAME, SITE_TITLE, SITE_DESCRIPTION } from "@/data/site";
 
 const dmSerifDisplay = DM_Serif_Display({
   weight: "400",
@@ -34,8 +35,41 @@ const caveat = Caveat({
 });
 
 export const metadata: Metadata = {
-  title: "Portfolio",
-  description: "I Create Designs That Appeal, Engage & Sell",
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: SITE_TITLE,
+    template: `%s — ${SITE_NAME}`,
+  },
+  description: SITE_DESCRIPTION,
+  applicationName: SITE_NAME,
+  authors: [{ name: SITE_NAME, url: SITE_URL }],
+  creator: SITE_NAME,
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    type: "website",
+    siteName: SITE_NAME,
+    title: SITE_TITLE,
+    description: SITE_DESCRIPTION,
+    url: SITE_URL,
+    locale: "en_US",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: SITE_TITLE,
+    description: SITE_DESCRIPTION,
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
 };
 
 export default function RootLayout({
