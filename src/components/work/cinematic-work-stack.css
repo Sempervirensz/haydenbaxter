@@ -231,44 +231,33 @@
   background: rgba(255, 255, 255, 0.2);
 }
 
-/* ---- Footer caption + info trigger ---- */
-/* Bottom-left stack on every size so the glass panel always blooms from the
-   same anchor and stays inside the card (no edge bleed). */
+/* ---- Headline + info trigger — Option C balanced safe zones ----
+   Headline lives in the upper-left sky band; the trigger + panel dock bottom-right.
+   The two never overlap, so the headline no longer needs to fade when the panel
+   opens. */
 .cstack__foot {
   position: absolute;
-  left: 0;
   right: 0;
   bottom: 0;
   z-index: 6;
   display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 18px;
+  justify-content: flex-end;
   padding: clamp(28px, 4vw, 60px);
 }
 
 .cstack__caption {
+  position: absolute;
+  z-index: 6;
+  top: clamp(78px, 12vh, 156px);
+  left: clamp(28px, 4vw, 60px);
   margin: 0;
-  max-width: min(640px, 80%);
+  max-width: min(560px, 48%);
   font-family: var(--font-serif);
   font-size: clamp(28px, 3.6vw, 56px);
   line-height: 1.04;
   letter-spacing: -0.02em;
   text-shadow: 0 4px 30px rgba(0, 0, 0, 0.8);
   will-change: transform;
-  transition: opacity 300ms ease;
-}
-
-/* While the info panel is open, fade the headline so they don't collide.
-   (Opacity only — the rAF loop owns the caption's transform.) */
-.cstack__card--1:has(.cstack__infoWrap.is-peek) .cstack__caption,
-.cstack__card--1:has(.cstack__infoWrap:focus-within) .cstack__caption {
-  opacity: 0;
-}
-@media (hover: hover) {
-  .cstack__card--1:has(.cstack__infoWrap:hover) .cstack__caption {
-    opacity: 0;
-  }
 }
 
 /* ---- WorldPulse (card 01): hover-revealed frosted-glass info panel ----
@@ -278,6 +267,23 @@
   position: relative;
   display: inline-flex;
   flex-shrink: 0;
+}
+
+/* Invisible hover bridge — covers the gap between the trigger and the panel so a
+   pointer moving up to the panel (and its link) never drops out of the group.
+   Only "live" while open so it blocks nothing in the resting state. */
+.cstack__bridge {
+  position: absolute;
+  right: 0;
+  bottom: 100%;
+  width: min(420px, calc(100vw - 2 * clamp(28px, 4vw, 60px) - 24px));
+  height: 20px;
+  pointer-events: none;
+}
+.cstack__infoWrap:hover .cstack__bridge,
+.cstack__infoWrap:focus-within .cstack__bridge,
+.cstack__infoWrap.is-peek .cstack__bridge {
+  pointer-events: auto;
 }
 
 .cstack__infoBtn {
@@ -320,7 +326,7 @@
 .cstack__glass {
   position: absolute;
   bottom: calc(100% + 14px);
-  left: 0;
+  right: 0;
   /* Capped to the card's inner width (viewport minus card margin + foot pad)
      so it never overflows the card edge at any size. */
   width: min(420px, calc(100vw - 2 * clamp(28px, 4vw, 60px) - 24px));
@@ -339,7 +345,7 @@
     inset 0 1px 0 rgba(255, 255, 255, 0.5),
     inset 0 -1px 0 rgba(255, 255, 255, 0.12),
     0 30px 70px -26px rgba(0, 0, 0, 0.85);
-  transform-origin: 28px 100%;
+  transform-origin: calc(100% - 28px) 100%;
   transform: scale(0.6) translateY(12px);
   opacity: 0;
   pointer-events: none;
@@ -396,26 +402,42 @@
   color: rgba(255, 255, 255, 0.92);
 }
 
+/* Primary CTA — solid, high-contrast pill so it clearly reads as clickable
+   against the frosted glass, while staying mono + on-aesthetic. */
 .cstack__glassLink {
   position: relative;
   align-self: flex-start;
-  margin-top: 2px;
-  padding: 9px 16px;
+  margin-top: 6px;
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 12px 20px;
   border-radius: 999px;
-  border: 1px solid rgba(255, 255, 255, 0.4);
-  background: rgba(255, 255, 255, 0.1);
-  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  background: #fff;
+  color: #0b0c12;
   font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: 0.16em;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.13em;
   text-transform: uppercase;
   text-decoration: none;
-  transition: background 160ms ease, border-color 160ms ease;
+  white-space: nowrap;
+  box-shadow: 0 10px 26px -10px rgba(0, 0, 0, 0.7);
+  transition: transform 200ms ease, box-shadow 200ms ease;
+}
+
+.cstack__glassArrow {
+  display: inline-block;
+  transition: transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .cstack__glassLink:hover {
-  background: rgba(255, 255, 255, 0.2);
-  border-color: rgba(255, 255, 255, 0.7);
+  transform: translateY(-1px);
+  box-shadow: 0 16px 34px -12px rgba(0, 0, 0, 0.75);
+}
+.cstack__glassLink:hover .cstack__glassArrow {
+  transform: translateX(4px);
 }
 
 /* ---- Panel cards (ETB / Supply Chain) — wrap the real deployed component ---- */
@@ -491,6 +513,18 @@
 .cstack--off .cstack__heroImg {
   transform: scale(1.05) !important;
 }
+@media (prefers-reduced-motion: reduce) {
+  .cstack__glassLink,
+  .cstack__glassArrow {
+    transition: none !important;
+  }
+  .cstack__glassLink:hover {
+    transform: none;
+  }
+  .cstack__glassLink:hover .cstack__glassArrow {
+    transform: none;
+  }
+}
 
 /* ============================================================================
    RESPONSIVE
@@ -510,12 +544,7 @@
     border-radius: 22px;
   }
   .cstack__caption {
-    max-width: 80%;
-  }
-  .cstack__foot {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 16px;
+    max-width: 62%;
   }
   /* Tablet/portrait: pull the crop toward the phone + face so the narrower
      frame still reads as the brand moment, not a face close-up. */
@@ -572,12 +601,12 @@
     letter-spacing: 0.2em;
   }
 
-  /* Lift the caption + expand control above the bottom-pinned dock bar. */
+  /* Lift the expand control above the bottom-pinned dock bar. */
   .cstack__foot {
     padding: 20px 20px 84px;
   }
   .cstack__caption {
-    max-width: 100%;
+    max-width: 82%;
     font-size: clamp(22px, 7vw, 34px);
   }
 

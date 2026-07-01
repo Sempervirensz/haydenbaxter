@@ -63,9 +63,16 @@ export default function CinematicCardBody({ card, isActive, peek, onTogglePeek }
               />
             </div>
             <div className="cstack__scrim" aria-hidden="true" />
+            {/* Option C — balanced safe zones: headline sits in the clean upper-left
+                sky band; the trigger + panel live bottom-right, each clear of the
+                subject and of each other. */}
+            <p className="cstack__caption">{card.tagline}</p>
             <div className="cstack__foot">
-              <p className="cstack__caption">{card.tagline}</p>
               <div className={`cstack__infoWrap ${peek ? "is-peek" : ""}`}>
+                {/* Invisible hover bridge — spans the gap between the trigger and the
+                    panel so pointer travel never leaves the group and the panel can't
+                    vanish mid-reach (kept a real element so overflow:auto can't clip it). */}
+                <span className="cstack__bridge" aria-hidden="true" />
                 <div className="cstack__glass" role="group" aria-label="WorldPulse details">
                   <span className="cstack__glassSheen" aria-hidden="true" />
                   <span className="cstack__glassLabel">WorldPulse · Founder</span>
@@ -79,7 +86,8 @@ export default function CinematicCardBody({ card, isActive, peek, onTogglePeek }
                       target="_blank"
                       rel="noopener noreferrer"
                     >
-                      {full.link.label} →
+                      {full.link.label}
+                      <span className="cstack__glassArrow" aria-hidden="true">→</span>
                     </a>
                   )}
                 </div>
@@ -89,7 +97,7 @@ export default function CinematicCardBody({ card, isActive, peek, onTogglePeek }
                   onClick={onTogglePeek}
                   aria-expanded={peek}
                 >
-                  WorldPulse <span aria-hidden="true">▸</span>
+                  Explore WorldPulse <span aria-hidden="true">▸</span>
                 </button>
               </div>
             </div>

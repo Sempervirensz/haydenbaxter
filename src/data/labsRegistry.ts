@@ -35,6 +35,7 @@ export const LAB_GROUPS: LabGroup[] = [
   {
     title: "Work — cinematic",
     items: [
+      { label: "WorldPulse hero lab", path: "/worldpulse-hero-lab", note: "Headline + hover-panel A/B/C" },
       { label: "Cinematic Work Stack", path: "/site-parallax-lab/work-cinema" },
       { label: "↳ Responsive Viewer", path: "/site-parallax-lab/work-cinema/viewer" },
       { label: "Work merged (CD scroll + cinematic)", path: "/site-parallax-lab/work-merged" },

@@ -1,0 +1,437 @@
+/* ============================================================================
+   WorldPulse hero lab — scoped styles (wpl- namespace, no clash with cstack__)
+   ========================================================================== */
+
+.wpl-page {
+  min-height: 100vh;
+  background: radial-gradient(120% 90% at 50% 0%, #0d0f16 0%, #06070b 60%);
+  color: #fff;
+  padding: clamp(20px, 4vw, 48px);
+  box-sizing: border-box;
+}
+
+/* ---- Control bar ---- */
+.wpl-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 20px;
+  max-width: 1180px;
+  margin: 0 auto;
+}
+.wpl-bar__kicker {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.5);
+  margin-bottom: 6px;
+}
+.wpl-bar__title h1 {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: clamp(22px, 3vw, 32px);
+  letter-spacing: -0.01em;
+  font-weight: 500;
+}
+.wpl-bar__toggle {
+  display: inline-flex;
+  gap: 6px;
+  padding: 6px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+.wpl-tab {
+  padding: 9px 16px;
+  border: none;
+  border-radius: 999px;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.62);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  transition: background 160ms ease, color 160ms ease;
+  white-space: nowrap;
+}
+.wpl-tab:hover { color: #fff; }
+.wpl-tab.is-active {
+  background: rgba(255, 255, 255, 0.14);
+  color: #fff;
+}
+
+.wpl-blurb {
+  max-width: 1180px;
+  margin: 18px auto 0;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* ---- Stage + cinematic card ---- */
+.wpl-stage {
+  max-width: 1180px;
+  margin: 22px auto 0;
+}
+.wpl-card {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  border-radius: 26px;
+  overflow: hidden;
+  outline: 1px solid rgba(255, 255, 255, 0.06);
+  outline-offset: -1px;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.05) inset,
+    0 0 130px 8px rgba(0, 0, 0, 0.5) inset,
+    0 54px 130px -34px rgba(0, 0, 0, 0.9);
+}
+.wpl-heroImg {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center 42%;
+  transform: scale(1.06);
+}
+.wpl-scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background: linear-gradient(
+    180deg,
+    rgba(4, 5, 10, 0.55) 0%,
+    transparent 26%,
+    transparent 52%,
+    rgba(4, 5, 10, 0.85) 100%
+  );
+}
+
+/* ---- Header label ---- */
+.wpl-head {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 6;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: clamp(20px, 2.6vw, 36px);
+  pointer-events: none;
+}
+.wpl-num {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.82);
+  white-space: nowrap;
+}
+.wpl-line {
+  flex: 1;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.18);
+}
+
+/* ---- Headline ---- */
+.wpl-caption {
+  position: absolute;
+  z-index: 6;
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: clamp(26px, 3.4vw, 50px);
+  line-height: 1.04;
+  letter-spacing: -0.02em;
+  text-shadow: 0 4px 30px rgba(0, 0, 0, 0.85);
+  transition: opacity 300ms ease;
+}
+
+/* Fade the headline while the panel is open so they never collide. */
+.wpl-card:has(.wpl-info.is-open) .wpl-caption,
+.wpl-card:has(.wpl-info:focus-within) .wpl-caption { opacity: 0; }
+@media (hover: hover) {
+  .wpl-card:has(.wpl-info:hover) .wpl-caption { opacity: 0; }
+}
+
+/* ---- Info group: trigger + expandable glass panel ---- */
+.wpl-info {
+  position: absolute;
+  z-index: 7;
+  display: inline-flex;
+}
+
+.wpl-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 22px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.32);
+  background: rgba(10, 11, 15, 0.5);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: #fff;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 180ms ease, border-color 180ms ease, transform 180ms ease;
+}
+.wpl-trigger span { transition: transform 220ms ease; display: inline-block; }
+.wpl-info:hover .wpl-trigger,
+.wpl-info:focus-within .wpl-trigger,
+.wpl-info.is-open .wpl-trigger {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.55);
+}
+.wpl-info:hover .wpl-trigger span,
+.wpl-info:focus-within .wpl-trigger span,
+.wpl-info.is-open .wpl-trigger span { transform: rotate(90deg); }
+
+/* ---- Invisible hover bridge (real element, per-option geometry below) ---- */
+.wpl-bridge {
+  position: absolute;
+  display: block;
+  pointer-events: none; /* only "live" while the group is open, so it never
+                           blocks anything underneath in the resting state */
+  background: transparent;
+}
+.wpl-info:hover .wpl-bridge,
+.wpl-info:focus-within .wpl-bridge,
+.wpl-info.is-open .wpl-bridge { pointer-events: auto; }
+
+/* ---- The frosted-glass panel ---- */
+.wpl-panel {
+  position: absolute;
+  width: min(420px, 78vw);
+  max-height: min(60vh, 460px);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 22px 24px;
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  backdrop-filter: blur(26px) saturate(1.7);
+  -webkit-backdrop-filter: blur(26px) saturate(1.7);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.5),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.12),
+    0 30px 70px -26px rgba(0, 0, 0, 0.85);
+  opacity: 0;
+  pointer-events: none;
+  transition: transform 360ms cubic-bezier(0.22, 1, 0.36, 1), opacity 240ms ease;
+}
+
+/* Reveal on hover / keyboard focus / open state */
+.wpl-info:focus-within .wpl-panel,
+.wpl-info.is-open .wpl-panel {
+  opacity: 1;
+  pointer-events: auto;
+}
+@media (hover: hover) {
+  .wpl-info:hover .wpl-panel { opacity: 1; pointer-events: auto; }
+}
+
+/* Sheen / typography inside the panel */
+.wpl-panel__sheen {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: linear-gradient(130deg, rgba(255, 255, 255, 0.42) 0%, rgba(255, 255, 255, 0.05) 30%, transparent 52%);
+  mix-blend-mode: screen;
+}
+.wpl-panel__label {
+  position: relative;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.82);
+}
+.wpl-panel__text {
+  position: relative;
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.92);
+}
+/* Primary CTA — solid, high-contrast pill so it clearly reads as "click me"
+   against the frosted glass, while staying mono + on-aesthetic. */
+.wpl-panel__link {
+  position: relative;
+  align-self: flex-start;
+  margin-top: 6px;
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 12px 20px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  background: #fff;
+  color: #0b0c12;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  text-decoration: none;
+  white-space: nowrap;
+  box-shadow: 0 10px 26px -10px rgba(0, 0, 0, 0.7);
+  transition: transform 200ms ease, box-shadow 200ms ease, background 160ms ease;
+}
+.wpl-panel__linkArrow {
+  display: inline-block;
+  transition: transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.wpl-panel__link:hover {
+  background: #fff;
+  transform: translateY(-1px);
+  box-shadow: 0 16px 34px -12px rgba(0, 0, 0, 0.75);
+}
+.wpl-panel__link:hover .wpl-panel__linkArrow {
+  transform: translateX(4px);
+}
+.wpl-panel__link:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.9);
+  outline-offset: 3px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .wpl-panel__link,
+  .wpl-panel__linkArrow { transition: none !important; }
+  .wpl-panel__link:hover { transform: none; }
+  .wpl-panel__link:hover .wpl-panel__linkArrow { transform: none; }
+}
+
+/* ============================================================================
+   OPTION LAYOUTS — placement only. Interaction identical across all three.
+   Each panel gets an invisible ::before bridge spanning the gap to the trigger
+   so pointer travel never drops out of the group.
+   ========================================================================== */
+
+/* ---- Option A — headline lower-left, trigger bottom-right, panel opens up ---- */
+.wpl-card--a .wpl-caption {
+  left: clamp(24px, 4vw, 56px);
+  bottom: clamp(26px, 4vw, 56px);
+  max-width: min(360px, 46%);
+}
+.wpl-card--a .wpl-info {
+  right: clamp(24px, 4vw, 56px);
+  bottom: clamp(26px, 4vw, 56px);
+}
+.wpl-card--a .wpl-panel {
+  right: 0;
+  bottom: calc(100% + 16px);
+  transform-origin: 90% 100%;
+  transform: scale(0.6) translateY(12px);
+}
+.wpl-card--a .wpl-info:hover .wpl-panel,
+.wpl-card--a .wpl-info:focus-within .wpl-panel,
+.wpl-card--a .wpl-info.is-open .wpl-panel { transform: scale(1) translateY(0); }
+/* Bridge spans the vertical gap under the (right-aligned) panel, full panel width. */
+.wpl-card--a .wpl-bridge {
+  right: 0;
+  bottom: 100%;
+  width: min(420px, 78vw);
+  height: 22px;
+}
+
+/* ---- Option B — headline upper-left, trigger mid-right, panel opens inward ---- */
+.wpl-card--b .wpl-caption {
+  left: clamp(24px, 4vw, 56px);
+  top: clamp(74px, 10vw, 118px);
+  max-width: min(420px, 48%);
+}
+.wpl-card--b .wpl-info {
+  right: clamp(24px, 4vw, 56px);
+  top: 50%;
+  transform: translateY(-50%);
+}
+.wpl-card--b .wpl-panel {
+  right: calc(100% + 16px);
+  top: 50%;
+  transform-origin: 100% 50%;
+  transform: translateY(-50%) scale(0.6);
+}
+.wpl-card--b .wpl-info:hover .wpl-panel,
+.wpl-card--b .wpl-info:focus-within .wpl-panel,
+.wpl-card--b .wpl-info.is-open .wpl-panel { transform: translateY(-50%) scale(1); }
+/* Bridge spans the horizontal gap to the left of the (mid-right) trigger. */
+.wpl-card--b .wpl-bridge {
+  right: 100%;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 22px;
+  height: 72px;
+}
+
+/* ---- Option C — slim headline upper-left, roomy trigger + panel bottom-right ---- */
+.wpl-card--c .wpl-caption {
+  left: clamp(24px, 4vw, 56px);
+  top: clamp(74px, 10vw, 118px);
+  max-width: min(400px, 44%);
+  font-size: clamp(24px, 3vw, 44px);
+}
+.wpl-card--c .wpl-info {
+  right: clamp(24px, 4vw, 56px);
+  bottom: clamp(26px, 4vw, 56px);
+}
+.wpl-card--c .wpl-panel {
+  right: 0;
+  bottom: calc(100% + 16px);
+  width: min(460px, 82vw);
+  transform-origin: 90% 100%;
+  transform: scale(0.6) translateY(12px);
+}
+.wpl-card--c .wpl-info:hover .wpl-panel,
+.wpl-card--c .wpl-info:focus-within .wpl-panel,
+.wpl-card--c .wpl-info.is-open .wpl-panel { transform: scale(1) translateY(0); }
+/* Bridge spans the vertical gap under the (right-aligned) panel, full panel width. */
+.wpl-card--c .wpl-bridge {
+  right: 0;
+  bottom: 100%;
+  width: min(460px, 82vw);
+  height: 22px;
+}
+
+/* ---- Reduced motion ---- */
+@media (prefers-reduced-motion: reduce) {
+  .wpl-caption,
+  .wpl-panel,
+  .wpl-trigger,
+  .wpl-trigger span { transition: none !important; }
+  .wpl-card--a .wpl-panel,
+  .wpl-card--b .wpl-panel,
+  .wpl-card--c .wpl-panel { transform: none !important; }
+  .wpl-card--b .wpl-panel { transform: translateY(-50%) !important; }
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 720px) {
+  .wpl-card { aspect-ratio: 3 / 4; }
+  .wpl-heroImg { background-position: 40% 46%; }
+  .wpl-caption { font-size: clamp(22px, 6vw, 32px) !important; max-width: 74% !important; }
+  /* On phones every option drops the trigger to the bottom-right, panel up. */
+  .wpl-card--b .wpl-info { top: auto; bottom: clamp(20px, 5vw, 40px); transform: none; }
+  .wpl-card--b .wpl-panel {
+    right: 0; top: auto; bottom: calc(100% + 16px);
+    transform-origin: 90% 100%; transform: scale(0.6) translateY(12px);
+  }
+  .wpl-card--b .wpl-info:hover .wpl-panel,
+  .wpl-card--b .wpl-info:focus-within .wpl-panel,
+  .wpl-card--b .wpl-info.is-open .wpl-panel { transform: scale(1) translateY(0); }
+  .wpl-card--b .wpl-bridge {
+    right: 0; top: auto; bottom: 100%; transform: none;
+    width: min(420px, 78vw); height: 22px;
+  }
+}
