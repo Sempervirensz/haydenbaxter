@@ -2,45 +2,72 @@ import type { ETBDemoDetail } from "@/data/work";
 
 const A = "/assets/cortex-demo";
 
-/** "View full details" content for Cortex — the WorldPulse editorial brain.
- *  An evidence-first knowledge system covering sustainable apparel and textiles,
- *  built on Obsidian and extended with a purpose-built triage plugin. */
+/** "View full details" content for Cortex, a living second brain: an Obsidian
+ *  knowledge architecture and an intelligence layer working as one connected
+ *  system that absorbs, structures, connects, reasons over, and publishes
+ *  research. Same extended detail shape as AtomicOS and CaseBrief.
+ *
+ *  Metric values reflect the current indexed system snapshot. */
 export const CORTEX_DEMO: ETBDemoDetail = {
-  badge: "Editorial system",
-  summary:
-    "Cortex is an opinionated, evidence-first knowledge system for covering the sustainable apparel and textiles beat — built on Obsidian, extended with a custom triage plugin, and structured as a repeatable pipeline from raw source to published claim. The biggest problem it solves is claim-to-source provenance: every sentence that reaches a draft has already passed through a typed source note, an extracted quote, a promoted claim, and an audit trail. The output is defensible publishing — any line in a finished piece walks back to a primary source in under thirty seconds.",
+  heroCategory: "Editorial Brain",
+  story: [
+    "Most research systems are built to store information. Cortex was built to make knowledge usable.",
+    "Cortex combines an Obsidian knowledge architecture, connected sources, structured notes, claims, topic maps, retrieval, drafting, and coverage analysis into one living brain for everything I learn.",
+    "Raw research enters the system as evidence, becomes connected knowledge, and remains available to question, compare, develop, and publish. Cortex remembers where ideas came from, how they relate, where the evidence is strong, and where the knowledge base is still incomplete.",
+    "The result is not simply a vault or an AI assistant. It is a second brain that becomes more useful as its knowledge becomes more structured and connected.",
+  ],
+  principle:
+    "A second brain should not just remember what you know. It should help you build on it.",
   stats: [
     {
-      value: "93",
-      label: "Source corpus",
-      detail: "Structured source notes in the populated vault",
+      value: "186",
+      label: "Research notes",
+      detail:
+        "Sources, claims, concepts, drafts, and topic maps connected inside the current system.",
       icon: "checklist",
     },
     {
-      value: "39",
-      label: "Concept notes",
-      detail: "Recurring ideas surfaced across multiple sources",
+      value: "3,783",
+      label: "Indexed knowledge",
+      detail: "Searchable knowledge units available to the intelligence layer.",
       icon: "spark",
     },
     {
       value: "9",
-      label: "Topic MOCs",
-      detail: "Living maps across the WorldPulse beat",
+      label: "Topic maps",
+      detail:
+        "Living maps that connect research, claims, questions, and publishing opportunities.",
       icon: "pulse",
     },
     {
-      value: "<30s",
-      label: "Citation traceback",
-      detail: "Any claim in a draft to its primary source",
-      icon: "trend-up",
+      value: "3",
+      label: "Core workflows",
+      detail: "Research, drafting, and coverage analysis inside one connected brain.",
+      icon: "bot",
     },
   ],
+  // Screenshots tell one story across both halves of the brain:
+  //   knowledge enters -> structure forms -> connections emerge ->
+  //   Cortex reasons -> Cortex creates.
+  // All entries below are real assets. The intelligence-experience captures
+  // that show reasoning and creation are not shot yet.
+  //
+  // TODO(screenshots): capture and add these app-experience views (fictitious
+  // or non-sensitive source material only), then insert with the captions below:
+  //   - Research answer with expanded source panel
+  //       "Ask questions across the full knowledge system and keep the answer connected to its supporting sources."
+  //   - Draft with inline citations
+  //       "Turn connected research into a draft while preserving the path back to the source material."
+  //   - Export Pack / independent review artifact
+  //       "Package an answer, its context, and its supporting sources for independent review."
+  //   - Provenance-filter comparison (evidence-quality filtering side by side)
+  //   - Retrieval architecture diagram (hybrid search, fusion, reranking)
   screenshots: [
     {
       src: `${A}/cortex-dashboard-overview.png`,
-      alt: "Cortex dashboard overview — knowledge graph hero, four KPI cards, recent activity feed, source-mix donut, and top-topic coverage.",
+      alt: "Cortex system overview with a knowledge-graph hero, key metrics, recent activity, source mix, and top-topic coverage in one view.",
       caption:
-        "The cockpit — knowledge graph hero, four KPI cards for the running state of the corpus, recent activity, source-mix donut, and top-topic coverage in one view.",
+        "Cortex brings the living state of the research system into one operational view.",
       width: 1920,
       height: 1200,
       mobileSrc: `${A}/cortex-dashboard-overview-mobile.png`,
@@ -48,21 +75,18 @@ export const CORTEX_DEMO: ETBDemoDetail = {
       mobileHeight: 2337,
     },
     {
-      src: `${A}/cortex-dashboard-graph.png`,
-      alt: "Cortex dashboard full-screen knowledge graph with coral glow halos on topic maps and a lit-up neighborhood on hover.",
+      src: `${A}/cortex-source-note.png`,
+      alt: "A typed Cortex source note in Obsidian with structured frontmatter for provenance, format, evidence rating, and linked topics and claims.",
       caption:
-        "Knowledge graph, full screen — topic maps anchor the structure with coral glow halos; sources, claims, and entities radiate from the topics they support, and hovering any node lights up its neighborhood.",
+        "Every source enters as a typed note, so its origin, evidence, and connections travel with it.",
       width: 1920,
-      height: 1200,
-      mobileSrc: `${A}/cortex-dashboard-graph-mobile.png`,
-      mobileWidth: 1080,
-      mobileHeight: 2337,
+      height: 1205,
     },
     {
       src: `${A}/cortex-dashboard-pipeline.png`,
-      alt: "Cortex dashboard editorial pipeline — Raw Source, Source Note, Approved, Quote, Claim, Draft — with the bottleneck stage flagged.",
+      alt: "Cortex editorial pipeline moving from raw source to source note, quote, claim, and draft, with the current bottleneck stage flagged.",
       caption:
-        "Editorial pipeline — Raw Source → Source Note → Approved → Quote → Claim → Draft. The dashboard auto-detects the bottleneck stage and flags it in real time.",
+        "Research moves through a structured path from raw source to note, claim, and publishable draft.",
       width: 1920,
       height: 1200,
       mobileSrc: `${A}/cortex-dashboard-pipeline-mobile.png`,
@@ -70,10 +94,37 @@ export const CORTEX_DEMO: ETBDemoDetail = {
       mobileHeight: 2337,
     },
     {
-      src: `${A}/cortex-dashboard-coverage.png`,
-      alt: "Cortex dashboard coverage view — every topic map ranked by source depth, with thin-coverage topics flagged.",
+      src: `${A}/cortex-dashboard-graph.png`,
+      alt: "Cortex knowledge graph showing topic maps at the center with sources, claims, and concepts connected around them.",
       caption:
-        "Coverage by topic — every topic map ranked by source depth, with thin-coverage topics flagged so commissioning happens before a draft starts, not after.",
+        "Sources, concepts, claims, and topic maps become a connected network rather than isolated files.",
+      width: 1920,
+      height: 1200,
+      mobileSrc: `${A}/cortex-dashboard-graph-mobile.png`,
+      mobileWidth: 1080,
+      mobileHeight: 2337,
+    },
+    {
+      src: `${A}/cortex-moc.png`,
+      alt: "A Cortex Map of Content weaving anchor sources, approved claims, and concepts into one living topic document.",
+      caption:
+        "Topic maps weave sources, claims, and concepts into one living document instead of scattered files.",
+      width: 1920,
+      height: 1205,
+    },
+    {
+      src: `${A}/cortex-source-index.png`,
+      alt: "A Cortex multi-axis source index, grouped by organization, with additional access axes available.",
+      caption:
+        "One canonical note, many access paths, so the same knowledge can be reached however the question is framed.",
+      width: 1920,
+      height: 1205,
+    },
+    {
+      src: `${A}/cortex-dashboard-coverage.png`,
+      alt: "Cortex coverage view ranking every topic map by source depth, with thin-coverage topics flagged.",
+      caption:
+        "Coverage analysis reveals where the knowledge base is strong, thin, or missing important evidence.",
       width: 1920,
       height: 1200,
       mobileSrc: `${A}/cortex-dashboard-coverage-mobile.png`,
@@ -82,9 +133,9 @@ export const CORTEX_DEMO: ETBDemoDetail = {
     },
     {
       src: `${A}/cortex-dashboard-triage.png`,
-      alt: "Cortex dashboard triage queue — auto-drafted classification per unreviewed note with Approve, Reset, and Ignore actions.",
+      alt: "Cortex triage queue showing an auto-drafted classification for each unreviewed note with approve, reset, and ignore actions.",
       caption:
-        "Triage queue — what the WorldPulse Triage plugin sees, rendered as a dashboard: an auto-drafted classification per unreviewed note, with Approve / Reset / Ignore actions.",
+        "Organize new research as it enters, so the system becomes more intelligent instead of more cluttered.",
       width: 1920,
       height: 1200,
       mobileSrc: `${A}/cortex-dashboard-triage-mobile.png`,
@@ -93,58 +144,101 @@ export const CORTEX_DEMO: ETBDemoDetail = {
     },
     {
       src: `${A}/cortex-dashboard-evidence.png`,
-      alt: "Cortex dashboard evidence-strength view — radial bar chart of the rated corpus, evidence-level distribution, high-evidence spine, and claims at risk.",
+      alt: "Cortex evidence-strength view with an evidence-level distribution, the high-evidence spine, and claims that need stronger support.",
       caption:
-        "Evidence strength — a radial bar chart of the rated corpus, evidence-level distribution, the high-evidence spine, and claims-at-risk in one view.",
+        "Evidence signals stay visible across the corpus, supporting judgment without becoming the whole product.",
       width: 1920,
       height: 1200,
       mobileSrc: `${A}/cortex-dashboard-evidence-mobile.png`,
       mobileWidth: 1080,
       mobileHeight: 2337,
     },
+  ],
+  howItWorks: [
     {
-      src: `${A}/cortex-source-note.png`,
-      alt: "A typed Cortex source note in Obsidian showing nineteen frontmatter properties — provenance, format, evidence rating, credibility score, linked MOCs and claims, review state.",
-      caption:
-        "Underneath the dashboard: a typed source note — nineteen properties covering provenance, format, evidence rating, credibility, linked MOCs and claims, and review state. This is what makes the corpus queryable, not just searchable.",
-      width: 1920,
-      height: 1205,
+      title: "It absorbs knowledge",
+      body: "Cortex brings research, sources, notes, quotes, claims, and drafts into one connected system. New information is organized as it enters instead of disappearing into folders or scattered documents.",
     },
     {
-      src: `${A}/cortex-source-index.png`,
-      alt: "Cortex multi-axis source index, grouped by organization, with other access axes one click away.",
-      caption:
-        "Multi-axis indexing — the same corpus grouped by organization. Date, type, podcast, and best-use axes are one click away: one canonical note, eight access paths.",
-      width: 1920,
-      height: 1205,
+      title: "It remembers with structure",
+      body: "Every item keeps its context: where it came from, what topic it supports, how it relates to other ideas, and where it sits in the publishing workflow.",
     },
     {
-      src: `${A}/cortex-moc.png`,
-      alt: "A Cortex Map of Content weaving anchor sources, approved claims, and concepts into one living document, with a high backlink count in the status bar.",
-      caption:
-        "Topic-level synthesis — a Map of Content weaving anchor sources, approved claims, and concepts into one living document. The backlink count is the punchline: connective tissue, not a category.",
-      width: 1920,
-      height: 1205,
+      title: "It connects what you know",
+      body: "Cortex links sources, concepts, claims, topics, and drafts across the knowledge system, revealing relationships that are difficult to see when information lives in isolation.",
+    },
+    {
+      title: "It reasons across the whole system",
+      body: "Ask a question, explore a topic, or begin a draft. Cortex searches across the knowledge base, combines the strongest relevant material, and returns answers that remain connected to their sources.",
+    },
+    {
+      title: "It turns knowledge into work",
+      body: "Research can move from raw source to organized note, connected claim, and publishable draft without leaving the system or losing the trail back to the evidence.",
     },
   ],
+  differentiators: [
+    {
+      title: "One brain, not a collection of tools",
+      body: "Cortex brings the vault, knowledge graph, research workflow, retrieval system, drafting tools, and coverage analysis into one connected environment.",
+    },
+    {
+      title: "Structure before automation",
+      body: "Sources, notes, claims, topics, and drafts have defined roles and relationships before AI enters the workflow. The intelligence layer reasons over organized knowledge instead of an undifferentiated pile of text.",
+    },
+    {
+      title: "Knowledge that builds on itself",
+      body: "New research does not disappear after one task. It becomes part of a durable system that can support future questions, comparisons, claims, and drafts.",
+    },
+    {
+      title: "Gaps become visible",
+      body: "Coverage analysis shows where the system has strong support, where the evidence is thin, and where more research is needed.",
+    },
+    {
+      title: "From source to publishing",
+      body: "Cortex preserves the connection from raw research through notes, claims, and final work, making it easier to understand how an idea developed and what supports it.",
+    },
+    {
+      title: "Safe write-back",
+      body: "Generated research and drafts can return to the knowledge system as new files, while create-only rules protect the existing source of truth from being overwritten.",
+    },
+  ],
+  differentiatorsNote:
+    "Evidence signals and provenance controls remain available throughout the system, but Cortex is designed to help people think, connect, and create, not simply score sources.",
+  techSections: [
+    {
+      title: "Obsidian knowledge architecture",
+      body: "Cortex uses local Markdown and Obsidian as the durable foundation for sources, notes, claims, drafts, and topic maps. Structured frontmatter, controlled vocabularies, folder roles, links, and Dataview indexes turn the vault into a queryable knowledge model rather than a loose collection of documents.",
+    },
+    {
+      title: "Connected ingestion and knowledge model",
+      body: "New material is classified as it enters the system, enriched with source and evidence metadata, and connected to topics, concepts, claims, and publishing workflows. Claims and quotes can inherit context from the sources they reference, preserving provenance across the system.",
+    },
+    {
+      title: "Hybrid retrieval and reasoning",
+      body: "The intelligence layer combines semantic search with keyword retrieval, fuses the results, reranks them, and blends relevance with evidence quality. Cortex can then answer questions or develop drafts from the most useful parts of the knowledge system while keeping supporting sources visible.",
+    },
+    {
+      title: "Coverage, creation, and review",
+      body: "Coverage analytics show where the research base is strong or incomplete. Drafting tools use the vault’s knowledge and brand context, Export Packs support independent review, and create-only write-back allows new work to return to Cortex without overwriting existing knowledge.",
+    },
+  ],
+  // Short plain-text fallback (required by the type). techSections renders;
+  // this stays terse to avoid duplicating the long copy.
   techBreakdown: [
-    "Obsidian as the substrate — local-first, plain Markdown, portable, diff-able, and outlives any single tool.",
-    "WorldPulse Triage: a purpose-built community plugin that reads source notes, drafts a suggested classification (origin, topic, angle, evidence strength), and routes files when the approved group maps to a different folder — wiki-link backreferences stay intact.",
-    "Progressively-enriched YAML frontmatter schema with controlled vocabularies for provenance, format, editorial state, evidence quality, and relationships; required vs optional fields are explicit so light and heavy notes are both valid.",
-    "Dataview-backed multi-axis indexing — one canonical source note exposed through eight access paths (A–Z, date, group, organization, type, podcast, best use, recent + watchlist). Adding an index is a query, not a migration.",
-    "Bounded AI integration via a curated Copilot prompt library — controlled vocabularies constrain the option space, descriptive fields are protected from overwrite, and the system writes review metadata alongside human curation rather than over it.",
-    "Deep-linkable triage entry points: a single `obsidian://worldpulse-triage?vault=...&file=...` URL opens the review queue at a specific note, making the surface scriptable from outside Obsidian.",
+    "Obsidian knowledge architecture: a local Markdown vault with structured frontmatter, controlled vocabularies, links, and Dataview indexes.",
+    "Connected ingestion and knowledge model: new material classified, enriched with source and evidence metadata, and linked to topics, claims, and workflows.",
+    "Hybrid retrieval and reasoning: semantic and keyword search fused and reranked, blended with evidence quality, keeping sources visible.",
+    "Coverage, creation, and review: coverage analytics, vault-aware drafting, Export Packs, and create-only write-back into the vault.",
   ],
   outcomes: [
-    "A four-stage editorial pipeline encoded directly in the folder topology — Raw Source File → Source Note → Quote / Claim → Draft. You cannot skip a stage without it being visible in the file tree.",
-    "Defensible publishing as the default path: typed source notes, extracted quotes, promoted claims, and audit trail (`review_status`, `triage_status`, `reviewed_at`) make misattributed claims structurally hard.",
-    "Nine living topic maps aligned to the WorldPulse beat — DPPs & Traceability, Regulation & Compliance, Decarbonisation, Circularity, Materials, Worker Rights, Business Case, and Apparel Event Intelligence — link sources, claims, drafts, and open research questions.",
-    "Auditable failure handling: sources the pipeline can't process (corrupted PDFs, paywalled extracts, malformed transcripts) live in `09_Failed_Sources/` rather than being discarded, so coverage gaps are measured honestly.",
+    "Built a unified second-brain system that moves research from source capture through connected notes, claims, drafting, and review.",
+    "Engineered a hybrid retrieval and reasoning layer that turns a structured Obsidian knowledge base into a queryable intelligence system.",
+    "Created a closed-loop publishing workflow with coverage analysis, auditable source context, independent review packs, and protected write-back.",
   ],
   lessonsLearned: [
-    "Domain-specific beats deserve domain-specific systems. Generic 'second brain' templates collapse on a regulated, fast-moving topic — the categories that work are the categories a textile-policy reporter would actually pitch around.",
-    "Provenance has to be cheap or it doesn't happen. The frontmatter schema, controlled vocabularies, and folder topology exist so the path of least resistance is the auditable one.",
-    "Custom tooling beats configuration when the workflow is the product. The triage plugin is the difference between 'I have a notes app' and 'I have an editorial system.'",
-    "AI accelerates without compromising provenance only when it suggests inside guardrails — drafts not decisions, controlled vocabularies not free text, additive metadata not overwrites.",
+    "Knowledge becomes more useful when structure survives every stage. Sources, notes, claims, and drafts need clear relationships before an intelligence layer can reason across them well.",
+    "A second brain should compound learning, not just store files. The system becomes more valuable when each new source strengthens future research, connections, and drafts.",
+    "Retrieval quality is a product decision, not a default setting. Search, filtering, reranking, and evidence signals all shape what the system treats as important.",
+    "Automation earns trust when it proposes and connects without overwriting the source of truth. Create-only write-back keeps the human in control of what becomes permanent knowledge.",
   ],
 };

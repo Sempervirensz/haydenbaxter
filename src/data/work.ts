@@ -353,7 +353,7 @@ export const WORK_SCREENS: WorkScreen[] = [
         "Case Intelligence",
         "Voice/Video",
         "Supply Chain Apps",
-        "Editorial Systems",
+        "Editorial Brain",
         "R&D",
       ],
       sortOptions: [
@@ -437,27 +437,27 @@ export const WORK_SCREENS: WorkScreen[] = [
         {
           id: "cortex",
           name: "Cortex",
-          status: "Prototype",
-          category: "Editorial Systems",
-          oneLiner:
-            "An evidence-first editorial brain for sustainable apparel reporting — every published claim walks back to a primary source in under thirty seconds.",
+          status: "Front-end Build",
+          category: "Editorial Brain",
+          oneLiner: "Find the signal. Grade the evidence. Publish the truth.",
           bullets: [
-            "Custom Obsidian plugin triages sources and routes them by editorial group",
-            "Progressively-enriched frontmatter turns raw files into queryable, attributable claims",
-            "Four-stage pipeline (Source → Note → Quote/Claim → Draft) encoded in folder topology",
+            "Brings sources, notes, claims, topic maps, and drafts into one connected system",
+            "Reasons across the whole knowledge base and keeps answers tied to sources",
+            "Turns structured research into defensible, publishable work",
           ],
-          tags: ["Editorial AI", "Knowledge Graph", "Provenance"],
+          tags: ["Second Brain", "Connected Research", "Source-to-Publishing"],
           screenshot: "/assets/cortex-demo/cortex-dashboard-overview.png",
-          previewLabel: "View full detail",
-          detailFooter: "Populated working system — 93 source notes, 39 concepts, 9 topic maps.",
-          systemSnapshot: [
-            "Triage plugin drafts classifications inside controlled vocabularies",
-            "Multi-axis Dataview indexes expose one corpus through eight access paths",
-            "Failed-source folder keeps a public audit of coverage gaps",
-          ],
           completenessScore: 78,
           technicalScore: 88,
           recencyScore: 97,
+          panel: {
+            meta: "Editorial Brain",
+            hook: "Turn your research into a living system that thinks with you.",
+            description:
+              "Cortex brings sources, notes, claims, evidence, and drafts into one connected intelligence system. Built around Obsidian, it helps you remember what matters, connect ideas, uncover gaps, and turn deep research into clear, defensible work.",
+            cta: "Explore Cortex",
+          },
+          keepFullSummary: true,
           demo: CORTEX_DEMO,
           mark: {
             src: "/assets/cortex-mark.webp",
