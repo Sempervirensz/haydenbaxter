@@ -3,6 +3,7 @@
 // ---------------------------------------------------------------------------
 
 import { ATOMICOS_DEMO } from "@/data/atomicosDemo";
+import { CASEBRIEF_DEMO } from "@/data/casebriefDemo";
 import { CORTEX_DEMO } from "@/data/cortexDemo";
 
 // ---- Shared base ----
@@ -349,7 +350,7 @@ export const WORK_SCREENS: WorkScreen[] = [
       filters: [
         "All",
         "Personal OS",
-        "NLP/Privacy",
+        "Case Intelligence",
         "Voice/Video",
         "Supply Chain Apps",
         "Editorial Systems",
@@ -410,26 +411,28 @@ export const WORK_SCREENS: WorkScreen[] = [
           id: "casebrief",
           name: "CaseBrief",
           status: "Front-end Build",
-          category: "NLP/Privacy",
+          category: "Case Intelligence",
           oneLiner:
-            "AI-assisted legal research that turns dense case material into clear, structured briefs.",
+            "Understand the full story of an injury, so every client’s case is built with care.",
           bullets: [
-            "Long case documents condensed into structured summaries",
-            "Cleaner workflow for review, chronology, and key takeaways",
-            "Built to assist comprehension, not replace counsel",
+            "Turns scattered medical records into a clear injury narrative",
+            "Flags referenced records that are missing from the file",
+            "Keeps every conclusion tied to its source document and page",
           ],
-          tags: ["Legal Research", "Summarization", "AI Assist"],
+          tags: ["Case Narrative", "Missing-Record Detection", "Source-Backed Review"],
           screenshot: "/assets/casebrief-preview.png",
-          previewLabel: "View concept",
-          detailFooter: "Research and organization support only. Not legal advice.",
-          systemSnapshot: [
-            "Document intake handles long-form legal material",
-            "Outputs shaped into reviewable, structured briefs",
-            "Assists comprehension and workflow, not judgment",
-          ],
           completenessScore: 85,
           technicalScore: 95,
           recencyScore: 87,
+          panel: {
+            meta: "Case Intelligence",
+            hook: "When a client’s future is on the line, clarity matters.",
+            description:
+              "CaseBrief transforms scattered medical records into a clear, source-backed narrative of injury, treatment, and recovery. It helps legal teams find the missing pieces, understand the full case faster, and spend less time searching through documents and more time advocating for the client.",
+            cta: "Explore CaseBrief",
+          },
+          keepFullSummary: true,
+          demo: CASEBRIEF_DEMO,
         },
         {
           id: "cortex",

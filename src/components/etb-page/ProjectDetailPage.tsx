@@ -42,7 +42,7 @@ export default function ProjectDetailPage({ project }: Props) {
       </header>
 
       {project.demo ? (
-        <DemoShowcase demo={project.demo} />
+        <DemoShowcase demo={project.demo} projectName={project.name} />
       ) : (
         <PlaceholderSections />
       )}
@@ -55,7 +55,13 @@ export default function ProjectDetailPage({ project }: Props) {
   );
 }
 
-function DemoShowcase({ demo }: { demo: ETBDemoDetail }) {
+function DemoShowcase({
+  demo,
+  projectName,
+}: {
+  demo: ETBDemoDetail;
+  projectName: string;
+}) {
   return (
     <>
       {demo.disclaimer || demo.badge ? (
@@ -105,7 +111,7 @@ function DemoShowcase({ demo }: { demo: ETBDemoDetail }) {
         {/* How AtomicOS works */}
         {demo.howItWorks && demo.howItWorks.length > 0 ? (
           <details className="etb-page__accItem" open>
-            <summary className="etb-page__accHead">How AtomicOS works</summary>
+            <summary className="etb-page__accHead">How {projectName} works</summary>
             <div className="etb-page__accBody">
               <ol className="etb-page__steps">
                 {demo.howItWorks.map((step, i) => (
