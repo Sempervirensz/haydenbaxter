@@ -74,10 +74,29 @@ export interface ETBDemoDetail {
   /** Optional link to an interactive, clickable demo. */
   liveUrl?: string;
   liveLabel?: string;
+  /** Category label shown in the full-detail hero, overriding
+   *  `project.category` for the detail page only (card/panel keep their own). */
+  heroCategory?: string;
+  /** Multi-paragraph opening project story. Rendered in place of `summary`
+   *  when present. */
+  story?: string[];
+  /** Emphasized product principle rendered as a callout/blockquote. */
+  principle?: string;
   screenshots: ETBScreenshot[];
+  /** Ordered "how it works" steps, written for a non-technical reader. */
+  howItWorks?: { title: string; body: string }[];
+  /** "What makes it different" items. */
+  differentiators?: { title: string; body: string }[];
+  /** Note clarifying differentiators are directional, not proven-causal. */
+  differentiatorsNote?: string;
+  /** Titled technical subsections. Rendered in place of the flat
+   *  `techBreakdown` list when present. */
+  techSections?: { title: string; body: string }[];
   techBreakdown: string[];
   outcomes: string[];
   lessonsLearned: string[];
+  /** Honest, compact limitations of the current build. */
+  limitations?: string[];
 }
 
 export interface ETBProject {
@@ -98,6 +117,22 @@ export interface ETBProject {
   technicalScore: number;
   recencyScore: number;
   demo?: ETBDemoDetail;
+  /** Curiosity-first slide-in preview panel copy. When present, the dossier
+   *  renders a simplified layout (meta · title · hook · one paragraph · tags ·
+   *  CTA) instead of the capability-bullets + System Notes layout. */
+  panel?: {
+    /** Category · status line, e.g. "PERSONAL OS · PROTOTYPE". */
+    meta: string;
+    /** One-line curiosity hook. */
+    hook: string;
+    /** One short paragraph. */
+    description: string;
+    /** CTA label (the arrow is appended by the component). */
+    cta?: string;
+  };
+  /** When true, the candy-bar card shows the full `oneLiner` verbatim rather
+   *  than a derived brief teaser (CSS still clamps the display to one line). */
+  keepFullSummary?: boolean;
   /** Small brand mark / sigil shown alongside the project name in the
    *  dossier, modal, and detail-page hero. Square asset; intrinsic
    *  dimensions used to lock aspect. */
@@ -313,7 +348,7 @@ export const WORK_SCREENS: WorkScreen[] = [
         "Applied emerging tech builds focused on clear workflows and useful interfaces. Case Brief and Atomic OS currently have active front-end implementations; Procurement and Open Claw are concept-stage.",
       filters: [
         "All",
-        "Agents",
+        "Personal OS",
         "NLP/Privacy",
         "Voice/Video",
         "Supply Chain Apps",
@@ -333,15 +368,19 @@ export const WORK_SCREENS: WorkScreen[] = [
           id: "atomicos",
           name: "AtomicOS",
           status: "Front-end Build",
-          category: "Agents",
+          category: "Personal OS",
           oneLiner:
-            "A personal operating system for focus, routines, and daily accountability.",
+            "An operating system built for better habits, better days, and an extraordinary life.",
           bullets: [
             "Daily check-ins capture energy, focus, and execution signals",
             "One dashboard for routines, priorities, and operating patterns",
             "Foundation for an AI coaching layer over time",
           ],
-          tags: ["Personal OS", "Behavior Design", "Pattern Tracking"],
+          tags: [
+            "Natural-Language Tracking",
+            "Behavior Analytics",
+            "Privacy-First Design",
+          ],
           screenshot: "/assets/atomicos-demo/atomicos-overview.webp",
           systemSnapshot: [
             "Check-ins turn daily behavior into structured operating data",
@@ -351,8 +390,14 @@ export const WORK_SCREENS: WorkScreen[] = [
           completenessScore: 82,
           technicalScore: 89,
           recencyScore: 89,
-          previewUrl: "/atomicos-preview",
-          previewLabel: "View preview",
+          panel: {
+            meta: "Personal OS",
+            hook: "Stop tracking every habit. Start discovering which ones change everything.",
+            description:
+              "AtomicOS turns casual chat replies into structured habit data, then reveals which routines improve your focus, energy, and follow-through. No forms. No endless toggles. Just useful patterns from the life you are already living.",
+            cta: "Explore AtomicOS",
+          },
+          keepFullSummary: true,
           demo: ATOMICOS_DEMO,
           mark: {
             src: "/assets/atomicos-mark.webp",

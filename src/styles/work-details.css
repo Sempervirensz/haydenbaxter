@@ -733,6 +733,18 @@
   color: var(--etb-text);
 }
 
+/* Curiosity hook — leads the simplified preview panel.
+   Fallback keeps it dark when the card is portaled outside the .etb scope
+   (mobile overlay), where --etb-text is undefined. */
+.etb-dos__hook {
+  margin: 0;
+  font-size: clamp(14px, 1.5vw, 16px);
+  font-weight: 500;
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+  color: var(--etb-text, #111116);
+}
+
 /* One-liner */
 .etb-dos__oneLiner {
   margin: 0;
@@ -963,6 +975,11 @@
 
   .etb-mobileOverlay .etb-dos__title {
     font-size: 24px;
+    color: #111116;
+  }
+
+  .etb-mobileOverlay .etb-dos__hook {
+    font-size: 15px;
     color: #111116;
   }
 

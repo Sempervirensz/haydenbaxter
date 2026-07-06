@@ -2,48 +2,96 @@ import type { ETBDemoDetail } from "@/data/work";
 
 const A = "/assets/atomicos-demo";
 
-/** "View full details" content for AtomicOS — built from the "Check On Me
- *  Every Hour" app. */
+/** "View full details" content for AtomicOS, a behavior-intelligence system
+ *  that turns natural-language chat check-ins into structured habit data
+ *  and surfaces which routines appear to drive better days. */
 export const ATOMICOS_DEMO: ETBDemoDetail = {
-  summary:
-    "“Check On Me Every Hour” is the check-in engine behind AtomicOS — a personal operating system that turns daily intentions into a measurable system. It tracks habits and streaks, when things actually get done, calories and weight, journaling, and the interaction effects between behaviors, all surfaced through a clean analytics dashboard and an automated bot that checks in throughout the day and parses natural-language replies into structured data.",
+  heroCategory: "Behavior Intelligence",
+  story: [
+    "I kept quitting habit trackers for the same reason most people do: logging eventually became more work than the habit itself.",
+    "So I built the opposite.",
+    "AtomicOS checks in through a chat bot throughout the day. I reply in plain English, something as simple as “morning walk done, felt like an eight,” and the system identifies the habit, timing, energy level, and other useful details automatically.",
+    "The dashboard then goes beyond streaks and completion counts. It looks for relationships between behaviors to reveal which routines appear to improve focus, energy, and follow-through.",
+  ],
+  principle:
+    "Remove friction where the person has to act, and put intelligence where it earns its keep.",
   stats: [
     {
-      value: "88%",
-      label: "Response rate",
-      detail: "Automated check-ins answered, sample data",
-      icon: "pulse",
-    },
-    {
-      value: "+22pp",
-      label: "Deep work lift",
-      detail: "Day after a Sleep Wind-Down",
-      icon: "trend-up",
-    },
-    {
       value: "60d",
-      label: "Tracking window",
-      detail: "Habits, streaks, and interactions at a glance",
+      label: "Demo history",
+      detail:
+        "Deterministic behavioral data designed to demonstrate long-term patterns safely.",
       icon: "calendar",
     },
     {
       value: "22",
-      label: "Habits tracked",
-      detail: "Behaviors turned into structured signals",
+      label: "Behaviors modeled",
+      detail:
+        "Habits, routines, health signals, work patterns, and daily actions.",
       icon: "checklist",
     },
+    {
+      value: "4",
+      label: "Daily loops",
+      detail:
+        "Morning, work, evening, and night routines analyzed as connected systems.",
+      icon: "spark",
+    },
+    {
+      value: "2",
+      label: "Input modes",
+      detail: "Natural-language check-ins and meal-photo analysis.",
+      icon: "bot",
+    },
   ],
+  // Screenshots are ordered to tell one story:
+  //   natural conversation -> structured data -> behavioral insights.
+  // TODO(screenshot): a dedicated "interaction effects" capture belongs
+  // between "Loop drivers" and the activity heatmap (relationships between
+  // behaviors, e.g. deep work after a wind-down). Add the asset + a slide
+  // here when it exists rather than inserting a broken image.
   screenshots: [
+    {
+      src: `${A}/atomicos-checkin-thread.webp`,
+      alt: "Phone mock of the AtomicOS chat check-in thread with tap-to-track inline buttons.",
+      caption:
+        "A conversational interface replaces the traditional habit-tracking form.",
+      width: 880,
+      height: 3206,
+      variant: "phone",
+    },
     {
       src: `${A}/atomicos-overview.webp`,
       alt: "AtomicOS dashboard overview showing today's habits, energy, sleep, last check-in, and last meal.",
       caption:
-        "Daily dashboard — today's habits, energy, sleep, last check-in, and last meal at a glance.",
+        "One operating view turns scattered daily behavior into structured signals.",
       width: 2912,
       height: 1470,
       mobileSrc: `${A}/atomicos-overview-mobile.webp`,
       mobileWidth: 750,
       mobileHeight: 3640,
+    },
+    {
+      src: `${A}/atomicos-loop-drivers.webp`,
+      alt: "Loop drivers chart showing which habits make each daily routine more or less likely to close.",
+      caption:
+        "AtomicOS identifies which habits appear to strengthen each part of the day.",
+      width: 2912,
+      height: 1520,
+      mobileSrc: `${A}/atomicos-loop-drivers-mobile.webp`,
+      mobileWidth: 750,
+      mobileHeight: 2916,
+    },
+    {
+      src: `${A}/atomicos-heatmap.webp`,
+      alt: "Activity heatmap of habit completions across hours and weekdays, with peak hour and peak day.",
+      caption:
+        "Timing patterns reveal when habits happen, not just whether they happened.",
+      width: 2912,
+      height: 850,
+      mobileSrc: `${A}/atomicos-heatmap-mobile.webp`,
+      mobileWidth: 750,
+      mobileHeight: 1478,
     },
     {
       src: `${A}/atomicos-habits.png`,
@@ -56,61 +104,93 @@ export const ATOMICOS_DEMO: ETBDemoDetail = {
       mobileHeight: 1456,
     },
     {
-      src: `${A}/atomicos-heatmap.webp`,
-      alt: "Activity heatmap of habit completions across hours and weekdays, with peak hour and peak day.",
-      caption:
-        "Activity heatmap — when habits and routines actually get done across hours and weekdays.",
-      width: 2912,
-      height: 850,
-      mobileSrc: `${A}/atomicos-heatmap-mobile.webp`,
-      mobileWidth: 750,
-      mobileHeight: 1478,
-    },
-    {
-      src: `${A}/atomicos-loop-drivers.webp`,
-      alt: "Loop drivers chart showing which habits make each daily routine more or less likely to close.",
-      caption:
-        "Loop drivers — which habits make each routine more or less likely to close.",
-      width: 2912,
-      height: 1520,
-      mobileSrc: `${A}/atomicos-loop-drivers-mobile.webp`,
-      mobileWidth: 750,
-      mobileHeight: 2916,
-    },
-    {
       src: `${A}/atomicos-checkins.webp`,
-      alt: "Check-in analytics showing response rate, average latency, and a log of recent replies.",
-      caption: "Check-in analytics — response rate, latency, and a log of recent replies.",
+      alt: "Check-in analytics from the demo dataset showing response rate, average latency, and a log of recent replies.",
+      caption:
+        "Check-in analytics from the sample dataset: response rate, latency, and a log of recent replies.",
       width: 2912,
       height: 1930,
       mobileSrc: `${A}/atomicos-checkins-mobile.webp`,
       mobileWidth: 750,
       mobileHeight: 2446,
     },
+  ],
+  howItWorks: [
     {
-      src: `${A}/atomicos-checkin-thread.webp`,
-      alt: "Phone mock of the AtomicOS Telegram check-in thread with tap-to-track inline buttons.",
-      caption:
-        "The “Check On Me Every Hour” thread — automated Telegram check-ins with tap-to-track replies.",
-      width: 880,
-      height: 3206,
-      variant: "phone",
+      title: "It checks in naturally",
+      body: "A chat bot sends prompts throughout the day based on routines, priorities, and scheduled behaviors. There is no separate tracking form to maintain.",
+    },
+    {
+      title: "You reply like a person",
+      body: "Replies can be casual. AtomicOS converts natural language into structured information such as the completed habit, timestamp, category, and relevant context.",
+    },
+    {
+      title: "It stores the useful signal",
+      body: "Simple replies such as “done,” “yes,” or “took it” are handled locally. More ambiguous responses are sent to an AI model for interpretation.",
+    },
+    {
+      title: "It reveals the patterns",
+      body: "The dashboard displays habits, streaks, timing, daily loops, and interaction effects between behaviors. Instead of only showing what happened, AtomicOS looks for what may have helped the good days happen.",
     },
   ],
+  differentiators: [
+    {
+      title: "Reply-to-track",
+      body: "Users text naturally instead of filling out forms or maintaining another checklist.",
+    },
+    {
+      title: "Loop drivers",
+      body: "AtomicOS organizes behavior into four daily loops (morning, work, evening, and night) and identifies which habits appear to strengthen each loop.",
+    },
+    {
+      title: "Interaction effects",
+      body: "The system surfaces relationships between behaviors, such as whether deep work appears more consistently after completing a wind-down routine the previous night.",
+    },
+    {
+      title: "Meal-photo analysis",
+      body: "Users can send a photograph of a meal and receive an estimated calorie and protein range, which is added to the daily record.",
+    },
+    {
+      title: "Human-centered streak protection",
+      body: "A missed day does not automatically erase months of momentum. Freeze logic protects long-running streaks and reflects how people actually behave.",
+    },
+  ],
+  differentiatorsNote:
+    "These are directional associations surfaced from the data, not proven causal claims.",
+  techSections: [
+    {
+      title: "Front end",
+      body: "AtomicOS uses Next.js 15 and React 19 for the dashboard experience. Tailwind CSS supports the interface system, while Recharts renders behavioral analytics and time-based visualizations.",
+    },
+    {
+      title: "Data layer",
+      body: "Supabase and PostgreSQL store habits, check-ins, meal records, weight, journal entries, and related behavioral data. Supabase Edge Functions support server-side automation and the chat check-in workflow.",
+    },
+    {
+      title: "AI and automation",
+      body: "A chat bot delivers scheduled prompts and converts natural-language replies into structured behavioral data. Common responses are processed through lightweight local parsing first. Only ambiguous messages are sent to the AI model, reducing unnecessary latency and API cost.",
+    },
+    {
+      title: "Privacy and demo safety",
+      body: "The public experience defaults to deterministic synthetic data. Private database fields are transformed into generic display structures before reaching the browser, reducing the risk of exposing personal labels or sensitive records.",
+    },
+  ],
+  // techSections above is the rendered technical breakdown; techBreakdown is
+  // kept as a plain-text fallback / summary for any consumer that expects it.
   techBreakdown: [
-    "Next.js 15 and React 19 dashboard, styled with Tailwind; analytics views render with Recharts.",
-    "Supabase (Postgres) backs habits, check-ins, meals, weight, and journal entries; Edge Functions run the server-side check-in bot.",
-    "A Telegram bot delivers timed check-ins and parses natural-language replies into structured habit, finance, and health data.",
-    "A synthetic-data mode generates all sample content client-side, so the publicly shareable build never touches a real database.",
+    "Front end: Next.js 15 and React 19 dashboard styled with Tailwind; analytics render with Recharts.",
+    "Data layer: Supabase (Postgres) stores habits, check-ins, meals, weight, and journal entries; Edge Functions run the server-side workflow.",
+    "AI and automation: a chat bot parses natural-language replies, with lightweight local parsing first and the AI model reserved for ambiguous messages.",
+    "Privacy and demo safety: deterministic synthetic data by default, with private fields transformed into generic display structures before reaching the browser.",
   ],
   outcomes: [
-    "A single operating view that turns scattered daily behavior into structured, trackable signals.",
-    "Interaction-effect insights surface non-obvious patterns — e.g., in the sample data, Deep Work runs ~22% higher the day after a Sleep Wind-Down.",
-    "Low-friction logging: check-ins reach an 88% response rate in the sample data, with most entries captured in a few taps.",
+    "Built an end-to-end behavioral system connecting conversational input, scheduled automation, structured storage, analytics, and visual reporting.",
+    "Demonstrated how natural-language interaction can reduce the friction that causes people to abandon traditional tracking tools.",
+    "Created a privacy-safe, portfolio-ready demo that communicates the product experience without exposing personal health, journal, or financial data.",
   ],
   lessonsLearned: [
-    "Defaulting to synthetic data unless real credentials are explicitly provided makes the build safe to share publicly by design.",
-    "Natural-language check-ins lower the friction of logging far more than forms; parsing reliability is the hard part.",
-    "Surfacing interaction effects is where the data gets genuinely useful — raw streaks alone don't change behavior.",
+    "The best tracking interface may not look like tracking at all. A casual reply is easier to sustain than opening another application and completing a form.",
+    "AI should handle ambiguity, not every interaction. Local parsing improved speed, reliability, and cost while preserving AI for the responses that genuinely required interpretation.",
+    "Streaks tell you what happened; relationships help explain why. AtomicOS became more valuable when it moved beyond counting habits and started examining how behaviors influence one another.",
   ],
 };

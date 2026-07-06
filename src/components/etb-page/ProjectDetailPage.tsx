@@ -11,6 +11,8 @@ interface Props {
  *  it renders a real showcase (screenshots + write-up); otherwise it falls
  *  back to quiet placeholder sections that read as deliberate. */
 export default function ProjectDetailPage({ project }: Props) {
+  const heroCategory = project.demo?.heroCategory ?? project.category;
+
   return (
     <main className="etb-page">
       <Link href="/emerging-tech-builds" className="etb-page__back">
@@ -29,7 +31,7 @@ export default function ProjectDetailPage({ project }: Props) {
             height={project.mark.height}
           />
         ) : null}
-        <span className="etb-page__category">{project.category}</span>
+        <span className="etb-page__category">{heroCategory}</span>
         <h1 className="etb-page__title">{project.name}</h1>
         <p className="etb-page__oneLiner">{project.oneLiner}</p>
         <div className="etb-page__tags">
@@ -67,27 +69,30 @@ function DemoShowcase({ demo }: { demo: ETBDemoDetail }) {
         </aside>
       ) : null}
 
-      {demo.summary ? (
+      {/* Opening project story */}
+      {demo.story && demo.story.length > 0 ? (
+        <div className="etb-page__story">
+          {demo.story.map((para, i) => (
+            <p key={i} className="etb-page__storyPara">{para}</p>
+          ))}
+        </div>
+      ) : demo.summary ? (
         <p className="etb-page__lede">{demo.summary}</p>
       ) : null}
 
+      {demo.principle ? (
+        <blockquote className="etb-page__principle">
+          {demo.principle}
+        </blockquote>
+      ) : null}
+
+      {/* Metric cards */}
       {demo.stats && demo.stats.length > 0 ? (
         <DemoStats stats={demo.stats} />
       ) : null}
 
-      {demo.liveUrl ? (
-        <a
-          className="etb-page__cta"
-          href={demo.liveUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <span>{demo.liveLabel ?? "Open"}</span>
-          <span aria-hidden="true">&rarr;</span>
-        </a>
-      ) : null}
-
       <div className="etb-page__acc">
+        {/* Screenshots — ordered to tell one story */}
         {demo.screenshots.length > 0 ? (
           <details className="etb-page__accItem" open>
             <summary className="etb-page__accHead">Screenshots</summary>
@@ -97,9 +102,76 @@ function DemoShowcase({ demo }: { demo: ETBDemoDetail }) {
           </details>
         ) : null}
 
-        <AccordionList title="Technical breakdown" items={demo.techBreakdown} />
+        {/* How AtomicOS works */}
+        {demo.howItWorks && demo.howItWorks.length > 0 ? (
+          <details className="etb-page__accItem" open>
+            <summary className="etb-page__accHead">How AtomicOS works</summary>
+            <div className="etb-page__accBody">
+              <ol className="etb-page__steps">
+                {demo.howItWorks.map((step, i) => (
+                  <li key={step.title} className="etb-page__step">
+                    <span className="etb-page__stepNum" aria-hidden="true">
+                      {i + 1}
+                    </span>
+                    <div className="etb-page__stepText">
+                      <h3 className="etb-page__stepTitle">{step.title}</h3>
+                      <p className="etb-page__stepBody">{step.body}</p>
+                    </div>
+                  </li>
+                ))}
+              </ol>
+            </div>
+          </details>
+        ) : null}
+
+        {/* What makes it different */}
+        {demo.differentiators && demo.differentiators.length > 0 ? (
+          <details className="etb-page__accItem" open>
+            <summary className="etb-page__accHead">
+              What makes it different
+            </summary>
+            <div className="etb-page__accBody">
+              <ul className="etb-page__diffs">
+                {demo.differentiators.map((item) => (
+                  <li key={item.title} className="etb-page__diff">
+                    <h3 className="etb-page__diffTitle">{item.title}</h3>
+                    <p className="etb-page__diffBody">{item.body}</p>
+                  </li>
+                ))}
+              </ul>
+              {demo.differentiatorsNote ? (
+                <p className="etb-page__diffNote">{demo.differentiatorsNote}</p>
+              ) : null}
+            </div>
+          </details>
+        ) : null}
+
+        {/* Technical breakdown */}
+        {demo.techSections && demo.techSections.length > 0 ? (
+          <details className="etb-page__accItem">
+            <summary className="etb-page__accHead">Technical breakdown</summary>
+            <div className="etb-page__accBody">
+              <div className="etb-page__techGroups">
+                {demo.techSections.map((sec) => (
+                  <div key={sec.title} className="etb-page__techGroup">
+                    <h3 className="etb-page__techTitle">{sec.title}</h3>
+                    <p className="etb-page__techBody">{sec.body}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </details>
+        ) : (
+          <AccordionList title="Technical breakdown" items={demo.techBreakdown} />
+        )}
+
         <AccordionList title="Outcomes" items={demo.outcomes} />
         <AccordionList title="Lessons learned" items={demo.lessonsLearned} />
+
+        {/* Honest limitations */}
+        {demo.limitations && demo.limitations.length > 0 ? (
+          <AccordionList title="Honest limitations" items={demo.limitations} />
+        ) : null}
       </div>
     </>
   );

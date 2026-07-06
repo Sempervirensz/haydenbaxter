@@ -1953,6 +1953,157 @@ html.is-safari body {
   padding: 4px clamp(16px, 2.4vw, 20px) clamp(18px, 2.6vw, 22px);
 }
 
+/* ---- Opening project story ---- */
+.etb-page__story {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  max-width: 62ch;
+}
+.etb-page__storyPara {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: clamp(15px, 1.5vw, 17px);
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.76);
+}
+
+/* ---- Emphasized product principle ---- */
+.etb-page__principle {
+  margin: 0;
+  max-width: 60ch;
+  padding: clamp(16px, 2.4vw, 22px) clamp(18px, 2.8vw, 26px);
+  border-left: 3px solid rgba(104, 130, 216, 0.85);
+  border-radius: 4px 14px 14px 4px;
+  background: rgba(104, 130, 216, 0.09);
+  font-family: var(--font-serif);
+  font-size: clamp(17px, 2vw, 22px);
+  font-style: italic;
+  line-height: 1.45;
+  letter-spacing: -0.01em;
+  color: rgba(232, 238, 255, 0.94);
+}
+
+/* ---- How it works — numbered steps ---- */
+.etb-page__steps {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.etb-page__step {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+}
+.etb-page__stepNum {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  border: 1px solid rgba(104, 130, 216, 0.4);
+  background: rgba(104, 130, 216, 0.12);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  color: rgba(196, 208, 244, 0.96);
+}
+.etb-page__stepText {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.etb-page__stepTitle {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.9);
+}
+.etb-page__stepBody {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+/* ---- What makes it different ---- */
+.etb-page__diffs {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.etb-page__diff {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-left: 14px;
+  border-left: 2px solid rgba(104, 130, 216, 0.32);
+}
+.etb-page__diffTitle {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(186, 200, 240, 0.95);
+}
+.etb-page__diffBody {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.72);
+}
+.etb-page__diffNote {
+  margin: 4px 0 0;
+  font-family: var(--font-sans);
+  font-size: 12.5px;
+  font-style: italic;
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* ---- Technical breakdown — titled subsections ---- */
+.etb-page__techGroups {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.etb-page__techGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.etb-page__techTitle {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(186, 200, 240, 0.95);
+}
+.etb-page__techBody {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.72);
+}
+
 .etb-page__demoFootnote {
   margin: 0;
   font-family: var(--font-mono);

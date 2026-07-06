@@ -15,16 +15,17 @@ const ETB_DETAIL_ROUTES: Record<string, string> = {
   cortex: "/emerging-tech-builds/cortex",
 };
 
-function ProjectCTA({ project }: { project: ETBProject }) {
+function ProjectCTA({ project, label }: { project: ETBProject; label?: string }) {
   const route = ETB_DETAIL_ROUTES[project.id];
+  const text = label ?? "View Full Detail";
   if (route) {
     return (
       <Link
         href={route}
         className="etb-dos__cta"
-        aria-label={`View full detail for ${project.name}`}
+        aria-label={`${text} for ${project.name}`}
       >
-        View Full Detail &rarr;
+        {text} &rarr;
       </Link>
     );
   }
@@ -37,6 +38,84 @@ function ProjectCTA({ project }: { project: ETBProject }) {
     >
       Coming Soon
     </button>
+  );
+}
+
+/** Off-white dossier card shared by the desktop overlay and the mobile
+ *  full-push panel, so the two never diverge. When `project.panel` is set the
+ *  card renders a curiosity-first preview (meta · title · hook · one paragraph ·
+ *  tags · CTA); otherwise it keeps the capability-bullets + System Notes
+ *  layout used by the other projects. */
+function DossierCard({ project }: { project: ETBProject }) {
+  const panel = project.panel;
+  return (
+    <div className="etb-dos__card">
+      {project.mark ? (
+        /* eslint-disable-next-line @next/next/no-img-element */
+        <img
+          className="etb-dos__mark"
+          src={project.mark.src}
+          alt={project.mark.alt}
+          width={project.mark.width}
+          height={project.mark.height}
+          aria-hidden="true"
+        />
+      ) : null}
+
+      {/* Metadata strip */}
+      <div className="etb-dos__meta">
+        {panel ? (
+          <span className="etb-dos__category">{panel.meta}</span>
+        ) : (
+          <>
+            <span className={`etb-dos__status etb-dos__status--${toSlug(project.status)}`}>
+              {project.status}
+            </span>
+            <span className="etb-dos__category">{project.category}</span>
+          </>
+        )}
+      </div>
+
+      {/* Title */}
+      <h3 className="etb-dos__title">{project.name}</h3>
+
+      {panel ? (
+        <>
+          <p className="etb-dos__hook">{panel.hook}</p>
+          <p className="etb-dos__oneLiner">{panel.description}</p>
+          <div className="etb-dos__tags">
+            {project.tags.map((tag) => (
+              <span key={tag} className="etb-dos__tag">{tag}</span>
+            ))}
+          </div>
+          <ProjectCTA project={project} label={panel.cta} />
+        </>
+      ) : (
+        <>
+          <p className="etb-dos__oneLiner">{project.oneLiner}</p>
+          <hr className="etb-dos__rule" />
+          <ul className="etb-dos__bullets">
+            {project.bullets.slice(0, 3).map((line) => (
+              <li key={line}>{line}</li>
+            ))}
+          </ul>
+          <div className="etb-dos__tags">
+            {project.tags.map((tag) => (
+              <span key={tag} className="etb-dos__tag">{tag}</span>
+            ))}
+          </div>
+          <div className="etb-dos__notes">
+            <span className="etb-dos__notesLabel">System Notes</span>
+            <ul className="etb-dos__notesList">
+              {getSystemSnapshot(project).slice(0, 3).map((line) => (
+                <li key={line}>{line}</li>
+              ))}
+            </ul>
+          </div>
+          <ProjectCTA project={project} />
+        </>
+      )}
+    </div>
   );
 }
 
@@ -327,8 +406,10 @@ export default function ETBDetail({ data }: ETBDetailProps) {
                 <span className="etb-bar__sheen" aria-hidden="true" />
                 <div className="etb-bar__content">
                   <span className="etb-bar__name">{project.name}</span>
-                  <span className="etb-bar__summary">
-                    {getBriefSummary(project) || project.oneLiner}
+                  <span className="etb-bar__summary" title={project.oneLiner}>
+                    {project.keepFullSummary
+                      ? project.oneLiner
+                      : getBriefSummary(project) || project.oneLiner}
                   </span>
                 </div>
                 <span className="etb-bar__chevron" aria-hidden="true">
@@ -360,63 +441,7 @@ export default function ETBDetail({ data }: ETBDetailProps) {
               </div>
 
               {/* Off-white dossier card */}
-              <div className="etb-dos__card">
-                {selectedProject.mark ? (
-                  /* eslint-disable-next-line @next/next/no-img-element */
-                  <img
-                    className="etb-dos__mark"
-                    src={selectedProject.mark.src}
-                    alt={selectedProject.mark.alt}
-                    width={selectedProject.mark.width}
-                    height={selectedProject.mark.height}
-                    aria-hidden="true"
-                  />
-                ) : null}
-
-                {/* Metadata strip */}
-                <div className="etb-dos__meta">
-                  <span className={`etb-dos__status etb-dos__status--${toSlug(selectedProject.status)}`}>
-                    {selectedProject.status}
-                  </span>
-                  <span className="etb-dos__category">{selectedProject.category}</span>
-                </div>
-
-                {/* Title */}
-                <h3 className="etb-dos__title">{selectedProject.name}</h3>
-
-                {/* One-liner */}
-                <p className="etb-dos__oneLiner">{selectedProject.oneLiner}</p>
-
-                {/* Divider */}
-                <hr className="etb-dos__rule" />
-
-                {/* Capability bullets */}
-                <ul className="etb-dos__bullets">
-                  {selectedProject.bullets.slice(0, 3).map((line) => (
-                    <li key={line}>{line}</li>
-                  ))}
-                </ul>
-
-                {/* Tags */}
-                <div className="etb-dos__tags">
-                  {selectedProject.tags.map((tag) => (
-                    <span key={tag} className="etb-dos__tag">{tag}</span>
-                  ))}
-                </div>
-
-                {/* System notes */}
-                <div className="etb-dos__notes">
-                  <span className="etb-dos__notesLabel">System Notes</span>
-                  <ul className="etb-dos__notesList">
-                    {getSystemSnapshot(selectedProject).slice(0, 3).map((line) => (
-                      <li key={line}>{line}</li>
-                    ))}
-                  </ul>
-                </div>
-
-                {/* CTA */}
-                <ProjectCTA project={selectedProject} />
-              </div>
+              <DossierCard project={selectedProject} />
             </div>
           ) : null}
         </aside>
@@ -519,53 +544,7 @@ export default function ETBDetail({ data }: ETBDetailProps) {
                   </button>
                 </div>
 
-                <div className="etb-dos__card">
-                  {selectedProject.mark ? (
-                    /* eslint-disable-next-line @next/next/no-img-element */
-                    <img
-                      className="etb-dos__mark"
-                      src={selectedProject.mark.src}
-                      alt={selectedProject.mark.alt}
-                      width={selectedProject.mark.width}
-                      height={selectedProject.mark.height}
-                      aria-hidden="true"
-                    />
-                  ) : null}
-
-                  <div className="etb-dos__meta">
-                    <span className={`etb-dos__status etb-dos__status--${toSlug(selectedProject.status)}`}>
-                      {selectedProject.status}
-                    </span>
-                    <span className="etb-dos__category">{selectedProject.category}</span>
-                  </div>
-
-                  <h3 className="etb-dos__title">{selectedProject.name}</h3>
-                  <p className="etb-dos__oneLiner">{selectedProject.oneLiner}</p>
-                  <hr className="etb-dos__rule" />
-
-                  <ul className="etb-dos__bullets">
-                    {selectedProject.bullets.slice(0, 3).map((line) => (
-                      <li key={line}>{line}</li>
-                    ))}
-                  </ul>
-
-                  <div className="etb-dos__tags">
-                    {selectedProject.tags.map((tag) => (
-                      <span key={tag} className="etb-dos__tag">{tag}</span>
-                    ))}
-                  </div>
-
-                  <div className="etb-dos__notes">
-                    <span className="etb-dos__notesLabel">System Notes</span>
-                    <ul className="etb-dos__notesList">
-                      {getSystemSnapshot(selectedProject).slice(0, 3).map((line) => (
-                        <li key={line}>{line}</li>
-                      ))}
-                    </ul>
-                  </div>
-
-                  <ProjectCTA project={selectedProject} />
-                </div>
+                <DossierCard project={selectedProject} />
               </div>
             </div>,
             portalTarget,
