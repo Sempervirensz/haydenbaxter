@@ -5,7 +5,7 @@ import { WORK_SCREENS } from "@/data/work";
 import { notFound } from "next/navigation";
 
 export const metadata: Metadata = {
-  title: "Emerging Tech Builds",
+  title: "AI & Emerging Tech Builds",
 };
 
 export default function EmergingTechBuildsPage() {

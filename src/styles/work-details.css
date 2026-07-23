@@ -255,7 +255,7 @@
   transform: translateX(3px);
 }
 
-/* Emerging Tech Builds */
+/* AI & Emerging Tech Builds */
 .etb {
   --etb-surface: #f2f0ec;
   --etb-surface-2: #faf9f6;
@@ -574,22 +574,15 @@
   height: 100%;
 }
 
+/* Close-only top bar. With the eyebrow removed the button anchors right and
+   the rule is dropped — the off-white card below is the panel's only edge, so
+   the header reads as quiet chrome instead of an empty labeled strip. */
 .etb-dos__topbar {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding: 12px 16px 10px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  justify-content: flex-end;
+  padding: 12px 16px 2px;
   flex-shrink: 0;
-}
-
-.etb-dos__eyebrow {
-  font-family: var(--font-mono);
-  font-size: 9px;
-  font-weight: 500;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.38);
 }
 
 .etb-dos__close {
@@ -664,11 +657,13 @@
   flex-shrink: 0;
 }
 
-/* Metadata strip */
+/* Metadata strip. Wraps to a second row on the narrowest panel (280px) rather
+   than breaking a two-word status like "Coming Soon" inside its pill. */
 .etb-dos__meta {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 8px;
+  gap: 6px 8px;
 }
 
 .etb-dos__status {
@@ -677,6 +672,7 @@
   font-weight: 500;
   letter-spacing: 0.1em;
   text-transform: uppercase;
+  white-space: nowrap;
   padding: 3px 8px;
   border-radius: 999px;
   border: 1px solid rgba(17, 17, 22, 0.1);
@@ -708,7 +704,7 @@
   background: rgba(37, 99, 235, 0.08);
 }
 
-.etb-dos__status--concept {
+.etb-dos__status--coming-soon {
   border-color: rgba(17, 17, 22, 0.18);
   color: rgba(17, 17, 22, 0.56);
   background: rgba(17, 17, 22, 0.04);
@@ -720,6 +716,7 @@
   font-weight: 400;
   letter-spacing: 0.12em;
   text-transform: uppercase;
+  white-space: nowrap;
   color: rgba(17, 17, 22, 0.42);
 }
 
@@ -1228,7 +1225,7 @@
   background: rgba(88, 110, 210, 0.08);
 }
 
-.etb-status--concept {
+.etb-status--coming-soon {
   border-color: rgba(17, 17, 22, 0.18);
   color: rgba(17, 17, 22, 0.56);
   background: rgba(17, 17, 22, 0.04);

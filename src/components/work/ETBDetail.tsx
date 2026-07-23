@@ -427,9 +427,8 @@ export default function ETBDetail({ data }: ETBDetailProps) {
         >
           {selectedProject ? (
             <div className="etb-dos">
-              {/* Top bar */}
+              {/* Top bar — close-only; the card below carries the identity. */}
               <div className="etb-dos__topbar">
-                <span className="etb-dos__eyebrow">Project File</span>
                 <button
                   className="etb-dos__close"
                   type="button"
@@ -533,7 +532,6 @@ export default function ETBDetail({ data }: ETBDetailProps) {
             >
               <div className="etb-dos">
                 <div className="etb-dos__topbar">
-                  <span className="etb-dos__eyebrow">Project File</span>
                   <button
                     className="etb-dos__close"
                     type="button"

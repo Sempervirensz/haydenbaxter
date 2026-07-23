@@ -1,0 +1,843 @@
+/* ─────────────────────────────────────────────────────────────────────────────
+   WORK DISPLAY LAB — Isolated stylesheet
+   Dark-only. Editorial. Detail-obsessed. The CD player owns the lower half
+   of the card; every concept lives in the top 40–46vh only.
+   ───────────────────────────────────────────────────────────────────────────── */
+
+:root {
+  /* Top text region — hard budget. Concepts never exceed this height. */
+  --wdl-top-cap: 42vh;
+  --wdl-side-pad: clamp(28px, 5vw, 64px);
+  --wdl-text-max: 880px;
+
+  /* Palette — bones of the site */
+  --wdl-ink:   #f3f3f3;
+  --wdl-ink-2: rgba(243, 243, 243, 0.62);
+  --wdl-ink-3: rgba(243, 243, 243, 0.32);
+  --wdl-ink-4: rgba(243, 243, 243, 0.18);
+  --wdl-ink-5: rgba(243, 243, 243, 0.08);
+  --wdl-accent: #cba86a; /* aged brass, barely-there */
+}
+
+/* ── Reset ─────────────────────────────────────────────────────────────────── */
+.wdl-shell *,
+.wdl-shell *::before,
+.wdl-shell *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+.wdl-shell {
+  position: relative;
+  background: #000;
+  min-height: 100vh;
+  color: var(--wdl-ink);
+}
+
+/* ── Lab badge ────────────────────────────────────────────────────────────── */
+.wdl-badge {
+  position: fixed;
+  top: 12px;
+  right: 12px;
+  z-index: 100;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.28);
+  padding: 6px 10px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 3px;
+  background: rgba(0, 0, 0, 0.7);
+  pointer-events: none;
+}
+
+/* ── Concept switcher ─────────────────────────────────────────────────────── */
+.wdl-switcher {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+  display: flex;
+  gap: 6px;
+}
+
+.wdl-switcher__btn {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.42);
+  padding: 9px 14px 8px;
+  border-radius: 3px;
+  background: #1c1c1c;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow:
+    inset 0 2px 4px rgba(0, 0, 0, 0.75),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.05),
+    0 3px 0 #0b0b0b,
+    0 4px 7px rgba(0, 0, 0, 0.85);
+  cursor: pointer;
+  transition: color 140ms ease, box-shadow 100ms ease;
+}
+
+.wdl-switcher__btn:hover { color: rgba(255, 255, 255, 0.8); }
+
+.wdl-switcher__btn.is-active {
+  color: #fff;
+  background: #262626;
+  border-color: rgba(255, 255, 255, 0.18);
+}
+
+.wdl-switcher__btn:active {
+  box-shadow:
+    inset 0 3px 6px rgba(0, 0, 0, 0.85),
+    0 0 0 #0b0b0b,
+    0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+/* ── Notes panel ──────────────────────────────────────────────────────────── */
+.wdl-notes {
+  position: fixed;
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%);
+  z-index: 90;
+  width: 128px;
+  padding: 14px 12px;
+  background: rgba(8, 8, 8, 0.88);
+  border-left: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 6px 0 0 6px;
+}
+
+.wdl-notes__concept {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.28);
+  margin-bottom: 4px;
+}
+
+.wdl-notes__name {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.72);
+  margin-bottom: 12px;
+  line-height: 1.4;
+}
+
+.wdl-notes__hr {
+  border: none;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  margin-bottom: 10px;
+}
+
+.wdl-notes__kv { display: flex; flex-direction: column; gap: 1px; margin-bottom: 8px; }
+.wdl-notes__kv span:first-child {
+  font-family: var(--font-mono);
+  font-size: 8px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.2);
+}
+.wdl-notes__kv span:last-child {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.55);
+  word-break: break-all;
+}
+
+/* ── Scroll container + sticky card ───────────────────────────────────────── */
+.wdl-work {
+  position: relative;
+  height: 500vh;
+  background: #000;
+}
+
+.wdl-screen {
+  position: sticky;
+  top: 6vh;
+  height: 88vh;
+  margin: 6px;
+  padding: clamp(36px, 5vh, 56px) var(--wdl-side-pad) 48px;
+  background: url("/usethisbackground.png") center / cover no-repeat;
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  border-radius: 14px;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.10),
+    inset 0 0 80px rgba(0, 0, 0, 0.3),
+    0 14px 48px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
+}
+
+/* All concepts inherit this frame: top-aligned, width-capped, never
+   encroach on the CD player's airspace. */
+.wdl-concept {
+  position: relative;
+  z-index: 4;
+  width: 100%;
+  max-width: var(--wdl-text-max);
+  margin: 0 auto;
+  max-height: var(--wdl-top-cap);
+}
+
+/* ── CD player — lower-center, untouched ──────────────────────────────────── */
+.wdl-player {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%) translateY(155px);
+  width: clamp(520px, 62%, 730px);
+  line-height: 0;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.wdl-player__fg { display: block; width: 100%; height: auto; position: relative; z-index: 1; }
+
+.wdl-disc-wrap {
+  position: absolute;
+  top: 70%;
+  left: 51%;
+  transform: translate(-50%, -50%);
+  width: 92%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.wdl-disc {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: url("/cd-disc-final.png") center / cover no-repeat;
+  transform: rotate(var(--lab-deg, 0deg));
+  will-change: transform;
+  animation: wdl-idle-rock 10s ease-in-out infinite;
+}
+
+@keyframes wdl-idle-rock {
+  0%, 100% { transform: rotate(var(--lab-deg)) rotate(0deg); }
+  25%      { transform: rotate(var(--lab-deg)) rotate(1.2deg); }
+  50%      { transform: rotate(var(--lab-deg)) rotate(0deg); }
+  75%      { transform: rotate(var(--lab-deg)) rotate(-1.2deg); }
+}
+
+/* ── CD label (marker) ────────────────────────────────────────────────────── */
+.wdl-cdlabel {
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 4;
+  font-family: var(--font-marker);
+  font-size: clamp(14px, 2vw, 22px);
+  color: rgba(255, 255, 255, 0.68);
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+/* ── Shared animations ────────────────────────────────────────────────────── */
+@keyframes wdl-fadein {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes wdl-riseIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ═════════════════════════════════════════════════════════════════════════════
+   CONCEPT A — Index Leaf
+   ══════════════════════════════════════════════════════════════════════════ */
+
+.wdl-concept--a {
+  display: grid;
+  grid-template-rows: auto 1px auto;
+  gap: 22px;
+  padding-top: 8px;
+}
+
+.wdl-a__masthead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.wdl-a__title {
+  font-family: var(--font-serif);
+  font-size: clamp(68px, 11vw, 148px);
+  font-weight: 400;
+  line-height: 0.88;
+  letter-spacing: -0.045em;
+  color: var(--wdl-ink);
+}
+
+/* tiny N° XX / 04 ticker on the right */
+.wdl-a__ticker {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--wdl-ink-3);
+  white-space: nowrap;
+  padding-bottom: 0.3em;
+}
+
+.wdl-a__tickerNum {
+  color: var(--wdl-accent);
+  display: inline-block;
+  animation: wdl-fadein 260ms ease both;
+}
+
+.wdl-a__rule {
+  height: 1px;
+  background: var(--wdl-ink-4);
+}
+
+.wdl-a__readout {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.wdl-a__name {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: clamp(22px, 2.8vw, 34px);
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: -0.01em;
+  color: var(--wdl-ink-2);
+  animation: wdl-fadein var(--readout-dur, 280ms) ease both;
+}
+
+.wdl-a__tag {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--wdl-ink-3);
+  animation: wdl-fadein 260ms ease both;
+  animation-delay: 40ms;
+}
+
+/* ═════════════════════════════════════════════════════════════════════════════
+   CONCEPT B — Numeral
+   ══════════════════════════════════════════════════════════════════════════ */
+
+.wdl-concept--b {
+  display: grid;
+  grid-template-rows: auto 1px;
+  gap: 20px;
+  padding-top: 2px;
+}
+
+.wdl-b__wrap {
+  display: flex;
+  align-items: flex-end;
+  gap: clamp(18px, 2.4vw, 32px);
+}
+
+.wdl-b__numCol {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.wdl-b__prefix {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--wdl-ink-3);
+  padding-top: 10px;
+}
+
+.wdl-b__bigNum {
+  font-family: var(--font-serif);
+  font-size: clamp(120px, 22vw, 280px);
+  font-weight: 300;
+  line-height: 0.82;
+  letter-spacing: -0.05em;
+  color: rgba(243, 243, 243, 0.15);
+  display: block;
+  animation: wdl-riseIn var(--readout-dur, 300ms) ease both;
+}
+
+.wdl-b__textCol {
+  display: flex;
+  flex-direction: column;
+  padding-bottom: clamp(16px, 2.4vw, 26px);
+  min-width: 0;
+}
+
+.wdl-b__name {
+  font-family: var(--font-serif);
+  font-size: clamp(30px, 4.4vw, 60px);
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: -0.025em;
+  color: var(--wdl-ink);
+  animation: wdl-fadein var(--readout-dur, 300ms) ease both;
+}
+
+.wdl-b__rule {
+  height: 1px;
+  background: var(--wdl-ink-4);
+}
+
+/* ═════════════════════════════════════════════════════════════════════════════
+   CONCEPT C — Contents
+   ══════════════════════════════════════════════════════════════════════════ */
+
+.wdl-concept--c {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-top: 6px;
+}
+
+.wdl-c__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--wdl-ink-4);
+}
+
+.wdl-c__eyebrow {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--wdl-ink-3);
+}
+
+.wdl-c__eyebrow--right {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 14px;
+  letter-spacing: 0.01em;
+  text-transform: none;
+  color: var(--wdl-ink-2);
+}
+
+.wdl-c__list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+}
+
+.wdl-c__item {
+  display: grid;
+  grid-template-columns: 14px 44px 1fr;
+  align-items: baseline;
+  gap: 14px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--wdl-ink-5);
+  opacity: var(--dim-opacity, 0.24);
+  transition:
+    opacity var(--list-dur, 300ms) ease,
+    color var(--list-dur, 300ms) ease;
+  position: relative;
+}
+
+.wdl-c__item.is-active {
+  opacity: 1;
+}
+
+.wdl-c__bullet {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--wdl-ink-4);
+  justify-self: center;
+  transition: background var(--list-dur, 300ms) ease, transform var(--list-dur, 300ms) ease;
+}
+
+.wdl-c__item.is-active .wdl-c__bullet {
+  background: var(--wdl-accent);
+  transform: scale(1.2);
+  box-shadow: 0 0 0 3px rgba(203, 168, 106, 0.12);
+}
+
+.wdl-c__num {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  color: var(--wdl-ink-3);
+}
+
+.wdl-c__item.is-active .wdl-c__num { color: var(--wdl-ink-2); }
+
+.wdl-c__name {
+  font-family: var(--font-serif);
+  font-size: clamp(18px, 2.4vw, 28px);
+  font-weight: 400;
+  letter-spacing: -0.015em;
+  color: var(--wdl-ink-2);
+  line-height: 1.1;
+}
+
+.wdl-c__item.is-active .wdl-c__name { color: var(--wdl-ink); }
+
+/* ═════════════════════════════════════════════════════════════════════════════
+   CONCEPT C2 — Contents (Hush)
+   No header. Just four rows. Active row brightens + slides 4px right.
+   ══════════════════════════════════════════════════════════════════════════ */
+
+.wdl-concept--c2 {
+  display: flex;
+  flex-direction: column;
+  padding-top: clamp(28px, 5vh, 56px);
+}
+
+.wdl-c2__list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+}
+
+.wdl-c2__item {
+  display: grid;
+  grid-template-columns: 56px 1fr;
+  align-items: baseline;
+  gap: 22px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--wdl-ink-5);
+  opacity: var(--dim-opacity, 0.22);
+  transform: translateX(0);
+  transition:
+    opacity var(--list-dur, 320ms) ease,
+    transform var(--list-dur, 320ms) cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.wdl-c2__item.is-active {
+  opacity: 1;
+  transform: translateX(4px);
+}
+
+.wdl-c2__num {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  color: var(--wdl-ink-3);
+  transition: color var(--list-dur, 320ms) ease;
+}
+
+.wdl-c2__item.is-active .wdl-c2__num {
+  color: var(--wdl-accent);
+}
+
+.wdl-c2__name {
+  font-family: var(--font-serif);
+  font-size: clamp(20px, 2.6vw, 30px);
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  color: var(--wdl-ink-2);
+  line-height: 1.05;
+  transition: color var(--list-dur, 320ms) ease;
+}
+
+.wdl-c2__item.is-active .wdl-c2__name {
+  color: var(--wdl-ink);
+}
+
+/* ═════════════════════════════════════════════════════════════════════════════
+   CONCEPT C3 — Contents (Inline)
+   Typography + one growing underline rule. No bullets, no columns, no borders.
+   ══════════════════════════════════════════════════════════════════════════ */
+
+.wdl-concept--c3 {
+  display: flex;
+  flex-direction: column;
+  padding-top: clamp(32px, 5.5vh, 60px);
+}
+
+.wdl-c3__list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.wdl-c3__item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 10px 0 8px;
+  opacity: var(--dim-opacity, 0.26);
+  transition: opacity var(--list-dur, 320ms) ease;
+}
+
+.wdl-c3__item.is-active {
+  opacity: 1;
+}
+
+.wdl-c3__row {
+  display: flex;
+  align-items: baseline;
+  gap: 18px;
+}
+
+.wdl-c3__num {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.26em;
+  color: var(--wdl-ink-3);
+  min-width: 36px;
+  transition: color var(--list-dur, 320ms) ease;
+}
+
+.wdl-c3__item.is-active .wdl-c3__num {
+  color: var(--wdl-accent);
+}
+
+.wdl-c3__name {
+  font-family: var(--font-serif);
+  font-size: clamp(20px, 2.7vw, 32px);
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  color: var(--wdl-ink-2);
+  line-height: 1;
+  transition: color var(--list-dur, 320ms) ease;
+}
+
+.wdl-c3__item.is-active .wdl-c3__name {
+  color: var(--wdl-ink);
+}
+
+/* Hairline below each row — thin, grows in brass on active */
+.wdl-c3__rule {
+  height: 1px;
+  width: 100%;
+  background: var(--wdl-ink-5);
+  position: relative;
+  overflow: hidden;
+}
+
+.wdl-c3__rule::after {
+  content: "";
+  position: absolute;
+  inset: 0 100% 0 0;
+  background: var(--wdl-accent);
+  transition: inset var(--list-dur, 320ms) cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.wdl-c3__item.is-active .wdl-c3__rule::after {
+  inset: 0 0 0 0;
+}
+
+/* ═════════════════════════════════════════════════════════════════════════════
+   CONCEPT D — Register
+   ══════════════════════════════════════════════════════════════════════════ */
+
+.wdl-concept--d {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding-top: 4px;
+}
+
+.wdl-d__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--wdl-ink-4);
+}
+
+.wdl-d__title {
+  font-family: var(--font-serif);
+  font-size: clamp(44px, 7.5vw, 88px);
+  font-weight: 400;
+  line-height: 0.9;
+  letter-spacing: -0.04em;
+  color: var(--wdl-ink);
+}
+
+.wdl-d__meta {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--wdl-ink-3);
+  align-self: flex-end;
+  padding-bottom: 10px;
+}
+
+.wdl-d__table { display: flex; flex-direction: column; }
+
+.wdl-d__colhead {
+  display: grid;
+  grid-template-columns: 44px 1fr 1.4fr;
+  gap: 18px;
+  padding: 6px 0 6px;
+}
+
+.wdl-d__colhead span {
+  font-family: var(--font-mono);
+  font-size: 8px;
+  font-weight: 500;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--wdl-ink-4);
+}
+
+.wdl-d__row {
+  display: grid;
+  grid-template-columns: 44px 1fr 1.4fr;
+  gap: 18px;
+  align-items: baseline;
+  padding: 9px 0;
+  border-top: 1px solid var(--wdl-ink-5);
+  opacity: var(--dim-opacity, 0.24);
+  transition: opacity var(--list-dur, 260ms) ease;
+}
+
+.wdl-d__row.is-active { opacity: 1; }
+
+.wdl-d__rowNum {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  color: var(--wdl-ink-3);
+}
+
+.wdl-d__row.is-active .wdl-d__rowNum { color: var(--wdl-accent); }
+
+.wdl-d__rowName {
+  font-family: var(--font-serif);
+  font-size: clamp(15px, 1.9vw, 22px);
+  font-weight: 400;
+  letter-spacing: -0.015em;
+  color: var(--wdl-ink-2);
+  line-height: 1.1;
+}
+
+.wdl-d__row.is-active .wdl-d__rowName { color: var(--wdl-ink); }
+
+.wdl-d__rowFocus {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: clamp(11px, 1.1vw, 13px);
+  color: var(--wdl-ink-3);
+  line-height: 1.4;
+}
+
+.wdl-d__row.is-active .wdl-d__rowFocus { color: var(--wdl-ink-2); }
+
+/* ═════════════════════════════════════════════════════════════════════════════
+   CONCEPT E — Broadside
+   ══════════════════════════════════════════════════════════════════════════ */
+
+.wdl-concept--e {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding-top: 2px;
+}
+
+.wdl-e__title {
+  font-family: var(--font-serif);
+  font-size: clamp(72px, 13vw, 176px);
+  font-weight: 400;
+  line-height: 0.86;
+  letter-spacing: -0.05em;
+  color: var(--wdl-ink);
+}
+
+.wdl-e__rule {
+  height: 1px;
+  background: var(--wdl-ink-4);
+  margin-top: 2px;
+}
+
+.wdl-e__bottom {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: baseline;
+  gap: 20px;
+}
+
+.wdl-e__kicker {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: clamp(12px, 1.15vw, 14px);
+  color: var(--wdl-ink-3);
+  white-space: nowrap;
+}
+
+.wdl-e__active {
+  font-family: var(--font-serif);
+  font-size: clamp(24px, 3.6vw, 44px);
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: -0.025em;
+  color: var(--wdl-ink);
+  animation: wdl-fadein var(--readout-dur, 320ms) ease both;
+}
+
+.wdl-e__num {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--wdl-ink-3);
+  animation: wdl-fadein 260ms ease both;
+  animation-delay: 40ms;
+}
+
+/* ── Reduced motion ───────────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .wdl-disc,
+  .wdl-a__tickerNum,
+  .wdl-a__name,
+  .wdl-a__tag,
+  .wdl-b__bigNum,
+  .wdl-b__name,
+  .wdl-c__item,
+  .wdl-c__bullet,
+  .wdl-c2__item,
+  .wdl-c2__num,
+  .wdl-c2__name,
+  .wdl-c3__item,
+  .wdl-c3__num,
+  .wdl-c3__name,
+  .wdl-c3__rule::after,
+  .wdl-d__row,
+  .wdl-e__active,
+  .wdl-e__num {
+    animation: none !important;
+    transition: none !important;
+  }
+}

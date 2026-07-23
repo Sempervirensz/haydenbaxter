@@ -1,0 +1,1045 @@
+/* =========================================================================
+   ETB Overlay Sandbox — scoped styles
+   Bars reuse .etb-bar / hover / sheen classes from work-details.css.
+   All sandbox-specific classes are prefixed .sbx- to avoid collisions.
+   ========================================================================= */
+
+/* ---- Page wrapper ---- */
+
+.sbx {
+  --etb-surface: #f2f0ec;
+  --etb-surface-2: #faf9f6;
+  --etb-text: #111116;
+  --etb-muted: rgba(17, 17, 22, 0.62);
+  --etb-dim: rgba(17, 17, 22, 0.38);
+  --etb-accent: #6882d8;
+  --sbx-cobalt: #2563eb;
+  --sbx-cobalt-deep: #1d4ed8;
+  --sbx-card-bg: #f5f4f1;
+  --sbx-card-border: rgba(17, 17, 22, 0.08);
+
+  min-height: 100vh;
+  background: #030304;
+  padding: clamp(24px, 4vw, 48px);
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* ---- Header ---- */
+
+.sbx-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.sbx-title {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.62);
+}
+
+/* ---- Iteration switcher (DYMO labels) ---- */
+
+.sbx-switcher {
+  display: flex;
+  gap: 8px;
+}
+
+.sbx-switcher__btn {
+  all: unset;
+  box-sizing: border-box;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 6px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  color: rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow:
+    inset 0 1px 2px rgba(0, 0, 0, 0.4),
+    inset 0 -1px 1px rgba(255, 255, 255, 0.03);
+  transform: rotate(-0.6deg);
+  transition:
+    background 180ms ease,
+    color 180ms ease,
+    border-color 180ms ease;
+}
+
+.sbx-switcher__btn:nth-child(2) { transform: rotate(0.4deg); }
+.sbx-switcher__btn:nth-child(3) { transform: rotate(-0.3deg); }
+
+.sbx-switcher__btn:hover {
+  color: rgba(255, 255, 255, 0.8);
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.14);
+}
+
+.sbx-switcher__btn:focus-visible {
+  outline: 2px solid rgba(37, 99, 235, 0.6);
+  outline-offset: 2px;
+}
+
+.sbx-switcher__btn.is-active {
+  color: #fff;
+  background: linear-gradient(180deg, var(--sbx-cobalt) 0%, var(--sbx-cobalt-deep) 100%);
+  border-color: rgba(37, 99, 235, 0.6);
+  box-shadow:
+    inset 0 1px 2px rgba(0, 0, 0, 0.2),
+    inset 0 -1px 1px rgba(255, 255, 255, 0.08),
+    0 2px 8px rgba(29, 78, 216, 0.25);
+}
+
+/* ---- Stage ---- */
+
+.sbx-stage {
+  position: relative;
+  flex: 1;
+  display: flex;
+  min-height: clamp(300px, 64vh, 540px);
+}
+
+/* ---- Bar stack ---- */
+
+.sbx-barStack {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  flex: 1;
+  min-height: 0;
+  transition: padding-right 300ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.sbx-stage.has-selection .sbx-barStack {
+  padding-right: clamp(300px, 36vw, 460px);
+}
+
+/* Bars: equal flex, no accordion */
+.sbx-barStack .etb-bar {
+  flex: 1 1 0;
+}
+
+/* Override production hover flex */
+.sbx-barStack.has-hover .etb-bar.is-hovered { flex: 1 1 0; }
+
+.sbx-barStack.has-hover .etb-bar:not(.is-hovered) {
+  flex: 1 1 0;
+  opacity: 0.78;
+  filter: saturate(0.9) brightness(0.98);
+}
+
+/* Active bar cobalt persist */
+.sbx-barStack .etb-bar.is-active {
+  background: linear-gradient(180deg, var(--sbx-cobalt) 0%, var(--sbx-cobalt-deep) 100%);
+  border-color: rgba(37, 99, 235, 0.6);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.2) inset,
+    0 -1px 0 rgba(0, 0, 0, 0.15) inset,
+    0 6px 24px rgba(29, 78, 216, 0.25),
+    0 2px 6px rgba(0, 0, 0, 0.4);
+}
+
+.sbx-barStack .etb-bar.is-active .etb-bar__name { color: #fff; }
+.sbx-barStack .etb-bar.is-active .etb-bar__summary { color: rgba(255, 255, 255, 0.65); }
+.sbx-barStack .etb-bar.is-active .etb-bar__chevron { color: rgba(255, 255, 255, 0.7); }
+
+.sbx-barStack.has-active .etb-bar:not(.is-active):not(.is-hovered) {
+  opacity: 0.72;
+  filter: saturate(0.9) brightness(0.98);
+}
+
+/* Bar head (sandbox-scoped to avoid .etb-bar__head `all:unset` issues) */
+.sbx-bar__head {
+  all: unset;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  height: 100%;
+  min-height: clamp(52px, 7vh, 72px);
+  padding: 0 clamp(16px, 2vw, 24px);
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+/* =========================================================================
+   DESKTOP OVERLAY — shared shell
+   ========================================================================= */
+
+.sbx-overlay {
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: clamp(280px, 35vw, 440px);
+  border-radius: 16px;
+  overflow: hidden;
+  overflow-y: auto;
+  z-index: 10;
+  transform: translateX(100%);
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    transform 300ms cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 240ms ease;
+}
+
+.sbx-overlay.is-open {
+  transform: translateX(0);
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* =========================================================================
+   ITERATION A — System Dossier
+   Dark outer shell + off-white inner dossier card
+   ========================================================================= */
+
+.sbx-overlay--dossier {
+  background: rgba(7, 8, 11, 0.97);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.45);
+}
+
+.sbx-dos {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+/* Top bar */
+.sbx-dos__topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  flex-shrink: 0;
+}
+
+.sbx-dos__eyebrow {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.38);
+}
+
+.sbx-dos__close {
+  all: unset;
+  box-sizing: border-box;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.52);
+  cursor: pointer;
+  padding: 4px 10px;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.03);
+  transition: color 160ms ease, border-color 160ms ease;
+}
+
+.sbx-dos__close:hover { color: rgba(255, 255, 255, 0.85); border-color: rgba(255, 255, 255, 0.2); }
+.sbx-dos__close:focus-visible { outline: 2px solid rgba(37, 99, 235, 0.6); outline-offset: 2px; }
+
+/* Off-white card */
+.sbx-dos__card {
+  margin: 12px;
+  padding: 20px 18px 18px;
+  border-radius: 12px;
+  background: var(--sbx-card-bg);
+  border: 1px solid var(--sbx-card-border);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex: 1;
+  overflow-y: auto;
+}
+
+/* Metadata strip */
+.sbx-dos__meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sbx-dos__status {
+  font-family: var(--font-mono);
+  font-size: 8px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: 999px;
+  border: 1px solid rgba(17, 17, 22, 0.1);
+  color: rgba(17, 17, 22, 0.55);
+  background: rgba(17, 17, 22, 0.03);
+}
+
+.sbx-dos__status--stealth {
+  border-color: rgba(37, 99, 235, 0.28);
+  color: rgba(37, 99, 235, 0.82);
+  background: rgba(37, 99, 235, 0.06);
+}
+
+.sbx-dos__status--prototype {
+  border-color: rgba(37, 99, 235, 0.22);
+  color: rgba(37, 99, 235, 0.7);
+  background: rgba(37, 99, 235, 0.04);
+}
+
+.sbx-dos__status--r-d {
+  border-color: rgba(37, 99, 235, 0.2);
+  color: rgba(37, 99, 235, 0.65);
+  background: rgba(37, 99, 235, 0.04);
+}
+
+.sbx-dos__category {
+  font-family: var(--font-mono);
+  font-size: 8px;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(17, 17, 22, 0.42);
+}
+
+/* Title — editorial serif */
+.sbx-dos__title {
+  margin: 0;
+  font-size: clamp(20px, 2.2vw, 26px);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  color: var(--etb-text);
+}
+
+/* One-liner */
+.sbx-dos__oneLiner {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.48;
+  color: var(--etb-muted);
+}
+
+/* Divider */
+.sbx-dos__rule {
+  border: none;
+  border-top: 1px solid rgba(17, 17, 22, 0.08);
+  margin: 2px 0;
+}
+
+/* Bullets */
+.sbx-dos__bullets {
+  margin: 0;
+  padding-left: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.sbx-dos__bullets li {
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--etb-muted);
+}
+
+/* Tags */
+.sbx-dos__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.sbx-dos__tag {
+  font-family: var(--font-mono);
+  font-size: 8px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 3px 7px 2px;
+  border-radius: 999px;
+  color: rgba(37, 99, 235, 0.72);
+  background: rgba(37, 99, 235, 0.06);
+  border: 1px solid rgba(37, 99, 235, 0.18);
+}
+
+/* System notes */
+.sbx-dos__notes {
+  border-radius: 10px;
+  background: rgba(17, 17, 22, 0.025);
+  border: 1px solid rgba(17, 17, 22, 0.06);
+  padding: 10px 12px;
+}
+
+.sbx-dos__notesLabel {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 8px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(17, 17, 22, 0.36);
+  margin-bottom: 6px;
+}
+
+.sbx-dos__notesList {
+  margin: 0;
+  padding-left: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.sbx-dos__notesList li {
+  font-size: 11px;
+  line-height: 1.38;
+  color: rgba(17, 17, 22, 0.52);
+}
+
+/* CTA */
+.sbx-dos__cta {
+  all: unset;
+  box-sizing: border-box;
+  align-self: flex-start;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 8px 18px 7px;
+  border-radius: 999px;
+  cursor: pointer;
+  color: var(--sbx-cobalt);
+  border: 1px solid rgba(37, 99, 235, 0.25);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.15) 14%, transparent 40%),
+    rgba(37, 99, 235, 0.05);
+  transition: border-color 180ms ease, transform 180ms ease;
+}
+
+.sbx-dos__cta:hover,
+.sbx-dos__cta:focus-visible {
+  border-color: rgba(37, 99, 235, 0.45);
+  transform: translateY(-1px);
+}
+
+.sbx-dos__cta:focus-visible {
+  outline: 2px solid rgba(37, 99, 235, 0.6);
+  outline-offset: 2px;
+}
+
+/* =========================================================================
+   ITERATION B — iPod Control Panel
+   Dark shell, navigable list modules, "Now Playing" framing, signal bar,
+   restrained chrome, tactile rhythm. Premium, not kitschy.
+   ========================================================================= */
+
+.sbx-overlay--ipod {
+  background: #08090c;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.5);
+}
+
+.sbx-ipod {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+/* Nav bar */
+.sbx-ipod__nav {
+  padding: 10px 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  flex-shrink: 0;
+}
+
+.sbx-ipod__back {
+  all: unset;
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(140, 170, 255, 0.85);
+  cursor: pointer;
+  padding: 4px 0;
+  transition: color 160ms ease;
+}
+
+.sbx-ipod__back:hover { color: #fff; }
+.sbx-ipod__back:focus-visible { outline: 2px solid rgba(37, 99, 235, 0.6); outline-offset: 2px; }
+
+.sbx-ipod__backChevron {
+  font-size: 16px;
+  line-height: 1;
+  font-weight: 300;
+}
+
+/* Hero strip — "Now Playing" framing */
+.sbx-ipod__hero {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px 16px 12px;
+}
+
+.sbx-ipod__heroText {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.sbx-ipod__title {
+  margin: 0;
+  font-size: clamp(20px, 2.2vw, 26px);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.sbx-ipod__subtitle {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.38);
+}
+
+.sbx-ipod__badge {
+  flex-shrink: 0;
+  font-family: var(--font-mono);
+  font-size: 8px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: 999px;
+  margin-top: 4px;
+}
+
+.sbx-ipod__badge--stealth {
+  color: rgba(140, 170, 255, 0.9);
+  background: rgba(37, 99, 235, 0.12);
+  border: 1px solid rgba(37, 99, 235, 0.25);
+}
+
+.sbx-ipod__badge--prototype {
+  color: rgba(140, 170, 255, 0.8);
+  background: rgba(37, 99, 235, 0.08);
+  border: 1px solid rgba(37, 99, 235, 0.2);
+}
+
+.sbx-ipod__badge--r-d {
+  color: rgba(140, 170, 255, 0.7);
+  background: rgba(37, 99, 235, 0.06);
+  border: 1px solid rgba(37, 99, 235, 0.18);
+}
+
+/* Signal bar — thin playback/progress-inspired accent */
+.sbx-ipod__signal {
+  height: 2px;
+  background: rgba(255, 255, 255, 0.06);
+  margin: 0 16px;
+  border-radius: 1px;
+  overflow: hidden;
+}
+
+.sbx-ipod__signalFill {
+  height: 100%;
+  width: 62%;
+  background: linear-gradient(90deg, var(--sbx-cobalt), rgba(37, 99, 235, 0.4));
+  border-radius: 1px;
+  transition: width 300ms ease;
+}
+
+/* Modules — navigable list sections */
+.sbx-ipod__modules {
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px 0;
+}
+
+.sbx-ipod__module {
+  padding: 10px 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.sbx-ipod__module:last-child {
+  border-bottom: none;
+}
+
+.sbx-ipod__moduleLabel {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 8px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.32);
+  margin-bottom: 8px;
+}
+
+.sbx-ipod__summary {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.82);
+}
+
+/* List items — clean rows */
+.sbx-ipod__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+}
+
+.sbx-ipod__listItem {
+  font-size: 12px;
+  line-height: 1.4;
+  color: rgba(255, 255, 255, 0.68);
+  padding: 6px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+.sbx-ipod__listItem:last-child { border-bottom: none; }
+
+.sbx-ipod__list--system .sbx-ipod__listItem {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.48);
+}
+
+/* Tags */
+.sbx-ipod__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.sbx-ipod__tag {
+  font-family: var(--font-mono);
+  font-size: 8px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 3px 7px 2px;
+  border-radius: 999px;
+  color: rgba(140, 170, 255, 0.8);
+  background: rgba(37, 99, 235, 0.08);
+  border: 1px solid rgba(37, 99, 235, 0.18);
+}
+
+/* Footer + CTA */
+.sbx-ipod__footer {
+  padding: 12px 16px 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.04);
+  flex-shrink: 0;
+}
+
+.sbx-ipod__cta {
+  all: unset;
+  box-sizing: border-box;
+  display: block;
+  width: 100%;
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 10px 18px 9px;
+  border-radius: 10px;
+  cursor: pointer;
+  color: #fff;
+  background: linear-gradient(180deg, var(--sbx-cobalt) 0%, var(--sbx-cobalt-deep) 100%);
+  border: 1px solid rgba(37, 99, 235, 0.5);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.12) inset,
+    0 2px 8px rgba(29, 78, 216, 0.3);
+  transition: transform 180ms ease, box-shadow 180ms ease;
+}
+
+.sbx-ipod__cta:hover {
+  transform: translateY(-1px);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.12) inset,
+    0 4px 14px rgba(29, 78, 216, 0.35);
+}
+
+.sbx-ipod__cta:focus-visible {
+  outline: 2px solid rgba(37, 99, 235, 0.6);
+  outline-offset: 2px;
+}
+
+/* =========================================================================
+   ITERATION C — Hybrid Experimental
+   Blends dossier + iPod. Dark chrome strip, cobalt accent bar,
+   off-white inner card with navigable section rows. Editorial type +
+   tactile list rhythm. Pushes the concept further.
+   ========================================================================= */
+
+.sbx-overlay--hybrid {
+  background: #0a0b0f;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.5);
+}
+
+.sbx-hyb {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+/* Chrome strip */
+.sbx-hyb__chrome {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  flex-shrink: 0;
+}
+
+.sbx-hyb__back {
+  all: unset;
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(140, 170, 255, 0.85);
+  cursor: pointer;
+  padding: 4px 0;
+  transition: color 160ms ease;
+}
+
+.sbx-hyb__back:hover { color: #fff; }
+.sbx-hyb__back:focus-visible { outline: 2px solid rgba(37, 99, 235, 0.6); outline-offset: 2px; }
+
+.sbx-hyb__chromeLabel {
+  font-family: var(--font-mono);
+  font-size: 8px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.25);
+}
+
+/* Cobalt accent bar */
+.sbx-hyb__accent {
+  height: 3px;
+  background: linear-gradient(90deg, var(--sbx-cobalt), rgba(37, 99, 235, 0.2));
+  margin: 0;
+  flex-shrink: 0;
+}
+
+/* Inner off-white card */
+.sbx-hyb__card {
+  margin: 12px;
+  padding: 18px 16px 16px;
+  border-radius: 12px;
+  background: var(--sbx-card-bg);
+  border: 1px solid var(--sbx-card-border);
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  flex: 1;
+  overflow-y: auto;
+}
+
+/* Header */
+.sbx-hyb__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.sbx-hyb__title {
+  margin: 0;
+  font-size: clamp(20px, 2.2vw, 26px);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  color: var(--etb-text);
+}
+
+.sbx-hyb__category {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(17, 17, 22, 0.42);
+  margin-top: 4px;
+  display: block;
+}
+
+.sbx-hyb__status {
+  flex-shrink: 0;
+  font-family: var(--font-mono);
+  font-size: 8px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: 999px;
+  margin-top: 4px;
+}
+
+.sbx-hyb__status--stealth {
+  color: rgba(37, 99, 235, 0.82);
+  background: rgba(37, 99, 235, 0.06);
+  border: 1px solid rgba(37, 99, 235, 0.22);
+}
+
+.sbx-hyb__status--prototype {
+  color: rgba(37, 99, 235, 0.7);
+  background: rgba(37, 99, 235, 0.04);
+  border: 1px solid rgba(37, 99, 235, 0.18);
+}
+
+.sbx-hyb__status--r-d {
+  color: rgba(37, 99, 235, 0.65);
+  background: rgba(37, 99, 235, 0.04);
+  border: 1px solid rgba(37, 99, 235, 0.16);
+}
+
+/* Summary */
+.sbx-hyb__summary {
+  margin: 0 0 12px;
+  font-size: 13px;
+  line-height: 1.48;
+  color: var(--etb-muted);
+}
+
+/* Sections — with dividers */
+.sbx-hyb__section {
+  padding: 10px 0;
+  border-top: 1px solid rgba(17, 17, 22, 0.06);
+}
+
+.sbx-hyb__section--system {
+  border-top-color: rgba(17, 17, 22, 0.05);
+}
+
+.sbx-hyb__sectionLabel {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 8px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(17, 17, 22, 0.36);
+  margin-bottom: 6px;
+}
+
+/* Rows — tactile list rhythm */
+.sbx-hyb__rows {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+}
+
+.sbx-hyb__row {
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--etb-muted);
+  padding: 5px 0;
+  border-bottom: 1px solid rgba(17, 17, 22, 0.04);
+}
+
+.sbx-hyb__row:last-child { border-bottom: none; }
+
+.sbx-hyb__rows--system .sbx-hyb__row {
+  font-size: 11px;
+  color: rgba(17, 17, 22, 0.46);
+}
+
+/* Tags */
+.sbx-hyb__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.sbx-hyb__tag {
+  font-family: var(--font-mono);
+  font-size: 8px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 3px 7px 2px;
+  border-radius: 999px;
+  color: rgba(37, 99, 235, 0.72);
+  background: rgba(37, 99, 235, 0.05);
+  border: 1px solid rgba(37, 99, 235, 0.16);
+}
+
+/* Footer + CTA */
+.sbx-hyb__footer {
+  padding: 10px 12px 14px;
+  flex-shrink: 0;
+}
+
+.sbx-hyb__cta {
+  all: unset;
+  box-sizing: border-box;
+  display: block;
+  width: 100%;
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 9px 18px 8px;
+  border-radius: 10px;
+  cursor: pointer;
+  color: var(--sbx-cobalt);
+  background:
+    linear-gradient(180deg, rgba(37, 99, 235, 0.08), transparent 50%),
+    rgba(37, 99, 235, 0.03);
+  border: 1px solid rgba(37, 99, 235, 0.22);
+  transition: border-color 180ms ease, transform 180ms ease;
+}
+
+.sbx-hyb__cta:hover {
+  border-color: rgba(37, 99, 235, 0.4);
+  transform: translateY(-1px);
+}
+
+.sbx-hyb__cta:focus-visible {
+  outline: 2px solid rgba(37, 99, 235, 0.6);
+  outline-offset: 2px;
+}
+
+/* =========================================================================
+   MOBILE — full-screen overlay for all iterations
+   ========================================================================= */
+
+.sbx-mobileOverlay {
+  display: none;
+}
+
+@media (max-width: 767px) {
+  /* Hide desktop inline overlay on mobile */
+  .sbx-overlay {
+    display: none;
+  }
+
+  /* Remove padding-right shift on mobile */
+  .sbx-stage.has-selection .sbx-barStack {
+    padding-right: 0;
+  }
+
+  /* Show mobile full-screen overlay */
+  .sbx-mobileOverlay {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 50;
+    overflow-y: auto;
+    animation: sbx-slideIn 300ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  /* Match iteration background on mobile */
+  .sbx-mobileOverlay:has(.sbx-dos) { background: rgba(7, 8, 11, 0.98); }
+  .sbx-mobileOverlay:has(.sbx-ipod) { background: #08090c; }
+  .sbx-mobileOverlay:has(.sbx-hyb) { background: #0a0b0f; }
+
+  @keyframes sbx-slideIn {
+    from { transform: translateX(100%); }
+    to { transform: translateX(0); }
+  }
+
+  /* Bigger touch targets on mobile */
+  .sbx-dos__close,
+  .sbx-ipod__back,
+  .sbx-hyb__back {
+    font-size: 12px;
+    padding: 8px 12px;
+  }
+
+  /* Dossier card takes full height on mobile */
+  .sbx-dos__card {
+    margin: 12px;
+    min-height: calc(100vh - 80px);
+  }
+
+  /* iPod modules get more padding */
+  .sbx-ipod__module { padding: 12px 20px; }
+  .sbx-ipod__footer { padding: 16px 20px 20px; }
+
+  /* Hybrid card full height */
+  .sbx-hyb__card { min-height: calc(100vh - 80px); }
+}
+
+/* ---- Debug tag ---- */
+
+.sbx-debugTag {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.28);
+  padding-top: 8px;
+}
+
+/* ---- Reduced motion ---- */
+
+@media (prefers-reduced-motion: reduce) {
+  .sbx-barStack .etb-bar,
+  .sbx-barStack,
+  .sbx-overlay,
+  .sbx-switcher__btn,
+  .sbx-dos__close,
+  .sbx-dos__cta,
+  .sbx-ipod__back,
+  .sbx-ipod__cta,
+  .sbx-hyb__back,
+  .sbx-hyb__cta {
+    transition: none;
+  }
+
+  .sbx-barStack .etb-bar__sheen {
+    display: none;
+  }
+
+  .sbx-mobileOverlay {
+    animation: none;
+  }
+}

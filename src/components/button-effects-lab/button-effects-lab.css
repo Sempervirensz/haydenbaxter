@@ -1,0 +1,691 @@
+/* Button Effects Lab — scoped .bel-* only; does not touch production .tag */
+
+.bel {
+  min-height: 100dvh;
+  background: #0a0a0a;
+  color: rgba(255, 255, 255, 0.88);
+  padding: clamp(20px, 4vw, 40px);
+  font-family: var(--font-sans);
+}
+
+.bel__header {
+  max-width: 1200px;
+  margin: 0 auto 24px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.bel__title {
+  font-family: var(--font-serif);
+  font-size: clamp(22px, 3.5vw, 40px);
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  color: rgba(255, 255, 255, 0.92);
+  margin: 0;
+}
+
+.bel__lead {
+  font-size: 14px;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.38);
+  max-width: 420px;
+  margin: 10px 0 0;
+}
+
+.bel__back {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.35);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  padding-bottom: 2px;
+  transition: color 160ms ease, border-color 160ms ease;
+}
+
+.bel__back:hover {
+  color: rgba(255, 255, 255, 0.75);
+  border-color: rgba(255, 255, 255, 0.28);
+}
+
+/* Preview first, controls column */
+.bel__main {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr minmax(280px, 360px);
+  gap: clamp(20px, 3vw, 36px);
+  align-items: start;
+}
+
+@media (max-width: 900px) {
+  .bel__main {
+    grid-template-columns: 1fr;
+  }
+}
+
+.bel__preview {
+  min-width: 0;
+}
+
+.bel__sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.bel__toolbar {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.bel__field-label {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.35);
+}
+
+.bel__toolbar-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  gap: 8px;
+}
+
+.bel__step {
+  flex: 0 0 40px;
+  font-size: 18px;
+  line-height: 1;
+  padding: 0;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(255, 255, 255, 0.65);
+  cursor: pointer;
+  transition: background 160ms ease, border-color 160ms ease, color 160ms ease;
+}
+
+.bel__step:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.bel__select--effect {
+  flex: 1 1 160px;
+  min-width: 0;
+  padding: 10px 12px;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  border-radius: 8px;
+}
+
+.bel__insight {
+  padding: 16px 18px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.bel__insight-kicker {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.32);
+  margin: 0 0 8px;
+}
+
+.bel__insight-title {
+  font-family: var(--font-serif);
+  font-size: 20px;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.92);
+  margin: 0 0 10px;
+  line-height: 1.2;
+}
+
+.bel__insight-body {
+  font-size: 14px;
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.48);
+  margin: 0;
+}
+
+.bel__insight-hint {
+  margin: 12px 0 0;
+  font-size: 12px;
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.35);
+  font-style: italic;
+}
+
+.bel__tuning {
+  padding: 14px 16px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(0, 0, 0, 0.35);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.bel__tuning-title {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.28);
+  margin: 0;
+}
+
+.bel__slider {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.bel__slider-top {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.bel__slider input[type="range"] {
+  width: 100%;
+  accent-color: rgba(255, 255, 255, 0.45);
+}
+
+.bel__select {
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 12px;
+}
+
+.bel__btn-replay {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.85);
+  cursor: pointer;
+  transition: background 160ms ease, border-color 160ms ease;
+}
+
+.bel__btn-replay:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.22);
+}
+
+.bel__rm-banner {
+  font-size: 11px;
+  color: rgba(255, 200, 120, 0.75);
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 200, 120, 0.2);
+  background: rgba(255, 200, 120, 0.06);
+}
+
+/* ---- Stage ---- */
+.bel__stage-wrap {
+  position: relative;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  background:
+    radial-gradient(ellipse 90% 60% at 50% -20%, rgba(120, 120, 255, 0.07), transparent 50%),
+    radial-gradient(120% 80% at 50% 0%, rgba(255, 255, 255, 0.05), transparent 55%),
+    #060606;
+  min-height: min(480px, 58vh);
+  overflow: hidden;
+}
+
+.bel__stage-label {
+  position: absolute;
+  top: 14px;
+  left: 16px;
+  z-index: 2;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.35);
+  pointer-events: none;
+}
+
+.bel__stage {
+  --bel-dur: 600ms;
+  --bel-stagger: 80ms;
+  --bel-distance: 120%;
+  --bel-ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: min(480px, 58vh);
+  padding: 52px 28px 40px;
+  position: relative;
+}
+
+/* DYMO-ish demo chip (lab only) */
+.bel-chip {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  line-height: 1;
+  text-transform: uppercase;
+  text-decoration: none;
+  white-space: nowrap;
+  user-select: none;
+  color: rgba(255, 255, 255, 0.72);
+  padding: 11px 14px 10px;
+  border-radius: 3px;
+  background: #1c1c1c;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow:
+    inset 0 2px 4px rgba(0, 0, 0, 0.75),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.05),
+    0 3px 0 #0b0b0b,
+    0 4px 7px rgba(0, 0, 0, 0.85);
+  cursor: default;
+}
+
+button.bel-chip {
+  cursor: pointer;
+}
+
+/* ── DYMO row: askew at rest, straighten as a group, white label only on target ── */
+.bel-chip-wrap {
+  display: inline-block;
+  transform: rotate(var(--bel-tilt, 0deg)) translateY(var(--bel-shift, 0px));
+  transition: transform 220ms cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.bel__track--dymo .bel-chip-wrap:nth-child(1) {
+  --bel-tilt: -2.2deg;
+  --bel-shift: 2px;
+}
+.bel__track--dymo .bel-chip-wrap:nth-child(2) {
+  --bel-tilt: 1.6deg;
+  --bel-shift: -2px;
+}
+.bel__track--dymo .bel-chip-wrap:nth-child(3) {
+  --bel-tilt: -1deg;
+  --bel-shift: 3px;
+}
+.bel__track--dymo .bel-chip-wrap:nth-child(4) {
+  --bel-tilt: 2.4deg;
+  --bel-shift: -1px;
+}
+
+.bel__track--dymo:hover .bel-chip-wrap,
+.bel__track--dymo:focus-within .bel-chip-wrap {
+  --bel-tilt: 0deg;
+  --bel-shift: 0px;
+}
+
+.bel-chip.bel-chip--dymo {
+  transition: color 160ms ease;
+}
+
+button.bel-chip.bel-chip--dymo {
+  font: inherit;
+  letter-spacing: inherit;
+  text-align: center;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.bel__track--dymo .bel-chip--dymo:hover {
+  color: #fff;
+}
+
+.bel__track--dymo .bel-chip--dymo:focus-visible {
+  color: #fff;
+  outline: 1px solid rgba(255, 255, 255, 0.32);
+  outline-offset: 3px;
+  box-shadow:
+    inset 0 2px 4px rgba(0, 0, 0, 0.75),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.05),
+    0 3px 0 #0b0b0b,
+    0 4px 7px rgba(0, 0, 0, 0.85);
+}
+
+/* ========== Effect: slide from left ========== */
+.bel__stage--slide-left .bel__track {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+}
+
+.bel__stage--slide-left .bel-chip-wrap .bel-chip--dymo {
+  animation: bel-slideFromLeft var(--bel-dur) var(--bel-ease) both;
+}
+
+.bel__stage--slide-left .bel-chip-wrap:nth-child(1) .bel-chip--dymo {
+  animation-delay: calc(var(--bel-stagger) * 0);
+}
+.bel__stage--slide-left .bel-chip-wrap:nth-child(2) .bel-chip--dymo {
+  animation-delay: calc(var(--bel-stagger) * 1);
+}
+.bel__stage--slide-left .bel-chip-wrap:nth-child(3) .bel-chip--dymo {
+  animation-delay: calc(var(--bel-stagger) * 2);
+}
+.bel__stage--slide-left .bel-chip-wrap:nth-child(4) .bel-chip--dymo {
+  animation-delay: calc(var(--bel-stagger) * 3);
+}
+
+@keyframes bel-slideFromLeft {
+  from {
+    opacity: 0;
+    transform: translateX(calc(-1 * var(--bel-distance)));
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* ========== Effect: slide from right ========== */
+.bel__stage--slide-right .bel__track {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+}
+
+.bel__stage--slide-right .bel-chip-wrap .bel-chip--dymo {
+  animation: bel-slideFromRight var(--bel-dur) var(--bel-ease) both;
+}
+
+.bel__stage--slide-right .bel-chip-wrap:nth-child(1) .bel-chip--dymo {
+  animation-delay: calc(var(--bel-stagger) * 0);
+}
+.bel__stage--slide-right .bel-chip-wrap:nth-child(2) .bel-chip--dymo {
+  animation-delay: calc(var(--bel-stagger) * 1);
+}
+.bel__stage--slide-right .bel-chip-wrap:nth-child(3) .bel-chip--dymo {
+  animation-delay: calc(var(--bel-stagger) * 2);
+}
+.bel__stage--slide-right .bel-chip-wrap:nth-child(4) .bel-chip--dymo {
+  animation-delay: calc(var(--bel-stagger) * 3);
+}
+
+@keyframes bel-slideFromRight {
+  from {
+    opacity: 0;
+    transform: translateX(var(--bel-distance));
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* ========== Effect: rise + fade ========== */
+.bel__stage--rise .bel__track {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+}
+
+.bel__stage--rise .bel-chip-wrap .bel-chip--dymo {
+  animation: bel-rise var(--bel-dur) var(--bel-ease) both;
+}
+
+.bel__stage--rise .bel-chip-wrap:nth-child(1) .bel-chip--dymo {
+  animation-delay: calc(var(--bel-stagger) * 0);
+}
+.bel__stage--rise .bel-chip-wrap:nth-child(2) .bel-chip--dymo {
+  animation-delay: calc(var(--bel-stagger) * 1);
+}
+.bel__stage--rise .bel-chip-wrap:nth-child(3) .bel-chip--dymo {
+  animation-delay: calc(var(--bel-stagger) * 2);
+}
+.bel__stage--rise .bel-chip-wrap:nth-child(4) .bel-chip--dymo {
+  animation-delay: calc(var(--bel-stagger) * 3);
+}
+
+@keyframes bel-rise {
+  from {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ========== Effect: clip reveal ========== */
+.bel__stage--clip .bel__track {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+}
+
+.bel__stage--clip .bel-chip-wrap .bel-chip--dymo {
+  animation: bel-clipReveal var(--bel-dur) var(--bel-ease) both;
+}
+
+.bel__stage--clip .bel-chip-wrap:nth-child(1) .bel-chip--dymo {
+  animation-delay: calc(var(--bel-stagger) * 0);
+}
+.bel__stage--clip .bel-chip-wrap:nth-child(2) .bel-chip--dymo {
+  animation-delay: calc(var(--bel-stagger) * 1);
+}
+.bel__stage--clip .bel-chip-wrap:nth-child(3) .bel-chip--dymo {
+  animation-delay: calc(var(--bel-stagger) * 2);
+}
+.bel__stage--clip .bel-chip-wrap:nth-child(4) .bel-chip--dymo {
+  animation-delay: calc(var(--bel-stagger) * 3);
+}
+
+@keyframes bel-clipReveal {
+  from {
+    opacity: 0;
+    clip-path: inset(0 100% 0 0);
+  }
+  to {
+    opacity: 1;
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+/* ========== Effect: blur in ========== */
+.bel__stage--blur .bel__track {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+}
+
+.bel__stage--blur .bel-chip-wrap .bel-chip--dymo {
+  animation: bel-blurIn var(--bel-dur) var(--bel-ease) both;
+}
+
+.bel__stage--blur .bel-chip-wrap:nth-child(1) .bel-chip--dymo {
+  animation-delay: calc(var(--bel-stagger) * 0);
+}
+.bel__stage--blur .bel-chip-wrap:nth-child(2) .bel-chip--dymo {
+  animation-delay: calc(var(--bel-stagger) * 1);
+}
+.bel__stage--blur .bel-chip-wrap:nth-child(3) .bel-chip--dymo {
+  animation-delay: calc(var(--bel-stagger) * 2);
+}
+.bel__stage--blur .bel-chip-wrap:nth-child(4) .bel-chip--dymo {
+  animation-delay: calc(var(--bel-stagger) * 3);
+}
+
+@keyframes bel-blurIn {
+  from {
+    opacity: 0;
+    filter: blur(12px);
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    filter: blur(0);
+    transform: scale(1);
+  }
+}
+
+/* ========== Effect: underline sweep (hover) ========== */
+.bel__stage--underline .bel__track {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  justify-content: center;
+  align-items: center;
+}
+
+.bel__stage--underline .bel-chip--link {
+  position: relative;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  padding: 8px 4px 10px;
+  color: rgba(255, 255, 255, 0.45);
+  overflow: visible;
+}
+
+.bel__stage--underline .bel-chip--link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 4px;
+  width: 100%;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.45);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 280ms cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.bel__stage--underline .bel-chip--link:hover::after,
+.bel__stage--underline .bel-chip--link:focus-visible::after {
+  transform: scaleX(1);
+}
+
+.bel__stage--underline .bel-chip--link:hover,
+.bel__stage--underline .bel-chip--link:focus-visible {
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.bel__stage--underline .bel-chip--link:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.15);
+  border-radius: 2px;
+}
+
+/* ========== Effect: tilt 3D hover ========== */
+.bel__stage--tilt .bel__tilt-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+  perspective: 900px;
+}
+
+.bel__stage--tilt .bel-tilt {
+  transition: transform 180ms ease-out;
+  transform-style: preserve-3d;
+}
+
+.bel__stage--tilt .bel-tilt:hover {
+  transition: transform 80ms ease-out;
+}
+
+/* ========== Effect: magnetic (JS applies --bel-mx, --bel-my) ========== */
+.bel__stage--magnetic .bel__mag-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  justify-content: center;
+  align-items: center;
+}
+
+.bel__stage--magnetic .bel-magnetic {
+  transform: translate(var(--bel-mx, 0px), var(--bel-my, 0px));
+  transition: transform 120ms ease-out;
+}
+
+.bel__stage--magnetic .bel-magnetic.is-pressed {
+  transform: translate(var(--bel-mx, 0px), var(--bel-my, 0px)) scale(0.98);
+}
+
+/* ========== Effect: soft pulse (CTA attention) ========== */
+.bel__stage--pulse .bel__track {
+  display: flex;
+  justify-content: center;
+}
+
+.bel__stage--pulse .bel-chip-wrap .bel-chip--pulse {
+  animation: bel-softPulse 2.4s ease-in-out infinite;
+}
+
+@keyframes bel-softPulse {
+  0%,
+  100% {
+    box-shadow:
+      inset 0 2px 4px rgba(0, 0, 0, 0.75),
+      inset 0 -1px 0 rgba(255, 255, 255, 0.05),
+      0 3px 0 #0b0b0b,
+      0 4px 7px rgba(0, 0, 0, 0.85);
+  }
+  50% {
+    box-shadow:
+      inset 0 2px 4px rgba(0, 0, 0, 0.75),
+      inset 0 -1px 0 rgba(255, 255, 255, 0.08),
+      0 3px 0 #0b0b0b,
+      0 4px 14px rgba(255, 255, 255, 0.06);
+  }
+}
+
+/* ========== Reduced motion ========== */
+@media (prefers-reduced-motion: reduce) {
+  .bel__stage .bel-chip,
+  .bel__stage .bel-tilt,
+  .bel__stage .bel-magnetic {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  .bel__track--dymo .bel-chip-wrap {
+    --bel-tilt: 0deg !important;
+    --bel-shift: 0px !important;
+    transform: none !important;
+    transition: none !important;
+  }
+
+  .bel__stage--underline .bel-chip--link::after {
+    transition: none !important;
+  }
+
+  .bel__stage--pulse .bel-chip-wrap .bel-chip--pulse {
+    animation: none !important;
+  }
+
+  .bel__stage--magnetic .bel-magnetic {
+    transform: none !important;
+  }
+}

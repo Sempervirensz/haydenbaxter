@@ -1,0 +1,525 @@
+/* Globe + Card Lab — dark lab environment */
+
+.gcl {
+  display: flex;
+  gap: 32px;
+  min-height: 100vh;
+  background: #0a0a0a;
+  color: #fff;
+  font-family: var(--font-sans, system-ui, sans-serif);
+  padding: 24px;
+}
+
+/* ── Controls panel ── */
+.gcl__controls {
+  flex: 0 0 280px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  align-self: flex-start;
+  position: sticky;
+  top: 24px;
+}
+
+.gcl__title {
+  font-family: var(--font-serif, serif);
+  font-size: 20px;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+
+.gcl__subtitle {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.4);
+  font-family: var(--font-mono, monospace);
+  margin: 0;
+  line-height: 1.4;
+}
+
+.gcl__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.gcl__label {
+  font-family: var(--font-mono, monospace);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.gcl__val {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.08);
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-size: 11px;
+}
+
+/* Toggle buttons */
+.gcl__toggle {
+  display: flex;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.gcl__toggleBtn {
+  padding: 6px 14px;
+  font-family: var(--font-mono, monospace);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  border: none;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.4);
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+
+.gcl__toggleBtn.is-active {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+.gcl__toggleBtn:hover:not(.is-active) {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* Fieldsets */
+.gcl__fieldset {
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 8px;
+  padding: 12px;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.gcl__legend {
+  font-family: var(--font-mono, monospace);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: rgba(255, 255, 255, 0.35);
+  padding: 0 6px;
+}
+
+.gcl__sliderRow,
+.gcl__selectRow {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.gcl__fieldset input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 4px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.12);
+  outline: none;
+}
+
+.gcl__fieldset input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #fff;
+  cursor: pointer;
+  border: 2px solid #0a0a0a;
+}
+
+.gcl__controls > .gcl__selectRow select,
+.gcl__fieldset select {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 6px;
+  color: #fff;
+  padding: 6px 10px;
+  font-family: var(--font-mono, monospace);
+  font-size: 11px;
+  cursor: pointer;
+}
+
+.gcl__controls > .gcl__selectRow select option,
+.gcl__fieldset select option {
+  background: #1a1a1a;
+}
+
+/* ── Preview area ── */
+.gcl__preview {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.02);
+  overflow: hidden;
+  transition: max-width 0.4s ease;
+}
+
+.gcl__preview--mobile {
+  margin: 0 auto;
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+/* Timeline nav */
+.gcl__topbar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 12px 24px 0;
+  position: relative;
+}
+
+.gcl__topbarLine {
+  position: absolute;
+  top: 50%;
+  left: 10%;
+  right: 10%;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.1);
+  z-index: 0;
+  pointer-events: none;
+}
+
+.gcl__topbarItem {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 16px;
+  background: none;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  color: rgba(255, 255, 255, 0.35);
+  cursor: pointer;
+  transition: color 0.3s ease, border-color 0.3s ease, background 0.3s ease,
+    opacity 0.5s ease, transform 0.5s ease;
+  font-family: inherit;
+}
+
+.gcl__topbarItem:hover:not(:disabled) {
+  color: rgba(255, 255, 255, 0.7);
+  border-color: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.gcl__topbarItem.is-visited {
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.gcl__topbarItem.is-active {
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.gcl__topbarItem.is-hidden {
+  opacity: 0;
+  transform: translateY(-8px);
+  pointer-events: none;
+}
+
+.gcl__topbarDot {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono, monospace);
+  font-size: 11px;
+  transition: background 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+}
+
+.gcl__topbarItem.is-active .gcl__topbarDot {
+  background: #fff;
+  border-color: #fff;
+  color: #0a0a0a;
+}
+
+.gcl__topbarItem.is-visited .gcl__topbarDot {
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+.gcl__topbarLabel {
+  font-family: var(--font-mono, monospace);
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+}
+
+/* Stacked preset: primary headline on top, subtitle below */
+.gcl__topbarStack {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  line-height: 1.15;
+}
+
+.gcl__topbar--stacked .gcl__topbarLabel {
+  font-family: var(--font-serif, Georgia, serif);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.005em;
+  white-space: normal;
+  max-width: 180px;
+  text-align: center;
+  text-transform: none;
+}
+
+.gcl__topbarSub {
+  font-family: var(--font-mono, monospace);
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.5);
+  white-space: nowrap;
+}
+
+/* Inline preset: longer labels allowed */
+.gcl__topbar--inline .gcl__topbarLabel {
+  font-size: 11px;
+  white-space: nowrap;
+}
+
+.gcl__topbarDivider {
+  color: rgba(255, 255, 255, 0.35);
+}
+
+/* Give the topbar more breathing room when using stacked labels */
+.gcl__topbar--stacked {
+  gap: 32px;
+}
+.gcl__topbar--inline {
+  gap: 24px;
+}
+
+/* Stage: globe + card container */
+.gcl__stage {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  padding: 16px;
+  min-height: 400px;
+  overflow: hidden;
+}
+
+.gcl__globe {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  max-height: 100%;
+  max-width: 100%;
+}
+
+.gcl__globe canvas {
+  max-height: 100%;
+  object-fit: contain;
+}
+
+/* ── Glass card base ── */
+.gcl__card {
+  padding: 20px 24px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  opacity: 0;
+  transition: opacity 0.5s ease, transform 0.5s ease;
+  pointer-events: none;
+  position: absolute;
+  max-width: 300px;
+  min-width: 200px;
+  z-index: 2;
+}
+
+.gcl__card.is-visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Card positions */
+.gcl__card--right {
+  right: 24px;
+  top: 50%;
+  transform: translateY(-50%) translateX(12px);
+}
+.gcl__card--right.is-visible {
+  transform: translateY(-50%) translateX(0);
+}
+
+.gcl__card--left {
+  left: 24px;
+  top: 50%;
+  transform: translateY(-50%) translateX(-12px);
+}
+.gcl__card--left.is-visible {
+  transform: translateY(-50%) translateX(0);
+}
+
+.gcl__card--bottom-right {
+  right: 24px;
+  bottom: 24px;
+  transform: translateY(12px);
+}
+.gcl__card--bottom-right.is-visible {
+  transform: translateY(0);
+}
+
+.gcl__card--bottom-center {
+  left: 50%;
+  bottom: 24px;
+  transform: translateX(-50%) translateY(12px);
+  text-align: center;
+}
+.gcl__card--bottom-center.is-visible {
+  transform: translateX(-50%) translateY(0);
+}
+
+.gcl__card--overlay-bottom {
+  left: 50%;
+  bottom: 48px;
+  transform: translateX(-50%) translateY(12px);
+  text-align: center;
+  background: rgba(180, 200, 220, 0.14);
+  border-color: rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(24px) saturate(1.4);
+  -webkit-backdrop-filter: blur(24px) saturate(1.4);
+  border-radius: 16px;
+}
+.gcl__card--overlay-bottom.is-visible {
+  transform: translateX(-50%) translateY(0);
+}
+
+/* Card typography */
+.gcl__cardYear {
+  font-family: var(--font-mono, monospace);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  color: rgba(255, 255, 255, 0.45);
+  margin-bottom: 4px;
+}
+
+.gcl__cardTitle {
+  font-family: var(--font-serif, serif);
+  font-size: 20px;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  margin: 0 0 8px;
+}
+
+.gcl__cardDesc {
+  font-family: var(--font-serif, serif);
+  font-size: 13px;
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.7);
+  margin: 0;
+}
+
+.gcl__cardHint {
+  color: rgba(255, 255, 255, 0.45);
+  font-family: var(--font-serif, serif);
+  font-size: 13px;
+  font-style: italic;
+  margin: 0;
+}
+
+/* Readout bar */
+.gcl__readout {
+  padding: 10px 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  text-align: center;
+}
+
+.gcl__readout code {
+  font-family: var(--font-mono, monospace);
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  color: rgba(255, 255, 255, 0.35);
+  text-transform: uppercase;
+}
+
+/* ── Mobile preview mode tweaks ── */
+.gcl__preview--mobile .gcl__topbar {
+  gap: 0;
+  padding: 8px 8px;
+}
+
+.gcl__preview--mobile .gcl__topbarItem {
+  padding: 6px 8px;
+}
+
+.gcl__preview--mobile .gcl__topbarLabel {
+  font-size: 9px;
+}
+
+.gcl__preview--mobile .gcl__topbarDot {
+  width: 22px;
+  height: 22px;
+  font-size: 9px;
+}
+
+.gcl__preview--mobile .gcl__stage {
+  min-height: 300px;
+}
+
+.gcl__preview--mobile .gcl__card {
+  max-width: 240px;
+  min-width: 0;
+  padding: 14px 18px;
+}
+
+.gcl__preview--mobile .gcl__cardTitle {
+  font-size: 16px;
+}
+
+.gcl__preview--mobile .gcl__cardDesc {
+  font-size: 12px;
+}
+
+/* ── Reduced motion ── */
+@media (prefers-reduced-motion: reduce) {
+  .gcl__card,
+  .gcl__topbarItem {
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ── Small screens — stack controls above preview ── */
+@media (max-width: 900px) {
+  .gcl {
+    flex-direction: column;
+  }
+
+  .gcl__controls {
+    flex: none;
+    position: static;
+  }
+
+  .gcl__preview--mobile {
+    max-width: 390px !important;
+  }
+}
