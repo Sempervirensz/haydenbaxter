@@ -18,7 +18,7 @@ import { dirname, join, basename } from "node:path";
 
 const SRC_EXT = new Set([".ts", ".tsx", ".css", ".js", ".jsx"]);
 const ASSET_EXT =
-  "png|jpe?g|webp|svg|gif|mp4|webm|woff2?|avif|ico|json|txt|xml";
+  "png|jpe?g|webp|svg|gif|mp4|webm|woff2?|ttf|otf|avif|ico|json|txt|xml";
 const REF_RE = new RegExp(`["'(]\\s*(/[A-Za-z0-9_./%\\- ]+\\.(?:${ASSET_EXT}))`, "g");
 
 // -z gives NUL-separated raw paths, sidestepping git's quoting of names with spaces.

@@ -5,7 +5,17 @@ out/
 *.tsbuildinfo
 next-env.d.ts
 .vercel
+
+# Agent working state — per-machine and disposable. .claude/worktrees holds
+# real git worktrees, which must never be committed into the repo itself.
 .claude/settings.local.json
+.claude/plans/
+.claude/worktrees/
+
+# Camera originals for the About collage. Byte-identical to the tracked
+# public/about/* source files, which are themselves only kept as the source
+# for the WebP the site actually serves. Nothing references these.
+public/Personal Photos/
 
 # Environment files — never commit real secrets. .env.example IS tracked.
 .env
