@@ -18,7 +18,7 @@ export const LAB_GROUPS: LabGroup[] = [
     items: [
       { label: "Home", path: "/" },
       { label: "Journal", path: "/blog" },
-      { label: "Emerging Tech Builds", path: "/emerging-tech-builds" },
+      { label: "AI & Emerging Tech Builds", path: "/emerging-tech-builds" },
       { label: "↳ AtomicOS", path: "/emerging-tech-builds/atomic-os" },
       { label: "↳ CaseBrief", path: "/emerging-tech-builds/casebrief" },
       { label: "↳ Cortex", path: "/emerging-tech-builds/cortex" },

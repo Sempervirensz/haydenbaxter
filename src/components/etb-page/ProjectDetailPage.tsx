@@ -17,7 +17,7 @@ export default function ProjectDetailPage({ project }: Props) {
     <main className="etb-page">
       <Link href="/emerging-tech-builds" className="etb-page__back">
         <span aria-hidden="true">&larr;</span>
-        <span>Back to Emerging Tech Builds</span>
+        <span>Back to AI &amp; Emerging Tech Builds</span>
       </Link>
 
       <header className="etb-page__hero">
@@ -49,7 +49,7 @@ export default function ProjectDetailPage({ project }: Props) {
 
       <Link href="/emerging-tech-builds" className="etb-page__backFooter">
         <span aria-hidden="true">&larr;</span>
-        <span>Back to Emerging Tech Builds</span>
+        <span>Back to AI &amp; Emerging Tech Builds</span>
       </Link>
     </main>
   );
@@ -221,7 +221,7 @@ function PlaceholderSections() {
       <section className="etb-page__section" aria-label="Technical breakdown">
         <h2 className="etb-page__sectionTitle">Technical breakdown</h2>
         <div className="etb-page__placeholder">
-          Architecture, data model, and tooling notes — coming soon.
+          Architecture, data model, and tooling notes are coming soon.
         </div>
       </section>
 
@@ -231,7 +231,7 @@ function PlaceholderSections() {
       >
         <h2 className="etb-page__sectionTitle">Outcomes &amp; lessons learned</h2>
         <div className="etb-page__placeholder">
-          What worked, what didn&rsquo;t, and what shaped the next build —
+          What worked, what didn&rsquo;t, and what shaped the next build:
           coming soon.
         </div>
       </section>

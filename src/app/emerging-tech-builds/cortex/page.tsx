@@ -4,7 +4,7 @@ import { findEtbProject } from "@/data/etbProjects";
 import { notFound } from "next/navigation";
 
 export const metadata: Metadata = {
-  title: "Cortex — Emerging Tech Builds",
+  title: "Cortex · AI & Emerging Tech Builds",
 };
 
 export default function CortexPage() {

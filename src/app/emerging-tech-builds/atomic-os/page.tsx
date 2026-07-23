@@ -4,7 +4,7 @@ import { findEtbProject } from "@/data/etbProjects";
 import { notFound } from "next/navigation";
 
 export const metadata: Metadata = {
-  title: "Atomic OS — Emerging Tech Builds",
+  title: "AtomicOS · AI & Emerging Tech Builds",
 };
 
 export default function AtomicOSPage() {

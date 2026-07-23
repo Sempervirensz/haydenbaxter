@@ -28,7 +28,7 @@ interface WorldPulseScreen extends WorkScreenBase {
   };
 }
 
-// ---- Screen 2: Emerging Tech Builds ----
+// ---- Screen 2: AI & Emerging Tech Builds ----
 
 export interface ETBScreenshot {
   src: string;
@@ -301,7 +301,7 @@ export const WORK_SCROLL_CONFIG = {
   zones: [
     { hold: [0.0, 0.15], deg: 0, label: "" },                         // Angel at 12 (rest)
     { hold: [0.18, 0.35], deg: -45, label: "WorldPulse" },            // ~1:30 → top
-    { hold: [0.38, 0.55], deg: -135, label: "Emerging Tech Builds" }, // ~4:30 → top
+    { hold: [0.38, 0.55], deg: -135, label: "AI & Emerging Tech Builds" }, // ~4:30 → top
     { hold: [0.58, 0.75], deg: -225, label: "Supply Chain" },         // ~7:30 → top
     { hold: [0.78, 0.92], deg: -315, label: "Consulting" },           // ~10:30 → top
     { hold: [0.96, 0.985], deg: -360, label: "" },                    // Return to angel
@@ -335,26 +335,24 @@ export const WORK_SCREENS: WorkScreen[] = [
     },
   },
 
-  // ── Screen 2 — Emerging Tech Builds ────────────────────────────────────
+  // ── Screen 2 — AI & Emerging Tech Builds ───────────────────────────────
   {
     id: 2,
-    name: "Emerging Tech Builds",
+    name: "AI & Emerging Tech Builds",
     number: "02 / 04",
     type: "emerging-tech-builds",
     etb: {
-      title: "Emerging Tech Builds",
+      title: "AI & Emerging Tech Builds",
       credibilityLine: "M.S. in Artificial Intelligence in Business (ASU)",
       intro: "Usable AI systems, not slideware.",
       description:
-        "Applied emerging tech builds focused on clear workflows and useful interfaces. Case Brief and Atomic OS currently have active front-end implementations; Procurement and Open Claw are concept-stage.",
+        "Applied AI systems built around clear workflows and useful interfaces. AtomicOS, CaseBrief, and Cortex have working front-end builds you can explore. ProcureBridge is coming soon.",
       filters: [
         "All",
         "Personal OS",
         "Case Intelligence",
-        "Voice/Video",
-        "Supply Chain Apps",
         "Editorial Brain",
-        "R&D",
+        "Supply Chain Apps",
       ],
       sortOptions: [
         { label: "Most complete", field: "completenessScore" },
@@ -475,24 +473,24 @@ export const WORK_SCREENS: WorkScreen[] = [
         {
           id: "procurebridge",
           name: "ProcureBridge",
-          status: "Concept",
+          status: "Coming Soon",
           category: "Supply Chain Apps",
           oneLiner:
-            "A procurement intelligence concept for evaluating suppliers and clearer sourcing decisions.",
+            "A procurement intelligence tool for evaluating suppliers and making clearer sourcing decisions.",
           bullets: [
-            "Supplier evaluation and sourcing comparison framing",
+            "Side-by-side supplier evaluation and sourcing comparison",
             "Fragmented purchasing data shaped into clearer calls",
-            "Concept-stage exploration of practical decision support",
+            "Full walkthrough publishes when the build is ready to show",
           ],
           tags: ["Procurement", "Sourcing", "Decision Support"],
           screenshot: "",
           comingSoon: true,
           previewLabel: "Demo Coming Soon",
-          detailFooter: "Coming soon.",
+          detailFooter: "Full walkthrough coming soon.",
           systemSnapshot: [
             "Workflow centered on supplier comparison and sourcing decisions",
             "Model unifies vendor docs, pricing, and risk signals",
-            "Early concept; preview shows direction, not a live system",
+            "Interface in progress; the detail page opens once it ships",
           ],
           completenessScore: 35,
           technicalScore: 62,
@@ -503,32 +501,6 @@ export const WORK_SCREENS: WorkScreen[] = [
             width: 1024,
             height: 1024,
           },
-        },
-        {
-          id: "openclaw",
-          name: "OpenClaw",
-          status: "Concept",
-          category: "R&D",
-          oneLiner:
-            "An R&D concept for open-ended agentic workflows that turn rough ideas into usable tools.",
-          bullets: [
-            "Agentic blocks for research, build, and iteration loops",
-            "Lightweight orchestration for fast concept-to-output cycles",
-            "Currently exploratory R&D framing",
-          ],
-          tags: ["Agentic Workflows", "Tooling", "Experimentation"],
-          screenshot: "",
-          comingSoon: true,
-          previewLabel: "Demo Coming Soon",
-          detailFooter: "Coming soon.",
-          systemSnapshot: [
-            "Modular blocks for open-ended AI build processes",
-            "Low-friction orchestration with repeatable structure",
-            "Exploratory state; no production build yet",
-          ],
-          completenessScore: 28,
-          technicalScore: 74,
-          recencyScore: 96,
         },
       ],
       graduateWork: {

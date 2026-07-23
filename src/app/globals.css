@@ -613,6 +613,9 @@ html {
   letter-spacing: -0.02em;
   color: rgba(243, 243, 243, 0.62);
   line-height: 1.05;
+  /* Longer track names ("AI & Emerging Tech Builds") wrap on narrow
+     viewports — balance the lines so the last word never sits alone. */
+  text-wrap: balance;
   transition: color 320ms ease;
 }
 
@@ -1226,7 +1229,7 @@ html.is-safari body {
 }
 
 /* ──────────────────────────────────────────────────────────
-   Emerging Tech Builds — standalone gallery + detail pages
+   AI & Emerging Tech Builds — standalone gallery + detail pages
    ────────────────────────────────────────────────────────── */
 .etb-gallery {
   min-height: 100vh;
