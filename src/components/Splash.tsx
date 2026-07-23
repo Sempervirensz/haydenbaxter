@@ -15,6 +15,7 @@ const NO_SPLASH_ROUTES = [
   "/emerging-tech-builds",
   "/atomicos-preview",
   "/lab/scroll",
+  "/mobile-lab",
 ];
 
 export default function Splash() {

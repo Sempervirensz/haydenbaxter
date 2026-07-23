@@ -322,7 +322,7 @@ export const WORK_SCREENS: WorkScreen[] = [
     type: "full",
     full: {
       image: { src: "", alt: "" },
-      background: "/WorldPulseCostal3.0.png",
+      background: "/WorldPulseCostal3.0.webp",
       role: "",
       caption: [
         "Founder at WorldPulse, where we turn complex supply chain data into visual, engaging product stories.",
@@ -433,6 +433,12 @@ export const WORK_SCREENS: WorkScreen[] = [
           },
           keepFullSummary: true,
           demo: CASEBRIEF_DEMO,
+          mark: {
+            src: "/assets/casebrief-mark.png",
+            alt: "CaseBrief cube mark",
+            width: 1024,
+            height: 1024,
+          },
         },
         {
           id: "cortex",

@@ -1,0 +1,291 @@
+/* Work Sticky Depth Handoff — isolated sample using the REAL Work detail
+   cards (WorldPulse / ETB / Supply Chain). Everything here is scoped under
+   .ho-root so it never leaks into the production Work section. The detail
+   components reuse their global classes from work-details.css + globals.css. */
+
+.ho-root {
+  position: relative;
+}
+
+/* Each chapter gives the sticky card room to pin, then hand off to the next. */
+.ho-chapter {
+  position: relative;
+  height: 150vh;
+}
+
+/* ============================================================================
+   CINEMATIC DESIGN PASS (lab-scoped exploration)
+   Borderless, floating frames. Larger, imagery-first cards. Multi-plane image
+   parallax is driven from JS (see WorkHandoffSample tick()). Everything stays
+   under .ho-root so production is untouched.
+   ========================================================================== */
+
+/* The real production card is `position: sticky; top: 6vh; height:88vh`. We
+   enlarge it, drop the heavy border for a clean floating frame, and give it a
+   deeper cinematic shadow + internal vignette so the imagery carries the card. */
+.ho-root .ho-chapter .work__screen--detail {
+  transform-origin: 50% 14%;
+  will-change: transform;
+
+  /* Bigger, more cinematic footprint on desktop. */
+  top: 5vh;
+  height: 90vh;
+  margin: 8px;
+
+  /* Borderless: hairline edge + filmic float instead of the glass border. */
+  border: none;
+  outline: 1px solid rgba(255, 255, 255, 0.06);
+  outline-offset: -1px;
+  border-radius: 26px;
+  background: #0a0b0f;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.05) inset,
+    0 0 130px 8px rgba(0, 0, 0, 0.5) inset,
+    0 54px 130px -34px rgba(0, 0, 0, 0.9),
+    0 14px 50px -18px rgba(0, 0, 0, 0.7);
+}
+
+/* Soften the production ambient hotspot so it reads as a gentle filmic top
+   light over photography rather than a glassy spec highlight. */
+.ho-root .ho-chapter .work__screen--detail::after {
+  border-radius: 26px;
+  background:
+    radial-gradient(120% 70% at 50% 0%, rgba(255, 255, 255, 0.05) 0%, transparent 34%),
+    radial-gradient(ellipse 125% 100% at 50% 46%, transparent 56%, rgba(0, 0, 0, 0.9) 100%);
+}
+
+.ho-root .ho-chapter .work__screen--detail::before {
+  border-radius: 26px 26px 0 0;
+}
+
+/* ---- Multi-plane image layers ----
+   Base zoom so photography fills more of the frame and reads cinematic even at
+   rest / reduced-motion; JS adds the per-frame parallax drift on top. */
+.ho-root .pd-full__bg,
+.ho-root .cht-bg {
+  transform: scale(1.12);
+  will-change: transform;
+}
+
+.ho-root .pd-full__hero,
+.ho-root .pd-full__tagline,
+.ho-root .wp-description {
+  will-change: transform;
+}
+
+/* ---- Editorial header hierarchy ---- */
+.ho-root .ho-chapter .work__detail-head {
+  position: relative;
+  z-index: 5;
+}
+
+.ho-root .ho-chapter .work__detail-num {
+  letter-spacing: 0.3em;
+}
+
+/* Per-frame darkening as the next chapter covers this card. */
+.ho-dim {
+  position: absolute;
+  inset: 0;
+  z-index: 60;
+  border-radius: inherit;
+  background: #04050a;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Intro / outro reuse the .plx__* type scale from site-parallax-lab.css. */
+.ho-root .plx__intro,
+.ho-root .plx__outro {
+  position: relative;
+  z-index: 1;
+}
+
+/* Variation switcher in the dock. */
+.ho-variants {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.ho-variant {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  text-align: left;
+  padding: 8px 10px;
+  border-radius: 7px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.7);
+  cursor: pointer;
+  font-family: var(--font-sans);
+  transition: background 160ms ease, border-color 160ms ease, color 160ms ease;
+}
+
+.ho-variant:hover {
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.ho-variant.is-on {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.4);
+  color: #fff;
+}
+
+.ho-variant__name {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.ho-variant__desc {
+  font-size: 10px;
+  line-height: 1.35;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.ho-variant.is-on .ho-variant__desc {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* Dock can get tall with all the controls — let it scroll. */
+.ho-root .plx__dock {
+  max-height: calc(100vh - 28px);
+  overflow-y: auto;
+}
+
+/* ---- Design-option toggles ---- */
+.ho-opts {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.ho-optsTitle {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.ho-opt {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  text-align: left;
+  padding: 7px 10px;
+  border-radius: 7px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.7);
+  cursor: pointer;
+  font-family: var(--font-sans);
+  transition: background 160ms ease, border-color 160ms ease, color 160ms ease;
+}
+
+.ho-opt:hover {
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.ho-opt.is-on {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.4);
+  color: #fff;
+}
+
+.ho-opt__name {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.ho-opt__desc {
+  font-size: 9.5px;
+  line-height: 1.3;
+  color: rgba(255, 255, 255, 0.42);
+}
+
+.ho-opt.is-on .ho-opt__desc {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* ============================================================================
+   OPTION A — Copy over image (WorldPulse): float the intro copy on the photo
+   ========================================================================== */
+.ho-root.is-copy-over .wp-description {
+  position: absolute;
+  left: 0;
+  right: auto;
+  bottom: clamp(92px, 12vh, 140px);
+  max-width: min(620px, 66%);
+  padding: 0 clamp(28px, 4vw, 56px);
+  margin: 0;
+  z-index: 6;
+}
+
+.ho-root.is-copy-over .wp-description p {
+  color: rgba(255, 255, 255, 0.95);
+  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.85), 0 1px 3px rgba(0, 0, 0, 0.6);
+}
+
+/* Bottom scrim so the floated copy always reads against the photography. */
+.ho-root.is-copy-over .pd-full__img::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background: linear-gradient(
+    0deg,
+    rgba(4, 6, 10, 0.86) 0%,
+    rgba(4, 6, 10, 0.5) 20%,
+    transparent 48%
+  );
+}
+
+/* ============================================================================
+   OPTION B — Immersive ETB / Supply Chain: parallaxing brand image wash
+   ========================================================================== */
+.ho-band {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border-radius: inherit;
+  background-size: cover;
+  background-position: center;
+  opacity: 0;
+  filter: blur(2px) brightness(0.5) saturate(1.05);
+  will-change: transform, opacity;
+  transition: opacity 340ms ease;
+  pointer-events: none;
+}
+
+.ho-root.is-immersive .ho-band {
+  opacity: 0.24;
+}
+
+/* ============================================================================
+   OPTION C — Color grade: per-card cinematic temperature (soft-light)
+   ========================================================================== */
+.ho-grade {
+  position: absolute;
+  inset: 0;
+  z-index: 55;
+  border-radius: inherit;
+  opacity: 0;
+  mix-blend-mode: soft-light;
+  pointer-events: none;
+  transition: opacity 300ms ease;
+}
+
+.ho-root.is-graded .ho-grade {
+  opacity: 0.7;
+}

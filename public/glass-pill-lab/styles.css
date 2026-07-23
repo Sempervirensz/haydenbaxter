@@ -1,0 +1,439 @@
+/* =========================================================================
+   Glass Pill Lab — Mobile-first, portrait-optimized
+   Target: 375–430px width (iPhone portrait)
+   Support: 320px minimum
+   ========================================================================= */
+
+/* ---- Reset + base ---- */
+
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  /* ================================================================
+     BACKGROUND — dark, cinematic, premium
+     Tweak: adjust gradient stops for warmer/cooler feel
+     ================================================================ */
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 55%, rgba(18, 22, 32, 1) 0%, rgba(8, 9, 14, 1) 100%);
+  background-color: #08090e;
+  font-family: "Avenir Next", "Avenir", -apple-system, "Helvetica Neue", sans-serif;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  position: relative;
+}
+
+/* ---- Cinematic vignette ---- */
+
+.vignette {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  /* Tweak: opacity controls vignette intensity */
+  background: radial-gradient(ellipse 70% 55% at 50% 48%, transparent 0%, rgba(0, 0, 0, 0.55) 100%);
+}
+
+/* ---- Ultra-subtle film grain ---- */
+
+.grain {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  /* Tweak: opacity for grain intensity (0.03–0.08 range) */
+  opacity: 0.04;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 180px;
+}
+
+/* =========================================================================
+   PILL — frosted glass, bottom-center, mobile-sized
+   ========================================================================= */
+
+.pill-stage {
+  position: fixed;
+  /* Tweak: bottom spacing — safe area for mobile */
+  bottom: clamp(48px, 10vh, 72px);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pill {
+  /* ================================================================
+     PILL DIMENSIONS
+     Tweak: --pill-w controls width (set via JS slider, default 55vw)
+     ================================================================ */
+  --pill-w: 55vw;
+  width: var(--pill-w);
+  min-width: 160px;
+  max-width: 300px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 20px;
+
+  /* ================================================================
+     GLASS TREATMENT
+     Tweak these values for glass feel:
+     - background alpha: opacity of the glass (0.15–0.35)
+     - blur: frosted intensity (16–40px)
+     - saturate: color richness through glass
+     - brightness: lightness of frosted layer
+     - border alpha: edge visibility (0.15–0.45)
+     ================================================================ */
+  border-radius: 999px;
+  background: rgba(180, 200, 220, 0.18);
+  backdrop-filter: blur(24px) saturate(1.6) brightness(1.06);
+  -webkit-backdrop-filter: blur(24px) saturate(1.6) brightness(1.06);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+
+  /* ================================================================
+     SHADOW + INNER HIGHLIGHT
+     Tweak: shadow spread/opacity, inset highlight opacity
+     ================================================================ */
+  box-shadow:
+    0 2px 12px rgba(0, 0, 0, 0.12),
+    0 0.5px 0 rgba(255, 255, 255, 0.14) inset,
+    0 -0.5px 0 rgba(0, 0, 0, 0.06) inset;
+
+  /* Animation base — overridden by iteration classes */
+  will-change: transform, opacity;
+}
+
+/* ---- Typography ---- */
+
+.pill__text {
+  /* ================================================================
+     TEXT STYLING
+     Tweak: --pill-fs controls font-size (set via JS slider)
+     Tweak: letter-spacing for tighter/wider tracking
+     ================================================================ */
+  --pill-fs: 10.5px;
+  display: flex;
+  gap: 0.38em;
+  font-size: var(--pill-fs);
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  line-height: 1;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.92);
+  text-shadow: 0 0.5px 2px rgba(0, 0, 0, 0.12);
+  white-space: nowrap;
+  will-change: transform, opacity;
+}
+
+.pill__word {
+  display: inline-block;
+}
+
+/* =========================================================================
+   ITERATION 1 — Hover Together
+   Pill + text float as one unit. Slow, premium, suspended.
+   ========================================================================= */
+
+.iter-1 .pill {
+  animation: iter1-float var(--anim-dur, 5s) ease-in-out infinite;
+}
+
+@keyframes iter1-float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    /* Tweak: translateY controls hover distance (2–6px) */
+    transform: translateY(-4px);
+  }
+}
+
+/* =========================================================================
+   ITERATION 2 — Text Hovers Independently
+   Pill stays mostly still. Text has refined internal motion.
+   ========================================================================= */
+
+.iter-2 .pill {
+  /* Pill has ultra-subtle micro-drift */
+  animation: iter2-pill var(--anim-dur, 6s) ease-in-out infinite;
+}
+
+.iter-2 .pill__text {
+  animation: iter2-text var(--anim-dur, 4s) ease-in-out infinite;
+}
+
+@keyframes iter2-pill {
+  0%, 100% { transform: translateY(0); }
+  /* Tweak: very slight — 1px max */
+  50% { transform: translateY(-1px); }
+}
+
+@keyframes iter2-text {
+  0%, 100% {
+    transform: translateY(0) scale(1);
+    opacity: 0.92;
+  }
+  50% {
+    /* Tweak: translateY for text float, scale for subtle size shift */
+    transform: translateY(-2.5px) scale(1.008);
+    opacity: 1;
+  }
+}
+
+/* =========================================================================
+   ITERATION 3 — Breathing Mode
+   Organic, calm. Subtle scale + opacity + glow shift.
+   ========================================================================= */
+
+.iter-3 .pill {
+  animation: iter3-breathe var(--anim-dur, 5s) ease-in-out infinite;
+}
+
+.iter-3 .pill__text {
+  animation: iter3-text var(--anim-dur, 5s) ease-in-out infinite;
+}
+
+@keyframes iter3-breathe {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow:
+      0 2px 12px rgba(0, 0, 0, 0.12),
+      0 0.5px 0 rgba(255, 255, 255, 0.14) inset,
+      0 -0.5px 0 rgba(0, 0, 0, 0.06) inset;
+    border-color: rgba(255, 255, 255, 0.22);
+  }
+  50% {
+    /* Tweak: scale range (1.01–1.04), shadow glow, border brightness */
+    transform: scale(1.02);
+    box-shadow:
+      0 4px 20px rgba(0, 0, 0, 0.1),
+      0 0.5px 0 rgba(255, 255, 255, 0.2) inset,
+      0 -0.5px 0 rgba(0, 0, 0, 0.04) inset,
+      0 0 18px rgba(180, 200, 230, 0.06);
+    border-color: rgba(255, 255, 255, 0.3);
+  }
+}
+
+@keyframes iter3-text {
+  0%, 100% {
+    opacity: 0.88;
+    letter-spacing: 0.2em;
+  }
+  50% {
+    /* Tweak: opacity range, letter-spacing shift */
+    opacity: 1;
+    letter-spacing: 0.23em;
+  }
+}
+
+/* =========================================================================
+   PAUSED STATE
+   ========================================================================= */
+
+.is-paused .pill,
+.is-paused .pill__text,
+.is-paused .pill__word {
+  animation-play-state: paused !important;
+}
+
+/* =========================================================================
+   ITERATION LABEL — small, quiet, top area
+   ========================================================================= */
+
+.iter-label {
+  position: fixed;
+  top: clamp(36px, 8vh, 56px);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  text-align: center;
+}
+
+.iter-label__name {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.iter-label__desc {
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  color: rgba(255, 255, 255, 0.28);
+}
+
+/* =========================================================================
+   CONTROLS — compact mobile panel
+   ========================================================================= */
+
+.controls {
+  position: fixed;
+  top: clamp(12px, 3vw, 20px);
+  right: clamp(12px, 3vw, 20px);
+  z-index: 20;
+}
+
+.controls__toggle {
+  all: unset;
+  box-sizing: border-box;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  cursor: pointer;
+  transition: background 180ms ease;
+}
+
+.controls__toggle:hover,
+.controls__toggle:focus-visible {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.controls__toggle-icon {
+  font-size: 16px;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.controls__panel {
+  display: none;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 8px;
+  padding: 14px 16px;
+  border-radius: 14px;
+  background: rgba(12, 13, 18, 0.92);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  min-width: 210px;
+}
+
+.controls.is-open .controls__panel {
+  display: flex;
+}
+
+.controls__row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.controls__label {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  font-weight: 400;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.36);
+  min-width: 62px;
+  flex-shrink: 0;
+}
+
+.controls__btns {
+  display: flex;
+  gap: 4px;
+  flex: 1;
+}
+
+.controls__btn {
+  all: unset;
+  box-sizing: border-box;
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 5px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  color: rgba(255, 255, 255, 0.45);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transition: background 150ms ease, color 150ms ease, border-color 150ms ease;
+  text-align: center;
+}
+
+.controls__btn:hover {
+  color: rgba(255, 255, 255, 0.7);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.controls__btn.is-active {
+  color: #fff;
+  background: rgba(37, 99, 235, 0.7);
+  border-color: rgba(37, 99, 235, 0.5);
+}
+
+.controls__btn--wide {
+  flex: 1;
+}
+
+.controls__slider {
+  flex: 1;
+  height: 3px;
+  -webkit-appearance: none;
+  appearance: none;
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 2px;
+  outline: none;
+}
+
+.controls__slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  cursor: pointer;
+}
+
+.controls__val {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.32);
+  min-width: 28px;
+  text-align: right;
+}
+
+/* =========================================================================
+   REDUCED MOTION
+   ========================================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .pill,
+  .pill__text,
+  .pill__word {
+    animation: none !important;
+  }
+}

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Glass Pill Lab</title>
+  <link rel="stylesheet" href="styles.css">
+  <!-- Fonts: system stack + optional mono for controls -->
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&display=swap');
+  </style>
+</head>
+<body>
+  <!-- ================================================================
+       GLASS PILL LAB — Mobile-only design lab
+       3 frosted glass pill animation iterations
+       ================================================================ -->
+
+  <!-- Background grain overlay -->
+  <div class="grain" aria-hidden="true"></div>
+
+  <!-- Cinematic vignette -->
+  <div class="vignette" aria-hidden="true"></div>
+
+  <!-- ---- Pill container ---- -->
+  <div class="pill-stage" id="pillStage">
+    <div class="pill" id="pill">
+      <span class="pill__text" id="pillText">
+        <span class="pill__word">ORIGIN</span>
+        <span class="pill__word">MATTERS</span>
+      </span>
+    </div>
+  </div>
+
+  <!-- ---- Iteration description ---- -->
+  <div class="iter-label" id="iterLabel">
+    <span class="iter-label__name" id="iterName">01 — Hover Together</span>
+    <span class="iter-label__desc" id="iterDesc">Pill and text float as one unit</span>
+  </div>
+
+  <!-- ---- Controls panel ---- -->
+  <div class="controls" id="controls">
+    <button class="controls__toggle" id="controlsToggle" aria-label="Toggle controls">
+      <span class="controls__toggle-icon">&#9881;</span>
+    </button>
+
+    <div class="controls__panel" id="controlsPanel">
+      <!-- Iteration switcher -->
+      <div class="controls__row">
+        <span class="controls__label">Iteration</span>
+        <div class="controls__btns" role="radiogroup" aria-label="Animation iteration">
+          <button class="controls__btn is-active" data-iter="1" role="radio" aria-checked="true">01</button>
+          <button class="controls__btn" data-iter="2" role="radio" aria-checked="false">02</button>
+          <button class="controls__btn" data-iter="3" role="radio" aria-checked="false">03</button>
+        </div>
+      </div>
+
+      <!-- Play / Pause -->
+      <div class="controls__row">
+        <span class="controls__label">Animation</span>
+        <button class="controls__btn controls__btn--wide" id="playPauseBtn">Pause</button>
+      </div>
+
+      <!-- Speed -->
+      <div class="controls__row">
+        <span class="controls__label">Speed</span>
+        <input type="range" class="controls__slider" id="speedSlider" min="0.3" max="2" step="0.1" value="1">
+        <span class="controls__val" id="speedVal">1.0x</span>
+      </div>
+
+      <!-- Pill width -->
+      <div class="controls__row">
+        <span class="controls__label">Pill width</span>
+        <input type="range" class="controls__slider" id="widthSlider" min="40" max="75" step="1" value="55">
+        <span class="controls__val" id="widthVal">55%</span>
+      </div>
+
+      <!-- Text size -->
+      <div class="controls__row">
+        <span class="controls__label">Text size</span>
+        <input type="range" class="controls__slider" id="sizeSlider" min="8" max="16" step="0.5" value="10.5">
+        <span class="controls__val" id="sizeVal">10.5</span>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

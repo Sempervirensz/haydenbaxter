@@ -45,6 +45,16 @@ export const LAB_GROUPS: LabGroup[] = [
     ],
   },
   {
+    title: "Mobile",
+    items: [
+      {
+        label: "Mobile lab — cinematic field guide",
+        path: "/mobile-lab",
+        note: "Mobile-native homepage + CD dock/hero/off A/B/C",
+      },
+    ],
+  },
+  {
     title: "Scroll & parallax",
     items: [
       { label: "Site parallax lab", path: "/site-parallax-lab" },

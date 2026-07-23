@@ -1,0 +1,632 @@
+/* Site Parallax Lab — scoped under .plx-. Lab chrome + seven vision panels.
+   All motion comes from the JS engine writing transforms; these styles only
+   define resting composition. With .plx--off (reduced motion) everything
+   simply reads as a static page. */
+
+.plx {
+  background: #060607;
+  color: #f3f3f3;
+  overflow-x: clip;
+}
+
+/* ---- Control dock ---- */
+
+.plx__dock {
+  position: fixed;
+  top: 14px;
+  right: 14px;
+  z-index: 40;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 200px;
+  padding: 12px;
+  border-radius: 12px;
+  background: rgba(10, 11, 16, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.plx__dockTitle {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.plx__dial {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.plx__dialMeta {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.plx__dial input[type="range"] {
+  width: 100%;
+  accent-color: #cba86a;
+}
+
+.plx__toggle {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 7px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: #15171c;
+  color: rgba(255, 255, 255, 0.6);
+  cursor: pointer;
+}
+
+.plx__toggle.is-on {
+  color: #fff;
+  border-color: rgba(203, 168, 106, 0.55);
+}
+
+/* ---- Intro / outro ---- */
+
+.plx__intro {
+  min-height: 92vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 16px;
+  padding: 64px 24px;
+}
+
+.plx__kicker {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.plx__title {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: clamp(42px, 6.4vw, 84px);
+  font-weight: 400;
+  letter-spacing: -0.03em;
+}
+
+.plx__lede {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.65;
+  max-width: 58ch;
+  color: rgba(255, 255, 255, 0.62);
+}
+
+.plx__hint {
+  margin-top: 22px;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.plx__outro {
+  min-height: 50vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 24px;
+}
+
+.plx__outro p {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: clamp(16px, 1.8vw, 22px);
+  color: rgba(255, 255, 255, 0.55);
+  max-width: 48ch;
+  text-align: center;
+}
+
+/* ---- Panel scaffolding ---- */
+
+.plx__panel {
+  position: relative;
+  padding: clamp(80px, 14vh, 150px) clamp(20px, 5vw, 72px);
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  overflow: clip;
+}
+
+.plx__head {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  max-width: 1100px;
+  margin: 0 auto clamp(40px, 7vh, 80px);
+}
+
+.plx__head--sticky {
+  position: relative;
+  z-index: 5;
+}
+
+.plx__num {
+  flex-shrink: 0;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.66);
+  padding: 8px 11px 7px;
+  border-radius: 3px;
+  background: #17171a;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  box-shadow:
+    inset 0 2px 4px rgba(0, 0, 0, 0.75),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.05),
+    0 3px 0 #09090b,
+    0 4px 7px rgba(0, 0, 0, 0.8);
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.7);
+  transform: rotate(-1.4deg);
+}
+
+.plx__name {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: clamp(22px, 2.6vw, 34px);
+  font-weight: 400;
+  letter-spacing: -0.02em;
+}
+
+.plx__section {
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 0.7em;
+}
+
+.plx__note {
+  margin: 6px 0 0;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  line-height: 1.55;
+  max-width: 62ch;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+/* ---- PLX 01 · Hero ---- */
+
+.plx__panel--hero {
+  min-height: 110vh;
+}
+
+.plx__heroStage {
+  position: relative;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: clamp(40px, 10vh, 110px) 0;
+  text-align: center;
+}
+
+.plx__heroGlow {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: min(760px, 90%);
+  height: 380px;
+  margin-left: min(-380px, -45%);
+  border-radius: 50%;
+  background: radial-gradient(ellipse, rgba(255, 255, 255, 0.14), transparent 70%);
+  filter: blur(60px);
+  pointer-events: none;
+}
+
+.plx__heroEyebrow {
+  position: relative;
+  margin: 0 auto 26px;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  color: rgba(255, 255, 255, 0.55);
+  max-width: 60ch;
+}
+
+.plx__heroHeading {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(2px, 0.8vh, 10px);
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-size: clamp(30px, 4.6vw, 68px);
+  line-height: 1.08;
+  letter-spacing: -0.025em;
+}
+
+.plx__heroLine {
+  display: block;
+  will-change: transform, opacity;
+}
+
+/* ---- PLX 02 · Card deck ---- */
+
+.plx__deckRow {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  gap: clamp(10px, 2.4vw, 28px);
+  padding-bottom: 30px;
+  flex-wrap: wrap;
+}
+
+.plx__card {
+  margin: 0;
+  width: clamp(120px, 16vw, 200px);
+  will-change: transform;
+}
+
+.plx__card img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 5 / 7;
+  object-fit: cover;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: #101014;
+  box-shadow: 0 24px 50px rgba(0, 0, 0, 0.55);
+}
+
+/* Resting fan arc — independent rotate/translate props so the JS parallax
+   transform on the figure never collides with these. */
+.plx__card:nth-child(1) img { rotate: -7deg; translate: 0 16px; }
+.plx__card:nth-child(2) img { rotate: -2.5deg; }
+.plx__card:nth-child(3) img { rotate: 2.5deg; }
+.plx__card:nth-child(4) img { rotate: 7deg; translate: 0 16px; }
+
+.plx__card figcaption {
+  margin-top: 12px;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.5);
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.plx__cardRank {
+  font-size: 11px;
+  color: #cba86a;
+}
+
+/* ---- PLX 03 · Brands ---- */
+
+.plx__panel--brands {
+  overflow: clip;
+}
+
+.plx__rails {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(18px, 3vh, 32px);
+  padding: 10px 0 26px;
+}
+
+.plx__rail {
+  display: flex;
+  align-items: center;
+  gap: clamp(48px, 7vw, 110px);
+  width: max-content;
+  margin-left: 50%;
+  transform: translateX(-50%);
+  will-change: transform;
+}
+
+.plx__logo {
+  height: clamp(26px, 3.4vw, 42px);
+  width: auto;
+  opacity: 0.8;
+  filter: grayscale(1) brightness(2.2);
+}
+
+.plx__logo--text {
+  font-family: var(--font-serif);
+  font-size: clamp(20px, 2.4vw, 30px);
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.plx__brandsNote {
+  margin: 0 auto;
+  max-width: 1100px;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.4);
+  text-align: center;
+}
+
+/* ---- PLX 04 · Work sticky stack ---- */
+
+.plx__stack {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.pstack__chapter {
+  height: 105vh;
+}
+
+.pstack__card {
+  position: sticky;
+  top: 10vh;
+  height: 78vh;
+  border-radius: 24px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: #0a0a10;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.18),
+    0 40px 90px rgba(0, 0, 0, 0.6);
+  will-change: transform;
+  transform-origin: 50% 18%;
+  display: flex;
+  flex-direction: column;
+  padding: clamp(18px, 2.6vw, 30px);
+}
+
+.pstack__img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+}
+
+.pstack__scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(
+    180deg,
+    rgba(4, 5, 10, 0.55) 0%,
+    transparent 36%,
+    transparent 62%,
+    rgba(4, 5, 10, 0.72) 100%
+  );
+}
+
+/* Driven per frame — darkens the card as the next chapter covers it */
+.pstack__dim {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background: #04050a;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.pstack__head {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.pstack__num {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.pstack__line {
+  flex: 1;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.22);
+}
+
+.pstack__caption {
+  position: relative;
+  z-index: 3;
+  margin: auto 0 0;
+  font-family: var(--font-serif);
+  font-size: clamp(24px, 3.2vw, 44px);
+  letter-spacing: -0.02em;
+  text-shadow: 0 4px 24px rgba(0, 0, 0, 0.7);
+}
+
+/* ---- PLX 05 · Connect label cloud ---- */
+
+.plx__cloud {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: clamp(18px, 3.4vw, 44px);
+  max-width: 860px;
+  margin: 0 auto;
+  padding: clamp(20px, 6vh, 60px) 0;
+}
+
+.plx__dymo {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: calc(11px * var(--size, 1));
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.72);
+  padding: calc(12px * var(--size, 1)) calc(16px * var(--size, 1))
+    calc(11px * var(--size, 1));
+  border-radius: 3px;
+  background: #1c1c1c;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow:
+    inset 0 2px 4px rgba(0, 0, 0, 0.75),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.05),
+    0 3px 0 #0b0b0b,
+    0 4px 7px rgba(0, 0, 0, 0.85);
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.7);
+  rotate: var(--tilt, 0deg);
+  will-change: transform;
+}
+
+/* ---- PLX 06 · About collage ---- */
+
+.plx__collage {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: clamp(14px, 2.4vw, 28px);
+  max-width: 1100px;
+  margin: 0 auto;
+  align-items: start;
+}
+
+.plx__frame {
+  margin: 0;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: #101014;
+  box-shadow: 0 26px 60px rgba(0, 0, 0, 0.5);
+  will-change: transform;
+}
+
+.plx__frame img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* Inner counter-drift needs bleed so edges never show */
+  scale: 1.18;
+  will-change: transform;
+}
+
+.plx__frame--1 { grid-column: 1 / 4; aspect-ratio: 21 / 9; }
+.plx__frame--2 { grid-column: 4 / 7; aspect-ratio: 3 / 2; margin-top: clamp(30px, 6vh, 70px); }
+.plx__frame--3 { grid-column: 1 / 3; aspect-ratio: 9 / 14; }
+.plx__frame--4 { grid-column: 3 / 5; aspect-ratio: 3 / 2; margin-top: clamp(36px, 7vh, 80px); }
+.plx__frame--5 { grid-column: 5 / 7; aspect-ratio: 3 / 4; }
+
+/* ---- PLX 07 · Journal ---- */
+
+.plx__posts {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(16px, 2.4vw, 28px);
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.plx__post {
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: linear-gradient(180deg, rgba(18, 20, 30, 0.7), rgba(10, 11, 17, 0.85));
+  box-shadow: 0 24px 56px rgba(0, 0, 0, 0.45);
+  padding-bottom: 20px;
+  will-change: transform;
+}
+
+.plx__postImg {
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+
+.plx__postImg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  scale: 1.16;
+  will-change: transform;
+}
+
+.plx__postDate {
+  display: block;
+  padding: 0 18px;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #cba86a;
+}
+
+.plx__postTitle {
+  margin: 8px 0 0;
+  padding: 0 18px;
+  font-family: var(--font-serif);
+  font-size: clamp(17px, 1.6vw, 22px);
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+}
+
+.plx__postExcerpt {
+  margin: 8px 0 0;
+  padding: 0 18px;
+  font-family: var(--font-sans);
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.plx__mockNote {
+  margin: 26px auto 0;
+  max-width: 1100px;
+  font-family: var(--font-mono);
+  font-size: 8px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.3);
+  text-align: center;
+}
+
+/* ---- Reduced motion / motion-off resting state ---- */
+
+.plx--off [data-plx-y],
+.plx--off [data-plx-x],
+.plx--off [data-plx-scale],
+.plx--off [data-plx-fade],
+.plx--off [data-plx-rot] {
+  transform: none !important;
+  opacity: 1 !important;
+}
+
+/* ---- Responsive ---- */
+
+@media (max-width: 880px) {
+  .plx__posts {
+    grid-template-columns: 1fr;
+    max-width: 460px;
+  }
+  .plx__collage {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .plx__frame--1 { grid-column: 1 / 3; }
+  .plx__frame--2 { grid-column: 1 / 3; margin-top: 0; }
+  .plx__frame--3 { grid-column: 1 / 2; }
+  .plx__frame--4 { grid-column: 2 / 3; margin-top: 0; }
+  .plx__frame--5 { grid-column: 1 / 3; }
+  .plx__dock {
+    width: 170px;
+  }
+}

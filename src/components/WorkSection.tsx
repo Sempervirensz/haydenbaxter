@@ -49,8 +49,8 @@ export default function WorkSection() {
           </ol>
 
           <div className="cd-player-wrap" aria-hidden="true">
-            <img src="/playershellpngtransparent.png" alt="" className="cd-player-shell" />
-            <img src="/playerforeground.png" alt="" className="cd-player-fg" />
+            <img src="/playershellpngtransparent.webp" alt="" className="cd-player-shell" />
+            <img src="/playerforeground.webp" alt="" className="cd-player-fg" />
             <div className="cd-disc-overlay">
               <div className="cd-disc" />
             </div>

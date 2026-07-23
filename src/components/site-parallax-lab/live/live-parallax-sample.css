@@ -1,0 +1,18 @@
+/* Live Parallax Sample — helper classes for previewing the SiteParallaxEnhancer
+   on the *real* homepage sections. These were trialled inline in globals.css
+   during the experiment; they live here so the homepage stays parallax-free
+   while the lab keeps the experiment runnable. */
+
+.brands__rail {
+  width: max-content;
+}
+
+.journal__plx-card {
+  display: flex;
+  width: 100%;
+  max-width: 420px;
+}
+
+.journal__plx-card .journal__card {
+  max-width: none;
+}
