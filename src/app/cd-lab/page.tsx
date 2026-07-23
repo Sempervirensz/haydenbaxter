@@ -145,7 +145,9 @@ export default function CdLabPage() {
           justifyContent: "center",
           minHeight: "100vh",
           paddingTop: 60,
-          background: `url("/Velvetbackground.png") center / cover no-repeat`,
+          // Velvetbackground.png was never committed — this 404s, so the lab has
+          // always rendered on the flat backdrop below. Kept as the real value.
+          background: "#0a0a0a",
           overflow: "hidden",
           position: "relative",
         }}

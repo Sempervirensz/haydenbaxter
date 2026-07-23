@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "check:assets": "node scripts/check-assets.mjs",
+    "check": "npx tsc --noEmit && npm run check:assets"
   },
   "dependencies": {
     "@react-three/drei": "^10.7.7",

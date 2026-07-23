@@ -140,7 +140,9 @@ export default function CdLabDesktopPage() {
           width: "100%",
           height: "100vh",
           overflow: "hidden",
-          background: `url("/Velvetbackground.png") center / cover no-repeat`,
+          // Velvetbackground.png was never committed — this 404s, so the lab has
+          // always rendered on the flat backdrop below. Kept as the real value.
+          background: "#0a0a0a",
           display: "flex",
           flexDirection: "column",
           alignItems: "center",

@@ -35,4 +35,43 @@ Minimize diffs. Preserve architecture. Avoid style drift.
 
 ## Commands
 - Next dev: `npm run dev`
+- Verify before you hand work back: `npm run check` (tsc + asset references)
+- Production build: `npm run build` (static export to `out/`)
 - Vanilla preview (if needed): `python3 -m http.server 8000`
+
+## Traps that have already caused shipped bugs
+
+Read these before touching assets or running a build. Each one is invisible on
+this machine and only shows up in production.
+
+### 1. Asset paths are case-sensitive in production, not in dev
+Development is macOS (case-insensitive); Vercel builds on Linux
+(case-sensitive). `url("/Consulting/hero.png")` resolves locally and 404s
+after deploy. Worse, `git config core.ignorecase` is `true`, so git can track
+`public/consulting/` while your working copy shows `public/Consulting/` — and
+any audit that reads the filesystem gives the wrong answer.
+
+**git's index is the authority**, not the filesystem: `git ls-files public/`
+is exactly what a fresh clone gets. `npm run check:assets` enforces this.
+
+### 2. Assets under `public/` must actually be committed
+A referenced file sitting untracked in your working directory renders fine
+locally and is simply absent for everyone else. Eight assets were in this
+state at once. `npm run check:assets` catches it.
+
+### 3. Never run `npm run build` while `npm run dev` is running
+They share `.next/`, and the production build overwrites the manifests the
+dev server is still using. The symptom is not an error — the page keeps
+serving and every chunk returns 200, but React never hydrates, so every
+`onClick` silently does nothing and it looks like an interaction bug in your
+code. Stop the dev server, `rm -rf .next`, then build.
+
+### 4. Booking links come from one place
+`CALENDLY_URL` in `src/data/connect.ts` feeds the navbar CTA, the Connect
+embed, and the consulting drawer. Change it there, never inline.
+
+### 5. Much of `src/app/*-lab/` is uncommitted work in progress
+Many lab and sandbox routes exist only in the working directory. If a lab
+route seems to be missing from git, that is expected — do not "restore" it
+from a build artifact. Production surfaces are `/`, `/blog`, `/privacy`,
+`/emerging-tech-builds/**` (see `PUBLIC_ROUTES` in `src/data/site.ts`).
