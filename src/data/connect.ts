@@ -15,4 +15,9 @@ export const CONNECT_LINKS: ConnectLink[] = [
 
 export const WECHAT_ID = "haydenjbaxter";
 
-export const CALENDLY_URL = "https://calendly.com/haydenjbaxter";
+// Points at the event type, not the profile page. The profile page is a short
+// "pick one of your event types" card that doesn't fill the 700px embed frame,
+// which left a large empty block under it — and it made visitors click through
+// a list of one. The event page renders the calendar directly and sizes itself
+// to the container at both desktop and mobile widths.
+export const CALENDLY_URL = "https://calendly.com/haydenjbaxter/30min";

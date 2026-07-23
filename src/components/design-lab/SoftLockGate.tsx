@@ -7,8 +7,12 @@
 // (Skip is always right there). The gated sections are passed as children from
 // the server page, so no server/client import issues.
 
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import CardDeck from "@/components/CardDeck";
+import {
+  SOFT_LOCK_RELEASE,
+  type SoftLockReleaseDetail,
+} from "./softLockEvents";
 import "./design-lab.css";
 
 export default function SoftLockGate({ children }: { children: React.ReactNode }) {
@@ -21,7 +25,33 @@ export default function SoftLockGate({ children }: { children: React.ReactNode }
     if (count >= 4) setReleased(true);
   }, []);
 
+  // A nav link to a gated section counts as engaging with the entry — without
+  // this, #work / #about / #connect silently do nothing on first load.
+  const [pendingHash, setPendingHash] = useState<string | null>(null);
+
+  useEffect(() => {
+    const onRelease = (e: Event) => {
+      const { hash } = (e as CustomEvent<SoftLockReleaseDetail>).detail ?? {};
+      setSkipped(true);
+      if (hash) setPendingHash(hash);
+    };
+    window.addEventListener(SOFT_LOCK_RELEASE, onRelease);
+    return () => window.removeEventListener(SOFT_LOCK_RELEASE, onRelease);
+  }, []);
+
   const open = released || skipped;
+
+  // Runs after the commit that removes `display: none`, so the target is laid
+  // out and scrollable — no polling or rAF needed (rAF wouldn't fire at all if
+  // the tab were backgrounded).
+  useEffect(() => {
+    if (!open || !pendingHash) return;
+    const target = document.querySelector(pendingHash);
+    setPendingHash(null);
+    if (!target) return;
+    target.scrollIntoView({ behavior: "auto", block: "start" });
+    history.replaceState(null, "", pendingHash);
+  }, [open, pendingHash]);
 
   return (
     <>

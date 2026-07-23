@@ -1,3 +1,5 @@
+import { CALENDLY_URL } from "@/data/connect";
+
 export const SPLASH_WORDS = [
   "Hello",
   "你好",
@@ -21,7 +23,9 @@ export const SITE_CONTENT = {
       { label: "About", href: "#about" },
       { label: "Connect", href: "#connect" },
       { label: "Journal", href: "/blog" },
-      { label: "Book a Call", href: "#", cta: true },
+      // Booking always points at the single source of truth in `data/connect`
+      // so the nav CTA can't drift from the Connect-section embed again.
+      { label: "Book a Call", href: CALENDLY_URL, cta: true },
     ],
   },
   hero: {

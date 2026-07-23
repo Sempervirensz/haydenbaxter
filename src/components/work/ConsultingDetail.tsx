@@ -2,8 +2,9 @@
 
 import { useEffect, useState } from "react";
 import type { ConsultingData } from "@/data/work";
-import { CONNECT_LINKS, WECHAT_ID, CALENDLY_URL } from "@/data/connect";
+import { CONNECT_LINKS, WECHAT_ID } from "@/data/connect";
 import TagPills from "@/components/work/TagPills";
+import CalendlyEmbed from "@/components/CalendlyEmbed";
 
 interface ConsultingDetailProps {
   data: ConsultingData;
@@ -29,16 +30,6 @@ export default function ConsultingDetail({ data, isActive }: ConsultingDetailPro
     return () => window.removeEventListener("keydown", onKey);
   }, [drawerOpen]);
 
-  // Load Calendly script when drawer opens
-  useEffect(() => {
-    if (!drawerOpen) return;
-    if (document.querySelector('script[src*="calendly.com/assets/external/widget.js"]')) return;
-    const script = document.createElement("script");
-    script.src = "https://assets.calendly.com/assets/external/widget.js";
-    script.async = true;
-    document.head.appendChild(script);
-  }, [drawerOpen]);
-
   const activeOffer = data.offers.find((o) => o.id === activeOfferId) ?? data.offers[0];
 
   return (
@@ -46,11 +37,11 @@ export default function ConsultingDetail({ data, isActive }: ConsultingDetailPro
       <picture>
         <source
           media="(max-width: 640px)"
-          srcSet="/Mobile%20Statue%20Consulting.png"
+          srcSet="/consulting/mobile-statue.webp"
         />
         <img
           className="cns-photo__img"
-          src="/consulting-hero.png"
+          src="/consulting/consulting-hero.png"
           alt="Night cityscape"
         />
       </picture>
@@ -173,10 +164,7 @@ export default function ConsultingDetail({ data, isActive }: ConsultingDetailPro
                 );
               })}
             </div>
-            <div
-              className="calendly-inline-widget cns-photo__calendly"
-              data-url={`${CALENDLY_URL}?hide_gdpr_banner=1&background_color=0a0a0a&text_color=f3f3f3&primary_color=ffffff`}
-            />
+            <CalendlyEmbed className="cns-photo__calendly" active={drawerOpen} />
           </div>
 
           {/* Footer identity */}

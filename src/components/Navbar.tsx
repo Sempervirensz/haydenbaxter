@@ -1,11 +1,24 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { SITE_CONTENT } from "@/data/siteContent";
+import { releaseSoftLock } from "@/components/design-lab/softLockEvents";
 
 export default function Navbar() {
   const { wordmark, navLinks } = SITE_CONTENT.header;
   const [open, setOpen] = useState(false);
+
+  // In-page anchors can't resolve while the soft lock hides their targets, so
+  // hand the destination to the gate: it opens, then scrolls once the content
+  // is committed. Anything else (/blog, the Calendly CTA) is left to the browser.
+  const handleAnchorClick = useCallback(
+    (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+      if (!href.startsWith("#") || href === "#") return;
+      e.preventDefault();
+      releaseSoftLock(href);
+    },
+    []
+  );
 
   useEffect(() => {
     if (!open) return;
@@ -33,6 +46,7 @@ export default function Navbar() {
                 key={link.label}
                 href={link.href}
                 className={`tag ${link.cta ? "tag--cta" : "tag--nav"}`}
+                onClick={(e) => handleAnchorClick(e, link.href)}
                 {...(isExternal && {
                   target: "_blank",
                   rel: "noopener noreferrer",
@@ -70,7 +84,10 @@ export default function Navbar() {
               key={link.label}
               href={link.href}
               className="nav-mobile__link"
-              onClick={() => setOpen(false)}
+              onClick={(e) => {
+                setOpen(false);
+                handleAnchorClick(e, link.href);
+              }}
               role="menuitem"
               {...(isExternal && {
                 target: "_blank",
