@@ -66,12 +66,28 @@ serving and every chunk returns 200, but React never hydrates, so every
 `onClick` silently does nothing and it looks like an interaction bug in your
 code. Stop the dev server, `rm -rf .next`, then build.
 
-### 4. Booking links come from one place
+### 4. `.next/types` goes stale across branch switches
+Next generates route type stubs into `.next/types/`. Switching between `main`
+and a branch that has different routes leaves stubs for routes that no longer
+exist, and `npx tsc --noEmit` then reports `TS2307: Cannot find module
+'../../src/app/<some-lab>/page.js'` for routes you never touched. The code is
+fine. `rm -rf .next` and re-run.
+
+### 5. Booking links come from one place
 `CALENDLY_URL` in `src/data/connect.ts` feeds the navbar CTA, the Connect
 embed, and the consulting drawer. Change it there, never inline.
 
-### 5. Much of `src/app/*-lab/` is uncommitted work in progress
-Many lab and sandbox routes exist only in the working directory. If a lab
-route seems to be missing from git, that is expected — do not "restore" it
-from a build artifact. Production surfaces are `/`, `/blog`, `/privacy`,
-`/emerging-tech-builds/**` (see `PUBLIC_ROUTES` in `src/data/site.ts`).
+### 6. The lab routes live on a branch, not on `main`
+`main` carries the production site only — roughly 40 routes. The experimental
+labs, sandboxes, and previews (`src/app/*-lab/`, `*-sandbox/`, `*-preview/`,
+plus `public/fonts/`) live on `wip/labs-and-asset-optimization`, which builds
+64 routes. A lab route missing from `main` is expected, not damage; check that
+branch out rather than reconstructing it.
+
+Production surfaces are `/`, `/blog`, `/privacy`, `/emerging-tech-builds/**`
+— see `PUBLIC_ROUTES` in `src/data/site.ts`. Everything else is listed in
+`NON_PUBLIC_PREFIXES` and is noindexed; add new labs there too.
+
+That branch also holds a PNG→WebP swap for the main site that is safe to merge,
+sharing files with an in-progress "AI & Emerging Tech Builds" rename. Don't
+merge it piecemeal without checking with Hayden first.
