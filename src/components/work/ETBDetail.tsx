@@ -8,8 +8,11 @@ import DetailModal from "@/components/work/DetailModal";
 import TagPills from "@/components/work/TagPills";
 
 /** Project IDs with a standalone /emerging-tech-builds/{slug} detail page.
- *  Anything not listed here renders a disabled "Coming Soon" CTA. */
-const ETB_DETAIL_ROUTES: Record<string, string> = {
+ *  Anything not listed here renders a disabled "Coming Soon" CTA.
+ *
+ *  Exported so the mobile Work card routes to the exact same slugs — the two
+ *  surfaces must never disagree about where a project lives. */
+export const ETB_DETAIL_ROUTES: Record<string, string> = {
   casebrief: "/emerging-tech-builds/casebrief",
   atomicos: "/emerging-tech-builds/atomic-os",
   cortex: "/emerging-tech-builds/cortex",
@@ -202,7 +205,10 @@ function getSystemSnapshot(project: ETBProject): string[] {
   ];
 }
 
-function sortProjects(projects: ETBProject[], field: ScoreField): ETBProject[] {
+/** Exported so the mobile Work card orders its candy bars identically — the
+ *  homepage card and this gallery must never disagree about project order.
+ *  Pure; exporting changes no behaviour here. */
+export function sortProjects(projects: ETBProject[], field: ScoreField): ETBProject[] {
   return projects
     .slice()
     .sort((a, b) => {
@@ -211,7 +217,8 @@ function sortProjects(projects: ETBProject[], field: ScoreField): ETBProject[] {
     });
 }
 
-function resolveSortField(data: ETBData): ScoreField {
+/** Exported alongside sortProjects — see the note there. Pure. */
+export function resolveSortField(data: ETBData): ScoreField {
   const byLabel = data.sortOptions.find((option) => option.label === data.defaultSort);
   if (
     byLabel?.field === "completenessScore" ||

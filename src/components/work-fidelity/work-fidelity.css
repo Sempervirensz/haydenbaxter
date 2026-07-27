@@ -1,0 +1,1368 @@
+/* ============================================================================
+   MOBILE WORK — FIDELITY VARIATIONS (.wf)
+   Scoped under .wf so nothing leaks into production.
+
+   Fidelity rule for this file: where production already defines a material —
+   the candy bar gradient, Cobalt Select, the sheen sweep, the frosted glass
+   dossier, the off-white Project File card — those VALUES ARE COPIED, not
+   reinvented. If a value here disagrees with work-details.css or
+   cinematic-work-stack.css, this file is wrong.
+
+   Sized with container queries against the phone frame, so a variation could
+   drop into the production card unchanged.
+   ========================================================================== */
+
+.wf {
+  position: relative;
+  background: #04050a;
+  color: #f3f3f5;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* ---- Chapter + card frame (shared structural rule) ---- */
+.wf-chapter {
+  height: 100cqh;
+  padding: 6px;
+}
+
+.wf-card {
+  --wf-gutter: 18px;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border-radius: 18px;
+  background: #06070b;
+  outline: 1px solid rgba(255, 255, 255, 0.07);
+  outline-offset: -1px;
+  /* Copied from .cstack__card — the desktop stack's borderless filmic float. */
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.05) inset,
+    0 0 90px 6px rgba(0, 0, 0, 0.45) inset,
+    0 30px 70px -28px rgba(0, 0, 0, 0.9);
+}
+
+/* ---- Chapter rail (shared) — mirrors .cstack__head ---- */
+.wf-rail {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 12;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 15px var(--wf-gutter);
+  pointer-events: none;
+}
+
+.wf-rail__num {
+  font-family: var(--font-mono);
+  font-size: clamp(8px, 2.4cqw, 10px);
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.82);
+  white-space: nowrap;
+}
+
+.wf-rail--onPhoto .wf-rail__num {
+  color: #fff;
+  text-shadow: 0 1px 14px rgba(0, 0, 0, 0.95), 0 0 3px rgba(0, 0, 0, 0.7);
+}
+
+.wf-rail__line {
+  flex: 1;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* ---- Typography roles (shared) ---- */
+.wf-headline {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-size: clamp(23px, 7.2cqw, 32px);
+  line-height: 1.04;
+  letter-spacing: -0.02em;
+  color: #fff;
+}
+
+.wf-label {
+  font-family: var(--font-mono);
+  font-size: clamp(8px, 2.3cqw, 9.5px);
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.62);
+}
+
+.wf-para {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: clamp(12.5px, 3.4cqw, 14px);
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.wf a:focus-visible,
+.wf button:focus-visible {
+  outline: 2px solid #d8b15a;
+  outline-offset: 3px;
+}
+
+/* ============================================================================
+   FROSTED GLASS DOSSIER — copied from .cstack__glass
+   ========================================================================== */
+
+.wf-glass {
+  position: absolute;
+  left: var(--wf-gutter);
+  right: var(--wf-gutter);
+  bottom: var(--wf-gutter);
+  z-index: 14;
+  max-height: var(--wf-glass-h, 62cqh);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: none;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 20px 20px 22px;
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  backdrop-filter: blur(26px) saturate(1.7);
+  -webkit-backdrop-filter: blur(26px) saturate(1.7);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.5),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.12),
+    0 30px 70px -26px rgba(0, 0, 0, 0.85);
+  transform-origin: 50% 100%;
+  transform: scale(0.94) translateY(14px);
+  opacity: 0;
+  pointer-events: none;
+  transition: transform 460ms cubic-bezier(0.22, 1, 0.36, 1), opacity 300ms ease;
+}
+
+.wf-glass::-webkit-scrollbar {
+  display: none;
+}
+
+.wf-card.is-open .wf-glass {
+  transform: scale(1) translateY(0);
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* The desktop panel sits on a dark scrim so a light frost reads. Over sunlit
+   photo a light frost drops body copy under 4.5:1, so the tint darkens while
+   the material (blur, saturate, inset highlight) stays identical. */
+.wf-glass--dark {
+  background: rgba(9, 11, 16, 0.62);
+  border-color: rgba(255, 255, 255, 0.24);
+}
+
+.wf-glass__sheen {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: linear-gradient(
+    130deg,
+    rgba(255, 255, 255, 0.28) 0%,
+    rgba(255, 255, 255, 0.05) 28%,
+    transparent 52%
+  );
+  mix-blend-mode: screen;
+}
+
+.wf-glass__close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  background: rgba(10, 11, 15, 0.4);
+  color: rgba(255, 255, 255, 0.9);
+  font-family: var(--font-mono);
+  font-size: 15px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+/* ---- Controls — mirrors .cstack__infoBtn / .cstack__glassLink ---- */
+.wf-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 52px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  background: rgba(10, 11, 15, 0.5);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: #fff;
+  font-family: var(--font-mono);
+  font-size: clamp(9.5px, 2.8cqw, 11px);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 180ms ease, border-color 180ms ease, transform 160ms ease;
+}
+
+.wf-trigger:active {
+  transform: scale(0.985);
+  background: rgba(255, 255, 255, 0.14);
+}
+
+.wf-trigger__icon {
+  display: inline-block;
+  transition: transform 220ms ease;
+}
+
+.wf-card.is-open .wf-trigger__icon {
+  transform: rotate(90deg);
+}
+
+/* Primary CTA — copied from .cstack__glassLink (solid white mono pill). */
+.wf-cta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  min-height: 50px;
+  padding: 0 16px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  background: #fff;
+  color: #0b0c12;
+  font-family: var(--font-mono);
+  font-size: clamp(8.6px, 2.7cqw, 11px);
+  font-weight: 600;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  text-decoration: none;
+  white-space: nowrap;
+  box-shadow: 0 10px 26px -10px rgba(0, 0, 0, 0.7);
+  transition: transform 200ms ease;
+}
+
+.wf-cta:active {
+  transform: translateY(1px) scale(0.995);
+}
+
+.wf-foot {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 13;
+  padding: 0 var(--wf-gutter) var(--wf-gutter);
+  transition: opacity 280ms ease, transform 280ms ease;
+}
+
+.wf-card.is-open .wf-foot {
+  opacity: 0;
+  transform: translateY(8px);
+  pointer-events: none;
+}
+
+.wf-scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 13;
+  border: 0;
+  padding: 0;
+  background: rgba(4, 5, 10, 0.3);
+  opacity: 0;
+  pointer-events: none;
+  cursor: pointer;
+  transition: opacity 340ms ease;
+}
+
+.wf-card.is-open .wf-scrim {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* ============================================================================
+   01 — WORLDPULSE
+   ========================================================================== */
+
+.wf-wp__media {
+  position: absolute;
+  inset: -14px 0;
+  z-index: 0;
+  overflow: hidden;
+  transform: translate3d(0, var(--wf-plx-img, 0px), 0);
+}
+
+.wf-wp__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* Measured against the asset: the hero is 2.36:1, a portrait crop keeps only
+     ~19.6% of its width, and 38% is the one anchor holding the phone AND her
+     face. Production's ≤600px rule uses 34%, which cuts her face. */
+  object-position: 38% 50%;
+  display: block;
+  transition:
+    transform 620ms cubic-bezier(0.22, 1, 0.36, 1),
+    object-position 620ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Copied from .cstack__scrim, re-weighted for portrait. */
+.wf-wp__scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background: linear-gradient(
+    180deg,
+    rgba(4, 5, 10, 0.86) 0%,
+    rgba(4, 5, 10, 0.42) 30%,
+    transparent 52%,
+    rgba(4, 5, 10, 0.86) 100%
+  );
+  transform: translate3d(0, var(--wf-plx-scrim, 0px), 0);
+}
+
+.wf-wp__headline {
+  position: absolute;
+  z-index: 10;
+  top: clamp(46px, 7.4cqh, 70px);
+  left: var(--wf-gutter);
+  right: var(--wf-gutter);
+  text-shadow: 0 4px 30px rgba(0, 0, 0, 0.8);
+  transform: translate3d(0, var(--wf-plx-text, 0px), 0);
+  transition: opacity 320ms ease;
+}
+
+.wf-card--wp.is-open .wf-wp__headline {
+  opacity: 0;
+}
+
+/* Variation B — lede on the card, so the story is not gated behind a tap. */
+.wf-wp__lede {
+  position: absolute;
+  z-index: 10;
+  left: var(--wf-gutter);
+  right: var(--wf-gutter);
+  top: calc(clamp(46px, 7.4cqh, 70px) + 5.2em);
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: clamp(12.5px, 3.3cqw, 13.5px);
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.86);
+  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.9);
+  transition: opacity 320ms ease;
+}
+
+.wf-card--wp.is-open .wf-wp__lede {
+  opacity: 0;
+}
+
+.wf-wp__footStack {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.wf-wp__logo {
+  display: block;
+  width: clamp(140px, 44cqw, 175px);
+  height: auto;
+  margin-left: -5px;
+}
+
+/* ============================================================================
+   02 — EMERGING TECH BUILDS · the candy-bar stack
+   Values copied verbatim from .etb-bar / .etb-bar__* in work-details.css.
+   ========================================================================== */
+
+.wf-card--etb {
+  /* Production renders the bars over the dark work screen; the cobalt wash
+     echoes the Cobalt Select accent without competing with it. */
+  background:
+    radial-gradient(120% 80% at 82% 2%, rgba(37, 99, 235, 0.16), transparent 62%),
+    linear-gradient(168deg, #0b0d14 0%, #06070b 100%);
+}
+
+.wf-etb__body {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  display: flex;
+  flex-direction: column;
+  padding: clamp(50px, 7.6cqh, 70px) var(--wf-gutter) var(--wf-gutter);
+}
+
+.wf-etb__intro {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  padding-bottom: clamp(10px, 1.8cqh, 16px);
+}
+
+/* Variation B pins the section identity while the stack scrolls under it. */
+.wf-etb__intro--sticky {
+  position: sticky;
+  top: 0;
+  z-index: 6;
+  background: linear-gradient(180deg, #0a0c13 72%, rgba(10, 12, 19, 0));
+  padding-top: 4px;
+}
+
+.wf-etb__desc {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: clamp(11.5px, 3.1cqw, 12.5px);
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.wf-etb__stack {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.wf-etb__stack--scroll {
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: none;
+  padding-bottom: 4px;
+}
+
+.wf-etb__stack--scroll::-webkit-scrollbar {
+  display: none;
+}
+
+/* ---- The candy bar. Cream gradient + inset highlight + drop shadow. ---- */
+.wf-bar {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 0;
+  min-height: 0;
+  border-radius: 14px;
+  background: linear-gradient(180deg, #fefefe 0%, #f6f5f2 100%);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.85) inset,
+    0 -1px 0 rgba(0, 0, 0, 0.04) inset,
+    0 4px 16px rgba(0, 0, 0, 0.45),
+    0 1px 3px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+  transition:
+    flex 440ms cubic-bezier(0.22, 1, 0.36, 1),
+    background 260ms ease,
+    box-shadow 260ms ease,
+    border-color 200ms ease,
+    opacity 200ms ease,
+    transform 300ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.wf-bar__head {
+  all: unset;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  height: 100%;
+  min-height: 56px;
+  padding: 0 16px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.wf-bar__sheen {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    105deg,
+    transparent 32%,
+    rgba(255, 255, 255, 0.7) 46%,
+    rgba(255, 255, 255, 0.15) 54%,
+    transparent 66%
+  );
+  opacity: 0;
+  transform: translateX(-160%);
+  transition: transform 1s cubic-bezier(0.16, 0.84, 0.44, 1), opacity 300ms ease;
+}
+
+/* Touch has no hover: the sheen fires on ACTIVATION instead. */
+.wf-bar.is-active .wf-bar__sheen {
+  opacity: 0.5;
+  transform: translateX(160%);
+  background: linear-gradient(
+    105deg,
+    transparent 32%,
+    rgba(255, 255, 255, 0.18) 46%,
+    rgba(255, 255, 255, 0.04) 54%,
+    transparent 66%
+  );
+}
+
+.wf-bar__content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 4px;
+  flex: 1;
+  min-width: 0;
+}
+
+.wf-bar__name {
+  font-family: var(--font-mono);
+  font-size: clamp(12px, 3.4cqw, 15px);
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #111116;
+  line-height: 1;
+  text-align: left;
+}
+
+.wf-bar__summary {
+  font-family: var(--font-mono);
+  font-size: clamp(8.5px, 2.4cqw, 10px);
+  line-height: 1.3;
+  letter-spacing: 0.06em;
+  color: rgba(17, 17, 22, 0.42);
+  text-align: left;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.wf-bar__chevron {
+  flex-shrink: 0;
+  font-size: 18px;
+  color: rgba(17, 17, 22, 0.42);
+  font-weight: 600;
+  transition: color 200ms ease, transform 200ms ease;
+}
+
+/* ---- Cobalt Select — copied from .etb-bar:hover ---- */
+.wf-bar.is-active {
+  background: linear-gradient(180deg, #2563eb 0%, #1d4ed8 100%);
+  border-color: rgba(37, 99, 235, 0.6);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.2) inset,
+    0 -1px 0 rgba(0, 0, 0, 0.15) inset,
+    0 6px 24px rgba(29, 78, 216, 0.25),
+    0 2px 6px rgba(0, 0, 0, 0.4);
+}
+
+.wf-bar.is-active .wf-bar__name {
+  color: #fff;
+}
+
+.wf-bar.is-active .wf-bar__summary {
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.wf-bar.is-active .wf-bar__chevron {
+  color: rgba(255, 255, 255, 0.8);
+  transform: rotate(90deg);
+}
+
+/* Variation C — desktop weights the hovered bar with flex 1.15; touch gets the
+   same emphasis plus a lift, and the neighbours recede. */
+.wf-etb__stack--depth .wf-bar.is-active {
+  flex: 1.5 1 0;
+  transform: translateY(-2px) scale(1.012);
+  z-index: 2;
+}
+
+.wf-etb__stack--depth.has-active .wf-bar:not(.is-active) {
+  opacity: 0.55;
+  transform: scale(0.985);
+}
+
+/* ---- Inline dossier (variation B) — bar expands in place ---- */
+.wf-bar__panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 420ms cubic-bezier(0.22, 1, 0.36, 1);
+  background: #fbfaf7;
+}
+
+.wf-bar.is-open .wf-bar__panel {
+  grid-template-rows: 1fr;
+}
+
+.wf-bar__panelInner {
+  overflow: hidden;
+}
+
+/* Inline variant: bars size to content and the STACK scrolls. `flex: 1 1 auto`
+   on the open bar caps it at the stack's height, so the expanded dossier gets
+   clipped with nothing scrollable — the stack's scrollHeight never grows. Bars
+   must stay `0 0 auto` so the open one can actually push the stack taller. */
+.wf-etb__stack--inline .wf-bar,
+.wf-etb__stack--inline .wf-bar.is-open {
+  flex: 0 0 auto;
+}
+
+/* Same reason: inside a bar the dossier is plain flow content, not a flex child
+   with its own scroller. Its `flex`/`overflow` rules are for the pushed
+   overlay, where it IS a flex child. */
+.wf-etb__stack--inline .wf-dos__card {
+  flex: none;
+  overflow: visible;
+  min-height: 0;
+}
+
+/* ---- Project File dossier — the off-white card, copied from .etb-dos ---- */
+.wf-dos {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  background: rgba(6, 7, 11, 0.72);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  transform: translateY(100%);
+  transition: transform 480ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.wf-card--etb.is-open .wf-dos {
+  transform: translateY(0);
+}
+
+.wf-dos__topbar {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px var(--wf-gutter) 10px;
+}
+
+.wf-dos__eyebrow {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.wf-dos__close {
+  min-height: 44px;
+  padding: 0 12px;
+  border: 0;
+  background: none;
+  color: rgba(255, 255, 255, 0.8);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+/* The off-white file card itself. */
+.wf-dos__card {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: none;
+  margin: 0 var(--wf-gutter) var(--wf-gutter);
+  padding: 18px;
+  border-radius: 14px;
+  background: linear-gradient(180deg, #fefefe 0%, #f6f5f2 100%);
+  box-shadow: 0 18px 50px -18px rgba(0, 0, 0, 0.8);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.wf-dos__card::-webkit-scrollbar {
+  display: none;
+}
+
+.wf-dos__mark {
+  width: 44px;
+  height: 44px;
+  object-fit: contain;
+}
+
+.wf-dos__category {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: rgba(17, 17, 22, 0.5);
+}
+
+.wf-dos__title {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: clamp(15px, 4.2cqw, 18px);
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #111116;
+}
+
+.wf-dos__hook {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: clamp(15px, 4.2cqw, 18px);
+  line-height: 1.25;
+  color: #1d4ed8;
+}
+
+.wf-dos__text {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: clamp(12.5px, 3.3cqw, 13.5px);
+  line-height: 1.5;
+  color: rgba(17, 17, 22, 0.74);
+}
+
+.wf-dos__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.wf-dos__tag {
+  padding: 4px 9px;
+  border-radius: 999px;
+  border: 1px solid rgba(17, 17, 22, 0.14);
+  font-family: var(--font-mono);
+  font-size: 8.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(17, 17, 22, 0.55);
+}
+
+/* Cobalt CTA — the dossier's own action, matching Cobalt Select. */
+.wf-dos__cta {
+  margin-top: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 48px;
+  border-radius: 999px;
+  background: linear-gradient(180deg, #2563eb 0%, #1d4ed8 100%);
+  color: #fff;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  text-decoration: none;
+  border: 1px solid rgba(37, 99, 235, 0.6);
+}
+
+.wf-dos__cta--disabled {
+  background: rgba(17, 17, 22, 0.08);
+  color: rgba(17, 17, 22, 0.4);
+  border-color: rgba(17, 17, 22, 0.12);
+}
+
+/* ============================================================================
+   03 — SUPPLY CHAIN · the real globe
+   ========================================================================== */
+
+.wf-card--sc {
+  background: radial-gradient(120% 70% at 50% 22%, #0c1018 0%, #05060a 72%);
+}
+
+.wf-sc__body {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  display: flex;
+  flex-direction: column;
+  padding: clamp(46px, 7cqh, 66px) 0 0;
+}
+
+.wf-sc__globe {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: clamp(150px, 26cqh, 230px);
+}
+
+/* Variation B — the geography stays on screen for the whole story. */
+.wf-sc__globe--sticky {
+  position: sticky;
+  top: 0;
+  z-index: 3;
+}
+
+.wf-sc__globeGlow {
+  position: absolute;
+  left: 50%;
+  top: clamp(46px, 7cqh, 66px);
+  width: 78%;
+  height: clamp(150px, 26cqh, 230px);
+  transform: translateX(-50%);
+  pointer-events: none;
+  background: radial-gradient(50% 50% at 50% 50%, rgba(80, 140, 220, 0.16), transparent 70%);
+}
+
+.wf-sc__quote {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: clamp(8px, 1.6cqh, 14px) var(--wf-gutter) clamp(8px, 1.4cqh, 12px);
+}
+
+/* The four production heroArt quote styles, held at mobile scale. */
+.wf-sc__lineSerif {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: clamp(16px, 4.8cqw, 20px);
+  line-height: 1.15;
+  color: #fff;
+}
+
+.wf-sc__lineMono {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: clamp(8.5px, 2.5cqw, 10px);
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: rgba(216, 177, 90, 0.9);
+}
+
+.wf-sc__lineSans {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: clamp(12.5px, 3.4cqw, 14px);
+  color: rgba(255, 255, 255, 0.86);
+}
+
+.wf-sc__lineItalic {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: clamp(11.5px, 3.1cqw, 13px);
+  line-height: 1.4;
+  color: rgba(255, 255, 255, 0.58);
+}
+
+/* ---- The rail — production's own mobile timeline ---- */
+.wf-sc__rail {
+  list-style: none;
+  margin: 0;
+  padding: 0 var(--wf-gutter) clamp(74px, 10cqh, 96px);
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: none;
+  position: relative;
+}
+
+.wf-sc__rail::-webkit-scrollbar {
+  display: none;
+}
+
+.wf-sc__railRow {
+  position: relative;
+  padding-left: 20px;
+}
+
+/* The vertical line the dots sit on. */
+.wf-sc__railRow::before {
+  content: "";
+  position: absolute;
+  left: 4px;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: rgba(255, 255, 255, 0.14);
+}
+
+.wf-sc__railRow:first-child::before {
+  top: 14px;
+}
+
+.wf-sc__railRow:last-child::before {
+  bottom: auto;
+  height: 14px;
+}
+
+.wf-sc__railItem {
+  all: unset;
+  box-sizing: border-box;
+  display: block;
+  width: 100%;
+  min-height: 44px;
+  padding: 9px 0;
+  cursor: pointer;
+  opacity: 0.35;
+  transition: opacity 420ms ease;
+}
+
+.wf-sc__railItem.is-revealed {
+  opacity: 1;
+}
+
+.wf-sc__railDot {
+  position: absolute;
+  left: 0;
+  top: 15px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.25);
+  transition: background 300ms ease, box-shadow 300ms ease, transform 300ms ease;
+}
+
+.wf-sc__railItem.is-active .wf-sc__railDot {
+  background: #d8b15a;
+  box-shadow: 0 0 0 4px rgba(216, 177, 90, 0.18);
+  transform: scale(1.15);
+}
+
+.wf-sc__railMeta {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: clamp(8px, 2.2cqw, 9px);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(216, 177, 90, 0.85);
+}
+
+.wf-sc__railHeadline {
+  display: block;
+  margin-top: 4px;
+  font-family: var(--font-sans);
+  font-size: clamp(13px, 3.6cqw, 14.5px);
+  line-height: 1.3;
+  color: rgba(255, 255, 255, 0.92);
+}
+
+/* Description is the reward for selecting a stop — same as production. */
+.wf-sc__railDesc {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 400ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.wf-sc__railItem.is-active .wf-sc__railDesc {
+  grid-template-rows: 1fr;
+}
+
+.wf-sc__railDescInner {
+  overflow: hidden;
+}
+
+.wf-sc__railDesc p {
+  margin: 6px 0 0;
+  font-family: var(--font-sans);
+  font-size: clamp(11.5px, 3.1cqw, 12.5px);
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* ============================================================================
+   04 — CONSULTING · the three-state stage
+   ========================================================================== */
+
+.wf-cns__media {
+  position: absolute;
+  inset: -14px 0;
+  z-index: 0;
+  overflow: hidden;
+  transform: translate3d(0, var(--wf-plx-img, 0px), 0);
+}
+
+.wf-cns__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 32%;
+  display: block;
+  transition: transform 700ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Production's frosted wash — blur, no darkening. Copied from .cht-overlay. */
+.wf-cns__wash {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  opacity: 0;
+  pointer-events: none;
+  backdrop-filter: blur(var(--wf-wash-blur, 14px)) saturate(1.05);
+  -webkit-backdrop-filter: blur(var(--wf-wash-blur, 14px)) saturate(1.05);
+  background: rgba(255, 255, 255, 0.02);
+  transition: opacity 720ms cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.wf-card--cns.is-revealed .wf-cns__wash {
+  opacity: 1;
+}
+
+.wf-cns__vignette {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background: linear-gradient(
+    180deg,
+    rgba(4, 5, 10, 0.62) 0%,
+    transparent 22%,
+    transparent 46%,
+    rgba(4, 5, 10, 0.72) 72%,
+    rgba(3, 4, 8, 0.95) 90%
+  );
+}
+
+.wf-cns__stage {
+  position: absolute;
+  inset: 0;
+  z-index: 6;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: clamp(10px, 1.8cqh, 16px);
+  padding: 0 var(--wf-gutter) var(--wf-gutter);
+}
+
+.wf-cns__quote {
+  margin: 0;
+  font-family: var(--font-cursive, "Caveat", cursive);
+  font-size: clamp(19px, 5.6cqw, 25px);
+  line-height: 1.2;
+  text-align: center;
+  color: rgba(244, 244, 239, 0.92);
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.55);
+  transition: opacity 600ms ease, transform 600ms ease;
+}
+
+.wf-card--cns.is-revealed .wf-cns__quote {
+  opacity: 0.55;
+  transform: translateY(-4px);
+}
+
+.wf-cns__eyebrow {
+  text-align: center;
+}
+
+/* Glass CTA — copied from .cht-cta.is-glass */
+.wf-cns__ctaGlass {
+  align-self: center;
+  min-height: 52px;
+  padding: 0 24px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px) saturate(1.2);
+  -webkit-backdrop-filter: blur(10px) saturate(1.2);
+  color: #fff;
+  font-family: var(--font-mono);
+  font-size: clamp(9.5px, 2.7cqw, 11px);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: opacity 420ms ease, transform 420ms ease, background 200ms ease;
+}
+
+.wf-card--cns.is-revealed .wf-cns__ctaGlass {
+  opacity: 0;
+  transform: translateY(10px);
+  pointer-events: none;
+}
+
+/* ---- Candy path buttons — copied from .cht-path-btn.is-candy ---- */
+.wf-cns__paths {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.wf-cns__path {
+  --path-index: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  width: 100%;
+  min-height: 50px;
+  padding: 0 16px;
+  border-radius: 12px;
+  background: linear-gradient(180deg, #f6f4ee 0%, #e8e5dd 100%);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  color: #141414;
+  font-family: var(--font-mono);
+  font-size: clamp(9px, 2.5cqw, 10.5px);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.06),
+    0 6px 18px rgba(0, 0, 0, 0.28),
+    0 2px 0 rgba(0, 0, 0, 0.35);
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease,
+    background 220ms ease,
+    color 220ms ease,
+    border-color 220ms ease,
+    opacity 420ms ease;
+}
+
+/* Cobalt Select, consulting's own values. */
+.wf-cns__path.is-selected,
+.wf-cns__path:active {
+  background: linear-gradient(180deg, #2f7bff 0%, #1d5fe0 100%);
+  color: #fff;
+  border-color: rgba(120, 165, 255, 0.55);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.35),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.25),
+    0 12px 30px rgba(29, 95, 224, 0.5),
+    0 2px 0 rgba(10, 24, 58, 0.9);
+}
+
+.wf-cns__pathArrow {
+  color: rgba(20, 20, 20, 0.45);
+}
+
+.wf-cns__path.is-selected .wf-cns__pathArrow {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+/* Gated variant: paths rise on production's stagger once revealed. */
+.wf-cns__paths--gated .wf-cns__path {
+  opacity: 0;
+  transform: translateY(var(--wf-btn-rise, 60px));
+  pointer-events: none;
+}
+
+.wf-card--cns.is-revealed .wf-cns__paths--gated .wf-cns__path {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+  transition:
+    opacity 520ms cubic-bezier(0.22, 0.61, 0.36, 1)
+      calc(var(--path-index) * var(--wf-btn-stagger, 90ms)),
+    transform 520ms cubic-bezier(0.22, 0.61, 0.36, 1)
+      calc(var(--path-index) * var(--wf-btn-stagger, 90ms)),
+    background 220ms ease,
+    color 220ms ease;
+}
+
+.wf-cns__back {
+  position: absolute;
+  top: 12px;
+  right: var(--wf-gutter);
+  z-index: 16;
+  min-height: 40px;
+  padding: 0 12px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 999px;
+  background: rgba(10, 11, 15, 0.45);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: rgba(255, 255, 255, 0.85);
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  cursor: pointer;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 300ms ease;
+}
+
+.wf-card--cns.is-revealed .wf-cns__back {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* ---- Offer dossier — the off-white file, same family as the ETB dossier ---- */
+.wf-cns__offer {
+  position: absolute;
+  left: var(--wf-gutter);
+  right: var(--wf-gutter);
+  bottom: var(--wf-gutter);
+  z-index: 18;
+  max-height: 74cqh;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: none;
+  padding: 18px;
+  border-radius: 14px;
+  background: linear-gradient(180deg, #fefefe 0%, #f6f5f2 100%);
+  box-shadow: 0 24px 60px -20px rgba(0, 0, 0, 0.85);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  transform: translateY(16px) scale(0.97);
+  opacity: 0;
+  pointer-events: none;
+  transition: transform 520ms cubic-bezier(0.22, 1, 0.36, 1), opacity 320ms ease;
+}
+
+.wf-cns__offer::-webkit-scrollbar {
+  display: none;
+}
+
+.wf-card--cns.has-offer .wf-cns__offer {
+  transform: translateY(0) scale(1);
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.wf-cns__offerName {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: clamp(13px, 3.6cqw, 15px);
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #111116;
+}
+
+.wf-cns__offerDesc {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: clamp(12.5px, 3.3cqw, 13.5px);
+  line-height: 1.5;
+  color: rgba(17, 17, 22, 0.72);
+}
+
+.wf-cns__offerList {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 5px 10px;
+}
+
+.wf-cns__offerList li {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(17, 17, 22, 0.55);
+  padding-left: 10px;
+  position: relative;
+}
+
+.wf-cns__offerList li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 6px;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #1d5fe0;
+}
+
+/* ============================================================================
+   NARROW / SHORT CONTAINERS
+   ========================================================================== */
+
+@container phone (max-width: 344px) {
+  .wf-card {
+    --wf-gutter: 14px;
+  }
+  .wf-cta {
+    padding: 0 12px;
+    letter-spacing: 0.07em;
+  }
+  .wf-bar__head {
+    padding: 0 12px;
+  }
+  .wf-cns__offerList {
+    grid-template-columns: 1fr;
+  }
+}
+
+@container phone (max-height: 620px) {
+  .wf-headline {
+    font-size: clamp(21px, 6.6cqw, 26px);
+  }
+  .wf-glass {
+    --wf-glass-h: 74cqh;
+  }
+  .wf-sc__globe {
+    height: clamp(120px, 22cqh, 160px);
+  }
+  .wf-sc__globeGlow {
+    height: clamp(120px, 22cqh, 160px);
+  }
+  .wf-bar__head {
+    min-height: 50px;
+  }
+  .wf-cns__quote {
+    font-size: clamp(17px, 5cqw, 20px);
+  }
+}
+
+/* ============================================================================
+   REDUCED MOTION
+   .wf--still is the lab's simulation; the media query is the real preference.
+   Both keep every composition fully usable — nothing here is load-bearing.
+   ========================================================================== */
+
+.wf--still .wf-wp__media,
+.wf--still .wf-wp__scrim,
+.wf--still .wf-wp__headline,
+.wf--still .wf-cns__media {
+  transform: none !important;
+}
+
+.wf--still .wf,
+.wf--still .wf *,
+.wf--still .wf *::before,
+.wf--still .wf *::after {
+  transition-duration: 1ms !important;
+  animation-duration: 1ms !important;
+  scroll-behavior: auto !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wf-wp__media,
+  .wf-wp__scrim,
+  .wf-wp__headline,
+  .wf-cns__media {
+    transform: none !important;
+  }
+  .wf,
+  .wf *,
+  .wf *::before,
+  .wf *::after {
+    transition-duration: 1ms !important;
+    animation-duration: 1ms !important;
+    scroll-behavior: auto !important;
+  }
+  .wf-cta:active,
+  .wf-trigger:active,
+  .wf-cns__path:active {
+    transform: none;
+  }
+}

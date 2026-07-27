@@ -2,9 +2,11 @@
 
 // Responsive Work section switch.
 //   >= 1024px  → cinematic version (WorkSectionCinematic): CD-scroll landing +
-//                full-bleed cinematic project cards.
-//   <  1024px  → the original WorkSection (CD scroll + plain detail cards),
-//                untouched. Mobile + standard tablets get NO cinematic changes.
+//                full-bleed cinematic project cards. UNCHANGED.
+//   <  1024px  → WorkSectionMobile: the same CD-scroll landing + scroll tracks,
+//                with the four APPROVED mobile card designs as the detail
+//                content (WorldPulse B · Emerging Tech B · Supply Chain A ·
+//                Consulting C). Replaces the legacy WorkSection here.
 //
 // The choice is made client-side after measuring the viewport. Until measured
 // (SSR + first paint) we render an empty #work section so the nav anchor exists
@@ -14,7 +16,7 @@ import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
 
 const WorkSectionCinematic = dynamic(() => import("@/components/work/WorkSectionCinematic"));
-const WorkSectionOriginal = dynamic(() => import("@/components/WorkSection"));
+const WorkSectionMobile = dynamic(() => import("@/components/work/WorkSectionMobile"));
 
 const CINEMATIC_MIN_WIDTH = "(min-width: 1024px)";
 
@@ -32,5 +34,5 @@ export default function WorkSectionResponsive() {
   if (cinematic === null) {
     return <section id="work" className="work" aria-hidden="true" />;
   }
-  return cinematic ? <WorkSectionCinematic /> : <WorkSectionOriginal />;
+  return cinematic ? <WorkSectionCinematic /> : <WorkSectionMobile />;
 }

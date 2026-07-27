@@ -1,0 +1,1102 @@
+/* ============================================================================
+   MOBILE WORK SYSTEM (.mws)
+   The four Work chapters as one phone experience. Everything is scoped under
+   .mws so nothing leaks into production.
+
+   Sized by CONTAINER queries against the card, never viewport media queries —
+   that is what lets the lab render truthful phones side by side, and what would
+   let this drop into the production cinematic card unchanged.
+
+   The rule set is deliberately short. Four cards look related because they obey
+   the same eight rules, not because they share a template.
+   ========================================================================== */
+
+.mws {
+  position: relative;
+  background: #04050a;
+  color: #f3f3f5;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* ---- 1. Card frame — identical on all four ---- */
+.mws-chapter {
+  height: 100cqh;
+  padding: 6px;
+  /* Handoff: the outgoing card sinks and dims as the next covers it. Driven by
+     --mws-sink from the one sequence rAF loop. */
+  transform: translate3d(0, calc(var(--mws-sink, 0) * -5%), 0)
+    scale(calc(1 - var(--mws-sink, 0) * 0.06));
+  transform-origin: 50% 14%;
+  will-change: transform;
+}
+
+.mws-card {
+  /* One gutter token for the whole system — rails, bodies, feet, and anything
+     that needs to bleed past them all reference this. */
+  --mws-gutter: 18px;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border-radius: 18px;
+  background: #06070b;
+  outline: 1px solid rgba(255, 255, 255, 0.07);
+  outline-offset: -1px;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.05) inset,
+    0 0 90px 6px rgba(0, 0, 0, 0.45) inset,
+    0 30px 70px -28px rgba(0, 0, 0, 0.9);
+}
+
+/* Dim layer for the handoff — a pseudo-element so no card has to render one. */
+.mws-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 40;
+  background: #04050a;
+  opacity: calc(var(--mws-sink, 0) * 0.7);
+  pointer-events: none;
+}
+
+/* Media plane. The 12px vertical bleed is what the drift travels into — a
+   scale() would cost horizontal crop, and the photo cards have none to spare. */
+.mws-card__media {
+  position: absolute;
+  inset: -12px 0;
+  z-index: 0;
+  overflow: hidden;
+  transform: translate3d(0, var(--mws-plx, 0px), 0);
+  will-change: transform;
+}
+
+.mws-card__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* ---- 2. Rail — the navigation cue ---- */
+.mws-rail {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 6;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 15px var(--mws-gutter);
+}
+
+.mws-rail__num {
+  font-family: var(--font-mono);
+  font-size: clamp(8px, 2.4cqw, 10px);
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.86);
+  white-space: nowrap;
+}
+
+.mws-rail--onPhoto .mws-rail__num {
+  color: #fff;
+  text-shadow: 0 1px 14px rgba(0, 0, 0, 0.95), 0 0 3px rgba(0, 0, 0, 0.7);
+}
+
+.mws-rail__line {
+  flex: 1;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.22);
+}
+
+/* ---- 3. Typography — one scale, all four cards ---- */
+.mws-headline {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-size: clamp(23px, 7.2cqw, 33px);
+  line-height: 1.06;
+  letter-spacing: -0.02em;
+  color: #fff;
+}
+
+.mws-label {
+  font-family: var(--font-mono);
+  font-size: clamp(8px, 2.3cqw, 9.5px);
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.mws-para {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: clamp(12.5px, 3.4cqw, 14px);
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.mws-note {
+  margin: 2px 0 0;
+  font-family: var(--font-sans);
+  font-size: clamp(11.5px, 3.1cqw, 12.5px);
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.mws-logo {
+  display: block;
+  width: clamp(150px, 46cqw, 190px);
+  height: auto;
+  margin-left: -6px;
+}
+
+/* ---- Media band — the panel cards' answer to full-bleed ----
+   Photo cards (01, 04) get a full-bleed portrait plane because their assets are
+   portraits or crop to one. Panel cards (02, 03) get a LANDSCAPE band instead,
+   because both of their assets are wide: a 1.98:1 dashboard and a 2.36:1
+   Pacific map. Forced into a portrait crop the map keeps ~20% of its width and
+   stops reading as geography at all. The band bleeds to the card edges, absorbs
+   whatever height the card has spare, and fades into the panel on all four
+   sides so it reads as part of the card rather than a pasted rectangle. */
+.mws-band {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 84px;
+  margin: clamp(6px, 1.2cqh, 12px) calc(-1 * var(--mws-gutter)) 0;
+  overflow: hidden;
+}
+
+.mws-band img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: var(--mws-band-pos, 50% 50%);
+  display: block;
+  opacity: var(--mws-band-opacity, 0.92);
+  filter: var(--mws-band-filter, none);
+}
+
+.mws-band__fade {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(6, 7, 11, 0.55) 0%,
+      transparent 26%,
+      transparent 58%,
+      rgba(6, 7, 11, 0.96) 100%
+    ),
+    linear-gradient(
+      90deg,
+      rgba(6, 7, 11, 0.55) 0%,
+      transparent 11%,
+      transparent 89%,
+      rgba(6, 7, 11, 0.55) 100%
+    );
+}
+
+/* ---- 4. Spacing rhythm ---- */
+.mws-foot {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 8;
+  padding: 0 var(--mws-gutter) clamp(16px, 2.2cqh, 22px);
+  transition: opacity 300ms ease, transform 300ms ease;
+}
+
+.mws-card.is-open .mws-foot {
+  opacity: 0;
+  transform: translateY(10px);
+  pointer-events: none;
+}
+
+/* ---- 5. Touch targets + the two control shapes ---- */
+
+/* Primary action — solid white pill, full width, ≥50px. */
+.mws-cta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  min-height: 50px;
+  padding: 0 16px;
+  border-radius: 999px;
+  background: #fff;
+  color: #0b0c12;
+  font-family: var(--font-mono);
+  font-size: clamp(8.6px, 2.7cqw, 11px);
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  white-space: nowrap;
+  box-shadow: 0 12px 28px -12px rgba(0, 0, 0, 0.8);
+  transition: transform 200ms ease;
+}
+
+.mws-cta:active {
+  transform: translateY(1px) scale(0.995);
+}
+
+.mws-cta__arrow {
+  display: inline-block;
+}
+
+/* Secondary action — glass pill. Opens the sheet. */
+.mws-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 52px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.34);
+  background: rgba(10, 11, 15, 0.5);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: #fff;
+  font-family: var(--font-mono);
+  font-size: clamp(9.5px, 2.8cqw, 11px);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 200ms ease, transform 160ms ease;
+}
+
+.mws-trigger:active {
+  transform: scale(0.985);
+  background: rgba(255, 255, 255, 0.14);
+}
+
+.mws-trigger__icon {
+  display: inline-block;
+  transform: rotate(90deg);
+}
+
+.mws a:focus-visible,
+.mws button:focus-visible,
+.mws [tabindex="0"]:focus-visible {
+  outline: 2px solid #d8b15a;
+  outline-offset: 3px;
+}
+
+/* ---- 6. Disclosure — one sheet, four cards ---- */
+.mws-scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 9;
+  border: 0;
+  padding: 0;
+  background: rgba(4, 5, 10, 0.34);
+  opacity: 0;
+  pointer-events: none;
+  cursor: pointer;
+  transition: opacity 380ms ease;
+}
+
+.mws-card.is-open .mws-scrim {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.mws-sheet {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 10;
+  height: var(--mws-sheet-h, var(--mws-sheet-default, 54cqh));
+  display: flex;
+  flex-direction: column;
+  border-radius: 26px 26px 0 0;
+  /* Smoked, not milky. A light frosted tint drops body copy to roughly 3:1 over
+     sunlit imagery; a dark tint keeps the liquid-glass material and the
+     contrast. */
+  background: rgba(9, 11, 16, 0.68);
+  border-top: 1px solid rgba(255, 255, 255, 0.26);
+  backdrop-filter: blur(30px) saturate(1.5);
+  -webkit-backdrop-filter: blur(30px) saturate(1.5);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.3),
+    0 -30px 70px -30px rgba(0, 0, 0, 0.9);
+  transform: translateY(100%);
+  transition: transform 520ms cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform;
+}
+
+.mws-card.is-open .mws-sheet {
+  transform: translateY(0);
+}
+
+.mws-sheet__sheen {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: linear-gradient(
+    130deg,
+    rgba(255, 255, 255, 0.2) 0%,
+    rgba(255, 255, 255, 0.04) 26%,
+    transparent 48%
+  );
+  mix-blend-mode: screen;
+}
+
+/* Handle IS the close control: 30px of touch area, 4px of visual bar. */
+.mws-sheet__handle {
+  position: relative;
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 30px;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+
+.mws-sheet__handle::before {
+  content: "";
+  width: 44px;
+  height: 4px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.mws-sheet__scroll {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: none;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 4px 20px clamp(18px, 2.6cqh, 24px);
+}
+
+.mws-sheet__scroll::-webkit-scrollbar {
+  display: none;
+}
+
+/* ============================================================================
+   01 — WORLDPULSE (approved Passport Sheet, carried over unchanged)
+   ========================================================================== */
+
+.mws-wp__img {
+  /* 38% is the one anchor holding both the phone and her face inside the ~19.6%
+     of image width a portrait crop of a 2.36:1 photo leaves. */
+  object-position: 38% 50%;
+  transition:
+    transform 620ms cubic-bezier(0.22, 1, 0.36, 1),
+    object-position 620ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Open: the photo rises and pans onto her face, so what survives above the
+   sheet is a composed portrait. Solved from her face height, not eyeballed. */
+.mws-card--wp.is-open .mws-wp__img {
+  object-position: 50% 50%;
+  transform: scale(1.09) translateY(-1.4%);
+}
+
+.mws-wp__scrimTop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 30cqh;
+  z-index: 2;
+  pointer-events: none;
+  background: linear-gradient(
+    180deg,
+    rgba(4, 5, 10, 0.88) 0%,
+    rgba(4, 5, 10, 0.52) 38%,
+    transparent 100%
+  );
+  transition: opacity 420ms ease;
+}
+
+/* Once the sheet is up the headline is gone and the scrim is taller than the
+   strip of photo left above it — fade it to just what the rail needs. */
+.mws-card--wp.is-open .mws-wp__scrimTop {
+  opacity: 0.4;
+}
+
+.mws-wp__scrimBottom {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 22cqh;
+  z-index: 2;
+  pointer-events: none;
+  background: linear-gradient(180deg, transparent 0%, rgba(4, 5, 10, 0.82) 100%);
+  transition: opacity 420ms ease;
+}
+
+.mws-card--wp.is-open .mws-wp__scrimBottom {
+  opacity: 0;
+}
+
+.mws-wp__headline {
+  position: absolute;
+  z-index: 6;
+  top: clamp(46px, 7.4cqh, 70px);
+  left: var(--mws-gutter);
+  right: var(--mws-gutter);
+  max-width: 92%;
+  text-shadow: 0 4px 26px rgba(0, 0, 0, 0.75);
+  transition: opacity 340ms ease, transform 340ms ease;
+}
+
+.mws-card--wp.is-open .mws-wp__headline {
+  opacity: 0;
+  transform: translateY(-8px);
+  pointer-events: none;
+}
+
+/* ============================================================================
+   02 — EMERGING TECH BUILDS · The Shelf
+   ========================================================================== */
+
+.mws-card--etb {
+  background:
+    radial-gradient(120% 80% at 82% 4%, rgba(64, 78, 140, 0.22), transparent 62%),
+    radial-gradient(90% 60% at 6% 96%, rgba(216, 177, 90, 0.08), transparent 60%),
+    linear-gradient(168deg, #0b0d14 0%, #06070b 100%);
+}
+
+.mws-etb__wash {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    repeating-linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.014) 0 1px,
+      transparent 1px 3px
+    );
+}
+
+.mws-etb__body {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(10px, 1.6cqh, 16px);
+  padding: clamp(52px, 8cqh, 74px) var(--mws-gutter) clamp(16px, 2.2cqh, 22px);
+}
+
+.mws-etb__cred {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: clamp(8.5px, 2.4cqw, 10px);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(216, 177, 90, 0.85);
+}
+
+/* Anchored just off the top-left corner: that is where the product's own
+   wordmark and its densest real data sit, and it must not drift as the band's
+   height changes between phone sizes. */
+.mws-etb__band {
+  --mws-band-pos: 6% 0;
+}
+
+.mws-etb__shelf {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.mws-etb__row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-height: 62px;
+  padding: 8px 12px 8px 8px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.035);
+  cursor: pointer;
+  text-align: left;
+  transition: background 180ms ease, border-color 180ms ease, transform 140ms ease;
+}
+
+.mws-etb__row:active {
+  transform: scale(0.99);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+/* Real product screenshots, not icons — the card is proof, not a menu. */
+.mws-etb__thumb {
+  flex: 0 0 auto;
+  width: 62px;
+  height: 46px;
+  border-radius: 9px;
+  overflow: hidden;
+  background: #0d0f16;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mws-etb__thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 0 0;
+  display: block;
+}
+
+/* Concept builds have no screenshot, so their brand mark sits inset instead of
+   filling the tile — a visible, honest difference from a shipped build. */
+.mws-etb__thumb--mark img {
+  width: 62%;
+  height: 62%;
+  object-fit: contain;
+  opacity: 0.85;
+}
+
+.mws-etb__rowText {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.mws-etb__rowName {
+  font-family: var(--font-sans);
+  font-size: clamp(14px, 3.9cqw, 16px);
+  font-weight: 500;
+  color: #fff;
+  line-height: 1.1;
+}
+
+.mws-etb__rowMeta {
+  font-family: var(--font-mono);
+  font-size: clamp(8px, 2.2cqw, 9px);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.mws-etb__chip {
+  flex: 0 0 auto;
+  padding: 4px 9px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  font-family: var(--font-mono);
+  font-size: clamp(7.5px, 2cqw, 8.5px);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.mws-etb__chip.is-build {
+  border-color: rgba(216, 177, 90, 0.55);
+  color: #e8d5a6;
+}
+
+.mws-etb__mark {
+  width: 46px;
+  height: 46px;
+  object-fit: contain;
+}
+
+.mws-etb__sheetName {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-size: clamp(21px, 6.4cqw, 27px);
+  line-height: 1.1;
+  color: #fff;
+}
+
+.mws-etb__hook {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: clamp(13px, 3.6cqw, 15px);
+  line-height: 1.45;
+  color: rgba(216, 177, 90, 0.92);
+}
+
+/* ============================================================================
+   03 — SUPPLY CHAIN · The Crossing
+   ========================================================================== */
+
+/* Pacific-centred: Asia left, North America right. Desaturated and dimmed to
+   sit behind type, but not so far that it stops reading as a map. */
+.mws-sc__band {
+  --mws-band-pos: 50% 38%;
+  --mws-band-opacity: 0.78;
+  --mws-band-filter: saturate(0.3) brightness(0.85) contrast(1.06);
+  /* Unlike the evidence band, this one must NOT absorb spare height: let it
+     stretch and it becomes portrait again, which is the exact crop that stopped
+     the map reading as geography. Fixed landscape proportions keep Asia on the
+     left and North America on the right at every phone size. */
+  flex: 0 0 auto;
+  aspect-ratio: 1.85;
+  max-height: 30cqh;
+  /* Sits in the card's own gradient rather than on a hard edge — the map fades
+     out on every side, so it reads as atmosphere behind the type. */
+  /* Slack splits above and below, so the map floats as a plate between the
+     headline and the credentials rather than dumping a void in one place. */
+  margin-block: auto;
+  /* Extent has to be < 100% horizontally or the landmasses hit the card edge
+     with a hard cut — at 78% the fade starts before x=0. */
+  mask-image: radial-gradient(ellipse 78% 104% at 50% 46%, #000 26%, transparent 78%);
+  -webkit-mask-image: radial-gradient(ellipse 78% 104% at 50% 46%, #000 26%, transparent 78%);
+}
+
+/* The rectangular fade would fight the radial mask; the mask does the work. */
+.mws-sc__band .mws-band__fade {
+  background: linear-gradient(
+    180deg,
+    rgba(6, 7, 11, 0.4) 0%,
+    transparent 30%,
+    transparent 62%,
+    rgba(6, 7, 11, 0.55) 100%
+  );
+}
+
+/* Panel card: the atmosphere is the card's own gradient, not a dimmed photo. */
+.mws-card--sc {
+  background:
+    radial-gradient(130% 70% at 50% 30%, rgba(30, 52, 74, 0.3), transparent 68%),
+    radial-gradient(90% 55% at 8% 96%, rgba(216, 177, 90, 0.07), transparent 62%),
+    linear-gradient(172deg, #080a11 0%, #05060a 100%);
+}
+
+.mws-sc__wash {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.014) 0 1px,
+    transparent 1px 3px
+  );
+}
+
+.mws-sc__body {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(10px, 1.6cqh, 16px);
+  padding: clamp(52px, 8cqh, 74px) var(--mws-gutter) clamp(90px, 12cqh, 110px);
+}
+
+.mws-sc__lines {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.mws-sc__lines p {
+  margin: 0;
+}
+
+/* The production hero's four type styles, held at mobile scale. */
+.mws-sc__lineSerif {
+  font-family: var(--font-serif);
+  font-size: clamp(17px, 5cqw, 21px);
+  line-height: 1.15;
+  color: #fff;
+}
+
+.mws-sc__lineMono {
+  font-family: var(--font-mono);
+  font-size: clamp(9px, 2.6cqw, 10.5px);
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: rgba(216, 177, 90, 0.9);
+}
+
+.mws-sc__lineSans {
+  font-family: var(--font-sans);
+  font-size: clamp(13px, 3.6cqw, 15px);
+  color: rgba(255, 255, 255, 0.86);
+}
+
+.mws-sc__lineItalic {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: clamp(12.5px, 3.4cqw, 14px);
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* Dated journey rail — geographic framing without fragile map projection. */
+.mws-sc__journey {
+  list-style: none;
+  margin: 0;
+  padding: 14px 0 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+}
+
+.mws-sc__stop {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  position: relative;
+}
+
+.mws-sc__stopDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #d8b15a;
+  box-shadow: 0 0 0 3px rgba(216, 177, 90, 0.16);
+}
+
+/* Connective tissue between stops — reads as one crossing, not four dots. */
+.mws-sc__stop:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  top: 3px;
+  left: 10px;
+  right: -6px;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(216, 177, 90, 0.5), rgba(216, 177, 90, 0.12));
+}
+
+.mws-sc__stopYear {
+  font-family: var(--font-mono);
+  font-size: clamp(8px, 2.2cqw, 9px);
+  letter-spacing: 0.1em;
+  color: rgba(216, 177, 90, 0.9);
+  white-space: nowrap;
+}
+
+.mws-sc__stopPlace {
+  font-family: var(--font-sans);
+  font-size: clamp(10.5px, 2.9cqw, 12px);
+  line-height: 1.15;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.mws-sc__sheetTitle,
+.mws-cns__sheetTitle {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-size: clamp(20px, 6cqw, 25px);
+  line-height: 1.12;
+  color: #fff;
+}
+
+.mws-sc__tabs {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.mws-sc__tab {
+  min-height: 44px;
+  padding: 0 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: transparent;
+  color: rgba(255, 255, 255, 0.6);
+  font-family: var(--font-mono);
+  font-size: clamp(8.5px, 2.3cqw, 9.5px);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: border-color 180ms ease, color 180ms ease, background 180ms ease;
+}
+
+.mws-sc__tab.is-on {
+  border-color: rgba(216, 177, 90, 0.7);
+  background: rgba(216, 177, 90, 0.12);
+  color: #f0dfb6;
+}
+
+.mws-sc__bullets {
+  margin: 0;
+  padding-left: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.mws-sc__bullets li {
+  font-family: var(--font-sans);
+  font-size: clamp(12.5px, 3.4cqw, 13.5px);
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.mws-sc__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.mws-sc__tag {
+  padding: 5px 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  font-family: var(--font-mono);
+  font-size: clamp(8px, 2.1cqw, 9px);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* ============================================================================
+   04 — CONSULTING · The Invitation
+   Inverts the layout rule: text sits at the BOTTOM, because the asset was shot
+   for portrait and its lower half is empty water.
+   ========================================================================== */
+
+.mws-cns__img {
+  object-position: 50% 32%;
+}
+
+.mws-cns__scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  /* Long ramp on purpose: a short one bands visibly across the flat night sky
+     and the still water. */
+  background: linear-gradient(
+    180deg,
+    rgba(4, 5, 10, 0.62) 0%,
+    transparent 20%,
+    transparent 38%,
+    rgba(4, 5, 10, 0.42) 52%,
+    rgba(4, 5, 10, 0.82) 66%,
+    rgba(3, 4, 8, 0.97) 82%
+  );
+}
+
+.mws-cns__body {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 6;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(9px, 1.5cqh, 14px);
+  padding: 0 var(--mws-gutter) clamp(16px, 2.2cqh, 22px);
+  transition: opacity 300ms ease, transform 300ms ease;
+}
+
+.mws-card--cns.is-open .mws-cns__body {
+  opacity: 0;
+  transform: translateY(10px);
+  pointer-events: none;
+}
+
+.mws-cns__sub {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: clamp(13px, 3.6cqw, 15px);
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.mws-cns__offers {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  margin-top: 2px;
+}
+
+.mws-cns__offer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  width: 100%;
+  min-height: 48px;
+  padding: 0 14px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(10, 12, 18, 0.5);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: #fff;
+  cursor: pointer;
+  text-align: left;
+  transition: background 180ms ease, border-color 180ms ease, transform 140ms ease;
+}
+
+.mws-cns__offer:active {
+  transform: scale(0.99);
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.mws-cns__offerName {
+  font-family: var(--font-mono);
+  font-size: clamp(9px, 2.5cqw, 10.5px);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.mws-cns__offerArrow {
+  color: rgba(216, 177, 90, 0.9);
+}
+
+.mws-cns__book {
+  margin-top: 4px;
+}
+
+.mws-cns__subhead {
+  font-family: var(--font-mono);
+  font-size: clamp(8px, 2.2cqw, 9px);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(216, 177, 90, 0.85);
+  margin-top: 2px;
+}
+
+.mws-cns__list {
+  margin: 0;
+  padding-left: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.mws-cns__list li {
+  font-family: var(--font-sans);
+  font-size: clamp(12.5px, 3.4cqw, 13.5px);
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* ============================================================================
+   NARROW / SHORT CONTAINER TUNING
+   Container queries, so Compare mode stays truthful.
+   ========================================================================== */
+
+@container phone (max-width: 344px) {
+  .mws-card {
+    --mws-gutter: 14px;
+  }
+  .mws-sheet__scroll {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+  .mws-cta {
+    padding: 0 12px;
+    letter-spacing: 0.07em;
+  }
+  .mws-etb__thumb {
+    width: 54px;
+    height: 42px;
+  }
+}
+
+/* SE-class screens: the sheets need the room more than the compositions do. */
+@container phone (max-height: 620px) {
+  .mws-card--wp .mws-sheet {
+    --mws-sheet-h: 72cqh;
+  }
+  .mws-card--etb .mws-sheet,
+  .mws-card--sc .mws-sheet,
+  .mws-card--cns .mws-sheet {
+    --mws-sheet-h: 78cqh;
+  }
+  .mws-headline {
+    font-size: clamp(21px, 6.6cqw, 27px);
+  }
+  .mws-etb__row {
+    min-height: 54px;
+  }
+  .mws-etb__thumb {
+    height: 40px;
+  }
+  .mws-sc__journey {
+    padding-top: 10px;
+  }
+  .mws-sc__body {
+    gap: 10px;
+    padding-bottom: clamp(80px, 11cqh, 96px);
+  }
+}
+
+/* ============================================================================
+   REDUCED MOTION
+   .mws--still is set by the sequence hook when the real preference is on;
+   the lab's simulation switch adds .mws-sim-still to the same effect.
+   ========================================================================== */
+
+.mws--still .mws-chapter,
+.mws-sim-still .mws-chapter {
+  transform: none !important;
+}
+
+.mws--still .mws-card::after,
+.mws-sim-still .mws-card::after {
+  opacity: 0 !important;
+}
+
+.mws--still .mws-card__media,
+.mws-sim-still .mws-card__media {
+  transform: none !important;
+}
+
+.mws-sim-still .mws,
+.mws-sim-still .mws *,
+.mws-sim-still .mws *::before,
+.mws-sim-still .mws *::after {
+  transition-duration: 1ms !important;
+  animation-duration: 1ms !important;
+  scroll-behavior: auto !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mws,
+  .mws *,
+  .mws *::before,
+  .mws *::after {
+    transition-duration: 1ms !important;
+    animation-duration: 1ms !important;
+    scroll-behavior: auto !important;
+  }
+  .mws-chapter {
+    transform: none !important;
+  }
+  .mws-card__media {
+    transform: none !important;
+  }
+  .mws-card::after {
+    opacity: 0 !important;
+  }
+  .mws-cta:active,
+  .mws-trigger:active,
+  .mws-etb__row:active,
+  .mws-cns__offer:active {
+    transform: none;
+  }
+}

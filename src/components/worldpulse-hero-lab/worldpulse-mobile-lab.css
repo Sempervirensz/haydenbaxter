@@ -1,0 +1,1236 @@
+/* WorldPulse — mobile experience lab.
+   Everything is scoped under .wpm (lab chrome) or .wpc (concepts) so nothing
+   leaks into production. No production selector is touched by this file.
+
+   Concepts are sized with CONTAINER queries against the phone frame, never
+   viewport media queries — that is what lets three phones of different sizes sit
+   on one desktop screen and still render truthfully, and it is also what would
+   make a concept drop straight into the cinematic card later.
+   ========================================================================== */
+
+.wpm {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 262px minmax(0, 1fr);
+  background: #04050a;
+  color: #f2f2f4;
+}
+
+/* ============================================================================
+   CONTROL PANEL
+   ========================================================================== */
+
+.wpm__panel {
+  position: sticky;
+  top: 0;
+  align-self: start;
+  max-height: 100vh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 20px 18px 28px;
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(9, 10, 15, 0.9);
+}
+
+.wpm__kicker {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.42);
+}
+
+.wpm__title {
+  margin: 8px 0 0;
+  font-family: var(--font-serif);
+  font-size: 26px;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+}
+
+.wpm__sub {
+  margin: 10px 0 0;
+  font-family: var(--font-sans);
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.wpm__group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.wpm__groupLabel {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.wpm__concepts {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.wpm__concept {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 10px 12px;
+  text-align: left;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.03);
+  color: rgba(255, 255, 255, 0.72);
+  cursor: pointer;
+  transition: border-color 160ms ease, background 160ms ease, color 160ms ease;
+}
+
+.wpm__concept:hover {
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.wpm__concept.is-on {
+  border-color: rgba(216, 177, 90, 0.65);
+  background: rgba(216, 177, 90, 0.1);
+  color: #f6ecd6;
+}
+
+.wpm__conceptName {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.wpm__conceptTemper {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.42);
+}
+
+.wpm__rec {
+  position: absolute;
+  top: 9px;
+  right: 11px;
+  font-size: 12px;
+  color: #d8b15a;
+}
+
+.wpm__presets {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
+
+.wpm__preset {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 8px 9px;
+  border-radius: 9px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.03);
+  color: rgba(255, 255, 255, 0.72);
+  cursor: pointer;
+  text-align: left;
+  transition: border-color 160ms ease, background 160ms ease;
+}
+
+.wpm__preset:hover {
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.wpm__preset.is-on {
+  border-color: rgba(216, 177, 90, 0.65);
+  color: #f6ecd6;
+}
+
+.wpm__presetName {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.wpm__presetDim {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.wpm__slider {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.wpm__sliderMeta {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.wpm__slider input {
+  width: 100%;
+  accent-color: #d8b15a;
+}
+
+.wpm__btn {
+  display: block;
+  padding: 9px 11px;
+  border-radius: 9px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.03);
+  color: rgba(255, 255, 255, 0.75);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  transition: border-color 160ms ease, background 160ms ease, color 160ms ease;
+}
+
+.wpm__btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.wpm__btn.is-on {
+  border-color: rgba(216, 177, 90, 0.7);
+  background: rgba(216, 177, 90, 0.1);
+  color: #f6ecd6;
+}
+
+.wpm__hint {
+  margin: 2px 0 0;
+  font-family: var(--font-sans);
+  font-size: 11px;
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.wpm__hint code {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.wpm__links {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: auto;
+  padding-top: 8px;
+}
+
+/* ============================================================================
+   STAGE + PHONE FRAMES
+   ========================================================================== */
+
+.wpm__stageArea {
+  min-width: 0;
+  padding: 30px 24px 56px;
+  display: flex;
+  flex-direction: column;
+  gap: 34px;
+  align-items: center;
+}
+
+.wpm__frames {
+  display: flex;
+  gap: 46px;
+  align-items: flex-start;
+  justify-content: center;
+  width: 100%;
+  padding: 12px 0 0;
+}
+
+/* Never wrap: 2-over-1 is the one layout that defeats the point of Compare.
+   Scroll the row instead when the window cannot hold three phones. */
+.wpm__frames.is-compare {
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  gap: 26px;
+  overflow-x: auto;
+  padding-bottom: 12px;
+}
+
+.wpm-phone {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  flex: 0 0 auto;
+}
+
+.wpm-phone__shell {
+  position: relative;
+  border-radius: 30px;
+  background: #06070b;
+  box-shadow:
+    0 0 0 9px #101218,
+    0 0 0 10px rgba(255, 255, 255, 0.14),
+    0 44px 90px -34px rgba(0, 0, 0, 0.95);
+}
+
+/* The screen is EXACTLY the stated device size — the bezel is drawn outside it
+   with box-shadow rings so the numbers on the caption are honest. */
+/* Scrollable in both modes. Concept A is the only card that can outgrow the
+   frame — expanding the story on a 568px-tall phone needs about 50px more than
+   there is — and the truthful behaviour there is a short scroll, not a clipped
+   CTA. B and C are exactly 100cqh and never scroll. */
+.wpm-phone__screen {
+  position: absolute;
+  inset: 0;
+  border-radius: 30px;
+  overflow: hidden auto;
+  overscroll-behavior: contain;
+  scrollbar-width: none;
+  background: #06070b;
+  container-type: size;
+  container-name: phone;
+}
+
+.wpm-phone__screen::-webkit-scrollbar {
+  display: none;
+}
+
+.wpm-phone__cap {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+/* Chapter track — mirrors the production cinematic stack: the card arrives,
+   fills the frame, and is scrolled past. */
+.wpm-stage__lead,
+.wpm-stage__trail {
+  height: 62cqh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.24);
+  background: #04050a;
+}
+
+.wpm-stage__slot {
+  height: 100cqh;
+}
+
+/* ============================================================================
+   NOTES
+   ========================================================================== */
+
+.wpm__notes {
+  width: 100%;
+  max-width: 940px;
+  padding: 22px 24px 24px;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  background: rgba(255, 255, 255, 0.025);
+}
+
+.wpm__notesHead h2 {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.wpm__notesTemper,
+.wpm__notesRec,
+.wpm__notesPlx {
+  padding: 3px 9px;
+  border-radius: 999px;
+  font-size: 9px;
+  letter-spacing: 0.16em;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.wpm__notesRec {
+  border-color: rgba(216, 177, 90, 0.7);
+  background: rgba(216, 177, 90, 0.12);
+  color: #f0dfb6;
+}
+
+.wpm__notesIdea {
+  margin: 12px 0 0;
+  max-width: 78ch;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.76);
+}
+
+.wpm__why {
+  margin-top: 18px;
+  padding: 14px 16px;
+  border-radius: 12px;
+  border: 1px solid rgba(216, 177, 90, 0.3);
+  background: rgba(216, 177, 90, 0.06);
+}
+
+.wpm__why h3 {
+  margin: 0 0 8px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #d8b15a;
+}
+
+.wpm__why p {
+  margin: 0;
+  max-width: 84ch;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.wpm__notesCols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 22px 34px;
+  margin-top: 20px;
+}
+
+.wpm__notesCols h3 {
+  margin: 0 0 8px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.wpm__notesCols ul {
+  margin: 0;
+  padding-left: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.wpm__notesCols li {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.66);
+}
+
+.wpm__notesFoot {
+  margin: 20px 0 0;
+  padding-top: 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  font-family: var(--font-sans);
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.42);
+}
+
+.wpm__notesFoot code {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+@media (max-width: 900px) {
+  .wpm {
+    grid-template-columns: 1fr;
+  }
+  .wpm__panel {
+    position: static;
+    max-height: none;
+    border-right: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+  .wpm__stageArea {
+    padding: 24px 16px 48px;
+  }
+  .wpm__notesCols {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ============================================================================
+   SHARED CONCEPT PRIMITIVES
+   Same vocabulary as the approved desktop card: mono rail, serif headline,
+   mono label, sans body, one white mono CTA pill.
+   ========================================================================== */
+
+.wpc {
+  position: relative;
+  width: 100%;
+  background: #06070b;
+  color: #f4f4f6;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.wpc__num {
+  font-family: var(--font-mono);
+  font-size: clamp(8px, 2.4cqw, 10px);
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.84);
+  white-space: nowrap;
+}
+
+.wpc__line {
+  flex: 1;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.24);
+}
+
+.wpc__label {
+  font-family: var(--font-mono);
+  font-size: clamp(8px, 2.3cqw, 9.5px);
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.wpc__headline {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-size: clamp(23px, 7.2cqw, 33px);
+  line-height: 1.06;
+  letter-spacing: -0.02em;
+  color: #fff;
+}
+
+.wpc__para {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: clamp(12.5px, 3.4cqw, 14px);
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.wpc__logo {
+  display: block;
+  width: clamp(150px, 46cqw, 190px);
+  height: auto;
+  margin-left: -6px;
+}
+
+/* Single primary action — solid white mono pill, full width, always ≥48px tall
+   so it is a comfortable touch target on the smallest phone. */
+.wpc__cta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  min-height: 50px;
+  padding: 0 16px;
+  border-radius: 999px;
+  background: #fff;
+  color: #0b0c12;
+  font-family: var(--font-mono);
+  font-size: clamp(8.6px, 2.7cqw, 11px);
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  white-space: nowrap;
+  box-shadow: 0 12px 28px -12px rgba(0, 0, 0, 0.8);
+  transition: transform 200ms ease, box-shadow 200ms ease;
+}
+
+.wpc__cta:active {
+  transform: translateY(1px) scale(0.995);
+}
+
+.wpc__ctaArrow {
+  display: inline-block;
+  transition: transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.wpc a:focus-visible,
+.wpc button:focus-visible,
+.wpc [tabindex="0"]:focus-visible {
+  outline: 2px solid #d8b15a;
+  outline-offset: 3px;
+}
+
+/* ============================================================================
+   CONCEPT A — DOSSIER
+   ========================================================================== */
+
+.wpc-a {
+  min-height: 100cqh;
+  display: flex;
+  flex-direction: column;
+}
+
+.wpc-a__rail {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 18px 13px;
+}
+
+/* Photo window. `flex: 1` with a floor: it grows toward 4:5 on a tall phone and
+   simply shows MORE of the coastline on a short one — a shorter window means a
+   wider slice of a 2.36:1 image survives, so the subject never gets tighter. */
+.wpc-a__media {
+  position: relative;
+  flex: 1 1 44cqh;
+  min-height: 32cqh;
+  overflow: hidden;
+}
+
+.wpc-a__img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* The window is landscape-ish, so 34–45% of the photo's width survives here
+     versus 20% in a full-bleed portrait crop — the subject sits comfortably
+     inside at any height this concept produces. */
+  object-position: 42% 50%;
+  display: block;
+}
+
+.wpc-a__mediaEdge {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    180deg,
+    rgba(4, 5, 10, 0.35) 0%,
+    transparent 22%,
+    transparent 82%,
+    rgba(6, 7, 11, 0.9) 100%
+  );
+}
+
+.wpc-a__body {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(9px, 1.4cqh, 13px);
+  padding: 16px 18px clamp(16px, 2.4cqh, 22px);
+  background: #06070b;
+}
+
+/* grid-template-rows 0fr → 1fr is the only height animation in the lab; it is
+   one small element and it is disabled under reduced motion. */
+.wpc-a__more {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 260ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.wpc-a__more.is-open {
+  grid-template-rows: 1fr;
+}
+
+.wpc-a__moreInner {
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.wpc-a__more.is-open .wpc-a__moreInner {
+  padding-top: 10px;
+}
+
+.wpc-a__disclose {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  min-height: 44px;
+  padding: 0 4px;
+  background: none;
+  border: 0;
+  color: rgba(255, 255, 255, 0.72);
+  font-family: var(--font-mono);
+  font-size: clamp(9px, 2.5cqw, 10.5px);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.wpc-a__discloseIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  font-size: 12px;
+  line-height: 1;
+}
+
+/* ============================================================================
+   CONCEPT B — PASSPORT SHEET
+   ========================================================================== */
+
+.wpc-b {
+  /* Not a taste number. Hairline to jaw is ~52% of the photo's height, and a
+     cover crop can only ever scale UP, so the strip left above the sheet has to
+     be about that or the re-frame cuts her mid-face. 48cqh leaves 52%, which
+     lands the crop just below the mouth — an ordinary portrait crop rather than
+     the upper-lip cut a taller sheet produces. */
+  --wpm-sheet-h: 48cqh;
+  height: 100cqh;
+  overflow: hidden;
+}
+
+/* Parallax wrapper. Nothing else writes to this transform, so the drift and the
+   image's own state re-frame never fight. Delete the hook call and this whole
+   layer is inert.
+
+   The 12px vertical bleed — not a scale() — is what gives the drift somewhere to
+   travel. Scaling would cost horizontal crop, and there is none to spare: at
+   393×852 a cover crop of this 2.36:1 photo keeps only 19.6% of its width. */
+.wpc-b__plx {
+  position: absolute;
+  inset: -12px 0;
+  transform: translate3d(0, var(--wpm-plx, 0px), 0);
+  will-change: transform;
+}
+
+.wpc-b__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* Closed framing, measured against the asset rather than guessed: 38% is the
+     anchor that holds the whole phone AND her whole face, and still keeps a
+     sliver of coastline on the left for context. Past ~44% the phone's screen
+     starts getting cut by the card edge. */
+  object-position: 38% 50%;
+  transition:
+    transform 620ms cubic-bezier(0.22, 1, 0.36, 1),
+    object-position 620ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Open: the photo rises and tightens onto her face so what survives above the
+   sheet is a composed portrait, not the top third of the closed composition. */
+.wpc-b.is-open .wpc-b__img {
+  /* Pans right and lifts: the camera moves off the product and onto the person
+     while the dossier does the talking. scale/translate are solved for "her
+     whole face lands in the 46% band", not picked by feel. */
+  object-position: 50% 50%;
+  transform: scale(1.09) translateY(-1.4%);
+}
+
+.wpc-b__scrimTop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 30cqh;
+  z-index: 2;
+  pointer-events: none;
+  background: linear-gradient(
+    180deg,
+    rgba(4, 5, 10, 0.88) 0%,
+    rgba(4, 5, 10, 0.52) 38%,
+    transparent 100%
+  );
+  transition: opacity 420ms ease;
+}
+
+/* The top scrim exists to carry the headline. Once the sheet is up the headline
+   is gone, and on a short phone the scrim is taller than the strip of photo left
+   above the sheet — it would black out the whole portrait. Fade it back to just
+   what the rail needs. */
+.wpc-b.is-open .wpc-b__scrimTop {
+  opacity: 0.4;
+}
+
+.wpc-b__scrimBottom {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 22cqh;
+  z-index: 2;
+  pointer-events: none;
+  background: linear-gradient(180deg, transparent 0%, rgba(4, 5, 10, 0.82) 100%);
+  transition: opacity 420ms ease;
+}
+
+.wpc-b.is-open .wpc-b__scrimBottom {
+  opacity: 0;
+}
+
+.wpc-b__rail {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 15px 18px;
+}
+
+/* The rail can end up over sunlit skin once the sheet is open and the scrim
+   steps back, so it carries its own shadow rather than relying on the scrim. */
+.wpc-b__rail .wpc__num,
+.wpc-c__rail .wpc__num {
+  color: #fff;
+  text-shadow: 0 1px 14px rgba(0, 0, 0, 0.95), 0 0 3px rgba(0, 0, 0, 0.7);
+}
+
+.wpc-b__headline {
+  position: absolute;
+  z-index: 4;
+  top: clamp(46px, 7.4cqh, 70px);
+  left: 18px;
+  right: 18px;
+  max-width: 92%;
+  text-shadow: 0 4px 26px rgba(0, 0, 0, 0.75);
+  transition: opacity 340ms ease, transform 340ms ease;
+}
+
+.wpc-b.is-open .wpc-b__headline {
+  opacity: 0;
+  transform: translateY(-8px);
+  pointer-events: none;
+}
+
+.wpc-b__dismiss {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  border: 0;
+  padding: 0;
+  background: rgba(4, 5, 10, 0.34);
+  opacity: 0;
+  pointer-events: none;
+  cursor: pointer;
+  transition: opacity 380ms ease;
+}
+
+.wpc-b.is-open .wpc-b__dismiss {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.wpc-b__foot {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 6;
+  padding: 0 18px clamp(16px, 2.2cqh, 22px);
+  transition: opacity 300ms ease, transform 300ms ease;
+}
+
+.wpc-b.is-open .wpc-b__foot {
+  opacity: 0;
+  transform: translateY(10px);
+  pointer-events: none;
+}
+
+.wpc-b__trigger {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 52px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.34);
+  background: rgba(10, 11, 15, 0.46);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: #fff;
+  font-family: var(--font-mono);
+  font-size: clamp(9.5px, 2.8cqw, 11px);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 200ms ease, border-color 200ms ease, transform 160ms ease;
+}
+
+.wpc-b__trigger:active {
+  transform: scale(0.985);
+  background: rgba(255, 255, 255, 0.14);
+}
+
+.wpc-b__triggerIcon {
+  display: inline-block;
+  transform: rotate(90deg);
+}
+
+/* The sheet. Frosted glass, same material language as the desktop panel. */
+.wpc-b__sheet {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 7;
+  height: var(--wpm-sheet-h);
+  display: flex;
+  flex-direction: column;
+  border-radius: 26px 26px 0 0;
+  /* Smoked rather than milky glass. The desktop panel can be a light frosted
+     surface because it floats over the dark bottom scrim; here the sheet covers
+     sunlit sweater and sand, and a light tint dropped body copy to roughly 3:1.
+     A dark tint keeps the same liquid-glass material and puts contrast back. */
+  background: rgba(9, 11, 16, 0.62);
+  border-top: 1px solid rgba(255, 255, 255, 0.26);
+  backdrop-filter: blur(30px) saturate(1.5);
+  -webkit-backdrop-filter: blur(30px) saturate(1.5);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.3),
+    0 -30px 70px -30px rgba(0, 0, 0, 0.9);
+  transform: translateY(100%);
+  transition: transform 520ms cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform;
+}
+
+.wpc-b.is-open .wpc-b__sheet {
+  transform: translateY(0);
+}
+
+.wpc-b__sheetSheen {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: linear-gradient(
+    130deg,
+    rgba(255, 255, 255, 0.22) 0%,
+    rgba(255, 255, 255, 0.04) 26%,
+    transparent 48%
+  );
+  mix-blend-mode: screen;
+}
+
+/* The grab handle IS the close control — a real button, 44px of touch area with
+   a 4px visual bar, so keyboard and touch share one affordance. */
+.wpc-b__handle {
+  position: relative;
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 30px;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+
+.wpc-b__handle::before {
+  content: "";
+  width: 44px;
+  height: 4px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.wpc-b__sheetScroll {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 4px 20px clamp(18px, 2.6cqh, 24px);
+}
+
+.wpc-b__para {
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.wpc-b .wpc__cta {
+  margin-top: 4px;
+}
+
+/* ============================================================================
+   CONCEPT C — TWO-UP
+   ========================================================================== */
+
+.wpc-c {
+  height: 100cqh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.wpc-c__scroller {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+}
+
+.wpc-c__scroller::-webkit-scrollbar {
+  display: none;
+}
+
+.wpc-c__pane {
+  position: relative;
+  flex: 0 0 100%;
+  scroll-snap-align: start;
+  /* No scroll-snap-stop: with only two panes it buys nothing, and combined with
+     an animated scroll it stops the animation dead on the pane it started from,
+     so the pager buttons do nothing. */
+  overflow: hidden;
+}
+
+.wpc-c__img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* The poster pane is shorter than the card (the bar sits below it), so a wider
+     slice survives and the anchor can sit a touch further right than B's. */
+  object-position: 40% 50%;
+  display: block;
+}
+
+.wpc-c__scrimTop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 32cqh;
+  pointer-events: none;
+  background: linear-gradient(
+    180deg,
+    rgba(4, 5, 10, 0.86) 0%,
+    rgba(4, 5, 10, 0.46) 40%,
+    transparent 100%
+  );
+}
+
+.wpc-c__rail {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 15px 18px;
+}
+
+.wpc-c__headline {
+  position: absolute;
+  top: clamp(46px, 7.4cqh, 70px);
+  left: 18px;
+  right: 18px;
+  max-width: 92%;
+  text-shadow: 0 4px 26px rgba(0, 0, 0, 0.75);
+}
+
+.wpc-c__rail--story {
+  z-index: 2;
+}
+
+.wpc-c__pane--story {
+  background:
+    radial-gradient(120% 80% at 12% 0%, rgba(216, 177, 90, 0.09), transparent 60%),
+    linear-gradient(170deg, #0a0b11 0%, #06070b 100%);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+/* min-height + centre: the story sits optically centred on a tall phone and
+   simply grows from the top on a short one, so it never overflows upward. */
+.wpc-c__storyInner {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 14px;
+  padding: clamp(24px, 4cqh, 38px) 20px clamp(20px, 3cqh, 30px);
+}
+
+/* Bar sits OUTSIDE the pane scroller, so the CTA never scrolls away. Two rows
+   so the full link label stays legible down to a 320px screen. */
+.wpc-c__bar {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 11px 18px clamp(14px, 2cqh, 18px);
+  background: #06070b;
+  border-top: 1px solid rgba(255, 255, 255, 0.09);
+}
+
+.wpc-c__pager {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+/* Named tabs, not anonymous dots — two unlabelled pips do not tell a first-time
+   visitor there is a story on the next screen, and this concept's whole premise
+   is that the story is one gesture away. */
+.wpc-c__dot {
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: center;
+  gap: 6px;
+  min-width: 62px;
+  min-height: 34px;
+  padding: 0 8px 3px;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+
+.wpc-c__dotMark {
+  display: block;
+  width: 100%;
+  height: 2px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.2);
+  transition: background 220ms ease;
+}
+
+.wpc-c__dot.is-on .wpc-c__dotMark {
+  background: #d8b15a;
+}
+
+.wpc-c__dotLabel {
+  font-family: var(--font-mono);
+  font-size: clamp(8px, 2.2cqw, 9px);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.42);
+  transition: color 220ms ease;
+}
+
+.wpc-c__dot.is-on .wpc-c__dotLabel {
+  color: #f0dfb6;
+}
+
+/* ============================================================================
+   NARROW-CONTAINER TUNING (container queries — driven by the phone, not the
+   browser window, so Compare mode stays truthful)
+   ========================================================================== */
+
+@container phone (max-width: 344px) {
+  .wpc-a__rail,
+  .wpc-b__rail,
+  .wpc-c__rail {
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+  .wpc-a__body,
+  .wpc-b__foot,
+  .wpc-c__bar,
+  .wpc-c__storyInner {
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+  .wpc-b__sheetScroll {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+  .wpc-b__headline,
+  .wpc-c__headline {
+    left: 14px;
+    right: 14px;
+  }
+  .wpc__cta {
+    padding: 0 12px;
+    letter-spacing: 0.07em;
+  }
+}
+
+/* Short screens (SE-class): trim vertical rhythm so nothing overflows. */
+@container phone (max-height: 620px) {
+  /* On an SE-class screen the dossier needs the room more than the portrait
+     does; the sheet's own scroller takes over from there. */
+  .wpc-b {
+    --wpm-sheet-h: 72cqh;
+  }
+  /* On an SE the expanded story needs ~400px of the 568. Letting the window fall
+     to 20cqh keeps the CTA on screen; the photo turns into a letterbox strip
+     that shows the whole scene rather than a tighter crop of it. */
+  .wpc-a__media {
+    flex-basis: 34cqh;
+    min-height: 20cqh;
+  }
+  .wpc__headline {
+    font-size: clamp(21px, 6.6cqw, 27px);
+  }
+}
+
+/* ============================================================================
+   REDUCED MOTION
+   Real preference is honoured; .wpm--noMotion is the lab's simulation of it and
+   applies exactly the same rules.
+   ========================================================================== */
+
+.wpm--noMotion .wpc,
+.wpm--noMotion .wpc *,
+.wpm--noMotion .wpc *::before,
+.wpm--noMotion .wpc *::after {
+  transition-duration: 1ms !important;
+  animation-duration: 1ms !important;
+  scroll-behavior: auto !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wpc,
+  .wpc *,
+  .wpc *::before,
+  .wpc *::after {
+    transition-duration: 1ms !important;
+    animation-duration: 1ms !important;
+    scroll-behavior: auto !important;
+  }
+  .wpc__cta:active {
+    transform: none;
+  }
+  .wpc-b__trigger:active {
+    transform: none;
+  }
+}

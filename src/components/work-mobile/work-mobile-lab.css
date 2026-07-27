@@ -1,0 +1,402 @@
+/* Mobile Work System — lab chrome only. Scoped under .wml so it can never touch
+   the sequence itself (.mws) or production. */
+
+.wml {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 262px minmax(0, 1fr);
+  background: #04050a;
+  color: #f2f2f4;
+}
+
+.wml__panel {
+  position: sticky;
+  top: 0;
+  align-self: start;
+  max-height: 100vh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 20px 18px 28px;
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(9, 10, 15, 0.9);
+}
+
+.wml__kicker {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.42);
+}
+
+.wml__title {
+  margin: 8px 0 0;
+  font-family: var(--font-serif);
+  font-size: 25px;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+}
+
+.wml__sub {
+  margin: 10px 0 0;
+  font-family: var(--font-sans);
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.wml__group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.wml__groupLabel {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.wml__chapters {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.wml__chapter {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 11px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.03);
+  color: rgba(255, 255, 255, 0.75);
+  cursor: pointer;
+  text-align: left;
+  transition: border-color 160ms ease, background 160ms ease, color 160ms ease;
+}
+
+.wml__chapter:hover {
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.wml__chapter.is-on {
+  border-color: rgba(216, 177, 90, 0.65);
+  background: rgba(216, 177, 90, 0.1);
+  color: #f6ecd6;
+}
+
+.wml__chapterNum {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  color: rgba(216, 177, 90, 0.9);
+}
+
+.wml__chapterName {
+  font-family: var(--font-sans);
+  font-size: 12.5px;
+}
+
+.wml__presets {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
+
+.wml__preset {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 8px 9px;
+  border-radius: 9px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.03);
+  color: rgba(255, 255, 255, 0.72);
+  cursor: pointer;
+  text-align: left;
+  transition: border-color 160ms ease, background 160ms ease;
+}
+
+.wml__preset:hover {
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.wml__preset.is-on {
+  border-color: rgba(216, 177, 90, 0.65);
+  color: #f6ecd6;
+}
+
+.wml__presetName {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.wml__presetDim {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.wml__slider {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.wml__sliderMeta {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.wml__slider input {
+  width: 100%;
+  accent-color: #d8b15a;
+}
+
+.wml__btn {
+  display: block;
+  padding: 9px 11px;
+  border-radius: 9px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.03);
+  color: rgba(255, 255, 255, 0.75);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  transition: border-color 160ms ease, background 160ms ease, color 160ms ease;
+}
+
+.wml__btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.wml__btn.is-on {
+  border-color: rgba(216, 177, 90, 0.7);
+  background: rgba(216, 177, 90, 0.1);
+  color: #f6ecd6;
+}
+
+.wml__hint {
+  margin: 2px 0 0;
+  font-family: var(--font-sans);
+  font-size: 11px;
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.wml__hint code,
+.wml__notesFoot code {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.wml__links {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: auto;
+  padding-top: 8px;
+}
+
+/* ---- Stage ---- */
+.wml__stage {
+  min-width: 0;
+  padding: 30px 24px 56px;
+  display: flex;
+  flex-direction: column;
+  gap: 34px;
+  align-items: center;
+}
+
+.wml__frames {
+  display: flex;
+  gap: 34px;
+  align-items: flex-start;
+  justify-content: center;
+  width: 100%;
+  padding-top: 12px;
+  overflow-x: auto;
+}
+
+.wml-phone {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  flex: 0 0 auto;
+}
+
+.wml-phone__shell {
+  position: relative;
+  border-radius: 30px;
+  background: #06070b;
+  box-shadow:
+    0 0 0 9px #101218,
+    0 0 0 10px rgba(255, 255, 255, 0.14),
+    0 44px 90px -34px rgba(0, 0, 0, 0.95);
+}
+
+/* The screen is EXACTLY the stated device size — the bezel is drawn outside it
+   with box-shadow rings, so the caption's numbers are honest. */
+.wml-phone__screen {
+  position: absolute;
+  inset: 0;
+  border-radius: 30px;
+  overflow: hidden auto;
+  overscroll-behavior: contain;
+  scrollbar-width: none;
+  background: #04050a;
+  container-type: size;
+  container-name: phone;
+}
+
+.wml-phone__screen::-webkit-scrollbar {
+  display: none;
+}
+
+/* The production section assumes it owns the page; give it a plain scroll box. */
+.wml-phone__screen--prod {
+  container-type: normal;
+}
+
+.wml-loading {
+  padding: 40px 16px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.35);
+  text-align: center;
+}
+
+.wml-phone__cap {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+/* ---- Notes ---- */
+.wml__notes {
+  width: 100%;
+  max-width: 1000px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 28px;
+  padding: 22px 24px 24px;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  background: rgba(255, 255, 255, 0.025);
+}
+
+.wml__notesCol h2 {
+  margin: 0 0 10px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #f0dfb6;
+}
+
+.wml__notesCol h3 {
+  margin: 18px 0 8px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.wml__notesLede {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.74);
+}
+
+.wml__rules {
+  margin: 16px 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+}
+
+.wml__rules dt {
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(216, 177, 90, 0.85);
+}
+
+.wml__rules dd {
+  margin: 4px 0 0;
+  font-family: var(--font-sans);
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.62);
+}
+
+.wml__specific {
+  margin: 0;
+  padding-left: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.wml__specific li {
+  font-family: var(--font-sans);
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.66);
+}
+
+.wml__notesFoot {
+  margin: 18px 0 0;
+  padding-top: 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  font-family: var(--font-sans);
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.42);
+}
+
+@media (max-width: 900px) {
+  .wml {
+    grid-template-columns: 1fr;
+  }
+  .wml__panel {
+    position: static;
+    max-height: none;
+    border-right: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+  .wml__stage {
+    padding: 24px 16px 48px;
+  }
+  .wml__notes {
+    grid-template-columns: 1fr;
+  }
+}

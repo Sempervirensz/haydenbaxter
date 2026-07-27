@@ -36,6 +36,9 @@ export const LAB_GROUPS: LabGroup[] = [
     title: "Work — cinematic",
     items: [
       { label: "WorldPulse hero lab", path: "/worldpulse-hero-lab", note: "Headline + hover-panel A/B/C" },
+      { label: "↳ WorldPulse mobile concepts", path: "/worldpulse-hero-lab/mobile", note: "Three phone directions for card 01" },
+      { label: "Work — mobile variations", path: "/site-parallax-lab/work-mobile-variants", note: "Fidelity-first · 3 per card · desktop-anchored" },
+      { label: "Work — mobile system (all four)", path: "/site-parallax-lab/work-mobile", note: "Batch 5 — superseded by the variations lab" },
       { label: "Cinematic Work Stack", path: "/site-parallax-lab/work-cinema" },
       { label: "↳ Responsive Viewer", path: "/site-parallax-lab/work-cinema/viewer" },
       { label: "Work merged (CD scroll + cinematic)", path: "/site-parallax-lab/work-merged" },
