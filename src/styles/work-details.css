@@ -3152,9 +3152,27 @@
   }
 }
 
-/* ====================================================
-   Supply Chain — Journey Globe (Top Nav L, all-serif)
-   ==================================================== */
+/* ============================================================================
+   Supply Chain — DESKTOP EDITORIAL PANEL (.sc-ed)
+   ============================================================================
+   The approved mobile card (`wm-sc__*`, work-mobile-cards.css) opened out for a
+   wide screen. It is the same page, not a second concept: every colour, type
+   role, and timeline material below is lifted from the mobile card and re-set
+   at desktop scale with clamp().
+
+     rail        "03 / 04 — SUPPLY CHAIN" + hairline rule  ← .wm-rail
+     standfirst  the section description, repositioned under the rule
+     left  44%   the globe, centred, with mobile's own atmospheric glow
+     right 56%   the four credential lines, then the vertical journey rail
+
+   Fidelity rule: if a value here disagrees with `.wm-sc__*`, this file is wrong.
+   Gold is #d8b15a — the one accent, same as mobile.
+
+   Below 960px the two columns stack. Production never reaches that state (the
+   Work section hands off to the mobile cards under 1024px via
+   WorkSectionResponsive); it exists so the labs that mount this component at
+   arbitrary widths degrade instead of overflowing.
+   ========================================================================== */
 
 .sc-journey {
   display: flex;
@@ -3171,260 +3189,328 @@
   overflow: hidden;
 }
 
-/* Horizontal timeline nav */
-.sc-journey__topbar {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 4px;
-  padding: 12px 32px 0;
-  position: relative;
+/* Standalone (labs, legacy WorkSection): the panel carries the mobile card's
+   own frame, so it reads as the same object wherever it is mounted. */
+.sc-ed {
+  background: radial-gradient(120% 70% at 50% 22%, #0c1018 0%, #05060a 72%);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 20px;
 }
 
-/* Illumination values locked to "Snappy + bright" preset (see
-   /supply-chain-lab). Inactive/visited text runs high so all four labels
-   read confidently at a glance; reveal/color transitions are shorter so
-   the sequence feels snappy. */
-.sc-journey__topbarLine {
-  position: absolute;
-  top: 50%;
-  left: 10%;
-  right: 10%;
-  height: 1px;
-  background: rgba(255, 255, 255, 0.28);
-  z-index: 0;
-  pointer-events: none;
-}
-
-.sc-journey__topbarItem {
-  position: relative;
-  z-index: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-  padding: 10px 20px;
+/* Inside the cinematic stack the CARD is already that frame (26px radius,
+   hairline outline, filmic float) — don't draw a second one inside it. */
+.cstack__panelBody--sc .sc-ed {
   background: none;
-  border: 1px solid transparent;
-  border-radius: 8px;
-  color: rgba(255, 255, 255, 0.92);
-  cursor: pointer;
-  transition: color 0.14s ease, border-color 0.14s ease, background 0.14s ease, opacity 0.24s ease, transform 0.24s ease;
-  font-family: inherit;
+  border: 0;
+  border-radius: 0;
 }
 
-.sc-journey__topbarItem:hover:not(:disabled) {
-  color: #fff;
-  border-color: rgba(255, 255, 255, 0.18);
-  background: rgba(255, 255, 255, 0.05);
-}
-
-.sc-journey__topbarItem.is-visited {
-  color: rgba(255, 255, 255, 0.96);
-}
-
-.sc-journey__topbarItem.is-active {
-  color: #fff;
-  border-color: rgba(255, 255, 255, 0.36);
-  background: rgba(255, 255, 255, 0.14);
-}
-
-.sc-journey__topbarItem.is-hidden {
-  opacity: 0;
-  transform: translateY(-8px);
-  pointer-events: none;
-}
-
-.sc-journey__topbarDot {
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  border: 1px solid rgba(255, 255, 255, 0.55);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: var(--font-mono, monospace);
-  font-size: 11px;
-  transition: background 0.14s ease, border-color 0.14s ease, color 0.14s ease;
-}
-
-.sc-journey__topbarItem.is-active .sc-journey__topbarDot {
-  background: #fff;
-  border-color: #fff;
-  color: #0a0a0a;
-}
-
-.sc-journey__topbarItem.is-visited .sc-journey__topbarDot {
-  border-color: rgba(255, 255, 255, 0.75);
-}
-
-.sc-journey__topbarLabel {
-  font-family: var(--font-serif, serif);
-  font-size: 14px;
-  letter-spacing: 0.02em;
-  white-space: nowrap;
-}
-
-.sc-journey__topbarYear {
-  font-family: var(--font-mono, monospace);
-  font-size: 10px;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  opacity: 0.5;
-}
-
-/* Stacked label: accomplishment headline over location subtitle */
-.sc-journey__topbar--stacked {
-  gap: 32px;
-}
-
-.sc-journey__topbarStack {
+.sc-ed__inner {
+  flex: 1 1 auto;
+  min-height: 0;
+  width: 100%;
+  /* Fluid below 1392px so the composition tapers on the way down instead of
+     snapping: the container narrows, which narrows the globe column, which is
+     what the globe measures itself against. */
+  max-width: min(1280px, 92vw);
+  margin: 0 auto;
+  padding: clamp(38px, 5vh, 56px) clamp(32px, 4vw, 64px) clamp(34px, 5vh, 56px);
   display: flex;
   flex-direction: column;
+  gap: clamp(18px, 2.6vh, 30px);
+}
+
+/* ---- Section rail — mirrors .wm-rail / .cstack__head ---- */
+.sc-ed__rail {
+  flex: 0 0 auto;
+  display: flex;
   align-items: center;
-  gap: 3px;
-  line-height: 1.15;
+  gap: 16px;
 }
 
-.sc-journey__topbarHeadline {
-  font-family: var(--font-serif, Georgia, serif);
-  font-size: 15px;
-  font-weight: 500;
-  letter-spacing: 0.005em;
-  line-height: 1.25;
-  white-space: normal;
-  max-width: 200px;
-  text-align: center;
-  text-transform: none;
-}
-
-.sc-journey__topbarSub {
-  font-family: var(--font-mono, monospace);
-  font-size: 11px;
-  letter-spacing: 0.08em;
+.sc-ed__railNum {
+  font-family: var(--font-mono);
+  font-size: clamp(10px, 0.8vw, 11px);
+  letter-spacing: 0.3em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.6);
+  color: rgba(255, 255, 255, 0.82);
   white-space: nowrap;
 }
 
-/* Globe + card body */
-.sc-journey__topnavBody {
-  flex: 1 1 0%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  padding: 0;
+.sc-ed__railLine {
+  flex: 1;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* ---- Standfirst — the section description, same muted grey it had before ---- */
+.sc-ed__standfirst {
+  flex: 0 0 auto;
+  margin: 0;
+  max-width: 74ch;
+  font-family: var(--font-sans);
+  font-weight: 400;
+  font-size: clamp(13px, 1vw, 15px);
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+/* ---- Two columns: 44% globe / 56% content ---- */
+.sc-ed__cols {
+  flex: 1 1 auto;
   min-height: 0;
-  overflow: hidden;
+  display: grid;
+  grid-template-columns: 44fr 56fr;
+  gap: clamp(44px, 5vw, 88px);
+  align-items: center;
 }
 
-.sc-journey__globe {
+/* ---- Left: the globe ----
+   The column stretches to the row height and the globe is taken out of flow
+   inside it, so the measured box can never be a function of the canvas size
+   the measurement produces. */
+.sc-ed__globeCol {
+  position: relative;
+  align-self: stretch;
+  min-width: 0;
+  min-height: 0;
+}
+
+.sc-ed__globe {
+  position: absolute;
+  inset: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  position: relative;
-  max-height: 100%;
-  max-width: 100%;
-  flex-shrink: 0;
 }
 
-/* Canvas is rendered at the exact pixel size measured from
-   .sc-journey__topnavBody, so no CSS scaling is needed. Keep `display:
-   block` to drop the inline-baseline gap that can otherwise add a couple
-   of phantom pixels and trigger overflow clipping. */
-.sc-journey__globe canvas {
+/* Canvas is rendered at the exact pixel size measured from .sc-ed__globeCol,
+   so no CSS scaling is needed. `display: block` drops the inline-baseline gap. */
+.sc-ed__globe canvas {
   display: block;
 }
 
-/* Floating glass card */
-.sc-journey__floatingCard {
-  padding: 20px 24px;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 12px;
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  opacity: 0;
-  transition: opacity 0.5s ease, transform 0.5s ease;
-  pointer-events: none;
-}
-
-.sc-journey__floatingCard.is-visible {
-  opacity: 1;
-  pointer-events: auto;
-}
-
-/* Desktop: card floats to the right, outside the globe */
-.sc-journey__floatingCard--center {
+/* Mobile's own atmospheric glow behind the sphere (.wm-sc__globeGlow). */
+.sc-ed__globeGlow {
   position: absolute;
-  right: 32px;
+  left: 50%;
   top: 50%;
-  transform: translateY(-50%) translateX(12px);
-  max-width: 300px;
-  width: max-content;
-  min-width: 220px;
-  text-align: left;
-  z-index: 2;
+  width: 88%;
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  background: radial-gradient(
+    50% 50% at 50% 50%,
+    rgba(80, 140, 220, 0.16),
+    transparent 70%
+  );
 }
 
-.sc-journey__floatingCard--center.is-visible {
-  transform: translateY(-50%) translateX(0);
+/* ---- Right: credential lines + journey rail ---- */
+.sc-ed__content {
+  align-self: center;
+  min-width: 0;
+  max-width: 60ch;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(20px, 3vh, 34px);
 }
 
-.sc-journey__floatingCard--bottomRight {
-  position: absolute;
-  right: 24px;
-  bottom: 24px;
-  max-width: 340px;
-  transform: translateY(12px);
-  background: rgba(180, 200, 220, 0.12);
-  border-color: rgba(255, 255, 255, 0.15);
-  backdrop-filter: blur(24px) saturate(1.4);
-  -webkit-backdrop-filter: blur(24px) saturate(1.4);
+.sc-ed__quote {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(6px, 1vh, 11px);
 }
 
-.sc-journey__floatingCard--bottomRight.is-visible {
-  transform: translateY(0);
-}
-
-.sc-journey__hint {
-  color: rgba(255, 255, 255, 0.45);
-  font-family: var(--font-serif, serif);
-  font-size: 13px;
-  font-style: italic;
-  letter-spacing: 0.01em;
+/* The four production heroArt quote styles, held at desktop scale. */
+.sc-ed__lineSerif {
   margin: 0;
-}
-
-.sc-journey__year {
-  font-family: var(--font-serif, serif);
-  font-size: 13px;
-  letter-spacing: 0.06em;
-  color: rgba(255, 255, 255, 0.55);
-  margin-bottom: 4px;
-}
-
-.sc-journey__cardTitle {
-  font-family: var(--font-serif, serif);
-  font-size: clamp(20px, 3vw, 26px);
+  font-family: var(--font-serif);
   font-weight: 400;
-  letter-spacing: -0.02em;
-  margin: 0 0 10px;
+  font-size: clamp(28px, 2.6vw, 42px);
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  color: #fff;
 }
 
-.sc-journey__desc {
-  font-family: var(--font-serif, serif);
-  font-size: 15px;
-  line-height: 1.6;
-  color: rgba(255, 255, 255, 0.78);
+.sc-ed__lineMono {
   margin: 0;
+  font-family: var(--font-mono);
+  font-size: clamp(10px, 0.85vw, 12.5px);
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: rgba(216, 177, 90, 0.9);
+}
+
+.sc-ed__lineSans {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: clamp(15px, 1.15vw, 18px);
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.86);
+}
+
+.sc-ed__lineItalic {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: clamp(14px, 1.05vw, 17px);
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.58);
+}
+
+/* ---- The journey rail — the mobile timeline at desktop scale ---- */
+.sc-ed__timeline {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.sc-ed__row {
+  position: relative;
+  padding-left: 26px;
+}
+
+/* The vertical line the dots sit on. */
+.sc-ed__row::before {
+  content: "";
+  position: absolute;
+  left: 5px;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: rgba(255, 255, 255, 0.14);
+}
+
+.sc-ed__row:first-child::before {
+  top: 17px;
+}
+
+.sc-ed__row:last-child::before {
+  bottom: auto;
+  height: 17px;
+}
+
+.sc-ed__item {
+  all: unset;
+  box-sizing: border-box;
+  display: block;
+  width: 100%;
+  padding: clamp(7px, 1vh, 11px) 0;
+  cursor: pointer;
+  /* Unrevealed stops are dimmed, not removed — the block keeps its height, so
+     the staged reveal can't shift the composition. Mobile does the same. */
+  opacity: 0.35;
+  transition: opacity 420ms ease;
+}
+
+.sc-ed__item.is-revealed {
+  opacity: 1;
+}
+
+.sc-ed__item:disabled {
+  cursor: default;
+}
+
+/* `all: unset` above drops the UA focus ring, and this panel sits outside the
+   `.work--mobile` scope that covers the mobile card. Same gold ring. */
+.sc-ed__item:focus-visible {
+  outline: 2px solid #d8b15a;
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+.sc-ed__dot {
+  position: absolute;
+  left: 0;
+  top: 17px;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.25);
+  transform: translateY(-50%);
+  transition: background 300ms ease, box-shadow 300ms ease, transform 300ms ease;
+}
+
+.sc-ed__item.is-active .sc-ed__dot {
+  background: #d8b15a;
+  box-shadow: 0 0 0 5px rgba(216, 177, 90, 0.18);
+  transform: translateY(-50%) scale(1.15);
+}
+
+.sc-ed__meta {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: clamp(9px, 0.72vw, 10.5px);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(216, 177, 90, 0.85);
+}
+
+.sc-ed__headline {
+  display: block;
+  margin-top: 5px;
+  font-family: var(--font-sans);
+  font-size: clamp(15px, 1.15vw, 18px);
+  line-height: 1.3;
+  color: rgba(255, 255, 255, 0.92);
+}
+
+/* Description is the reward for selecting a stop — same as mobile. */
+.sc-ed__desc {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 400ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.sc-ed__item.is-active .sc-ed__desc {
+  grid-template-rows: 1fr;
+}
+
+.sc-ed__descInner {
+  overflow: hidden;
+}
+
+.sc-ed__desc p {
+  margin: 7px 0 0;
+  max-width: 48ch;
+  font-family: var(--font-sans);
+  font-size: clamp(13px, 0.95vw, 15px);
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* ---- Tablet → desktop taper: gap, globe, and headline all ease down ---- */
+@media (max-width: 1180px) {
+  .sc-ed__content {
+    max-width: 54ch;
+  }
+}
+
+/* ---- Below the desktop breakpoint: stack, don't squeeze ----
+   Production hands off to the mobile card before this; it's a safety net for
+   the labs that mount this component directly. */
+@media (max-width: 959px) {
+  .sc-ed__cols {
+    grid-template-columns: minmax(0, 1fr);
+    gap: clamp(18px, 3vh, 28px);
+  }
+
+  .sc-ed__globeCol {
+    align-self: auto;
+    height: clamp(200px, 30vh, 300px);
+  }
+
+  .sc-ed__content {
+    max-width: none;
+  }
 }
 
 /* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
-  .sc-journey__floatingCard,
-  .sc-journey__topbarItem {
+  .sc-ed__item,
+  .sc-ed__dot,
+  .sc-ed__desc {
     transition-duration: 0.01ms !important;
   }
 }

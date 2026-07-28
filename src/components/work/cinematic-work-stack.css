@@ -458,8 +458,23 @@
   overflow: hidden;
 }
 
-.cstack__panelBody--sc {
-  padding-bottom: 0;
+/* 03 Supply Chain owns its whole frame: the editorial panel (.sc-ed) supplies
+   its own container padding, its own "03 / 04 — SUPPLY CHAIN" rail, and the
+   mobile card's own near-black wash — so the card here is just the filmic
+   float around it. Scoped to card 3; card 2 (ETB) keeps --panel untouched. */
+.cstack__panelBody.cstack__panelBody--sc {
+  padding: 0;
+}
+
+.cstack__card--3 {
+  background: radial-gradient(120% 70% at 50% 22%, #0c1018 0%, #05060a 72%);
+}
+
+/* The panel draws the section rail itself, aligned to its own content column
+   instead of the card edge. Without this the two would print on top of
+   each other. */
+.cstack__card--3 .cstack__head {
+  display: none;
 }
 
 /* Neutralize the homepage glass shell so the cinematic card is the only frame,
