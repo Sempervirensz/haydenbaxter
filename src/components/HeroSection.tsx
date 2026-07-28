@@ -8,16 +8,18 @@ export default function HeroSection() {
     <section className="flex flex-col items-center relative bg-[#0a0a0a] overflow-hidden">
       <Navbar />
 
-      {/* Hero text */}
-      <div className="flex flex-col items-center justify-center text-center px-5 sm:px-4 pt-20 sm:pt-32 pb-12 sm:pb-20">
+      {/* Hero text. Sizing comes from the fluid scale rather than Tailwind's
+          fixed steps, which topped out at text-8xl/max-w-4xl — i.e. 96px type
+          in an 896px column no matter how wide the display got. */}
+      <div className="hero-copy flex flex-col items-center justify-center text-center">
         <p
-          className="text-[10px] sm:text-sm tracking-[0.04em] text-white/60 mb-3 sm:mb-6"
+          className="hero-eyebrow"
           style={{ fontFamily: "var(--font-sans)" }}
         >
           {hero.eyebrow}
         </p>
         <h1
-          className="text-[22px] sm:text-5xl md:text-7xl lg:text-8xl font-normal leading-[1.1] sm:leading-[1.05] max-w-4xl"
+          className="hero-heading font-normal"
           style={{ fontFamily: "var(--font-serif)" }}
         >
           {hero.heading}

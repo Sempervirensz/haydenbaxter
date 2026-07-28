@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "../styles/scale.css";
 @import "../styles/work-details.css";
 
 @property --cd-deg {
@@ -154,17 +155,20 @@ html {
 .tag {
   display: inline-block;
   font-family: var(--font-mono);
-  font-size: 10px;
+  font-size: var(--text-label);
   font-weight: 500;
-  letter-spacing: 0.22em;
+  letter-spacing: var(--track-dymo);
   line-height: 1;
   text-transform: uppercase;
   text-decoration: none;
   white-space: nowrap;
   user-select: none;
-  color: rgba(255, 255, 255, 0.72);
-  padding: clamp(10px, 1.2vw, 12px) clamp(12px, 1.8vw, 16px)
-    clamp(9px, 1.1vw, 11px);
+  color: var(--ink-body);
+  /* Padding tracks the label size so the emboss keeps its proportions instead
+     of turning into a thin strip around larger type. */
+  padding: clamp(0.625rem, 0.5rem + 0.35vw, 1.05rem)
+    clamp(0.75rem, 0.6rem + 0.5vw, 1.45rem)
+    clamp(0.5625rem, 0.45rem + 0.32vw, 0.95rem);
   border-radius: 3px;
   background: #1c1c1c;
   border: 1px solid rgba(255, 255, 255, 0.08);
@@ -200,6 +204,56 @@ html {
   background: #262626;
   border-color: rgba(255, 255, 255, 0.12);
   color: rgba(255, 255, 255, 0.86);
+}
+
+/* ──────────────────────────────────────────────────────────
+   Hero
+   Sizing lives here rather than in Tailwind utilities so it can ride the
+   fluid scale. The heading is capped by character count, not pixels: a
+   display line stays editorial at 4K instead of running the full width.
+   ────────────────────────────────────────────────────────── */
+/* Vertical rhythm lives on the wrapper as padding, not as margin on the first
+   child — a top margin here collapses out of the section and drags the whole
+   hero down over the card fan below it. */
+.hero-copy {
+  padding-block: clamp(5rem, 3.5rem + 3vw, 9rem) clamp(3rem, 2rem + 2vw, 5rem);
+  padding-inline: var(--page-gutter);
+}
+
+.hero-eyebrow {
+  font-size: var(--text-sm);
+  letter-spacing: 0.04em;
+  line-height: var(--leading-body);
+  color: var(--ink-muted);
+  margin-bottom: clamp(0.75rem, 0.5rem + 0.6vw, 1.75rem);
+  max-width: var(--measure);
+}
+
+.hero-heading {
+  font-size: var(--text-display);
+  line-height: var(--leading-display);
+  max-width: 22ch;
+  text-wrap: balance;
+}
+
+.hero-eyebrow,
+.hero-heading {
+  margin-inline: auto;
+}
+
+@media (max-width: 640px) {
+  .hero-copy {
+    padding-block: 5rem 3rem;
+  }
+
+  .hero-heading {
+    font-size: clamp(1.375rem, 1.1rem + 2.4vw, 2.25rem);
+    max-width: 18ch;
+  }
+
+  .hero-eyebrow {
+    font-size: var(--text-xs);
+  }
 }
 
 /* ──────────────────────────────────────────────────────────
@@ -560,7 +614,7 @@ html {
   flex-direction: column;
   padding: 0;
   margin: 0;
-  width: min(560px, 72%);
+  width: min(clamp(35rem, 26rem + 10vw, 52rem), 72%);
   text-align: left;
   /* Anchor to the upper region of the landing card so the CD player can own
      the lower half without overlapping (or getting overlapped by) list items.
@@ -574,14 +628,18 @@ html {
 
 .wl-c2__item {
   display: grid;
-  grid-template-columns: 56px 1fr;
+  grid-template-columns: clamp(3.5rem, 2.8rem + 1.4vw, 5.5rem) 1fr;
   align-items: baseline;
-  gap: 22px;
+  gap: clamp(1.375rem, 1.1rem + 0.7vw, 2.25rem);
   /* Vertical padding scales with card height so short screens (1024×768)
      stay compact while tall ones (1440×900, 1920×1080) breathe. */
   padding: clamp(8px, 1.4vh, 14px) 0;
   border-bottom: 1px solid rgba(243, 243, 243, 0.08);
-  opacity: 0.22;
+  /* The Hush concept wants inactive rows to recede, but 0.22 compounded with
+     the name's own alpha put them under 14% effective — a contents list you
+     can't read isn't a contents list. Active still resolves to full opacity,
+     so the focus effect is unchanged. */
+  opacity: 0.32;
   transform: translateX(0);
   transition:
     opacity 320ms ease,
@@ -595,10 +653,10 @@ html {
 
 .wl-c2__num {
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: var(--text-label);
   font-weight: 500;
-  letter-spacing: 0.22em;
-  color: rgba(243, 243, 243, 0.32);
+  letter-spacing: var(--track-dymo);
+  color: rgba(243, 243, 243, 0.45);
   transition: color 320ms ease;
 }
 
@@ -608,10 +666,10 @@ html {
 
 .wl-c2__name {
   font-family: var(--font-serif);
-  font-size: clamp(20px, 2.6vw, 30px);
+  font-size: clamp(1.25rem, 0.95rem + 1.1vw, 2.75rem);
   font-weight: 400;
   letter-spacing: -0.02em;
-  color: rgba(243, 243, 243, 0.62);
+  color: rgba(243, 243, 243, 0.75);
   line-height: 1.05;
   transition: color 320ms ease;
 }
@@ -695,16 +753,23 @@ html {
 }
 
 /* CD player — desktop: foreground base + disc on top.
-   Size and offset are viewport-height driven so the CD always parks below
-   the tracklist (which lives in the upper 40% of the card) regardless of
-   how tall the window is. Bottom half is allowed to overflow the card
-   edge — that's the intentional "hanging disc" framing. */
+   Offset stays viewport-height driven so the CD always parks below the
+   tracklist (which lives in the upper 40% of the card) regardless of how tall
+   the window is. Bottom half is allowed to overflow the card edge — that's the
+   intentional "hanging disc" framing.
+
+   Width takes the SMALLER of a width-derived and a height-derived size. The
+   old `clamp(360px, 58vh, 620px)` was height-only and hit its 620px ceiling at
+   1080p, so the signature element stopped growing exactly where large displays
+   begin — 620px of CD on a 4K screen is 16% of the frame. Taking `min()` of
+   both axes lets it scale with the display while the 62vh term still stops it
+   from outgrowing a short or ultra-wide viewport. */
 .cd-player-wrap {
   position: absolute;
   bottom: 0;
   left: 50%;
   transform: translateX(-50%) translateY(22vh);
-  width: clamp(360px, 58vh, 620px);
+  width: clamp(22.5rem, min(36vw, 62vh), 60rem);
   line-height: 0;
   pointer-events: none;
   z-index: 2;
@@ -756,8 +821,8 @@ html {
   transform: translateX(-50%);
   z-index: 4;
   font-family: var(--font-marker);
-  font-size: clamp(14px, 2vw, 22px);
-  color: rgba(255, 255, 255, 0.68);
+  font-size: clamp(0.875rem, 0.7rem + 0.7vw, 2rem);
+  color: var(--ink-body);
   text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
   white-space: nowrap;
 }
@@ -768,15 +833,17 @@ html {
 @media (max-height: 820px) and (min-width: 641px) {
   .wl-c2__list {
     top: clamp(18px, 3.5vh, 36px);
-    width: min(520px, 64%);
+    /* Still fluid — a short viewport can also be very wide (2560×800 split
+       screen, 3440×1440), where a flat 520px cap stranded the list. */
+    width: min(clamp(32.5rem, 24rem + 9vw, 46rem), 64%);
   }
   .wl-c2__item {
     padding: clamp(4px, 0.9vh, 10px) 0;
-    grid-template-columns: 46px 1fr;
-    gap: 18px;
+    grid-template-columns: clamp(2.875rem, 2.4rem + 1vw, 4.25rem) 1fr;
+    gap: clamp(1.125rem, 0.9rem + 0.6vw, 1.75rem);
   }
   .wl-c2__name {
-    font-size: clamp(18px, 2.2vw, 24px);
+    font-size: clamp(1.125rem, 0.9rem + 0.85vw, 2.125rem);
   }
 }
 
@@ -2144,7 +2211,7 @@ html.is-safari body {
 /* Connect section */
 .connect {
   background: #0a0a0a;
-  padding: clamp(64px, 10vw, 140px) 24px;
+  padding: var(--section-gap) var(--page-gutter);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -2153,18 +2220,24 @@ html.is-safari body {
 
 .connect__heading {
   font-family: var(--font-serif);
-  font-size: clamp(40px, 7vw, 80px);
+  font-size: var(--text-heading);
+  line-height: var(--leading-display);
   font-weight: 400;
-  color: rgba(255, 255, 255, 0.92);
-  margin-bottom: clamp(32px, 5vw, 56px);
+  color: var(--ink);
+  margin-bottom: var(--block-gap);
+  max-width: 20ch;
+  text-wrap: balance;
 }
 
+/* The cap scales with the tags inside it. Held at 640px, the row of DYMO
+   buttons bunched into a small cluster adrift in the middle of a wide
+   display; letting it breathe keeps the scatter reading as a composition. */
 .connect__grid {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 14px;
-  max-width: 640px;
+  gap: clamp(0.875rem, 0.7rem + 0.5vw, 1.75rem);
+  max-width: min(100%, clamp(40rem, 30rem + 18vw, 66rem));
 }
 
 /* Desktop-only playful scatter → aligned-on-hover. Each button gets a
@@ -2252,7 +2325,7 @@ html.is-safari body {
 /* About section */
 .about {
   background: #0a0a0a;
-  padding: clamp(64px, 10vw, 140px) 24px;
+  padding: var(--section-gap) var(--page-gutter);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -2260,21 +2333,26 @@ html.is-safari body {
 
 .about__heading {
   font-family: var(--font-serif);
-  font-size: clamp(40px, 7vw, 80px);
+  font-size: var(--text-heading);
+  line-height: var(--leading-display);
   font-weight: 400;
-  color: rgba(255, 255, 255, 0.92);
-  margin-bottom: clamp(24px, 4vw, 48px);
+  color: var(--ink);
+  margin-bottom: var(--block-gap);
   text-align: center;
+  max-width: 20ch;
+  text-wrap: balance;
 }
 
+/* Was 0.55 alpha — this is the section's only body copy, so it has to clear
+   the readability floor rather than sit at decorative opacity. */
 .about__intro {
   font-family: var(--font-sans);
-  font-size: clamp(14px, 1.4vw, 18px);
-  line-height: 1.7;
-  color: rgba(255, 255, 255, 0.55);
-  max-width: 640px;
+  font-size: var(--text-base);
+  line-height: var(--leading-body);
+  color: var(--ink-body);
+  max-width: var(--measure);
   text-align: center;
-  margin-bottom: clamp(40px, 6vw, 80px);
+  margin-bottom: var(--block-gap);
 }
 
 /* Curated collage on a 12-col grid. Frames are sized to each source image's
@@ -2283,11 +2361,15 @@ html.is-safari body {
      row 2: landscape A (span 8, 4:3)        | phone in dark frame (span 4, 2:3)
      row 3: portrait (span 4, 3:4)           | landscape B (span 8, 3:2)
    Row heights are matched: row 2 = 540, row 3 = 480 (at max-width 1080). */
+/* The 12-col spans and per-photo aspect ratios do the composing, so widening
+   the container scales the whole collage proportionally — no span changes
+   needed. Row-height comments above assume the old 1080px cap; the ratios are
+   what hold the rows in step, so they still match at any width. */
 .about__gallery {
   display: grid;
   grid-template-columns: repeat(12, 1fr);
-  gap: 14px;
-  max-width: 1080px;
+  gap: var(--grid-gap);
+  max-width: var(--content-wide);
   width: 100%;
 }
 
@@ -2368,7 +2450,7 @@ html.is-safari body {
 /* Journal section */
 .journal {
   background: #000;
-  padding: clamp(64px, 10vw, 140px) 24px;
+  padding: var(--section-gap) var(--page-gutter);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -2376,38 +2458,49 @@ html.is-safari body {
 
 .journal__heading {
   font-family: var(--font-serif);
-  font-size: clamp(40px, 7vw, 80px);
+  font-size: var(--text-heading);
+  line-height: var(--leading-display);
   font-weight: 400;
-  color: rgba(255, 255, 255, 0.92);
-  margin-bottom: 12px;
+  color: var(--ink);
+  margin-bottom: 0.5rem;
   text-align: center;
+  text-wrap: balance;
 }
 
 .journal__subline {
   font-family: var(--font-sans);
-  font-size: clamp(13px, 1.2vw, 16px);
-  color: rgba(255, 255, 255, 0.38);
+  font-size: var(--text-sm);
+  line-height: var(--leading-body);
+  color: var(--ink-muted);
   text-align: center;
-  max-width: 480px;
-  margin-bottom: clamp(32px, 5vw, 56px);
+  max-width: var(--measure-tight);
+  margin-bottom: var(--block-gap);
 }
 
+/* Grid rather than wrapping flex: with a fixed 900px cap and 420px cards the
+   posts stacked and left a hole on any wide display.
+
+   `justify-items: center` plus a card cap matters more than it looks — the
+   section currently renders a single published post, and bare auto-fit
+   collapses its empty tracks and stretches that one card across the whole
+   container. The cap keeps a card card-shaped at any post count. */
 .journal__posts {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr));
+  gap: var(--grid-gap);
   justify-content: center;
-  max-width: 900px;
+  justify-items: center;
+  max-width: var(--content-wide);
   width: 100%;
-  margin-bottom: clamp(32px, 5vw, 56px);
+  margin-bottom: var(--block-gap);
 }
 
 .journal__card {
   display: flex;
   flex-direction: column;
   width: 100%;
-  max-width: 420px;
-  border-radius: 12px;
+  max-width: clamp(20rem, 16rem + 12vw, 34rem);
+  border-radius: var(--card-radius);
   overflow: hidden;
   border: 1px solid rgba(255, 255, 255, 0.08);
   background: rgba(255, 255, 255, 0.03);
@@ -2442,42 +2535,45 @@ html.is-safari body {
 }
 
 .journal__card-body {
-  padding: 20px 24px 24px;
+  padding: clamp(1.25rem, 1rem + 0.6vw, 2rem) clamp(1.5rem, 1.2rem + 0.7vw, 2.25rem)
+    clamp(1.5rem, 1.2rem + 0.7vw, 2.25rem);
 }
 
 .journal__card-date {
   font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: 0.16em;
+  font-size: var(--text-meta);
+  letter-spacing: var(--track-label);
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.3);
+  color: var(--ink-faint);
   display: block;
-  margin-bottom: 8px;
+  margin-bottom: 0.5rem;
 }
 
 .journal__card-title {
   font-family: var(--font-serif);
-  font-size: clamp(18px, 2vw, 22px);
+  font-size: var(--text-lg);
   font-weight: 400;
-  color: rgba(255, 255, 255, 0.88);
-  line-height: 1.3;
-  margin-bottom: 10px;
+  color: var(--ink);
+  line-height: var(--leading-tight);
+  margin-bottom: 0.625rem;
 }
 
+/* Card descriptions are body copy, not decoration — 13px at 0.4 alpha put
+   these below the readable floor on every display, not just large ones. */
 .journal__card-excerpt {
   font-family: var(--font-sans);
-  font-size: 13px;
-  line-height: 1.6;
-  color: rgba(255, 255, 255, 0.4);
-  margin-bottom: 16px;
+  font-size: var(--text-sm);
+  line-height: var(--leading-body);
+  color: var(--ink-body);
+  margin-bottom: 1rem;
 }
 
 .journal__card-cta {
   font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: 0.18em;
+  font-size: var(--text-meta);
+  letter-spacing: var(--track-label);
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.5);
+  color: var(--ink-muted);
   transition: color 200ms ease;
 }
 
