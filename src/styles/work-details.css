@@ -1088,9 +1088,9 @@
 .etb-bar__bulletsMore {
   list-style: none;
   margin-left: -15px;
-  color: rgba(17, 17, 22, 0.36) !important;
+  color: rgba(17, 17, 22, 0.5) !important;
   font-family: var(--font-mono);
-  font-size: 9px !important;
+  font-size: var(--text-meta) !important;
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }

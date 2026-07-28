@@ -142,6 +142,13 @@ html {
 
 /* (card-overlay-banner/title/desc removed — orphaned, never used) */
 
+/* Tooltip pill — sizing moved out of Tailwind's fixed steps so it rides the
+   scale system. It labels the four hero cards, so it ships on every visit. */
+.tooltip__pill {
+  font-size: var(--text-meta);
+  line-height: var(--leading-tight);
+}
+
 /* Tooltip */
 .tooltip {
   position: absolute;
@@ -376,8 +383,8 @@ html {
   display: block;
   padding: 10px 14px;
   font-family: var(--font-mono);
-  font-size: 12px;
-  letter-spacing: 0.14em;
+  font-size: var(--text-control);
+  letter-spacing: var(--track-label);
   text-transform: uppercase;
   color: rgba(255, 255, 255, 0.78);
   text-decoration: none;
@@ -1736,9 +1743,9 @@ html.is-safari body {
 }
 .etb-carousel__count {
   font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: 0.12em;
-  color: rgba(255, 255, 255, 0.4);
+  font-size: var(--text-meta);
+  letter-spacing: var(--track-label);
+  color: var(--ink-faint);
 }
 .etb-shot {
   display: flex;
@@ -2329,9 +2336,9 @@ html.is-safari body {
 
 .calendly-fallback__note {
   font-family: var(--font-sans);
-  font-size: 13px;
-  line-height: 1.6;
-  color: rgba(255, 255, 255, 0.45);
+  font-size: var(--text-sm);
+  line-height: var(--leading-body);
+  color: var(--ink-body);
   text-align: center;
   max-width: 34ch;
   margin: 0;

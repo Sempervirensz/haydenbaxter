@@ -251,9 +251,9 @@
 
 .dlab-soft__hero {
   margin: 12px auto 0;
-  max-width: 880px;
+  max-width: 22ch;
   font-family: var(--font-serif);
-  font-size: clamp(26px, 4.4vw, 60px);
+  font-size: clamp(1.625rem, 1rem + 2.2vw, 5rem);
   line-height: 1.08;
   letter-spacing: -0.01em;
 }
