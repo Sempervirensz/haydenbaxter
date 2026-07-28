@@ -489,9 +489,9 @@ html {
 }
 .brands__logo {
   font-family: var(--font-sans);
-  font-size: 13px;
+  font-size: var(--text-sm);
   font-weight: 600;
-  letter-spacing: 0.18em;
+  letter-spacing: var(--track-label);
   text-transform: uppercase;
   color: rgba(255, 255, 255, 0.25);
   white-space: nowrap;
@@ -511,7 +511,7 @@ html {
 
 .brands__logo--img img {
   display: block;
-  height: clamp(22px, 3.2vw, 34px);
+  height: clamp(1.375rem, 1rem + 1.1vw, 3.25rem);
   width: auto;
   opacity: 0.62;
   transition: opacity 300ms ease;
@@ -522,29 +522,30 @@ html {
 }
 
 .brands__logo--img[data-brand="nike"] img {
-  height: clamp(42px, 6.5vw, 72px);
+  height: clamp(2.625rem, 2rem + 2.3vw, 6.875rem);
 }
 
 .brands__logo--img[data-brand="disney"] img {
-  height: clamp(30px, 4.4vw, 50px);
+  height: clamp(1.875rem, 1.4rem + 1.6vw, 4.75rem);
 }
 
 .brands__logo--img[data-brand="aosom"] img {
-  height: clamp(16px, 2.2vw, 24px);
+  height: clamp(1rem, 0.75rem + 0.8vw, 2.3125rem);
 }
 .brands__context {
   text-align: center;
-  font-size: clamp(14px, 1.4vw, 18px);
-  color: rgba(255, 255, 255, 0.75);
+  font-size: var(--text-base);
+  line-height: var(--leading-body);
+  color: var(--ink-body);
   margin-top: clamp(16px, 2vw, 24px);
   padding: 0 16px;
 }
 
 .brands__note {
   text-align: center;
-  font-size: clamp(9px, 0.7vw, 10px);
+  font-size: var(--text-meta);
   letter-spacing: 0.06em;
-  color: rgba(255, 255, 255, 0.15);
+  color: var(--ink-faint);
   margin-top: clamp(16px, 2vw, 24px);
   padding: 0 16px;
 }
@@ -745,11 +746,11 @@ html {
 
 .scroll-hint__text {
   font-family: var(--font-mono);
-  font-size: 10px;
+  font-size: var(--text-label);
   font-weight: 500;
-  letter-spacing: 0.14em;
+  letter-spacing: var(--track-label);
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.52);
+  color: var(--ink-muted);
 }
 
 /* CD player — desktop: foreground base + disc on top.
@@ -769,7 +770,7 @@ html {
   bottom: 0;
   left: 50%;
   transform: translateX(-50%) translateY(22vh);
-  width: clamp(22.5rem, min(36vw, 62vh), 60rem);
+  width: clamp(22.5rem, min(36vw, 62vh), 76rem);
   line-height: 0;
   pointer-events: none;
   z-index: 2;
@@ -1016,10 +1017,10 @@ html.is-safari body {
 
 .work__detail-num {
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: var(--text-label);
   font-weight: 500;
   letter-spacing: 0.08em;
-  color: rgba(255, 255, 255, 0.3);
+  color: var(--ink-faint);
 }
 
 .work__detail-name {
@@ -1039,10 +1040,10 @@ html.is-safari body {
 
 .work__detail-intro {
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: var(--text-label);
   font-weight: 500;
   letter-spacing: 0.08em;
-  color: rgba(255, 255, 255, 0.5);
+  color: var(--ink-muted);
   white-space: nowrap;
 }
 
@@ -1349,7 +1350,7 @@ html.is-safari body {
 }
 
 .etb-page {
-  max-width: 880px;
+  max-width: min(100% - 2 * var(--page-gutter), 82ch);
   margin: 0 auto;
   padding: clamp(24px, 4vw, 56px) clamp(16px, 4vw, 32px) 96px;
   display: flex;
@@ -1543,7 +1544,7 @@ html.is-safari body {
 .etb-stats__grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: clamp(10px, 1.4vw, 14px);
+  gap: clamp(0.625rem, 0.5rem + 0.5vw, 1.5rem);
   list-style: none;
   margin: 0;
   padding: 0;
@@ -2272,7 +2273,7 @@ html.is-safari body {
 }
 
 .tag--connect {
-  font-size: 11px;
+  font-size: var(--text-label);
   padding: 11px 18px 10px;
   letter-spacing: 0.18em;
 }
@@ -2282,17 +2283,17 @@ html.is-safari body {
 }
 
 .connect__id {
-  font-size: 9px;
-  color: rgba(255, 255, 255, 0.35);
+  font-size: var(--text-meta);
+  color: var(--ink-faint);
   margin-left: 8px;
   letter-spacing: 0.12em;
 }
 
 .connect__calendly {
   width: 100%;
-  max-width: 700px;
+  max-width: min(100%, clamp(43.75rem, 34rem + 16vw, 68rem));
   min-width: 320px;
-  height: 700px;
+  height: clamp(43.75rem, 38rem + 8vw, 56rem);
   margin-top: clamp(40px, 6vw, 72px);
   border-radius: 12px;
   overflow: hidden;
@@ -2436,10 +2437,10 @@ html.is-safari body {
 
 .about__photo-empty span {
   font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: 0.14em;
+  font-size: var(--text-label);
+  letter-spacing: var(--track-label);
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.15);
+  color: var(--ink-faint);
 }
 
 /* Hide placeholder text when image loads */
@@ -2582,7 +2583,7 @@ html.is-safari body {
 }
 
 .tag--journal {
-  font-size: 11px;
+  font-size: var(--text-label);
   padding: 12px 22px 11px;
   letter-spacing: 0.18em;
   text-transform: uppercase;
@@ -2838,7 +2839,7 @@ html.is-safari body {
   display: flex;
   flex-direction: column;
   gap: clamp(20px, 3vw, 36px);
-  max-width: 1100px;
+  max-width: min(100% - 2 * var(--page-gutter), var(--content-max));
   margin: 0 auto;
 }
 
@@ -2886,8 +2887,8 @@ html.is-safari body {
   margin: 0;
   padding: 0;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: clamp(16px, 2vw, 24px);
+  grid-template-columns: repeat(auto-fill, minmax(clamp(17.5rem, 14rem + 6vw, 26rem), 1fr));
+  gap: var(--grid-gap);
 }
 .blog-index__item {
   display: flex;
@@ -3010,7 +3011,7 @@ html.is-safari body {
 
 /* ── article detail ── */
 .blog-post {
-  max-width: 880px;
+  max-width: min(100% - 2 * var(--page-gutter), 82ch);
 }
 .blog-post__article {
   display: flex;
@@ -3122,7 +3123,7 @@ html.is-safari body {
 .cmp-page {
   min-height: 100vh;
   padding: clamp(24px, 4vw, 56px) clamp(16px, 4vw, 40px) 96px;
-  max-width: 1100px;
+  max-width: min(100% - 2 * var(--page-gutter), var(--content-max));
   margin: 0 auto;
   display: flex;
   flex-direction: column;

@@ -170,18 +170,25 @@
 }
 
 /* 2200px+ — the point where a fixed centre column starts reading as stranded.
-   Compositions widen; reading columns deliberately do not. */
+   Compositions widen; reading columns deliberately do not, because `--measure`
+   and `--content-narrow` are what protect line length. */
 @media (min-width: 137.5rem) {
   :root {
     --section-gap: clamp(5rem, 3rem + 3vw, 10rem);
+    --content-max: 96rem; /*  1536px */
+    --content-wide: 132rem; /* 2112px */
   }
 }
 
 /* 2880px+ — 4K and large ultra-wide. Gutters stop growing entirely so the
-   extra width goes to content rather than to margin. */
+   extra width goes to content rather than to margin, and the composition
+   containers take their final step up: at 3840px this puts grids and panels at
+   ~70% of the viewport instead of the ~45% a 108rem cap produced. */
 @media (min-width: 180rem) {
   :root {
     --page-gutter: 6rem;
+    --content-max: 108rem; /*  1728px */
+    --content-wide: 168rem; /* 2688px */
   }
 }
 

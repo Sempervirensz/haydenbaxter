@@ -2679,7 +2679,7 @@
 
 .cns-hero__orbShell {
   position: relative;
-  width: clamp(176px, 20vw, 248px);
+  width: clamp(11rem, 8rem + 4.5vw, 22rem);
   aspect-ratio: 1 / 1;
   border-radius: 50%;
   overflow: hidden;
@@ -2964,7 +2964,7 @@
 
 .cns-modal__dialog {
   position: relative;
-  width: min(1040px, calc(100% - 28px));
+  width: min(clamp(65rem, 45rem + 24vw, 100rem), calc(100% - 1.75rem));
   max-height: calc(100% - 28px);
   opacity: 0;
   transform: translateY(8px) scale(0.985);
@@ -3214,7 +3214,7 @@
      column width, which is what the globe measures itself against. The old flat
      1280px ceiling is why the globe stayed small on large displays — it was
      measuring a box that had stopped growing at roughly laptop width. */
-  max-width: min(clamp(80rem, 55rem + 30vw, 132rem), 92vw);
+  max-width: min(var(--content-wide), 92vw);
   margin: 0 auto;
   padding: clamp(2.375rem, 5vh, 3.5rem) clamp(2rem, 1.4rem + 2vw, 5rem)
     clamp(2.125rem, 5vh, 3.5rem);
@@ -3832,7 +3832,7 @@
   right: 0;
   bottom: 0;
   z-index: 10;
-  width: min(460px, 85%);
+  width: min(clamp(28.75rem, 22rem + 9vw, 44rem), 85%);
   background: rgba(10, 10, 10, 0.96);
   border-left: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 0 24px 24px 0;

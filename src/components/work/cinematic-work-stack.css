@@ -496,14 +496,15 @@
 /* Neutralize the homepage glass shell so the cinematic card is the only frame,
    while keeping the padding/layout context ETBDetail expects. */
 /* The 1000px cap held the whole Emerging Tech Builds panel to ~37% of a 2560px
-   display. It's an accordion of project rows, so it can take real width — but
-   not unlimited width, or the rows stop scanning as rows. */
+   display. Using the shared composition container means the large-display tiers
+   in scale.css govern it, rather than this file carrying its own ceiling that
+   would have to be kept in step by hand. */
 .cstack__etbShell {
   border: none !important;
   background: transparent !important;
   box-shadow: none !important;
   width: 100%;
-  max-width: clamp(62.5rem, 40rem + 30vw, 120rem);
+  max-width: min(100%, var(--content-wide));
   margin: 0 auto;
 }
 
