@@ -4,9 +4,10 @@ An isolated playground for the final-section CTA. It reproduces enough of the
 production Consulting card to judge the interaction honestly, then branches
 **LET'S WORK TOGETHER** into the three things a visitor could actually want.
 
-Nothing in `src/components/work/**` was touched. The production Consulting
-section still runs `ConsultingHeroStage` → `Stage` → `OfferDossier` exactly as
-before, and nothing here has been promoted.
+**Concept A (Rail) shipped.** The production Work section now renders it at both
+breakpoints — `ConsultingHeroStage` (desktop) and `MobileConsultingCard`
+(mobile) both mount `src/components/work/WorkTogether.tsx`. B and C stay here
+for comparison and have not been deleted.
 
 ---
 
@@ -83,7 +84,7 @@ and `data-motion` on `.ctal-stage`, nothing else.
 
 ## Where each iteration stands
 
-### A · Rail — **updated. This is the recommendation.**
+### A · Rail — **shipped.**
 
 The CTA is a serif headline low in the frame. Pressing it demotes the headline
 to a mono eyebrow and three full-width rows rise in, staggered — an index, not a
@@ -104,6 +105,13 @@ Why it wins:
 
 On narrow the screen scrolls with the action bar stuck to its bottom, so the one
 next step is always reachable without hunting for it.
+
+**Production note.** `WorkTogether` takes the photo as a `media` prop and renders
+it inside itself rather than letting the host paint it behind. `.wt` is the
+backdrop root for the blur ladder, so a host-owned photo sits outside what
+`backdrop-filter` can sample — the dim still lands and the blur silently does
+nothing, which reads as "too dark" rather than as a bug. This was caught during
+promotion; keep the plate inside `.wt`.
 
 ### B · Split — **updated, kept for comparison.**
 
@@ -172,8 +180,10 @@ as a phone does.
 
 ## Content
 
-All copy lives in `src/data/ctaLab.ts` with the source of each fact noted
-inline. Nothing is invented — everything traces to `consultingOffers.ts`,
+All copy lives in `src/data/workTogether.ts` — the production source, which the
+live section renders. `src/data/ctaLab.ts` re-exports it and adds only lab-only
+things (the concept roster, the split segments, the section-label toggle), so the
+lab and the site can't drift. The source of each fact is noted inline. Nothing is invented — everything traces to `consultingOffers.ts`,
 `work.ts`, `about.ts`, `siteContent.ts`, or `connect.ts`.
 
 Positioning guardrails: Hayden is a founder running WorldPulse who takes
@@ -183,9 +193,10 @@ record**, never availability, and there is no "hire me" / "open to work" /
 
 **No resume asset exists in `public/`** — `git ls-files` has no PDF anywhere in
 the repo — so the Experience screen's primary action is **Request the resume**
-(a pre-subjected mailto) rather than a link that would 404. Commit the document
-under `public/` and set `RESUME_HREF` in `src/data/ctaLab.ts`; the action becomes
-**View resume** automatically, with no other change.
+(a pre-subjected mailto) rather than a link that would 404. This is live in
+production in that state. Commit the document under `public/` and set
+`RESUME_HREF` in `src/data/workTogether.ts`; the action becomes **View resume**
+automatically, with no other change.
 
 ---
 
@@ -212,7 +223,18 @@ src/components/cta-lab/
 `DetailPanel.tsx` was removed — it was the tabbed panel, and tabs are exactly
 what the rework deletes. `Destination.tsx` replaces it.
 
-Three files outside the lab were touched, all additive registration only:
+Production files the promotion touched:
+
+```
+src/data/workTogether.ts                  the three paths + destinations (live)
+src/components/work/WorkTogether.tsx      the interaction, both breakpoints
+src/components/work/WorkTogetherScreen.tsx  the destination screen
+src/components/work/work-together.css     all styling, scoped .wt- / .wt-screen-
+src/components/work/ConsultingHeroStage.tsx        desktop host
+src/components/work/mobile/MobileConsultingCard.tsx  mobile host
+```
+
+Three further files were touched for lab registration only:
 `src/components/Splash.tsx` (`/cta-lab` in `NO_SPLASH_ROUTES`),
 `src/data/site.ts` (`NON_PUBLIC_PREFIXES`), `src/data/labsRegistry.ts`
 (the `/admin/labs` hub entry).
