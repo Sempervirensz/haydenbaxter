@@ -1,0 +1,786 @@
+/* ===========================================================================
+   "Let's work together" — the final Work section's interaction.
+   Scoped under .wt- / .wt-screen-. Promoted from the CTA lab (Concept A).
+   ===========================================================================
+
+   Layout is driven by one attribute:  .wt[data-step]  intro | paths | destination
+
+   `.wt` is a size container, so every rule below is a @container query. Both
+   the desktop cinematic card and the mobile Consulting card mount this and get
+   the right layout from the space they give it — no viewport media queries, no
+   duplicated breakpoint logic.
+   ======================================================================== */
+
+.wt {
+  --wt-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --wt-ease-out: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --wt-fast: 200ms;
+  --wt-base: 420ms;
+  --wt-slow: 640ms;
+
+  --wt-paper: #f5f4f1;
+  --wt-ink: #111116;
+
+  container-type: size;
+  container-name: wt;
+
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  overflow: hidden;
+  /* The backdrop root for .wt__focus. The photo plane is a child (.wt__media),
+     so it is inside this root and the blur ladder can sample it. Moving the
+     photo out to the host breaks the blur silently — the dim still applies, so
+     it reads as "too dark" rather than as a bug. */
+  isolation: isolate;
+}
+
+/* Photo plane, supplied by the host via the `media` prop. */
+.wt__media {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.wt__media > * {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* Depth ladder. Each level pushes the city further back. */
+.wt[data-step="intro"] {
+  --focus-blur: 0px;
+  --focus-dim: 0.06;
+}
+.wt[data-step="paths"] {
+  --focus-blur: 13px;
+  --focus-dim: 0.22;
+}
+.wt[data-step="destination"] {
+  --focus-blur: 24px;
+  --focus-dim: 0.4;
+}
+
+/* Blurs whatever the host painted behind it — the cityscape on desktop, the
+   statue on mobile. */
+.wt__focus {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  backdrop-filter: blur(var(--focus-blur)) saturate(1.06);
+  -webkit-backdrop-filter: blur(var(--focus-blur)) saturate(1.06);
+  background: rgba(4, 5, 10, var(--focus-dim));
+  transition:
+    backdrop-filter var(--wt-slow) var(--wt-ease-out),
+    -webkit-backdrop-filter var(--wt-slow) var(--wt-ease-out),
+    background-color var(--wt-slow) var(--wt-ease-out);
+}
+
+/* Film grain. Generated inline — no asset, no dependency. */
+.wt__grain {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  opacity: 0.4;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='0.3'/%3E%3C/svg%3E");
+  background-size: 180px 180px;
+}
+
+.wt :focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.75);
+  outline-offset: 3px;
+}
+
+/* ---- Back (paths level only; the screen carries its own) ---- */
+
+.wt__back {
+  position: absolute;
+  top: 72px;
+  left: clamp(22px, 4cqw, 52px);
+  z-index: 4;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 13px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(16, 18, 22, 0.5);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.86);
+  cursor: pointer;
+  animation: wt-back-in 340ms var(--wt-ease) 60ms backwards;
+  transition: border-color 180ms ease, background 180ms ease, color 180ms ease;
+}
+
+.wt__back:hover,
+.wt__back:focus-visible {
+  border-color: rgba(255, 255, 255, 0.4);
+  background: rgba(24, 28, 34, 0.66);
+  color: #fff;
+  outline: none;
+}
+
+.wt__back > span {
+  font-size: 13px;
+  letter-spacing: 0;
+}
+
+@keyframes wt-back-in {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ---- Masthead ---- */
+
+.wt__masthead {
+  position: absolute;
+  left: clamp(22px, 4cqw, 52px);
+  right: clamp(22px, 4cqw, 52px);
+  top: 124px;
+  z-index: 3;
+  transform: translateY(var(--mast-y));
+  transition: transform var(--wt-slow) var(--wt-ease);
+}
+
+.wt[data-step="intro"] .wt__masthead {
+  --mast-y: 44cqh;
+}
+.wt[data-step="paths"] .wt__masthead,
+.wt[data-step="destination"] .wt__masthead {
+  --mast-y: 0cqh;
+}
+
+.wt__cta {
+  all: unset;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  cursor: pointer;
+  padding-bottom: 18px;
+}
+
+.wt__ctaText {
+  font-family: var(--font-serif);
+  font-size: clamp(34px, 7cqw, 72px);
+  line-height: 0.98;
+  letter-spacing: -0.02em;
+  color: rgba(246, 245, 240, 0.96);
+  text-shadow: 0 4px 24px rgba(0, 0, 0, 0.6);
+  transition: color 200ms ease;
+}
+
+.wt__cta:hover .wt__ctaText,
+.wt__cta:focus-visible .wt__ctaText {
+  color: #fff;
+}
+
+.wt__ctaHint {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.55);
+  display: inline-flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.wt__cta:hover .wt__ctaHint {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.wt__eyebrow {
+  margin: 0 0 14px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.58);
+  animation: wt-fade-in var(--wt-base) var(--wt-ease) both;
+}
+
+.wt__rule {
+  display: block;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.22);
+}
+
+@keyframes wt-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* ---- The three rows ---- */
+
+.wt__rows {
+  position: absolute;
+  left: clamp(22px, 4cqw, 52px);
+  right: clamp(22px, 4cqw, 52px);
+  top: 190px;
+  z-index: 3;
+  display: grid;
+  grid-template-rows: auto auto auto;
+  transition: grid-template-rows var(--wt-base) var(--wt-ease);
+}
+
+.wt__row {
+  min-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(26px);
+  transition:
+    opacity var(--wt-slow) var(--wt-ease),
+    transform var(--wt-slow) var(--wt-ease);
+  transition-delay: calc(var(--row-index) * 80ms + 110ms);
+  pointer-events: none;
+}
+
+.wt[data-step="paths"] .wt__row,
+.wt[data-step="destination"] .wt__row {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.wt__row.is-dismissed {
+  opacity: 0;
+  transform: translateX(-28px);
+  pointer-events: none;
+  transition-delay: 0ms;
+}
+
+/* Collapse the two rows that weren't chosen so the survivor rises to the top. */
+.wt__rows:has(.wt__row:nth-child(1).is-chosen) { grid-template-rows: auto 0fr 0fr; }
+.wt__rows:has(.wt__row:nth-child(2).is-chosen) { grid-template-rows: 0fr auto 0fr; }
+.wt__rows:has(.wt__row:nth-child(3).is-chosen) { grid-template-rows: 0fr 0fr auto; }
+
+.wt__rowBtn {
+  all: unset;
+  box-sizing: border-box;
+  width: 100%;
+  display: grid;
+  grid-template-columns: auto 1fr auto auto;
+  align-items: center;
+  gap: 18px;
+  padding: 13px 4px;
+  cursor: pointer;
+  transition: padding-left 260ms var(--wt-ease);
+}
+
+.wt__rowBtn:hover,
+.wt__rowBtn:focus-visible {
+  padding-left: 12px;
+}
+
+.wt__num {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.24em;
+  color: rgba(255, 255, 255, 0.38);
+}
+
+.wt__rowMain {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.wt__label {
+  font-family: var(--font-serif);
+  font-size: clamp(19px, 2.7cqw, 27px);
+  line-height: 1.04;
+  letter-spacing: -0.015em;
+  color: rgba(246, 245, 240, 0.95);
+  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.5);
+}
+
+.wt__lede {
+  font-family: var(--font-sans);
+  font-size: 12.5px;
+  line-height: 1.4;
+  color: rgba(255, 255, 255, 0.56);
+}
+
+.wt__meta {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.34);
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 200ms ease;
+}
+
+.wt__rowBtn:hover .wt__meta,
+.wt__rowBtn:focus-visible .wt__meta,
+.wt__row.is-chosen .wt__meta {
+  opacity: 1;
+}
+
+.wt__chev {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.5);
+  transition: transform 240ms var(--wt-ease), color 200ms ease;
+}
+
+.wt__rowBtn:hover .wt__chev {
+  transform: translateX(5px);
+  color: #fff;
+}
+
+.wt__rowRule {
+  display: block;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.14);
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+  transition: transform var(--wt-base) var(--wt-ease), background 200ms ease;
+  transition-delay: calc(var(--row-index) * 80ms + 190ms);
+}
+
+.wt[data-step="paths"] .wt__rowRule,
+.wt[data-step="destination"] .wt__rowRule {
+  transform: scaleX(1);
+}
+
+.wt__row:hover .wt__rowRule,
+.wt__row.is-chosen .wt__rowRule {
+  background: rgba(255, 255, 255, 0.42);
+}
+
+/* ---- In-place unfurl ---- */
+
+.wt__unfurl {
+  position: absolute;
+  left: clamp(22px, 4cqw, 52px);
+  right: clamp(22px, 4cqw, 52px);
+  top: 272px;
+  bottom: clamp(16px, 2.4cqh, 30px);
+  z-index: 3;
+  display: flex;
+  align-items: flex-start;
+  animation: wt-unfurl 460ms var(--wt-ease) 60ms both;
+}
+
+@keyframes wt-unfurl {
+  from { opacity: 0; transform: translateY(-14px); clip-path: inset(0 0 100% 0); }
+  to   { opacity: 1; transform: translateY(0);     clip-path: inset(0 0 0 0); }
+}
+
+/* ===========================================================================
+   DESTINATION SCREEN — one complete answer, no navigation inside it
+   ======================================================================== */
+
+.wt-screen {
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+  width: 100%;
+  padding: 17px clamp(18px, 2.2cqw, 28px) 16px;
+  border-radius: 14px;
+  background: var(--wt-paper);
+  border: 1px solid rgba(17, 17, 22, 0.08);
+  color: var(--wt-ink);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.55) inset,
+    0 28px 72px rgba(0, 0, 0, 0.45),
+    0 6px 18px rgba(0, 0, 0, 0.28);
+  max-height: 100%;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+.wt-screen__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(17, 17, 22, 0.09);
+}
+
+.wt-screen__eyebrow {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(17, 17, 22, 0.45);
+}
+
+.wt-screen__back {
+  all: unset;
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(17, 17, 22, 0.52);
+  padding: 6px 11px;
+  border-radius: 999px;
+  border: 1px solid rgba(17, 17, 22, 0.14);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: color 160ms ease, border-color 160ms ease, background 160ms ease;
+}
+
+.wt-screen__back:hover,
+.wt-screen__back:focus-visible {
+  color: rgba(17, 17, 22, 0.92);
+  border-color: rgba(17, 17, 22, 0.34);
+  background: rgba(17, 17, 22, 0.03);
+  outline: none;
+}
+
+.wt-screen__back:focus-visible {
+  outline: 2px solid rgba(37, 99, 235, 0.6);
+  outline-offset: 2px;
+}
+
+.wt-screen__body {
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+  animation: wt-screen-in 340ms var(--wt-ease) 60ms both;
+}
+
+@keyframes wt-screen-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.wt-screen__title {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: clamp(21px, 2.7cqw, 30px);
+  font-weight: 400;
+  letter-spacing: -0.015em;
+  line-height: 1.03;
+}
+
+.wt-screen__lede {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: rgba(17, 17, 22, 0.66);
+  max-width: 76ch;
+}
+
+/* ---- The two always-visible blocks ---- */
+
+.wt-screen__blocks {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px clamp(20px, 3cqw, 40px);
+  padding: 12px 0 2px;
+  border-top: 1px solid rgba(17, 17, 22, 0.09);
+}
+
+.wt-screen__block {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.wt-screen__blockLabel {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(37, 99, 235, 0.95);
+}
+
+.wt-screen__blockDesc {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 11.5px;
+  line-height: 1.4;
+  color: rgba(17, 17, 22, 0.56);
+}
+
+.wt-screen__list {
+  list-style: none;
+  margin: 1px 0 0;
+  padding: 0;
+  display: grid;
+  gap: 4px;
+}
+
+.wt-screen__list li {
+  position: relative;
+  padding-left: 14px;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  line-height: 1.35;
+  color: rgba(17, 17, 22, 0.82);
+}
+
+.wt-screen__list li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.58em;
+  width: 4px;
+  height: 4px;
+  border-radius: 999px;
+  background: rgba(37, 99, 235, 0.65);
+}
+
+/* ---- Credential strip ---- */
+
+.wt-screen__signals {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.wt-screen__signals li {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(17, 17, 22, 0.5);
+  padding: 4px 8px;
+  border-radius: 4px;
+  background: rgba(17, 17, 22, 0.04);
+  border: 1px solid rgba(17, 17, 22, 0.07);
+}
+
+/* ---- One clear next action ---- */
+
+.wt-screen__foot {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-top: 1px;
+  padding-top: 11px;
+  border-top: 1px solid rgba(17, 17, 22, 0.09);
+}
+
+.wt-screen__note {
+  margin: 0;
+  flex: 1 1 300px;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  line-height: 1.45;
+  color: rgba(17, 17, 22, 0.52);
+  max-width: 62ch;
+}
+
+.wt-screen__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.wt-action {
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 10px 15px;
+  border-radius: 8px;
+  text-decoration: none;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: transform 160ms ease, border-color 160ms ease, background 160ms ease, color 160ms ease;
+}
+
+.wt-action--primary {
+  border: 1px solid rgba(37, 99, 235, 0.5);
+  background: rgba(37, 99, 235, 0.1);
+  color: rgba(30, 78, 190, 0.98);
+}
+
+.wt-action--primary:hover,
+.wt-action--primary:focus-visible {
+  border-color: rgba(37, 99, 235, 0.75);
+  background: rgba(37, 99, 235, 0.16);
+  transform: translateY(-1px);
+}
+
+.wt-action--ghost {
+  border: 1px solid rgba(17, 17, 22, 0.14);
+  background: transparent;
+  color: rgba(17, 17, 22, 0.72);
+}
+
+.wt-action--ghost:hover,
+.wt-action--ghost:focus-visible {
+  border-color: rgba(17, 17, 22, 0.32);
+  color: rgba(17, 17, 22, 0.95);
+  transform: translateY(-1px);
+}
+
+.wt-action:focus-visible {
+  outline: 2px solid rgba(37, 99, 235, 0.6);
+  outline-offset: 2px;
+}
+
+/* ===========================================================================
+   NARROW — container queries, so this fires from the composition's own width.
+   Covers phones and any narrow host without a viewport breakpoint.
+   ======================================================================== */
+
+@container wt (max-width: 700px) {
+  .wt__back {
+    top: 66px;
+    letter-spacing: 0.16em;
+  }
+
+  .wt__rows {
+    top: 158px;
+  }
+  .wt__rowBtn {
+    grid-template-columns: auto 1fr;
+    gap: 12px;
+    padding: 12px 2px;
+  }
+  .wt__meta,
+  .wt__chev {
+    display: none;
+  }
+  .wt__unfurl {
+    top: 250px;
+    bottom: 16px;
+  }
+  .wt[data-step="intro"] .wt__masthead {
+    --mast-y: 40cqh;
+  }
+
+  .wt-screen {
+    gap: 12px;
+    padding: 18px 18px 16px;
+  }
+  .wt-screen__blocks {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  .wt-screen__back span[aria-hidden] {
+    display: none;
+  }
+
+  /* The screen scrolls at this width, so the one next action sticks to the
+     bottom of it rather than sitting below the fold. */
+  .wt-screen__foot {
+    position: sticky;
+    bottom: -16px;
+    z-index: 1;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+    margin: 0 -18px -16px;
+    padding: 12px 18px 16px;
+    background: linear-gradient(
+      180deg,
+      rgba(245, 244, 241, 0.82) 0%,
+      var(--wt-paper) 38%
+    );
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+  }
+  /* The desktop `flex: 1 1 300px` is a WIDTH basis in a row; once the foot goes
+     column it becomes a 300px-tall note. Reset it. */
+  .wt-screen__note {
+    flex: 0 0 auto;
+  }
+  .wt-screen__actions .wt-action {
+    flex: 1 1 auto;
+    justify-content: center;
+  }
+}
+
+/* ===========================================================================
+   REDUCED MOTION
+   Every state above is a static rule, so switching motion off is just removing
+   the tweening — nothing is left mid-flight.
+   ======================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .wt,
+  .wt *,
+  .wt *::before,
+  .wt *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+  .wt__row.is-dismissed {
+    display: none;
+  }
+  .wt__rowRule {
+    transform: scaleX(1);
+  }
+}
+
+/* ===========================================================================
+   DESKTOP HOST — the cinematic Consulting card's photo plane
+   ======================================================================== */
+
+.cns-stage {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #05060a;
+}
+
+.cns-stage__img {
+  object-fit: cover;
+  object-position: center 62%;
+  transform: scale(1.02);
+}
+
+@media (max-width: 640px) {
+  .cns-stage__img {
+    object-position: center center;
+  }
+}
+
+/* Ambient top light + vignette — same recipe as .work__screen--detail::after */
+.cns-stage__vignette {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  background:
+    radial-gradient(circle 55% at 50% 26%, rgba(255, 255, 255, 0.1) 0%, transparent 68%),
+    radial-gradient(ellipse 116% 96% at 50% 50%, transparent 38%, rgba(0, 0, 0, 0.92) 100%);
+}
+
+/* ===========================================================================
+   MOBILE HOST — wraps the statue plate + interaction only, so the shared
+   chapter rail keeps resolving its cq units against .wmob-screen as before.
+   ======================================================================== */
+
