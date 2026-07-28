@@ -305,9 +305,11 @@
 .dlab-soft__cue {
   font-family: var(--font-mono);
   font-size: var(--text-label);
-  letter-spacing: 0.3em;
+  letter-spacing: var(--track-dymo);
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.4);
+  /* The pulse animation multiplies this down to ~0.33 effective at its trough;
+     0.4 as the base left the site's first piece of wayfinding barely visible. */
+  color: var(--ink-muted);
   animation: dlab-soft-pulse 2.6s ease-in-out infinite;
 }
 

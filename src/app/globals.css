@@ -1338,7 +1338,7 @@ html.is-safari body {
   gap: 10px;
   align-self: flex-start;
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: var(--text-control);
   font-weight: 500;
   letter-spacing: 0.16em;
   text-transform: uppercase;
@@ -1392,7 +1392,7 @@ html.is-safari body {
 }
 .etb-page__category {
   font-family: var(--font-mono);
-  font-size: 10px;
+  font-size: var(--text-label);
   font-weight: 500;
   letter-spacing: 0.22em;
   text-transform: uppercase;
@@ -1423,7 +1423,7 @@ html.is-safari body {
 }
 .etb-page__tag {
   font-family: var(--font-mono);
-  font-size: 9px;
+  font-size: var(--text-label);
   font-weight: 500;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -1441,7 +1441,7 @@ html.is-safari body {
 }
 .etb-page__sectionTitle {
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: var(--text-label);
   font-weight: 500;
   letter-spacing: 0.2em;
   text-transform: uppercase;
@@ -1454,7 +1454,7 @@ html.is-safari body {
   background: rgba(255, 255, 255, 0.02);
   padding: clamp(20px, 3vw, 32px);
   font-family: var(--font-sans);
-  font-size: 13px;
+  font-size: var(--text-sm);
   line-height: 1.55;
   color: rgba(255, 255, 255, 0.48);
 }
@@ -1466,7 +1466,7 @@ html.is-safari body {
   letter-spacing: 0.08em;
   text-transform: uppercase;
   font-family: var(--font-mono);
-  font-size: 10px;
+  font-size: var(--text-sm);
   color: rgba(255, 255, 255, 0.36);
 }
 
@@ -1487,7 +1487,7 @@ html.is-safari body {
 .etb-page__demoBadge {
   align-self: flex-start;
   font-family: var(--font-mono);
-  font-size: 9px;
+  font-size: var(--text-label);
   font-weight: 500;
   letter-spacing: 0.2em;
   text-transform: uppercase;
@@ -1500,7 +1500,7 @@ html.is-safari body {
 .etb-page__demoNoteText {
   margin: 0;
   font-family: var(--font-sans);
-  font-size: 13px;
+  font-size: var(--text-sm);
   line-height: 1.6;
   color: rgba(206, 214, 238, 0.82);
 }
@@ -1518,7 +1518,7 @@ html.is-safari body {
   align-items: center;
   gap: 10px;
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: var(--text-control);
   font-weight: 600;
   letter-spacing: 0.16em;
   text-transform: uppercase;
@@ -1604,7 +1604,7 @@ html.is-safari body {
 }
 .etb-stat__label {
   font-family: var(--font-mono);
-  font-size: 10px;
+  font-size: var(--text-label);
   font-weight: 500;
   letter-spacing: 0.18em;
   text-transform: uppercase;
@@ -1620,7 +1620,7 @@ html.is-safari body {
 }
 .etb-stat__detail {
   font-family: var(--font-sans);
-  font-size: 12.5px;
+  font-size: var(--text-sm);
   line-height: 1.45;
   color: rgba(255, 255, 255, 0.6);
 }
@@ -1787,7 +1787,7 @@ html.is-safari body {
   right: 12px;
   bottom: 12px;
   font-family: var(--font-mono);
-  font-size: 9px;
+  font-size: var(--text-control);
   font-weight: 500;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -1865,7 +1865,7 @@ html.is-safari body {
 }
 .etb-lightbox__caption {
   font-family: var(--font-mono);
-  font-size: 10px;
+  font-size: var(--text-meta);
   font-weight: 500;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -1933,7 +1933,7 @@ html.is-safari body {
 }
 .etb-shot__caption {
   font-family: var(--font-mono);
-  font-size: 10px;
+  font-size: var(--text-meta);
   font-weight: 500;
   letter-spacing: 0.04em;
   line-height: 1.5;
@@ -1997,7 +1997,7 @@ html.is-safari body {
   gap: 12px;
   padding: 16px clamp(16px, 2.4vw, 20px);
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: var(--text-control);
   font-weight: 500;
   letter-spacing: 0.2em;
   text-transform: uppercase;
@@ -2091,7 +2091,7 @@ html.is-safari body {
   border: 1px solid rgba(104, 130, 216, 0.4);
   background: rgba(104, 130, 216, 0.12);
   font-family: var(--font-mono);
-  font-size: 12px;
+  font-size: var(--text-label);
   font-weight: 600;
   color: rgba(196, 208, 244, 0.96);
 }
@@ -2103,7 +2103,7 @@ html.is-safari body {
 .etb-page__stepTitle {
   margin: 0;
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: var(--text-label);
   font-weight: 500;
   letter-spacing: 0.16em;
   text-transform: uppercase;
@@ -2136,7 +2136,7 @@ html.is-safari body {
 .etb-page__diffTitle {
   margin: 0;
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: var(--text-label);
   font-weight: 500;
   letter-spacing: 0.16em;
   text-transform: uppercase;
@@ -2152,7 +2152,7 @@ html.is-safari body {
 .etb-page__diffNote {
   margin: 4px 0 0;
   font-family: var(--font-sans);
-  font-size: 12.5px;
+  font-size: var(--text-sm);
   font-style: italic;
   line-height: 1.55;
   color: rgba(255, 255, 255, 0.5);
@@ -2172,7 +2172,7 @@ html.is-safari body {
 .etb-page__techTitle {
   margin: 0;
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: var(--text-label);
   font-weight: 500;
   letter-spacing: 0.16em;
   text-transform: uppercase;
@@ -2189,7 +2189,7 @@ html.is-safari body {
 .etb-page__demoFootnote {
   margin: 0;
   font-family: var(--font-mono);
-  font-size: 10px;
+  font-size: var(--text-label);
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: rgba(255, 255, 255, 0.34);
@@ -2867,7 +2867,7 @@ html.is-safari body {
 }
 .blog-index__eyebrow {
   font-family: var(--font-mono);
-  font-size: 10px;
+  font-size: var(--text-label);
   font-weight: 500;
   letter-spacing: 0.22em;
   text-transform: uppercase;
@@ -2951,7 +2951,7 @@ html.is-safari body {
 }
 .blog-index__cardDate {
   font-family: var(--font-mono);
-  font-size: 10px;
+  font-size: var(--text-label);
   font-weight: 500;
   letter-spacing: 0.2em;
   text-transform: uppercase;
@@ -2987,7 +2987,7 @@ html.is-safari body {
 }
 .blog-index__cardTag {
   font-family: var(--font-mono);
-  font-size: 9px;
+  font-size: var(--text-label);
   font-weight: 500;
   letter-spacing: 0.16em;
   text-transform: uppercase;
@@ -3000,7 +3000,7 @@ html.is-safari body {
 .blog-index__cardCta {
   margin-top: 8px;
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: var(--text-control);
   letter-spacing: 0.18em;
   text-transform: uppercase;
   color: rgba(255, 255, 255, 0.78);
@@ -3059,7 +3059,7 @@ html.is-safari body {
   align-items: center;
   gap: 14px;
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: var(--text-label);
   letter-spacing: 0.18em;
   text-transform: uppercase;
   color: rgba(255, 255, 255, 0.55);
@@ -3097,7 +3097,7 @@ html.is-safari body {
 }
 .blog-post__tag {
   font-family: var(--font-mono);
-  font-size: 9px;
+  font-size: var(--text-label);
   font-weight: 500;
   letter-spacing: 0.16em;
   text-transform: uppercase;
@@ -3154,7 +3154,7 @@ html.is-safari body {
 .cmp-page__eyebrow {
   align-self: flex-start;
   font-family: var(--font-mono);
-  font-size: 10px;
+  font-size: var(--text-label);
   font-weight: 500;
   letter-spacing: 0.22em;
   text-transform: uppercase;
