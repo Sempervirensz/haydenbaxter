@@ -28,7 +28,7 @@ export const DEFAULT_STATE: HeroTransitionState = {
 };
 
 export const HERO_QUOTE = "The best way to predict the future is to create it.";
-export const HERO_CTA_LABEL = "Explore What's Possible";
+export const HERO_CTA_LABEL = "Let's work together";
 
 export interface HeroPath {
   id: string;

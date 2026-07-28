@@ -97,7 +97,7 @@ export default function CinematicCardBody({ card, isActive, peek, onTogglePeek }
                   onClick={onTogglePeek}
                   aria-expanded={peek}
                 >
-                  Explore WorldPulse <span aria-hidden="true">▸</span>
+                  The full story <span aria-hidden="true">▸</span>
                 </button>
               </div>
             </div>

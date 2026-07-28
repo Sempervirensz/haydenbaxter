@@ -6,7 +6,7 @@ export const SPLASH_WORDS = [
   "Olá",
   "नमस्ते",
   "こんにちは",
-  "Explore the Site\n\nScroll through each section.\nClick cards to flip them.\nUse the globe timeline to move through the journey.\n\nStart Exploring ↓",
+  "Step Inside\n\nScroll through each section.\nClick cards to flip them.\nUse the globe timeline to move through the journey.\n\nStart Exploring ↓",
 ];
 
 /** Text label, or image asset path under /public */
@@ -29,7 +29,7 @@ export const SITE_CONTENT = {
     ],
   },
   hero: {
-    eyebrow: "Explore the builds, the supply chain background, and where WorldPulse fits in.",
+    eyebrow: "View the work, the supply chain background, and where WorldPulse fits in.",
     heading: "I build AI products and supply chain systems where data, design, and the real world meet.",
   },
   brands: {

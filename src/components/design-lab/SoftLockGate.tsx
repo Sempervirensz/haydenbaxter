@@ -81,7 +81,7 @@ export default function SoftLockGate({ children }: { children: React.ReactNode }
         ) : (
           <>
             <p className="dlab-soft__prompt dlab-soft__prompt--open">
-              {skipped && !released ? "Explore freely." : "The system is open."}
+              {skipped && !released ? "Explore freely." : "Enter the site."}
             </p>
             <span className="dlab-soft__scroll" aria-hidden="true">
               Scroll to explore ↓
