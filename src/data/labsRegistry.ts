@@ -71,6 +71,11 @@ export const LAB_GROUPS: LabGroup[] = [
   {
     title: "Consulting",
     items: [
+      {
+        label: "CTA interaction lab",
+        path: "/cta-lab",
+        note: "Let's work together → Advisory & Partnerships / Profile & Experience · 3 concepts",
+      },
       { label: "Consulting hero lab", path: "/consulting-hero-lab" },
       { label: "Consulting lab", path: "/consulting-lab" },
       { label: "Consulting parallax lab", path: "/consulting-parallax-lab" },

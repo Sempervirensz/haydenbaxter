@@ -1,0 +1,1788 @@
+/* ===========================================================================
+   CTA Interaction Lab — all styling, scoped under .ctal-
+   ===========================================================================
+
+   Layout is driven by two attributes and nothing else:
+     .ctal-stage[data-step]    intro | paths | destination
+     .ctal-stage[data-motion]  full | reduced
+
+   The stage is a size container, so every concept responds to the FRAME width,
+   not the window. That's what makes the desktop / narrow / both comparison in
+   the lab panel real rather than a mockup.
+   ======================================================================== */
+
+.ctal-root {
+  --ctal-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --ctal-ease-out: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --ctal-fast: 200ms;
+  --ctal-base: 420ms;
+  --ctal-slow: 640ms;
+
+  --ctal-paper: #f5f4f1;
+  --ctal-ink: #111116;
+  --ctal-accent: #2563eb;
+
+  /* DYMO emboss, lifted from globals.css `.tag` so the lab can't drift. */
+  --ctal-dymo-shadow:
+    inset 0 2px 4px rgba(0, 0, 0, 0.75),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.05),
+    0 3px 0 #0b0b0b,
+    0 4px 7px rgba(0, 0, 0, 0.85);
+  --ctal-dymo-shadow-pressed:
+    inset 0 3px 6px rgba(0, 0, 0, 0.85),
+    0 0 0 #0b0b0b,
+    0 1px 2px rgba(0, 0, 0, 0.5);
+
+  min-height: 100vh;
+  padding: 28px 24px 96px;
+  background: #06070a;
+  color: #f4f4f2;
+}
+
+/* Keep the stages clear of the floating lab panel on wide screens. */
+@media (min-width: 1100px) {
+  .ctal-root {
+    padding-right: 344px;
+  }
+}
+
+.ctal-stages {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 24px;
+}
+
+/* ---------------------------------------------------------------------------
+   Frame
+   ------------------------------------------------------------------------ */
+
+.ctal-frame {
+  min-width: 0;
+}
+
+.ctal-frame--desktop {
+  flex: 1 1 720px;
+  max-width: 1180px;
+}
+
+.ctal-frame--narrow {
+  flex: 0 0 390px;
+  max-width: 390px;
+}
+
+.ctal-frame__tag {
+  margin: 8px 0 0;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.28);
+  text-align: center;
+}
+
+/* ---------------------------------------------------------------------------
+   Stage — the reproduced Consulting card
+   ------------------------------------------------------------------------ */
+
+.ctal-stage {
+  /* Definite size, so `container-type: size` (and cq units) are legal. */
+  container-type: size;
+  container-name: ctal;
+
+  position: relative;
+  width: 100%;
+  height: min(780px, 84vh);
+  border-radius: 26px;
+  overflow: hidden;
+  isolation: isolate;
+  background: #0a0b0f;
+
+  /* Borderless filmic edge — matches .cstack__card */
+  outline: 1px solid rgba(255, 255, 255, 0.06);
+  outline-offset: -1px;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.05) inset,
+    0 0 130px 8px rgba(0, 0, 0, 0.5) inset,
+    0 54px 130px -34px rgba(0, 0, 0, 0.9),
+    0 14px 50px -18px rgba(0, 0, 0, 0.7);
+}
+
+.ctal-frame--narrow .ctal-stage {
+  border-radius: 22px;
+}
+
+/* Depth ladder. Each level pushes the city further back. */
+.ctal-stage[data-step="intro"] {
+  --focus-blur: 0px;
+  --focus-dim: 0.06;
+  --bg-scale: 1.02;
+}
+.ctal-stage[data-step="paths"] {
+  --focus-blur: 13px;
+  --focus-dim: 0.22;
+  --bg-scale: 1.05;
+}
+.ctal-stage[data-step="destination"] {
+  --focus-blur: 24px;
+  --focus-dim: 0.4;
+  --bg-scale: 1.07;
+}
+
+/* ---- Planes ---- */
+
+.ctal-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background-image: var(--bg-wide);
+  background-size: cover;
+  background-position: center 62%;
+  transform: scale(var(--bg-scale));
+  transition: transform var(--ctal-slow) var(--ctal-ease);
+  will-change: transform;
+}
+
+.ctal-focus {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  backdrop-filter: blur(var(--focus-blur)) saturate(1.06);
+  -webkit-backdrop-filter: blur(var(--focus-blur)) saturate(1.06);
+  background: rgba(4, 5, 10, var(--focus-dim));
+  transition:
+    backdrop-filter var(--ctal-slow) var(--ctal-ease-out),
+    -webkit-backdrop-filter var(--ctal-slow) var(--ctal-ease-out),
+    background-color var(--ctal-slow) var(--ctal-ease-out);
+}
+
+/* Vignette + ambient top light — same recipe as .work__screen--detail::after */
+.ctal-vignette {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background:
+    radial-gradient(circle 55% at 50% 26%, rgba(255, 255, 255, 0.1) 0%, transparent 68%),
+    radial-gradient(ellipse 116% 96% at 50% 50%, transparent 38%, rgba(0, 0, 0, 0.92) 100%);
+}
+
+/* Film grain. Generated inline — no new asset to commit, no dependency. */
+.ctal-grain {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  opacity: 0.42;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='0.3'/%3E%3C/svg%3E");
+  background-size: 180px 180px;
+}
+
+/* Header scrim only — the composition below stays clear. */
+.ctal-scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  pointer-events: none;
+  background: linear-gradient(180deg, rgba(4, 5, 10, 0.62) 0%, transparent 20%);
+}
+
+/* ---- Section header ---- */
+
+.ctal-head {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 8;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: clamp(22px, 3cqw, 40px);
+  pointer-events: none;
+}
+
+.ctal-head__label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.82);
+  white-space: nowrap;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
+}
+
+.ctal-head__rule {
+  flex: 1;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* ---- Back ---- */
+
+.ctal-back {
+  position: absolute;
+  top: 72px;
+  left: clamp(22px, 3cqw, 40px);
+  z-index: 9;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 13px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(16, 18, 22, 0.5);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.86);
+  cursor: pointer;
+  animation: ctal-back-in 340ms var(--ctal-ease) 60ms backwards;
+  transition: border-color 180ms ease, background 180ms ease, color 180ms ease;
+}
+
+.ctal-back:hover,
+.ctal-back:focus-visible {
+  border-color: rgba(255, 255, 255, 0.4);
+  background: rgba(24, 28, 34, 0.66);
+  color: #fff;
+  outline: none;
+}
+
+.ctal-back > span {
+  font-size: 13px;
+  letter-spacing: 0;
+}
+
+@keyframes ctal-back-in {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ---- Concept mount ---- */
+
+.ctal-body {
+  position: absolute;
+  inset: 0;
+  z-index: 6;
+}
+
+.ctal-stage :focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.75);
+  outline-offset: 3px;
+}
+
+/* ===========================================================================
+   DESTINATION SCREEN — one complete answer, no navigation inside it
+   ======================================================================== */
+
+.ctal-screen {
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+  width: 100%;
+  padding: 17px clamp(18px, 2.2cqw, 28px) 16px;
+  border-radius: 14px;
+  background: var(--ctal-paper);
+  border: 1px solid rgba(17, 17, 22, 0.08);
+  color: var(--ctal-ink);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.55) inset,
+    0 28px 72px rgba(0, 0, 0, 0.45),
+    0 6px 18px rgba(0, 0, 0, 0.28);
+  max-height: 100%;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.ctal-screen__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(17, 17, 22, 0.09);
+}
+
+.ctal-screen__eyebrow {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(17, 17, 22, 0.45);
+}
+
+.ctal-screen__back {
+  all: unset;
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(17, 17, 22, 0.52);
+  padding: 6px 11px;
+  border-radius: 999px;
+  border: 1px solid rgba(17, 17, 22, 0.14);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: color 160ms ease, border-color 160ms ease, background 160ms ease;
+}
+
+.ctal-screen__back:hover,
+.ctal-screen__back:focus-visible {
+  color: rgba(17, 17, 22, 0.92);
+  border-color: rgba(17, 17, 22, 0.34);
+  background: rgba(17, 17, 22, 0.03);
+  outline: none;
+}
+
+.ctal-screen__back:focus-visible {
+  outline: 2px solid rgba(37, 99, 235, 0.6);
+  outline-offset: 2px;
+}
+
+.ctal-screen__body {
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+  animation: ctal-screen-in 340ms var(--ctal-ease) 60ms both;
+}
+
+@keyframes ctal-screen-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.ctal-screen__title {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: clamp(21px, 2.7cqw, 30px);
+  font-weight: 400;
+  letter-spacing: -0.015em;
+  line-height: 1.03;
+}
+
+.ctal-screen__lede {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: rgba(17, 17, 22, 0.66);
+  max-width: 76ch;
+}
+
+/* ---- The two always-visible blocks ---- */
+
+.ctal-screen__blocks {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px clamp(20px, 3cqw, 40px);
+  padding: 12px 0 2px;
+  border-top: 1px solid rgba(17, 17, 22, 0.09);
+}
+
+.ctal-screen__block {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.ctal-screen__blockLabel {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(37, 99, 235, 0.95);
+}
+
+.ctal-screen__blockDesc {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 11.5px;
+  line-height: 1.4;
+  color: rgba(17, 17, 22, 0.56);
+}
+
+.ctal-screen__list {
+  list-style: none;
+  margin: 1px 0 0;
+  padding: 0;
+  display: grid;
+  gap: 4px;
+}
+
+.ctal-screen__list li {
+  position: relative;
+  padding-left: 14px;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  line-height: 1.35;
+  color: rgba(17, 17, 22, 0.82);
+}
+
+.ctal-screen__list li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.58em;
+  width: 4px;
+  height: 4px;
+  border-radius: 999px;
+  background: rgba(37, 99, 235, 0.65);
+}
+
+/* ---- Credential strip ---- */
+
+.ctal-screen__signals {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.ctal-screen__signals li {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(17, 17, 22, 0.5);
+  padding: 4px 8px;
+  border-radius: 4px;
+  background: rgba(17, 17, 22, 0.04);
+  border: 1px solid rgba(17, 17, 22, 0.07);
+}
+
+/* ---- One clear next action ---- */
+
+.ctal-screen__foot {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-top: 1px;
+  padding-top: 11px;
+  border-top: 1px solid rgba(17, 17, 22, 0.09);
+}
+
+.ctal-screen__note {
+  margin: 0;
+  flex: 1 1 300px;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  line-height: 1.45;
+  color: rgba(17, 17, 22, 0.52);
+  max-width: 62ch;
+}
+
+.ctal-screen__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.ctal-action {
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 10px 15px;
+  border-radius: 8px;
+  text-decoration: none;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: transform 160ms ease, border-color 160ms ease, background 160ms ease, color 160ms ease;
+}
+
+.ctal-action--primary {
+  border: 1px solid rgba(37, 99, 235, 0.5);
+  background: rgba(37, 99, 235, 0.1);
+  color: rgba(30, 78, 190, 0.98);
+}
+
+.ctal-action--primary:hover,
+.ctal-action--primary:focus-visible {
+  border-color: rgba(37, 99, 235, 0.75);
+  background: rgba(37, 99, 235, 0.16);
+  transform: translateY(-1px);
+}
+
+.ctal-action--ghost {
+  border: 1px solid rgba(17, 17, 22, 0.14);
+  background: transparent;
+  color: rgba(17, 17, 22, 0.72);
+}
+
+.ctal-action--ghost:hover,
+.ctal-action--ghost:focus-visible {
+  border-color: rgba(17, 17, 22, 0.32);
+  color: rgba(17, 17, 22, 0.95);
+  transform: translateY(-1px);
+}
+
+.ctal-action:focus-visible {
+  outline: 2px solid rgba(37, 99, 235, 0.6);
+  outline-offset: 2px;
+}
+
+/* ===========================================================================
+   CONCEPT A · RAIL  (production candidate)
+   ======================================================================== */
+
+.ctal-rail {
+  position: absolute;
+  inset: 0;
+}
+
+.ctal-rail__masthead {
+  position: absolute;
+  left: clamp(22px, 4cqw, 52px);
+  right: clamp(22px, 4cqw, 52px);
+  /* Clears the Back pill (top: 72px) once the CTA demotes to an eyebrow. */
+  top: 124px;
+  transform: translateY(var(--mast-y));
+  transition: transform var(--ctal-slow) var(--ctal-ease);
+}
+
+.ctal-stage[data-step="intro"] .ctal-rail__masthead {
+  --mast-y: 44cqh;
+}
+.ctal-stage[data-step="paths"] .ctal-rail__masthead,
+.ctal-stage[data-step="destination"] .ctal-rail__masthead {
+  --mast-y: 0cqh;
+}
+
+.ctal-rail__cta {
+  all: unset;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  cursor: pointer;
+  padding-bottom: 18px;
+}
+
+.ctal-rail__ctaText {
+  font-family: var(--font-serif);
+  font-size: clamp(34px, 7cqw, 72px);
+  line-height: 0.98;
+  letter-spacing: -0.02em;
+  color: rgba(246, 245, 240, 0.96);
+  text-shadow: 0 4px 24px rgba(0, 0, 0, 0.6);
+  transition: color 200ms ease;
+}
+
+.ctal-rail__cta:hover .ctal-rail__ctaText,
+.ctal-rail__cta:focus-visible .ctal-rail__ctaText {
+  color: #fff;
+}
+
+.ctal-rail__ctaHint {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.55);
+  display: inline-flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.ctal-rail__cta:hover .ctal-rail__ctaHint {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.ctal-rail__eyebrow {
+  margin: 0 0 14px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.58);
+  animation: ctal-fade-in var(--ctal-base) var(--ctal-ease) both;
+}
+
+.ctal-rail__rule {
+  display: block;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.22);
+}
+
+@keyframes ctal-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* ---- The three rows ---- */
+
+.ctal-rail__rows {
+  position: absolute;
+  left: clamp(22px, 4cqw, 52px);
+  right: clamp(22px, 4cqw, 52px);
+  top: 190px;
+  display: grid;
+  grid-template-rows: auto auto auto;
+  transition: grid-template-rows var(--ctal-base) var(--ctal-ease);
+}
+
+.ctal-rail__row {
+  min-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(26px);
+  transition:
+    opacity var(--ctal-slow) var(--ctal-ease),
+    transform var(--ctal-slow) var(--ctal-ease);
+  transition-delay: calc(var(--row-index) * 80ms + 110ms);
+  pointer-events: none;
+}
+
+.ctal-stage[data-step="paths"] .ctal-rail__row,
+.ctal-stage[data-step="destination"] .ctal-rail__row {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.ctal-rail__row.is-dismissed {
+  opacity: 0;
+  transform: translateX(-28px);
+  pointer-events: none;
+  transition-delay: 0ms;
+}
+
+/* Collapse the two rows that weren't chosen so the survivor rises to the top. */
+.ctal-rail__rows:has(.ctal-rail__row:nth-child(1).is-chosen) {
+  grid-template-rows: auto 0fr 0fr;
+}
+.ctal-rail__rows:has(.ctal-rail__row:nth-child(2).is-chosen) {
+  grid-template-rows: 0fr auto 0fr;
+}
+.ctal-rail__rows:has(.ctal-rail__row:nth-child(3).is-chosen) {
+  grid-template-rows: 0fr 0fr auto;
+}
+
+.ctal-rail__rowBtn {
+  all: unset;
+  box-sizing: border-box;
+  width: 100%;
+  display: grid;
+  grid-template-columns: auto 1fr auto auto;
+  align-items: center;
+  gap: 18px;
+  padding: 13px 4px;
+  cursor: pointer;
+  transition: padding-left 260ms var(--ctal-ease), color 200ms ease;
+}
+
+.ctal-rail__rowBtn:hover,
+.ctal-rail__rowBtn:focus-visible {
+  padding-left: 12px;
+}
+
+.ctal-rail__num {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.24em;
+  color: rgba(255, 255, 255, 0.38);
+}
+
+.ctal-rail__rowMain {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.ctal-rail__label {
+  font-family: var(--font-serif);
+  font-size: clamp(19px, 2.7cqw, 27px);
+  line-height: 1.04;
+  letter-spacing: -0.015em;
+  color: rgba(246, 245, 240, 0.95);
+  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.5);
+}
+
+.ctal-rail__lede {
+  font-family: var(--font-sans);
+  font-size: 12.5px;
+  line-height: 1.4;
+  color: rgba(255, 255, 255, 0.56);
+}
+
+.ctal-rail__meta {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.34);
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 200ms ease;
+}
+
+.ctal-rail__rowBtn:hover .ctal-rail__meta,
+.ctal-rail__rowBtn:focus-visible .ctal-rail__meta,
+.ctal-rail__row.is-chosen .ctal-rail__meta {
+  opacity: 1;
+}
+
+.ctal-rail__chev {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.5);
+  transition: transform 240ms var(--ctal-ease), color 200ms ease;
+}
+
+.ctal-rail__rowBtn:hover .ctal-rail__chev {
+  transform: translateX(5px);
+  color: #fff;
+}
+
+.ctal-rail__rowRule {
+  display: block;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.14);
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+  transition: transform var(--ctal-base) var(--ctal-ease), background 200ms ease;
+  transition-delay: calc(var(--row-index) * 80ms + 190ms);
+}
+
+.ctal-stage[data-step="paths"] .ctal-rail__rowRule,
+.ctal-stage[data-step="destination"] .ctal-rail__rowRule {
+  transform: scaleX(1);
+}
+
+.ctal-rail__row:hover .ctal-rail__rowRule,
+.ctal-rail__row.is-chosen .ctal-rail__rowRule {
+  background: rgba(255, 255, 255, 0.42);
+}
+
+/* ---- In-place unfurl ---- */
+
+.ctal-rail__unfurl {
+  position: absolute;
+  left: clamp(22px, 4cqw, 52px);
+  right: clamp(22px, 4cqw, 52px);
+  top: 272px;
+  bottom: clamp(16px, 2.4cqh, 30px);
+  display: flex;
+  align-items: flex-start;
+  animation: ctal-rail-unfurl 460ms var(--ctal-ease) 60ms both;
+}
+
+@keyframes ctal-rail-unfurl {
+  from { opacity: 0; transform: translateY(-14px); clip-path: inset(0 0 100% 0); }
+  to   { opacity: 1; transform: translateY(0);     clip-path: inset(0 0 0 0); }
+}
+
+/* ===========================================================================
+   CONCEPT B · SPLIT
+   ======================================================================== */
+
+.ctal-split {
+  position: absolute;
+  inset: 0;
+}
+
+/* Plate + hint travel together as one group, so the hint can never collide
+   with the plate however tall the plate grows. */
+.ctal-split__stack {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: var(--plate-w);
+  transform: translate(-50%, -50%) translateY(var(--stack-y));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  transition:
+    width var(--ctal-slow) var(--ctal-ease),
+    transform var(--ctal-slow) var(--ctal-ease);
+}
+
+.ctal-split__plate {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: var(--plate-gap);
+  transition:
+    gap var(--ctal-slow) var(--ctal-ease),
+    grid-template-columns var(--ctal-base) var(--ctal-ease);
+}
+
+.ctal-stage[data-step="intro"] .ctal-split__stack {
+  --stack-y: 14cqh;
+  --plate-w: min(440px, 80cqw);
+  --plate-gap: 0px;
+}
+
+.ctal-stage[data-step="paths"] .ctal-split__stack {
+  --stack-y: 2cqh;
+  --plate-w: min(1000px, 94cqw);
+  --plate-gap: 14px;
+}
+
+.ctal-stage[data-step="destination"] .ctal-split__stack {
+  --stack-y: -32cqh;
+  --plate-w: min(880px, 94cqw);
+  --plate-gap: 0px;
+}
+
+/* Pinned explicitly. When the other segments leave the flow (absolute, or
+   display:none under reduced motion), auto-placement would otherwise drop the
+   survivor into column 1 — which is a 0fr column unless the FIRST path was the
+   one chosen, collapsing it to a sliver. */
+.ctal-split__seg--a { grid-column: 1; }
+.ctal-split__seg--b { grid-column: 2; }
+.ctal-split__seg--c { grid-column: 3; }
+
+.ctal-split__plate:has(.ctal-split__seg--a.is-chosen) {
+  grid-template-columns: 1fr 0fr 0fr;
+}
+.ctal-split__plate:has(.ctal-split__seg--b.is-chosen) {
+  grid-template-columns: 0fr 1fr 0fr;
+}
+.ctal-split__plate:has(.ctal-split__seg--c.is-chosen) {
+  grid-template-columns: 0fr 0fr 1fr;
+}
+
+/* ---- Segments — DYMO plates ---- */
+
+.ctal-split__seg {
+  min-width: 0;
+  position: relative;
+  cursor: pointer;
+  /* A <button> centres its content, which would float each plate's label to a
+     different height as soon as one supporting line wraps. Pin to the top so
+     the three labels share a baseline. */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: #1c1c1c;
+  box-shadow: var(--ctal-dymo-shadow);
+  color: #fff;
+  padding: 16px 18px;
+  overflow: hidden;
+  text-align: center;
+  transition:
+    border-radius var(--ctal-base) var(--ctal-ease),
+    padding var(--ctal-base) var(--ctal-ease),
+    opacity var(--ctal-base) var(--ctal-ease),
+    transform 160ms ease,
+    box-shadow 160ms ease,
+    background 200ms ease;
+}
+
+.ctal-split__seg:active {
+  transform: translateY(2px);
+  box-shadow: var(--ctal-dymo-shadow-pressed);
+}
+
+/* At intro the three segments read as ONE plate: outer corners only, hairline
+   seams between them. */
+.ctal-stage[data-step="intro"] .ctal-split__seg--a {
+  border-radius: 5px 0 0 5px;
+  border-right-color: rgba(255, 255, 255, 0.11);
+}
+.ctal-stage[data-step="intro"] .ctal-split__seg--b {
+  border-radius: 0;
+  border-left: none;
+  border-right-color: rgba(255, 255, 255, 0.11);
+}
+.ctal-stage[data-step="intro"] .ctal-split__seg--c {
+  border-radius: 0 5px 5px 0;
+  border-left: none;
+}
+
+.ctal-stage[data-step="paths"] .ctal-split__seg,
+.ctal-stage[data-step="destination"] .ctal-split__seg {
+  border-radius: 6px;
+  padding: 18px 20px;
+}
+
+.ctal-stage[data-step="paths"] .ctal-split__seg:hover,
+.ctal-stage[data-step="paths"] .ctal-split__seg:focus-visible {
+  background: #232323;
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.ctal-split__seg.is-chosen {
+  background: #1a1c22;
+  border-color: rgba(120, 150, 235, 0.28);
+}
+
+/* Taken out of the grid entirely so its (now wrapped) text can't keep sizing
+   the row — otherwise the surviving header plate inherits its height. */
+.ctal-split__seg.is-dismissed {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Face stack — the middle line is the one that carries a CTA word into the
+   path label. The index and meta lines unfold above and below it. */
+.ctal-split__faces {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  width: 100%;
+}
+
+.ctal-split__slot {
+  display: grid;
+  grid-template-rows: 0fr;
+  overflow: hidden;
+  width: 100%;
+  transition: grid-template-rows var(--ctal-base) var(--ctal-ease);
+}
+
+.ctal-split__slot > * {
+  min-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: opacity var(--ctal-base) var(--ctal-ease);
+}
+
+.ctal-stage[data-step="paths"] .ctal-split__slot,
+.ctal-stage[data-step="destination"] .ctal-split__slot {
+  grid-template-rows: 1fr;
+}
+
+.ctal-stage[data-step="paths"] .ctal-split__slot > *,
+.ctal-stage[data-step="destination"] .ctal-split__slot > * {
+  opacity: 1;
+  padding-block: 4px;
+}
+
+.ctal-split__line {
+  position: relative;
+  display: grid;
+  align-items: center;
+  justify-items: center;
+  width: 100%;
+}
+
+/* Only the face that's actually showing may size the line. Otherwise the long
+   path label — which wraps inside the narrow intro plate — pushes the CTA word
+   off the baseline its neighbours sit on. */
+.ctal-stage[data-step="intro"] .ctal-split__face--to,
+.ctal-stage[data-step="paths"] .ctal-split__face--from,
+.ctal-stage[data-step="destination"] .ctal-split__face--from {
+  position: absolute;
+  inset: 0;
+}
+
+.ctal-split__face {
+  grid-area: 1 / 1;
+  text-align: center;
+  transition:
+    opacity var(--ctal-base) var(--ctal-ease),
+    transform var(--ctal-base) var(--ctal-ease);
+}
+
+.ctal-split__face--from {
+  font-family: var(--font-mono);
+  font-size: clamp(11px, 1.6cqw, 13px);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.7);
+  color: #fff;
+  white-space: nowrap;
+}
+
+.ctal-split__face--to {
+  font-family: var(--font-mono);
+  font-size: clamp(10px, 1.2cqw, 12px);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.7);
+  color: rgba(255, 255, 255, 0.95);
+  text-wrap: balance;
+  opacity: 0;
+  transform: translateY(7px);
+}
+
+.ctal-stage[data-step="paths"] .ctal-split__face--from,
+.ctal-stage[data-step="destination"] .ctal-split__face--from {
+  opacity: 0;
+  transform: translateY(-7px);
+}
+
+.ctal-stage[data-step="paths"] .ctal-split__face--to,
+.ctal-stage[data-step="destination"] .ctal-split__face--to {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.ctal-split__index {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.3em;
+  color: rgba(255, 255, 255, 0.42);
+}
+
+/* The supporting idea — prose, so sans and sentence case, not another label. */
+.ctal-split__meta {
+  display: block;
+  font-family: var(--font-sans);
+  font-size: 11.5px;
+  line-height: 1.35;
+  color: rgba(255, 255, 255, 0.5);
+  text-wrap: balance;
+}
+
+.ctal-split__hint {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.42);
+  white-space: nowrap;
+  transition: opacity var(--ctal-fast) ease;
+}
+
+.ctal-stage:not([data-step="intro"]) .ctal-split__hint {
+  opacity: 0;
+  height: 0;
+  margin-top: -16px;
+}
+
+/* Screen rises from under the chosen plate. */
+.ctal-split__screenSlot {
+  position: absolute;
+  left: 50%;
+  top: 29%;
+  bottom: 5%;
+  width: min(880px, 94cqw);
+  transform: translateX(-50%);
+  display: flex;
+  align-items: flex-start;
+  animation: ctal-split-rise 480ms var(--ctal-ease) both;
+}
+
+@keyframes ctal-split-rise {
+  from { opacity: 0; transform: translateX(-50%) translateY(34px) scale(0.97); }
+  to   { opacity: 1; transform: translateX(-50%) translateY(0) scale(1); }
+}
+
+/* ===========================================================================
+   CONCEPT C · FOLD
+   ======================================================================== */
+
+.ctal-fold {
+  position: absolute;
+  inset: 0;
+}
+
+.ctal-fold__scene {
+  position: absolute;
+  inset: 0;
+  perspective: 1600px;
+  perspective-origin: 50% 50%;
+}
+
+/* ---- Seed plate ---- */
+
+.ctal-fold__seed {
+  position: absolute;
+  left: 50%;
+  top: 56%;
+  width: min(440px, 80cqw);
+  transform: translate(-50%, -50%) rotateX(9deg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 20px 22px;
+  cursor: pointer;
+  border-radius: 5px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: #1c1c1c;
+  box-shadow: var(--ctal-dymo-shadow);
+  color: #fff;
+  transition:
+    opacity var(--ctal-base) var(--ctal-ease),
+    transform var(--ctal-slow) var(--ctal-ease),
+    background 200ms ease;
+}
+
+.ctal-fold__seed:hover {
+  background: #232323;
+}
+
+.ctal-fold__seed:active {
+  transform: translate(-50%, -50%) rotateX(9deg) translateY(2px);
+  box-shadow: var(--ctal-dymo-shadow-pressed);
+}
+
+.ctal-stage:not([data-step="intro"]) .ctal-fold__seed {
+  opacity: 0;
+  transform: translate(-50%, -50%) rotateX(9deg) scale(0.92);
+  pointer-events: none;
+}
+
+.ctal-fold__seedText {
+  font-family: var(--font-mono);
+  font-size: clamp(11px, 1.6cqw, 13px);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.7);
+}
+
+.ctal-fold__seedHint {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+/* ---- Leaves — a trifold. The middle settles flat; the outer two swing open
+        from the two seams that touch it. ---- */
+
+.ctal-fold__leaf {
+  position: absolute;
+  left: 50%;
+  width: min(620px, 86cqw);
+  margin-left: calc(min(620px, 86cqw) / -2);
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: #1c1c1c;
+  box-shadow: var(--ctal-dymo-shadow);
+  overflow: hidden;
+  transition:
+    transform var(--ctal-slow) var(--ctal-ease),
+    opacity var(--ctal-base) var(--ctal-ease),
+    top var(--ctal-slow) var(--ctal-ease),
+    bottom var(--ctal-slow) var(--ctal-ease),
+    background var(--ctal-base) var(--ctal-ease),
+    border-color var(--ctal-base) var(--ctal-ease);
+  transition-delay: calc(var(--leaf-index) * 60ms);
+}
+
+.ctal-fold__leaf--upper  { top: 24%; bottom: 60.5%; transform-origin: 50% 100%; }
+.ctal-fold__leaf--middle { top: 42%; bottom: 42%; }
+.ctal-fold__leaf--lower  { top: 60.5%; bottom: 24%; transform-origin: 50% 0%; }
+
+/* Folded shut at intro. */
+.ctal-stage[data-step="intro"] .ctal-fold__leaf {
+  opacity: 0;
+  pointer-events: none;
+}
+.ctal-stage[data-step="intro"] .ctal-fold__leaf--upper {
+  transform: rotateX(-95deg);
+}
+.ctal-stage[data-step="intro"] .ctal-fold__leaf--middle {
+  transform: scale(0.96);
+}
+.ctal-stage[data-step="intro"] .ctal-fold__leaf--lower {
+  transform: rotateX(95deg);
+}
+
+/* Open. The middle lands first, the wings follow. */
+.ctal-stage[data-step="paths"] .ctal-fold__leaf,
+.ctal-stage[data-step="destination"] .ctal-fold__leaf {
+  transform: rotateX(0deg) scale(1);
+  opacity: 1;
+}
+.ctal-stage[data-step="paths"] .ctal-fold__leaf--middle {
+  transition-delay: 0ms;
+}
+.ctal-stage[data-step="paths"] .ctal-fold__leaf--upper,
+.ctal-stage[data-step="paths"] .ctal-fold__leaf--lower {
+  transition-delay: 90ms;
+}
+
+.ctal-fold__leaf:hover {
+  background: #232323;
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Chosen leaf takes the frame and becomes the reading surface. */
+.ctal-fold__leaf.is-chosen {
+  top: 13%;
+  bottom: 5%;
+  background: transparent;
+  border-color: transparent;
+  box-shadow: none;
+  overflow: visible;
+  transition-delay: 0ms;
+}
+
+/* Must out-specify the `[data-step] .ctal-fold__leaf { opacity: 1 }` rule above,
+   or a folded-away leaf stays visible as a black wedge over the screen. */
+.ctal-stage[data-step="destination"] .ctal-fold__leaf.is-dismissed {
+  opacity: 0;
+  pointer-events: none;
+  transition-delay: 0ms;
+}
+.ctal-stage[data-step="destination"] .ctal-fold__leaf--upper.is-dismissed {
+  transform: rotateX(-88deg);
+}
+.ctal-stage[data-step="destination"] .ctal-fold__leaf--middle.is-dismissed {
+  transform: scale(0.94);
+}
+.ctal-stage[data-step="destination"] .ctal-fold__leaf--lower.is-dismissed {
+  transform: rotateX(88deg);
+}
+
+.ctal-fold__leafBtn {
+  all: unset;
+  box-sizing: border-box;
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 7px;
+  padding: 16px 24px;
+  cursor: pointer;
+  color: #fff;
+  transition: opacity var(--ctal-fast) ease;
+}
+
+.ctal-fold__leaf.is-chosen .ctal-fold__leafBtn,
+.ctal-fold__leaf.is-dismissed .ctal-fold__leafBtn {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.ctal-fold__leafNum {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.3em;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.ctal-fold__leafLabel {
+  font-family: var(--font-mono);
+  font-size: clamp(11px, 1.6cqw, 13px);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.95);
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.7);
+}
+
+.ctal-fold__leafLede {
+  font-family: var(--font-sans);
+  font-size: 12.5px;
+  line-height: 1.4;
+  color: rgba(255, 255, 255, 0.55);
+  max-width: 52ch;
+}
+
+.ctal-fold__face {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: flex-start;
+  animation: ctal-fold-face 420ms var(--ctal-ease) 120ms both;
+}
+
+@keyframes ctal-fold-face {
+  from { opacity: 0; transform: rotateX(-8deg) scale(0.98); }
+  to   { opacity: 1; transform: rotateX(0deg) scale(1); }
+}
+
+/* ===========================================================================
+   NARROW LAYOUT — container queries, so this fires on the 390px frame AND on
+   a real phone without duplicating rules.
+   ======================================================================== */
+
+@container ctal (max-width: 700px) {
+  /* Same swap the production card makes below 640px. */
+  .ctal-bg {
+    background-image: var(--bg-narrow);
+    background-position: center center;
+  }
+
+  .ctal-back {
+    top: 66px;
+    letter-spacing: 0.16em;
+  }
+
+  /* --- Screen: blocks stack, foot goes vertical --- */
+  .ctal-screen {
+    gap: 12px;
+    padding: 18px 18px 16px;
+  }
+  .ctal-screen__blocks {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  /* The screen scrolls at this width, so the one next action sticks to the
+     bottom of it rather than sitting below the fold. */
+  .ctal-screen__foot {
+    position: sticky;
+    bottom: -16px;
+    z-index: 1;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+    margin: 0 -18px -16px;
+    padding: 12px 18px 16px;
+    background: linear-gradient(
+      180deg,
+      rgba(245, 244, 241, 0.82) 0%,
+      var(--ctal-paper) 38%
+    );
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+  }
+  /* The desktop `flex: 1 1 300px` is a WIDTH basis in a row; once the foot goes
+     column it becomes a 300px-tall note. Reset it. */
+  .ctal-screen__note {
+    flex: 0 0 auto;
+  }
+  .ctal-screen__actions .ctal-action {
+    flex: 1 1 auto;
+    justify-content: center;
+  }
+  .ctal-screen__back span[aria-hidden] {
+    display: none;
+  }
+
+  /* --- Rail --- */
+  .ctal-rail__rows {
+    top: 158px;
+  }
+  .ctal-rail__rowBtn {
+    grid-template-columns: auto 1fr;
+    gap: 12px;
+    padding: 12px 2px;
+  }
+  .ctal-rail__meta,
+  .ctal-rail__chev {
+    display: none;
+  }
+  .ctal-rail__unfurl {
+    top: 250px;
+    bottom: 16px;
+  }
+  .ctal-stage[data-step="intro"] .ctal-rail__masthead {
+    --mast-y: 40cqh;
+  }
+
+  /* --- Split: segments stack, so the collapse runs down the rows --- */
+  .ctal-split__plate {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto;
+  }
+  .ctal-split__seg--a { grid-column: 1; grid-row: 1; }
+  .ctal-split__seg--b { grid-column: 1; grid-row: 2; }
+  .ctal-split__seg--c { grid-column: 1; grid-row: 3; }
+
+  .ctal-split__plate:has(.ctal-split__seg--a.is-chosen) {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 0fr 0fr;
+  }
+  .ctal-split__plate:has(.ctal-split__seg--b.is-chosen) {
+    grid-template-columns: 1fr;
+    grid-template-rows: 0fr auto 0fr;
+  }
+  .ctal-split__plate:has(.ctal-split__seg--c.is-chosen) {
+    grid-template-columns: 1fr;
+    grid-template-rows: 0fr 0fr auto;
+  }
+
+  /* Stacked: the intro seams run horizontally instead of vertically. */
+  .ctal-stage[data-step="intro"] .ctal-split__seg--a {
+    border-radius: 5px 5px 0 0;
+    border-right-color: rgba(255, 255, 255, 0.08);
+  }
+  .ctal-stage[data-step="intro"] .ctal-split__seg--b {
+    border-left: 1px solid rgba(255, 255, 255, 0.08);
+    border-top: none;
+    border-right-color: rgba(255, 255, 255, 0.08);
+  }
+  .ctal-stage[data-step="intro"] .ctal-split__seg--c {
+    border-radius: 0 0 5px 5px;
+    border-left: 1px solid rgba(255, 255, 255, 0.08);
+    border-top: none;
+  }
+
+  .ctal-stage[data-step="intro"] .ctal-split__stack {
+    --stack-y: 12cqh;
+    --plate-w: min(320px, 86cqw);
+  }
+  .ctal-stage[data-step="paths"] .ctal-split__stack {
+    --stack-y: 0cqh;
+    --plate-w: 88cqw;
+    --plate-gap: 10px;
+  }
+  /* Sits below the Back pill — at this width the plate spans the full frame,
+     so unlike desktop it can't pass beside it. */
+  .ctal-stage[data-step="destination"] .ctal-split__stack {
+    --stack-y: -28cqh;
+    --plate-w: 92cqw;
+  }
+  .ctal-split__screenSlot {
+    top: 31%;
+    bottom: 4%;
+    width: 92cqw;
+  }
+
+  /* --- Fold: tighter bands so three leaves still breathe --- */
+  .ctal-fold__leaf {
+    width: 88cqw;
+    margin-left: -44cqw;
+  }
+  .ctal-fold__leaf--upper  { top: 16%; bottom: 63%; }
+  .ctal-fold__leaf--middle { top: 39%; bottom: 40%; }
+  .ctal-fold__leaf--lower  { top: 63%; bottom: 16%; }
+  .ctal-fold__leaf.is-chosen {
+    top: 11%;
+    bottom: 4%;
+  }
+  .ctal-fold__seed {
+    width: min(320px, 86cqw);
+  }
+  .ctal-fold__leafBtn {
+    padding: 14px 18px;
+  }
+}
+
+/* ===========================================================================
+   REDUCED MOTION
+   Every state above is expressed as a static rule, so switching motion off is
+   just removing the tweening — nothing is left mid-flight.
+   ======================================================================== */
+
+.ctal-stage[data-motion="reduced"],
+.ctal-stage[data-motion="reduced"] *,
+.ctal-stage[data-motion="reduced"] *::before,
+.ctal-stage[data-motion="reduced"] *::after {
+  animation: none !important;
+  transition: none !important;
+}
+
+/* The 3D fold is motion by definition — flatten it rather than snapping it. */
+.ctal-stage[data-motion="reduced"] .ctal-fold__scene {
+  perspective: none;
+}
+.ctal-stage[data-motion="reduced"] .ctal-fold__leaf {
+  transform: none !important;
+}
+/* Keep the centring translate, drop only the rotation. */
+.ctal-stage[data-motion="reduced"] .ctal-fold__seed {
+  transform: translate(-50%, -50%) !important;
+}
+.ctal-stage[data-motion="reduced"] .ctal-fold__leaf.is-dismissed,
+.ctal-stage[data-motion="reduced"][data-step="intro"] .ctal-fold__leaf {
+  display: none;
+}
+.ctal-stage[data-motion="reduced"] .ctal-split__seg.is-dismissed,
+.ctal-stage[data-motion="reduced"] .ctal-rail__row.is-dismissed {
+  display: none;
+}
+.ctal-stage[data-motion="reduced"] .ctal-rail__rowRule {
+  transform: scaleX(1);
+}
+
+/* ===========================================================================
+   LAB CONTROLS — deliberately not portfolio language
+   ======================================================================== */
+
+.ctal-lab {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  z-index: 100;
+  width: min(300px, calc(100vw - 32px));
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(11, 12, 16, 0.94);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: 0 22px 60px rgba(0, 0, 0, 0.6);
+  font-family: var(--font-mono);
+  overflow: hidden;
+}
+
+.ctal-lab__toggle {
+  all: unset;
+  box-sizing: border-box;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 13px;
+  cursor: pointer;
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.86);
+}
+
+.ctal-lab__toggle:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.5);
+  outline-offset: -2px;
+}
+
+.ctal-lab__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: #4ade80;
+  box-shadow: 0 0 8px rgba(74, 222, 128, 0.7);
+  flex: none;
+}
+
+.ctal-lab__state {
+  margin-left: auto;
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  text-transform: none;
+  color: rgba(255, 255, 255, 0.42);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 150px;
+}
+
+.ctal-lab__body {
+  max-height: min(72vh, 640px);
+  overflow-y: auto;
+  padding: 4px 13px 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.ctal-lab__group {
+  padding: 12px 0 0;
+}
+
+.ctal-lab__groupTitle {
+  margin: 0 0 8px;
+  font-size: 9px;
+  font-weight: 400;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.ctal-lab__col {
+  display: grid;
+  gap: 5px;
+}
+
+.ctal-lab__row {
+  all: unset;
+  box-sizing: border-box;
+  display: grid;
+  gap: 4px;
+  padding: 8px 10px;
+  border-radius: 7px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.02);
+  cursor: pointer;
+  transition: background 140ms ease, border-color 140ms ease;
+}
+
+.ctal-lab__row:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.ctal-lab__row.is-active {
+  border-color: rgba(150, 175, 255, 0.6);
+  background: rgba(37, 99, 235, 0.14);
+}
+
+.ctal-lab__row:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.5);
+  outline-offset: 1px;
+}
+
+.ctal-lab__rowName {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.ctal-lab__status {
+  font-size: 8px;
+  letter-spacing: 0.1em;
+  padding: 3px 6px;
+  border-radius: 999px;
+  border: 1px solid currentColor;
+  white-space: nowrap;
+  flex: none;
+}
+.ctal-lab__status.is-recommended {
+  color: #6ee7a8;
+}
+.ctal-lab__status.is-comparison {
+  color: rgba(255, 255, 255, 0.42);
+}
+.ctal-lab__status.is-removal-candidate {
+  color: #e8a06b;
+}
+
+.ctal-lab__rowNote {
+  font-size: 9.5px;
+  line-height: 1.4;
+  letter-spacing: 0.01em;
+  color: rgba(255, 255, 255, 0.44);
+}
+
+.ctal-lab__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.ctal-lab__chip {
+  all: unset;
+  box-sizing: border-box;
+  padding: 5px 9px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: #15171c;
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.72);
+  cursor: pointer;
+  transition: background 140ms ease, border-color 140ms ease, color 140ms ease;
+}
+
+.ctal-lab__chip:hover {
+  color: #fff;
+}
+
+.ctal-lab__chip.is-active {
+  background: #252938;
+  border-color: rgba(210, 215, 255, 0.6);
+  color: #fff;
+}
+
+.ctal-lab__chip:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.5);
+  outline-offset: 1px;
+}
+
+.ctal-lab__check {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  color: rgba(255, 255, 255, 0.8);
+  cursor: pointer;
+}
+
+.ctal-lab__check input {
+  accent-color: #6b8cff;
+  cursor: pointer;
+}
+
+.ctal-lab__hint {
+  margin: 7px 0 0;
+  font-size: 9px;
+  line-height: 1.5;
+  letter-spacing: 0.02em;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.ctal-lab__readout {
+  margin: 0 0 8px;
+  padding: 7px 9px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  color: #9ec8ff;
+  word-break: break-word;
+}
+
+.ctal-lab__btnRow {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.ctal-lab__btn {
+  all: unset;
+  box-sizing: border-box;
+  flex: 1 1 auto;
+  text-align: center;
+  padding: 8px 10px;
+  border-radius: 7px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: linear-gradient(180deg, rgba(40, 41, 48, 0.85), rgba(14, 14, 17, 0.95));
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.88);
+  cursor: pointer;
+  transition: background 140ms ease, opacity 140ms ease;
+}
+
+.ctal-lab__btn:hover:not(:disabled) {
+  background: linear-gradient(180deg, rgba(56, 58, 68, 0.95), rgba(22, 22, 28, 1));
+}
+
+.ctal-lab__btn:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.ctal-lab__btn:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.5);
+  outline-offset: 1px;
+}
+
+/* Small screens: the lab panel gets out of the way. */
+@media (max-width: 720px) {
+  .ctal-root {
+    padding: 16px 12px 88px;
+  }
+  .ctal-frame--narrow {
+    flex: 1 1 auto;
+    max-width: 100%;
+  }
+  .ctal-lab {
+    left: 12px;
+    right: 12px;
+    width: auto;
+  }
+  .ctal-lab__body {
+    max-height: 54vh;
+  }
+}
