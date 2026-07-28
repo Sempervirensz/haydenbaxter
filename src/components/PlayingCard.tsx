@@ -108,7 +108,7 @@ export default function PlayingCard({
           {card.title}
         </h3>
         <p
-          className="text-[10px] mt-0.5 text-white/60 leading-tight"
+          className="card-caption__desc mt-0.5"
           style={{ fontFamily: "var(--font-sans)" }}
         >
           {card.description}
