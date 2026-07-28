@@ -188,7 +188,7 @@
 }
 
 .pd-full__role {
-  font-size: 13px;
+  font-size: var(--text-label);
   font-weight: 600;
   color: rgba(255, 255, 255, 0.9);
   letter-spacing: 0.01em;
@@ -207,7 +207,7 @@
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  font-size: 11.5px;
+  font-size: var(--text-control);
   font-weight: 600;
   letter-spacing: 0.16em;
   text-transform: uppercase;
@@ -231,7 +231,7 @@
 
 .pd-full__linkArrow {
   display: inline-block;
-  font-size: 13px;
+  font-size: var(--text-control);
   letter-spacing: 0;
   transition: transform 180ms cubic-bezier(0.22, 1, 0.36, 1);
 }
@@ -311,14 +311,14 @@
 
 .etb-topStrip__title {
   margin: 0;
-  font-size: 10px;
+  font-size: var(--text-label);
   font-weight: 500;
   letter-spacing: 0.22em;
   color: rgba(255, 255, 255, 0.62);
 }
 
 .etb-topStrip__cred {
-  font-size: 9px;
+  font-size: var(--text-label);
   letter-spacing: 0.12em;
   color: rgba(255, 255, 255, 0.28);
   font-weight: 400;
@@ -585,7 +585,7 @@
 
 .etb-dos__eyebrow {
   font-family: var(--font-mono);
-  font-size: 9px;
+  font-size: var(--text-label);
   font-weight: 500;
   letter-spacing: 0.16em;
   text-transform: uppercase;
@@ -596,7 +596,7 @@
   all: unset;
   box-sizing: border-box;
   font-family: var(--font-mono);
-  font-size: 9px;
+  font-size: var(--text-control);
   font-weight: 500;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -673,7 +673,7 @@
 
 .etb-dos__status {
   font-family: var(--font-mono);
-  font-size: 8px;
+  font-size: var(--text-label);
   font-weight: 500;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -716,7 +716,7 @@
 
 .etb-dos__category {
   font-family: var(--font-mono);
-  font-size: 8px;
+  font-size: var(--text-label);
   font-weight: 400;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -748,7 +748,7 @@
 /* One-liner */
 .etb-dos__oneLiner {
   margin: 0;
-  font-size: 13px;
+  font-size: var(--text-sm);
   line-height: 1.48;
   color: var(--etb-muted);
 }
@@ -770,7 +770,7 @@
 }
 
 .etb-dos__bullets li {
-  font-size: 12px;
+  font-size: var(--text-sm);
   line-height: 1.4;
   color: var(--etb-muted);
 }
@@ -784,7 +784,7 @@
 
 .etb-dos__tag {
   font-family: var(--font-mono);
-  font-size: 8px;
+  font-size: var(--text-label);
   font-weight: 500;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -806,7 +806,7 @@
 .etb-dos__notesLabel {
   display: block;
   font-family: var(--font-mono);
-  font-size: 8px;
+  font-size: var(--text-label);
   font-weight: 500;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -823,7 +823,7 @@
 }
 
 .etb-dos__notesList li {
-  font-size: 11px;
+  font-size: var(--text-sm);
   line-height: 1.38;
   color: rgba(17, 17, 22, 0.52);
 }
@@ -833,7 +833,7 @@
   align-items: center;
   margin-top: 10px;
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: var(--text-control);
   font-weight: 500;
   letter-spacing: 0.04em;
   color: rgba(17, 17, 22, 0.55);
@@ -854,7 +854,7 @@
   box-sizing: border-box;
   align-self: flex-start;
   font-family: var(--font-mono);
-  font-size: 10px;
+  font-size: var(--text-control);
   font-weight: 500;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -901,7 +901,7 @@
 .etb-dos__statusLine {
   margin: 10px 0 0;
   font-family: var(--font-mono);
-  font-size: 10px;
+  font-size: var(--text-label);
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: rgba(17, 17, 22, 0.58);
@@ -1055,7 +1055,7 @@
 
 .etb-bar__desc {
   margin: 0;
-  font-size: 11.5px;
+  font-size: var(--text-sm);
   line-height: 1.45;
   color: var(--etb-muted);
   display: -webkit-box;
@@ -1072,7 +1072,7 @@
 }
 
 .etb-bar__bullets li {
-  font-size: 10.5px;
+  font-size: var(--text-sm);
   line-height: 1.35;
   color: rgba(17, 17, 22, 0.58);
   display: -webkit-box;
@@ -1120,7 +1120,7 @@
   padding: 3px 6px;
   border-radius: 999px;
   font-family: var(--font-mono);
-  font-size: 8px;
+  font-size: var(--text-label);
   font-weight: 500;
   line-height: 1;
   letter-spacing: 0.08em;
@@ -1140,7 +1140,7 @@
   border-radius: 999px;
   padding: 6px 14px 5px;
   font-family: var(--font-mono);
-  font-size: 9px;
+  font-size: var(--text-control);
   font-weight: 500;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -1160,7 +1160,7 @@
   padding: 3px 6px 2px;
   border-radius: 999px;
   font-family: var(--font-mono);
-  font-size: 8px;
+  font-size: var(--text-label);
   line-height: 1;
   font-weight: 500;
   letter-spacing: 0.07em;
@@ -1193,7 +1193,7 @@
   padding: 4px 8px;
   border-radius: 999px;
   font-family: var(--font-mono);
-  font-size: 8px;
+  font-size: var(--text-label);
   font-weight: 500;
   line-height: 1;
   letter-spacing: 0.1em;
@@ -1245,7 +1245,7 @@
 .etb-graduate__title {
   margin: 0;
   font-family: var(--font-mono);
-  font-size: 10px;
+  font-size: var(--text-label);
   font-weight: 500;
   letter-spacing: 0.2em;
   text-transform: uppercase;
@@ -1254,7 +1254,7 @@
 
 .etb-graduate__subtitle {
   margin: 8px 0 12px;
-  font-size: 12px;
+  font-size: var(--text-sm);
   line-height: 1.4;
   color: rgba(255, 255, 255, 0.55);
 }
@@ -1276,14 +1276,14 @@
 
 .etb-graduateCard__title {
   margin: 0;
-  font-size: 13px;
+  font-size: var(--text-label);
   line-height: 1.25;
   color: rgba(255, 255, 255, 0.92);
 }
 
 .etb-graduateCard__outcome {
   margin: 0;
-  font-size: 11px;
+  font-size: var(--text-sm);
   line-height: 1.35;
   color: rgba(255, 255, 255, 0.66);
 }
@@ -1296,7 +1296,7 @@
 }
 
 .etb-graduateCard__bullets li {
-  font-size: 10px;
+  font-size: var(--text-sm);
   line-height: 1.35;
   color: rgba(255, 255, 255, 0.62);
 }
@@ -1379,7 +1379,7 @@
 
 .etb-modal__eyebrow {
   font-family: var(--font-mono);
-  font-size: 10px;
+  font-size: var(--text-label);
   line-height: 1;
   font-weight: 700;
   letter-spacing: 0.14em;
@@ -1393,7 +1393,7 @@
   color: rgba(17, 17, 22, 0.86);
   border-radius: 10px;
   padding: 7px 10px;
-  font-size: 11px;
+  font-size: var(--text-control);
   line-height: 1;
   font-weight: 700;
   letter-spacing: 0.08em;
@@ -1473,7 +1473,7 @@
 
 .etb-media__fallback-title {
   font-family: var(--font-mono);
-  font-size: 10px;
+  font-size: var(--text-label);
   font-weight: 500;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -1519,7 +1519,7 @@
 .etb-modal__category {
   margin: 8px 0 0;
   font-family: var(--font-mono);
-  font-size: 10px;
+  font-size: var(--text-label);
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: rgba(17, 17, 22, 0.52);
@@ -1527,7 +1527,7 @@
 
 .etb-modal__oneLiner {
   margin: 8px 0 0;
-  font-size: 13px;
+  font-size: var(--text-sm);
   line-height: 1.45;
   color: rgba(17, 17, 22, 0.78);
 }
@@ -1540,7 +1540,7 @@
 }
 
 .etb-modal__bullets li {
-  font-size: 12px;
+  font-size: var(--text-sm);
   line-height: 1.4;
   color: rgba(17, 17, 22, 0.72);
 }
@@ -1555,7 +1555,7 @@
 .etb-modal__statusLine {
   margin: 12px 0 0;
   font-family: var(--font-mono);
-  font-size: 10px;
+  font-size: var(--text-label);
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: rgba(17, 17, 22, 0.56);
@@ -1566,7 +1566,7 @@
   align-items: center;
   margin-top: 14px;
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: var(--text-control);
   font-weight: 500;
   letter-spacing: 0.04em;
   color: rgba(17,17,22,0.55);
@@ -1584,7 +1584,7 @@
 .etb-modal__snapshotTitle {
   margin: 0 0 8px;
   font-family: var(--font-mono);
-  font-size: 10px;
+  font-size: var(--text-label);
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: rgba(17, 17, 22, 0.6);
@@ -1598,7 +1598,7 @@
 }
 
 .etb-modal__snapshotList li {
-  font-size: 12px;
+  font-size: var(--text-sm);
   line-height: 1.4;
   color: rgba(17, 17, 22, 0.72);
 }
@@ -1779,7 +1779,7 @@
 
 .scs-proof__label {
   margin: 0;
-  font-size: 12px;
+  font-size: var(--text-label);
   color: rgba(255, 255, 255, 0.68);
 }
 
@@ -1790,7 +1790,7 @@
   border-radius: 999px;
   padding: 8px 14px;
   font-family: var(--font-mono);
-  font-size: 10px;
+  font-size: var(--text-control);
   letter-spacing: 0.12em;
   text-transform: uppercase;
   cursor: pointer;
@@ -1838,7 +1838,7 @@
   background: rgba(255, 255, 255, 0.03);
   color: rgba(255, 255, 255, 0.76);
   padding: 9px 12px;
-  font-size: 11px;
+  font-size: var(--text-control);
   cursor: pointer;
 }
 
@@ -1860,7 +1860,7 @@
 
 .scs-proof__panelTitle {
   margin: 0;
-  font-size: 12px;
+  font-size: var(--text-label);
   line-height: 1;
   font-weight: 700;
   letter-spacing: 0.1em;
@@ -1876,7 +1876,7 @@
 }
 
 .scs-proof__panelBullets li {
-  font-size: 12px;
+  font-size: var(--text-sm);
   line-height: 1.4;
   color: rgba(255, 255, 255, 0.72);
 }
@@ -1895,7 +1895,7 @@
   border-radius: 999px;
   border: 1px solid rgba(255, 255, 255, 0.06);
   background: rgba(255, 255, 255, 0.03);
-  font-size: 10px;
+  font-size: var(--text-label);
   color: rgba(255, 255, 255, 0.75);
 }
 
@@ -1907,7 +1907,7 @@
 
 .scs-head__eyebrow {
   margin: 0;
-  font-size: 10px;
+  font-size: var(--text-label);
   line-height: 1;
   font-weight: 700;
   letter-spacing: 0.15em;
@@ -1917,14 +1917,14 @@
 
 .scs-head__intro {
   margin: 0;
-  font-size: 13px;
+  font-size: var(--text-sm);
   line-height: 1.45;
   color: rgba(255, 255, 255, 0.78);
 }
 
 .scs-head__bridge {
   margin: 0;
-  font-size: 12px;
+  font-size: var(--text-label);
   line-height: 1.42;
   color: rgba(255, 255, 255, 0.56);
 }
@@ -1995,7 +1995,7 @@
 
 .scs-feature__badge,
 .scs-card__badge {
-  font-size: 9px;
+  font-size: var(--text-label);
   line-height: 1;
   font-weight: 700;
   letter-spacing: 0.14em;
@@ -2013,7 +2013,7 @@
 
 .scs-feature__role {
   margin: 0;
-  font-size: 12px;
+  font-size: var(--text-label);
   line-height: 1.35;
   color: rgba(255, 255, 255, 0.56);
 }
@@ -2021,7 +2021,7 @@
 .scs-feature__oneLiner,
 .scs-card__oneLiner {
   margin: 10px 0 0;
-  font-size: 12px;
+  font-size: var(--text-sm);
   line-height: 1.45;
   color: rgba(255, 255, 255, 0.62);
 }
@@ -2036,7 +2036,7 @@
 
 .scs-feature__bullets li,
 .scs-card__bullets li {
-  font-size: 11px;
+  font-size: var(--text-sm);
   line-height: 1.35;
   color: rgba(255, 255, 255, 0.72);
 }
@@ -2057,7 +2057,7 @@
 }
 
 .scs-feature__toolsLabel {
-  font-size: 10px;
+  font-size: var(--text-label);
   line-height: 1;
   font-weight: 700;
   letter-spacing: 0.14em;
@@ -2091,7 +2091,7 @@
   border-radius: 999px;
   border: 1px solid rgba(255, 255, 255, 0.06);
   background: rgba(255, 255, 255, 0.03);
-  font-size: 10px;
+  font-size: var(--text-label);
   color: rgba(255, 255, 255, 0.75);
 }
 
@@ -2103,7 +2103,7 @@
 }
 
 .scs-feature__supportLabel {
-  font-size: 9px;
+  font-size: var(--text-label);
   line-height: 1;
   font-weight: 700;
   letter-spacing: 0.12em;
@@ -2113,7 +2113,7 @@
 
 .scs-feature__supportTitle {
   margin-top: 6px;
-  font-size: 12px;
+  font-size: var(--text-label);
   line-height: 1.25;
   color: rgba(255, 255, 255, 0.9);
   font-weight: 600;
@@ -2121,7 +2121,7 @@
 
 .scs-feature__supportDesc {
   margin: 6px 0 0;
-  font-size: 11px;
+  font-size: var(--text-sm);
   line-height: 1.35;
   color: rgba(255, 255, 255, 0.5);
 }
@@ -2195,7 +2195,7 @@
 
 .scs-side__note {
   margin-top: 10px;
-  font-size: 11px;
+  font-size: var(--text-sm);
   line-height: 1.35;
   color: rgba(255, 255, 255, 0.46);
 }
@@ -2213,7 +2213,7 @@
   border: 1px solid rgba(255, 255, 255, 0.06);
   background: rgba(255, 255, 255, 0.04);
   color: rgba(255, 255, 255, 0.8);
-  font-size: 10px;
+  font-size: var(--text-label);
   line-height: 1;
   font-weight: 600;
   letter-spacing: 0.04em;
@@ -2291,7 +2291,7 @@
 .scs-card__glyph-badge {
   width: 34px;
   height: 34px;
-  font-size: 12px;
+  font-size: var(--text-label);
 }
 
 .scs-feature__glyph-copy,
@@ -2308,7 +2308,7 @@
 .scs-card__glyph-title,
 .scs-modalBody__glyph-title,
 .cns-modalBody__glyph-title {
-  font-size: 10px;
+  font-size: var(--text-label);
   line-height: 1.2;
   font-weight: 700;
   letter-spacing: 0.08em;
@@ -2320,7 +2320,7 @@
 .scs-card__glyph-subtitle,
 .scs-modalBody__glyph-subtitle,
 .cns-modalBody__glyph-subtitle {
-  font-size: 9px;
+  font-size: var(--text-sm);
   line-height: 1.2;
   color: rgba(255, 255, 255, 0.42);
   letter-spacing: 0.04em;
@@ -2402,7 +2402,7 @@
 
 .scs-modal__eyebrow,
 .cns-modal__eyebrow {
-  font-size: 10px;
+  font-size: var(--text-label);
   line-height: 1;
   font-weight: 700;
   letter-spacing: 0.16em;
@@ -2417,7 +2417,7 @@
   color: rgba(255, 255, 255, 0.9);
   border-radius: 10px;
   padding: 7px 10px;
-  font-size: 11px;
+  font-size: var(--text-control);
   line-height: 1;
   font-weight: 700;
   letter-spacing: 0.08em;
@@ -2458,7 +2458,7 @@
 
 .scs-modalBody__eyebrow,
 .cns-modalBody__eyebrow {
-  font-size: 10px;
+  font-size: var(--text-label);
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -2477,7 +2477,7 @@
 
 .scs-modalBody__role {
   margin: 0;
-  font-size: 12px;
+  font-size: var(--text-label);
   line-height: 1.4;
   color: rgba(255, 255, 255, 0.52);
 }
@@ -2486,7 +2486,7 @@
 .cns-modalBody__oneLiner,
 .cns-modalBody__bestFor {
   margin: 0;
-  font-size: 13px;
+  font-size: var(--text-sm);
   line-height: 1.5;
   color: rgba(255, 255, 255, 0.74);
 }
@@ -2512,7 +2512,7 @@
 .scs-modalBody__sectionTitle,
 .cns-modalBody__sectionTitle {
   margin: 0 0 10px;
-  font-size: 11px;
+  font-size: var(--text-label);
   line-height: 1;
   font-weight: 700;
   letter-spacing: 0.15em;
@@ -2530,7 +2530,7 @@
 
 .scs-modalBody__bullets li,
 .cns-modalBody__deliverables li {
-  font-size: 12px;
+  font-size: var(--text-sm);
   line-height: 1.45;
   color: rgba(255, 255, 255, 0.8);
 }
@@ -2546,7 +2546,7 @@
 .scs-modalBody__miniLabel,
 .cns-modalBody__miniLabel,
 .cns-modalBody__sectionLabel {
-  font-size: 10px;
+  font-size: var(--text-label);
   line-height: 1;
   font-weight: 700;
   letter-spacing: 0.14em;
@@ -2565,7 +2565,7 @@
 .scs-modalBody__list li,
 .cns-modalBody__list li,
 .cns-modalBody__sectionText {
-  font-size: 12px;
+  font-size: var(--text-sm);
   line-height: 1.4;
   color: rgba(255, 255, 255, 0.68);
   margin: 0;
@@ -2628,7 +2628,7 @@
 
 .cns-hero__eyebrow {
   margin: 0;
-  font-size: 10px;
+  font-size: var(--text-label);
   font-weight: 700;
   line-height: 1;
   letter-spacing: 0.16em;
@@ -2647,7 +2647,7 @@
 
 .cns-hero__subtitle {
   margin: 0;
-  font-size: 13px;
+  font-size: var(--text-sm);
   line-height: 1.5;
   color: rgba(255, 255, 255, 0.72);
   max-width: 64ch;
@@ -2655,7 +2655,7 @@
 
 .cns-hero__identity {
   margin: 2px 0 0;
-  font-size: 11px;
+  font-size: var(--text-label);
   line-height: 1.3;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -2664,7 +2664,7 @@
 
 .cns-hero__founder {
   margin: 0;
-  font-size: 12px;
+  font-size: var(--text-label);
   line-height: 1.45;
   color: rgba(255, 255, 255, 0.5);
   max-width: 76ch;
@@ -2716,7 +2716,7 @@
 .cns-hero__orbLabel {
   margin: 0;
   text-align: center;
-  font-size: 9px;
+  font-size: var(--text-label);
   line-height: 1;
   font-weight: 700;
   letter-spacing: 0.14em;
@@ -2788,7 +2788,7 @@
 
 .cns-offerCard__oneLiner {
   margin: 8px 0 0;
-  font-size: 12px;
+  font-size: var(--text-sm);
   line-height: 1.45;
   color: rgba(255, 255, 255, 0.62);
 }
@@ -2801,7 +2801,7 @@
 }
 
 .cns-offerCard__deliverables li {
-  font-size: 11px;
+  font-size: var(--text-sm);
   line-height: 1.35;
   color: rgba(255, 255, 255, 0.74);
 }
@@ -2811,7 +2811,7 @@
   padding: 5px 8px;
   border: 1px solid rgba(255, 255, 255, 0.09);
   background: rgba(255, 255, 255, 0.02);
-  font-size: 9px;
+  font-size: var(--text-label);
   line-height: 1;
   font-weight: 700;
   letter-spacing: 0.1em;
@@ -2837,7 +2837,7 @@
   border: 1px solid rgba(255, 255, 255, 0.06);
   background: rgba(255, 255, 255, 0.03);
   color: rgba(255, 255, 255, 0.78);
-  font-size: 10px;
+  font-size: var(--text-label);
   line-height: 1;
   font-weight: 600;
   letter-spacing: 0.04em;
@@ -2859,7 +2859,7 @@
 
 .cns-proof__title {
   margin: 0;
-  font-size: 11px;
+  font-size: var(--text-label);
   line-height: 1;
   font-weight: 700;
   letter-spacing: 0.16em;
@@ -2869,7 +2869,7 @@
 
 .cns-proof__subtitle {
   margin: 0;
-  font-size: 11px;
+  font-size: var(--text-sm);
   line-height: 1.35;
   color: rgba(255, 255, 255, 0.45);
 }
@@ -2889,14 +2889,14 @@
 }
 
 .cns-proofCard__title {
-  font-size: 12px;
+  font-size: var(--text-label);
   line-height: 1.2;
   color: rgba(255, 255, 255, 0.88);
   font-weight: 700;
 }
 
 .cns-proofCard__clientType {
-  font-size: 9px;
+  font-size: var(--text-label);
   line-height: 1;
   font-weight: 700;
   letter-spacing: 0.14em;
@@ -2912,7 +2912,7 @@
 }
 
 .cns-proofCard__row span {
-  font-size: 9px;
+  font-size: var(--text-label);
   line-height: 1.2;
   font-weight: 700;
   letter-spacing: 0.12em;
@@ -2922,7 +2922,7 @@
 
 .cns-proofCard__row p {
   margin: 0;
-  font-size: 11px;
+  font-size: var(--text-sm);
   line-height: 1.35;
   color: rgba(255, 255, 255, 0.62);
 }
@@ -3209,15 +3209,18 @@
   flex: 1 1 auto;
   min-height: 0;
   width: 100%;
-  /* Fluid below 1392px so the composition tapers on the way down instead of
-     snapping: the container narrows, which narrows the globe column, which is
-     what the globe measures itself against. */
-  max-width: min(1280px, 92vw);
+  /* Fluid in both directions so the composition tapers on the way down instead
+     of snapping AND keeps growing on the way up: the container drives the globe
+     column width, which is what the globe measures itself against. The old flat
+     1280px ceiling is why the globe stayed small on large displays — it was
+     measuring a box that had stopped growing at roughly laptop width. */
+  max-width: min(clamp(80rem, 55rem + 30vw, 132rem), 92vw);
   margin: 0 auto;
-  padding: clamp(38px, 5vh, 56px) clamp(32px, 4vw, 64px) clamp(34px, 5vh, 56px);
+  padding: clamp(2.375rem, 5vh, 3.5rem) clamp(2rem, 1.4rem + 2vw, 5rem)
+    clamp(2.125rem, 5vh, 3.5rem);
   display: flex;
   flex-direction: column;
-  gap: clamp(18px, 2.6vh, 30px);
+  gap: clamp(1.125rem, 2.6vh, 1.875rem);
 }
 
 /* ---- Section rail — mirrors .wm-rail / .cstack__head ---- */
@@ -3230,10 +3233,10 @@
 
 .sc-ed__railNum {
   font-family: var(--font-mono);
-  font-size: clamp(10px, 0.8vw, 11px);
-  letter-spacing: 0.3em;
+  font-size: var(--text-label);
+  letter-spacing: var(--track-dymo);
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.82);
+  color: var(--ink-body);
   white-space: nowrap;
 }
 
@@ -3247,12 +3250,12 @@
 .sc-ed__standfirst {
   flex: 0 0 auto;
   margin: 0;
-  max-width: 74ch;
+  max-width: var(--measure);
   font-family: var(--font-sans);
   font-weight: 400;
-  font-size: clamp(13px, 1vw, 15px);
-  line-height: 1.55;
-  color: rgba(255, 255, 255, 0.55);
+  font-size: var(--text-base);
+  line-height: var(--leading-body);
+  color: var(--ink-body);
 }
 
 /* ---- Two columns: 44% globe / 56% content ---- */
@@ -3638,7 +3641,7 @@
 
 .sc-journey__railMeta {
   font-family: var(--font-mono, ui-monospace, Menlo, monospace);
-  font-size: 11px;
+  font-size: var(--text-label);
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: rgba(255, 255, 255, 0.6);
@@ -3856,7 +3859,7 @@
 
 .cns-photo__eyebrow {
   font-family: var(--font-mono);
-  font-size: 10px;
+  font-size: var(--text-label);
   font-weight: 500;
   letter-spacing: 0.18em;
   text-transform: uppercase;
@@ -3876,7 +3879,7 @@
 
 .cns-photo__subtitle {
   font-family: var(--font-sans);
-  font-size: 13px;
+  font-size: var(--text-sm);
   line-height: 1.55;
   color: rgba(255, 255, 255, 0.45);
   margin: 0;
@@ -3935,7 +3938,7 @@
 
 .cns-photo__card-liner {
   font-family: var(--font-sans);
-  font-size: 12px;
+  font-size: var(--text-sm);
   line-height: 1.5;
   color: rgba(255, 255, 255, 0.42);
   margin: 0 0 8px;
@@ -3948,7 +3951,7 @@
 }
 .cns-photo__card-deliverables li {
   font-family: var(--font-sans);
-  font-size: 11px;
+  font-size: var(--text-sm);
   line-height: 1.55;
   color: rgba(255, 255, 255, 0.35);
   padding-left: 14px;
@@ -3982,7 +3985,7 @@
 
 .cns-photo__section-sub {
   font-family: var(--font-mono);
-  font-size: 10px;
+  font-size: var(--text-sm);
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: rgba(255, 255, 255, 0.28);
@@ -4004,7 +4007,7 @@
 
 .cns-photo__proof-name {
   font-family: var(--font-sans);
-  font-size: 13px;
+  font-size: var(--text-sm);
   font-weight: 500;
   color: rgba(255, 255, 255, 0.72);
   margin-bottom: 2px;
@@ -4012,7 +4015,7 @@
 
 .cns-photo__proof-client {
   font-family: var(--font-mono);
-  font-size: 9px;
+  font-size: var(--text-label);
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: rgba(255, 255, 255, 0.25);
@@ -4025,7 +4028,7 @@
 .cns-photo__proof-row span {
   display: block;
   font-family: var(--font-mono);
-  font-size: 9px;
+  font-size: var(--text-label);
   font-weight: 500;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -4035,7 +4038,7 @@
 
 .cns-photo__proof-row p {
   font-family: var(--font-sans);
-  font-size: 12px;
+  font-size: var(--text-label);
   line-height: 1.5;
   color: rgba(255, 255, 255, 0.42);
   margin: 0;
@@ -4068,14 +4071,14 @@
 
 .cns-photo__identity {
   font-family: var(--font-sans);
-  font-size: 11px;
+  font-size: var(--text-label);
   color: rgba(255, 255, 255, 0.32);
   margin: 0 0 4px;
 }
 
 .cns-photo__founder {
   font-family: var(--font-sans);
-  font-size: 11px;
+  font-size: var(--text-label);
   line-height: 1.5;
   color: rgba(255, 255, 255, 0.22);
   margin: 0;

@@ -46,6 +46,12 @@
   --text-label: clamp(0.71875rem, 0.652rem + 0.084vw, 0.90625rem); /* 11.5 → 14.5 */
   --text-meta: clamp(0.75rem, 0.664rem + 0.107vw, 0.96875rem); /*     12   → 15.5 */
 
+  /* Interactive controls get their own step with a higher floor than labels.
+     Buttons, tabs, close affordances and inline links were sitting at 8–11px
+     fixed; a control the user is expected to hit and read shouldn't render
+     below ~13px on any display. */
+  --text-control: clamp(0.8125rem, 0.72rem + 0.117vw, 1rem); /*       13   → 16   */
+
   /* Letter-spacing for uppercase mono labels. Tightens as the type grows —
      tracking that reads as "crisp" at 11px reads as "gappy" at 15px. The DYMO
      ramp keeps the embossed-label identity (wide tracking is the whole point of

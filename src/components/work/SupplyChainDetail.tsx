@@ -73,11 +73,15 @@ export default function SupplyChainDetail({
       const margin = isMobile ? 12 : 28;
       const available = Math.min(rect.width, rect.height) - margin * 2;
 
-      // Clamp so the globe stays readable on tiny phones and doesn't
-      // overwhelm 4K monitors. Cap is intentionally tighter than the
-      // available space so the timeline copy beside it stays legible.
+      // Clamp so the globe stays readable on tiny phones and doesn't overwhelm
+      // the copy beside it. The desktop ceiling scales with the viewport rather
+      // than sitting at a flat 520px — that flat cap is what left the globe at
+      // ~13% of the frame on a 4K display, and `available` (the measured column)
+      // is still the real constraint, so the copy keeps its room either way.
       const minSize = isMobile ? 160 : 260;
-      const maxSize = isMobile ? 240 : 520;
+      const maxSize = isMobile
+        ? 240
+        : Math.min(920, Math.max(520, Math.round(window.innerWidth * 0.26)));
       const next = Math.round(Math.max(minSize, Math.min(maxSize, available)));
 
       setGlobeSize((prev) => (Math.abs(prev - next) > 2 ? next : prev));

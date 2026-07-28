@@ -469,7 +469,8 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: clamp(64px, 9vh, 104px) clamp(20px, 4vw, 56px) clamp(28px, 4vh, 56px);
+  padding: clamp(4rem, 9vh, 6.5rem) clamp(1.25rem, 0.9rem + 1.8vw, 5.5rem)
+    clamp(1.75rem, 4vh, 3.5rem);
   overflow: hidden;
 }
 
@@ -494,12 +495,15 @@
 
 /* Neutralize the homepage glass shell so the cinematic card is the only frame,
    while keeping the padding/layout context ETBDetail expects. */
+/* The 1000px cap held the whole Emerging Tech Builds panel to ~37% of a 2560px
+   display. It's an accordion of project rows, so it can take real width — but
+   not unlimited width, or the rows stop scanning as rows. */
 .cstack__etbShell {
   border: none !important;
   background: transparent !important;
   box-shadow: none !important;
   width: 100%;
-  max-width: 1000px;
+  max-width: clamp(62.5rem, 40rem + 30vw, 120rem);
   margin: 0 auto;
 }
 
