@@ -14,10 +14,14 @@ export default function EmergingTechBuildsPage() {
 
   return (
     <main className="etb-gallery">
-      <Link href="/" className="etb-gallery__back">
-        <span aria-hidden="true">&larr;</span>
-        <span>Back to home</span>
-      </Link>
+      {/* Rail carries the shell's measure so the back link stays flush with the
+          accordion's left edge once the shell stops filling the viewport. */}
+      <div className="etb-gallery__rail">
+        <Link href="/" className="etb-gallery__back">
+          <span aria-hidden="true">&larr;</span>
+          <span>Back to home</span>
+        </Link>
+      </div>
       <div className="etb-gallery__shell">
         <ETBDetail data={screen.etb} />
       </div>

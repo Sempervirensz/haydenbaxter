@@ -239,13 +239,18 @@ html {
   padding-inline: var(--page-gutter);
 }
 
+/* The lead-in above the headline. Its own measure rather than --measure (68ch):
+   the sentence is short enough to set on one or two lines, and a 68ch column
+   lets it run wider than the eye wants to track at this size. `balance` keeps
+   the break even if it does wrap instead of leaving one orphaned word. */
 .hero-eyebrow {
   font-size: var(--text-sm);
   letter-spacing: 0.04em;
   line-height: var(--leading-body);
   color: var(--ink-muted);
   margin-bottom: clamp(0.75rem, 0.5rem + 0.6vw, 1.75rem);
-  max-width: var(--measure);
+  max-width: min(100%, var(--measure-lede));
+  text-wrap: balance;
 }
 
 .hero-heading {
@@ -497,18 +502,55 @@ html {
   right: 0;
   background: linear-gradient(to left, #0a0a0a, transparent);
 }
+/* ── Marquee geometry ──────────────────────────────────────────────────────
+   Every logo occupies an identical fixed-width SLOT. That one decision is what
+   makes the loop seamless, and it replaces two separate bugs:
+
+     1. The track used `gap`, but the keyframe shifted by -50%. With N items
+        there are N-1 gaps, so half the track is (N/2 items + (N-1)/2 gaps)
+        while a seamless shift needs (N/2 items + N/2 gaps). The loop was
+        short by exactly half a gap — a visible 40px snap on every cycle.
+
+     2. Item widths came from the images' intrinsic size, so the track was
+        0-wide until they decoded, and its final width depended on three
+        unrelated aspect ratios. Twelve of those items totalled 2694px, giving
+        a 1347px half-track — against a 3840px viewport that is 2493px of
+        blank canvas scrolling past on every loop.
+
+   With uniform slots the shift is a whole number of slots, so the state after
+   the shift is pixel-identical to the state before it, at any viewport and
+   regardless of whether the images have loaded. The track only has to be long
+   enough to cover the viewport plus one cycle, which `--brands-slot` and the
+   repeat count in siteContent.ts are sized together to guarantee through
+   3840px. Below ~1667px the slot sits on its 150px floor, so phone and laptop
+   spacing is exactly what it was. */
+.brands {
+  --brands-slot: clamp(150px, 9vw, 300px);
+  /* One cycle = one full pass through the unique logo set. The component
+     supplies --brands-logos (how many unique logos there are). */
+  --brands-cycle: calc(var(--brands-logos, 3) * var(--brands-slot));
+  /* Tuned per tier to hold ~35–45px/s, the speed the 28s/-50% loop produced
+     before the track got longer. Duration can't be fluid — CSS has no way to
+     derive a <time> from a <length> — so it steps with the composition tiers. */
+  --brands-duration: 12s;
+}
+
 .brands__track {
   display: flex;
   align-items: center;
-  gap: clamp(40px, 8vw, 80px);
   width: max-content;
-  animation: scroll-brands 28s linear infinite;
+  animation: scroll-brands var(--brands-duration) linear infinite;
 }
 @keyframes scroll-brands {
   0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
+  100% { transform: translateX(calc(-1 * var(--brands-cycle))); }
 }
 .brands__logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--brands-slot);
+  flex-shrink: 0;
   font-family: var(--font-sans);
   font-size: var(--text-sm);
   font-weight: 600;
@@ -516,7 +558,6 @@ html {
   text-transform: uppercase;
   color: rgba(255, 255, 255, 0.25);
   white-space: nowrap;
-  flex-shrink: 0;
   user-select: none;
   transition: color 300ms ease;
 }
@@ -569,6 +610,28 @@ html {
   color: var(--ink-faint);
   margin-top: clamp(16px, 2vw, 24px);
   padding: 0 16px;
+}
+
+/* The slot grows with the viewport, so the cycle distance does too. Step the
+   duration with it or the marquee accelerates as the display gets wider. */
+@media (min-width: 100rem) {
+  .brands {
+    --brands-duration: 15s;
+  }
+}
+
+@media (min-width: 150rem) {
+  .brands {
+    --brands-duration: 20s;
+  }
+}
+
+/* The caption and disclaimer are reading text, not composition — hold them to a
+   measure instead of letting them run the full width of a 4K display. */
+.brands__context,
+.brands__note {
+  max-width: min(100% - 2rem, var(--measure));
+  margin-inline: auto;
 }
 
 /* Work + CD scroll — sticky-stack layout */
@@ -1324,6 +1387,20 @@ html.is-safari body {
   flex-direction: column;
   gap: clamp(16px, 3vw, 28px);
 }
+.etb-gallery__rail {
+  display: flex;
+}
+
+.etb-gallery__rail,
+.etb-gallery__shell {
+  /* Same working width as the cinematic card's ETB panel — this route mounts
+     the same accordion, so it gets the same measure instead of running the
+     full 3728px a 4K viewport would otherwise hand it. */
+  width: 100%;
+  max-width: min(100%, var(--shell-etb));
+  margin-inline: auto;
+}
+
 .etb-gallery__shell {
   /* Mimic the framing the ETBDetail component expects on the homepage —
      a glass card surface so existing layout/styling reads correctly. */
@@ -1416,7 +1493,13 @@ html.is-safari body {
 }
 .etb-page__oneLiner {
   font-family: var(--font-sans);
-  font-size: clamp(16px, 1.6vw, 19px);
+  /* Every body step on this page used a clamp that saturated between 1130 and
+     1190px, so the whole detail template was frozen at laptop sizing on any
+     larger display. The --text-body-* steps keep each one's laptop rendering as
+     their floor, so only large displays change. This one is the page's lede and
+     takes the shared --text-lg step: 20px at laptop against the 19px it used to
+     render, the single 1px difference in the retrofit. */
+  font-size: var(--text-lg);
   line-height: 1.55;
   color: rgba(255, 255, 255, 0.7);
   max-width: 56ch;
@@ -1514,8 +1597,10 @@ html.is-safari body {
 .etb-page__lede {
   margin: 0;
   font-family: var(--font-sans);
-  font-size: clamp(15px, 1.5vw, 17px);
-  line-height: 1.6;
+  /* Was clamp(15px, 1.5vw, 17px) — saturated at 17px by a 1133px viewport, so
+     it was frozen on every display this pass targets. */
+  font-size: var(--text-body-lg);
+  line-height: var(--leading-body);
   color: rgba(255, 255, 255, 0.74);
   max-width: 62ch;
 }
@@ -1964,8 +2049,10 @@ html.is-safari body {
   position: relative;
   padding-left: 20px;
   font-family: var(--font-sans);
-  font-size: 14px;
-  line-height: 1.6;
+  /* Flat 14px put these at 113 characters per line in the page's 791px column
+     at 4K — the column was fine, the type had simply stopped growing. */
+  font-size: var(--text-body-sm);
+  line-height: var(--leading-body);
   color: rgba(255, 255, 255, 0.72);
 }
 .etb-page__listItem::before {
@@ -2052,7 +2139,7 @@ html.is-safari body {
 .etb-page__storyPara {
   margin: 0;
   font-family: var(--font-sans);
-  font-size: clamp(15px, 1.5vw, 17px);
+  font-size: var(--text-body-lg);
   line-height: 1.7;
   color: rgba(255, 255, 255, 0.76);
 }
@@ -2119,8 +2206,8 @@ html.is-safari body {
 .etb-page__stepBody {
   margin: 0;
   font-family: var(--font-sans);
-  font-size: 14px;
-  line-height: 1.6;
+  font-size: var(--text-body-sm);
+  line-height: var(--leading-body);
   color: rgba(255, 255, 255, 0.72);
 }
 
@@ -2152,8 +2239,8 @@ html.is-safari body {
 .etb-page__diffBody {
   margin: 0;
   font-family: var(--font-sans);
-  font-size: 14px;
-  line-height: 1.6;
+  font-size: var(--text-body-sm);
+  line-height: var(--leading-body);
   color: rgba(255, 255, 255, 0.72);
 }
 .etb-page__diffNote {
@@ -2188,8 +2275,9 @@ html.is-safari body {
 .etb-page__techBody {
   margin: 0;
   font-family: var(--font-sans);
-  font-size: 14px;
-  line-height: 1.6;
+  /* Same frozen-14px problem as .etb-page__listItem above. */
+  font-size: var(--text-body-sm);
+  line-height: var(--leading-body);
   color: rgba(255, 255, 255, 0.72);
 }
 
