@@ -41,6 +41,10 @@ const PUBLIC_CSS = [
   "src/components/work/cinematic-work-stack.css",
   "src/components/work/work-together.css",
   "src/components/design-lab/design-lab.css",
+  // Route-scoped stylesheet. It was missing from this list, which is exactly
+  // how it kept an 11.52px eyebrow on a public page indefinitely — the guard
+  // was never looking at the file.
+  "src/app/privacy/privacy.css",
 ];
 
 // JSX carrying fixed type escapes CSS review entirely — two Tailwind
@@ -60,9 +64,16 @@ const LAB_PATH =
 // `.dlab__*` is the lab page's own chrome; `.dlab-soft*` is the shipped gate.
 // `.cstack__dock*`/`__dial*`/`__toggle` is the intensity dock, rendered only
 // when CinematicWorkStack gets `lab && !embedded`.
+// `hb-handwriting-lab` is here for a different reason than the rest: it is not
+// scaffolding, it is DEAD. The class appears nowhere outside globals.css, so no
+// route can render it and its type sizes cannot reach a visitor. It is excluded
+// rather than fixed so the guard reports only live surfaces; the block itself
+// should be deleted.
 const LAB_SELECTOR =
-  /^\.(cmp[-_]|dlab__|dlab-(?!soft)|dlab-thresh|rv__|wf-|wfl-|scs-lab|admin|cstack__(dock|dial|toggle))/;
+  /^\.(cmp[-_]|dlab__|dlab-(?!soft)|dlab-thresh|rv__|wf-|wfl-|scs-lab|admin|hb-handwriting-lab|cstack__(dock|dial|toggle))/;
 
+// The site never overrides the root font-size, so 1rem is the browser default.
+const REM_PX = 16;
 const MIN_FONT_PX = 14;
 const MIN_CLAMP_CEILING_PX = 15;
 const CONTAINER_CAP_PX = 600;
@@ -104,11 +115,26 @@ function scanCss(file) {
         report(`fixed font-size ${fixed[1]}px is below the ${MIN_FONT_PX}px floor — use a --text-* token`);
       }
 
+      // Same rule in rem. Checking only `px` is what let privacy.css ship
+      // `font-size: 0.72rem` — 11.52px on every display, including 4K —
+      // straight past a guard whose whole job was to catch that.
+      const fixedRem = line.match(/font-size:\s*([0-9.]+)rem/);
+      if (fixedRem && parseFloat(fixedRem[1]) * REM_PX < MIN_FONT_PX) {
+        const px = (parseFloat(fixedRem[1]) * REM_PX).toFixed(2);
+        report(`fixed font-size ${fixedRem[1]}rem (${px}px) is below the ${MIN_FONT_PX}px floor — use a --text-* token`);
+      }
+
       // Only the clamp ceiling matters here: it is what renders once the
       // viewport is wide enough, i.e. on every display this guard protects.
       const clamped = line.match(/font-size:\s*clamp\([^)]*?,\s*([0-9.]+)px\s*\)/);
       if (clamped && parseFloat(clamped[1]) < MIN_CLAMP_CEILING_PX) {
         report(`clamp() ceiling of ${clamped[1]}px stops scaling too early — use a --text-* token`);
+      }
+
+      const clampedRem = line.match(/font-size:\s*clamp\([^)]*?,\s*([0-9.]+)rem\s*\)/);
+      if (clampedRem && parseFloat(clampedRem[1]) * REM_PX < MIN_CLAMP_CEILING_PX) {
+        const px = (parseFloat(clampedRem[1]) * REM_PX).toFixed(2);
+        report(`clamp() ceiling of ${clampedRem[1]}rem (${px}px) stops scaling too early — use a --text-* token`);
       }
 
       const cap = line.match(/max-width:\s*([0-9.]+)px/);

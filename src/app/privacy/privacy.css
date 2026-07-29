@@ -1,10 +1,21 @@
+/* Legal / privacy page.
+
+   This stylesheet predates the fluid scale system and was written entirely in
+   fixed rem: the eyebrow and back-link rendered at 0.72rem — 11.52px — at every
+   width, including 4K. `check-scale` never caught it for two reasons, both now
+   fixed: this file was missing from its PUBLIC_CSS list, and the guard only
+   inspected `px` values, so a sub-floor size declared in `rem` walked straight
+   through. Everything below is on a --text-* token so it tracks the ramp. */
+
 .legal {
-  max-width: 760px;
+  /* Prose, so the reading column is the cap — `ch` tracks the type ramp
+     automatically rather than freezing at the old flat 760px. */
+  width: min(100% - (2 * var(--page-gutter)), var(--measure));
   margin: 0 auto;
-  padding: 6rem 1.5rem 4rem;
-  color: rgba(243, 243, 243, 0.82);
+  padding: clamp(4rem, 3rem + 3vw, 8rem) 0 clamp(3rem, 2.5rem + 2vw, 6rem);
+  color: var(--ink-body);
   font-family: var(--font-sans);
-  line-height: 1.7;
+  line-height: var(--leading-body);
 }
 
 .legal__back {
@@ -12,12 +23,13 @@
   align-items: center;
   gap: 0.5rem;
   font-family: var(--font-mono);
-  font-size: 0.72rem;
-  letter-spacing: 0.1em;
+  /* A link the visitor is expected to read and hit — control step, not label. */
+  font-size: var(--text-control);
+  letter-spacing: var(--track-label);
   text-transform: uppercase;
-  color: rgba(243, 243, 243, 0.6);
+  color: var(--ink-muted);
   text-decoration: none;
-  margin-bottom: 2.5rem;
+  margin-bottom: clamp(2rem, 1.6rem + 1.2vw, 3.5rem);
 }
 
 .legal__back:hover,
@@ -28,8 +40,8 @@
 .legal__eyebrow {
   display: block;
   font-family: var(--font-mono);
-  font-size: 0.72rem;
-  letter-spacing: 0.2em;
+  font-size: var(--text-label);
+  letter-spacing: var(--track-dymo);
   text-transform: uppercase;
   color: #d8b15a;
   margin-bottom: 0.75rem;
@@ -37,28 +49,34 @@
 
 .legal h1 {
   font-family: var(--font-serif);
-  font-size: clamp(2rem, 5vw, 3rem);
+  /* Not --text-2xl: that step's floor is 32px, which would have SHRUNK this
+     heading from the 48px it rendered at laptop width. The old
+     clamp(2rem, 5vw, 3rem) hit its 48px ceiling at 960px, so this keeps 48px as
+     the floor and ramps above it instead. */
+  font-size: clamp(3rem, 2.6rem + 0.5vw, 4.25rem); /* 48 → 68 */
+  line-height: var(--leading-tight);
   color: #f3f3f3;
   margin: 0 0 0.5rem;
 }
 
 .legal__updated {
   font-family: var(--font-mono);
-  font-size: 0.72rem;
-  color: rgba(243, 243, 243, 0.45);
-  margin: 0 0 2.5rem;
+  font-size: var(--text-meta);
+  color: var(--ink-faint);
+  margin: 0 0 clamp(2rem, 1.6rem + 1.2vw, 3.5rem);
 }
 
 .legal h2 {
   font-family: var(--font-serif);
-  font-size: 1.35rem;
+  font-size: var(--text-lg);
+  line-height: var(--leading-tight);
   color: #f3f3f3;
-  margin: 2.5rem 0 0.75rem;
+  margin: clamp(2rem, 1.6rem + 1.2vw, 3.5rem) 0 0.75rem;
 }
 
 .legal p,
 .legal li {
-  font-size: 0.98rem;
+  font-size: var(--text-base);
 }
 
 .legal ul {
@@ -75,9 +93,9 @@
 }
 
 .legal__note {
-  margin-top: 3rem;
+  margin-top: clamp(2.5rem, 2rem + 1.5vw, 4rem);
   padding-top: 1.5rem;
   border-top: 1px solid rgba(243, 243, 243, 0.1);
-  font-size: 0.85rem;
-  color: rgba(243, 243, 243, 0.55);
+  font-size: var(--text-sm);
+  color: var(--ink-muted);
 }
