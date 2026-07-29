@@ -3019,6 +3019,52 @@ html.is-safari body {
   color: rgba(255, 255, 255, 0.78);
   margin: 0;
 }
+.blog-post__list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 0;
+  padding-left: 1.2rem;
+  max-width: 64ch;
+  font-family: var(--font-sans);
+  font-size: clamp(15.5px, 1.4vw, 17.5px);
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.78);
+}
+.blog-post__li::marker {
+  color: rgba(255, 255, 255, 0.45);
+}
+.blog-post__p strong,
+.blog-post__li strong {
+  color: rgba(255, 255, 255, 0.92);
+  font-weight: 650;
+}
+.blog-post__p em,
+.blog-post__li em {
+  color: rgba(255, 255, 255, 0.82);
+}
+.blog-post__p a,
+.blog-post__li a {
+  color: rgba(232, 205, 128, 0.95);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
+}
+.blog-post__quote {
+  margin: 4px 0;
+  padding: 2px 0 2px 18px;
+  border-left: 2px solid rgba(255, 255, 255, 0.26);
+  font-family: var(--font-serif);
+  font-size: clamp(18px, 1.8vw, 22px);
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.78);
+}
+.blog-post__quote strong {
+  color: rgba(255, 255, 255, 0.94);
+}
+.blog-post__quote a {
+  color: rgba(232, 205, 128, 0.95);
+}
 
 /* ──────────────────────────────────────────────────────────
    /admin/compose — dev-only post composer (clipboard + download)
