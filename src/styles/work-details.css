@@ -341,6 +341,24 @@
   padding-right: clamp(300px, 35vw, 440px);
 }
 
+/* The 460px ceiling above is a laptop measurement: on a 2160px-tall card it
+   leaves the accordion as a 533px strip centred in 1944px of empty card, which
+   is the "small desktop layout floating in empty space" failure exactly. Both
+   tiers are gated on HEIGHT as well as width — the ceiling has to stay under
+   what the sticky card (90vh, minus the panel's own padding) can actually give
+   it, or the bars overflow their frame on a short ultrawide. */
+@media (min-width: 100rem) and (min-height: 56.25rem) {
+  .etb-barStack {
+    min-height: clamp(260px, calc(100vh - 300px), 640px);
+  }
+}
+
+@media (min-width: 150rem) and (min-height: 75rem) {
+  .etb-barStack {
+    min-height: clamp(260px, calc(100vh - 320px), 880px);
+  }
+}
+
 .etb-bar {
   position: relative;
   display: flex;
@@ -3270,6 +3288,20 @@
   grid-template-columns: 44fr 56fr;
   gap: clamp(44px, 5vw, 88px);
   align-items: center;
+}
+
+/* A percentage split stops being the right instrument once the display is wide
+   enough that 56% overshoots the copy's own measure. At 3840 the content column
+   was 1366px holding a 657px column of text — 709px of dead space sitting
+   INSIDE the grid, which is why the section read as stranded rather than
+   generous. Above 1600px the text column is sized to the copy instead and the
+   globe takes the entire remainder, so the surplus goes to the one element that
+   can actually use it. `minmax(0, …)` on both tracks keeps the globe column
+   from being forced open by its absolutely-positioned canvas. */
+@media (min-width: 100rem) {
+  .sc-ed__cols {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 62ch);
+  }
 }
 
 /* ---- Left: the globe ----

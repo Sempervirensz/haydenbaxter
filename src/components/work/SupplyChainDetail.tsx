@@ -75,13 +75,18 @@ export default function SupplyChainDetail({
 
       // Clamp so the globe stays readable on tiny phones and doesn't overwhelm
       // the copy beside it. The desktop ceiling scales with the viewport rather
-      // than sitting at a flat 520px — that flat cap is what left the globe at
-      // ~13% of the frame on a 4K display, and `available` (the measured column)
-      // is still the real constraint, so the copy keeps its room either way.
+      // than sitting at a flat value, because a fixed ceiling means the sphere
+      // shrinks as a share of the frame on exactly the displays with room for
+      // it: the previous 920px lid stopped the globe growing past ~3540px while
+      // the card kept going. `available` — the measured column, which the
+      // large-display grid in work-details.css now widens — is still the real
+      // constraint, so the copy keeps its room either way. Below ~1920px the
+      // 0.30 slope lands under the 520px floor, leaving laptop and standard
+      // desktop sizing unchanged.
       const minSize = isMobile ? 160 : 260;
       const maxSize = isMobile
         ? 240
-        : Math.min(920, Math.max(520, Math.round(window.innerWidth * 0.26)));
+        : Math.min(1280, Math.max(520, Math.round(window.innerWidth * 0.3)));
       const next = Math.round(Math.max(minSize, Math.min(maxSize, available)));
 
       setGlobeSize((prev) => (Math.abs(prev - next) > 2 ? next : prev));

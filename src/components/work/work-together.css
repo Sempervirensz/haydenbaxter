@@ -21,6 +21,14 @@
   --wt-paper: #f5f4f1;
   --wt-ink: #111116;
 
+  /* Working width for the copy column on large displays, consumed by the
+     @container block near the end of this file. It has to be declared HERE,
+     not inside that block: `.wt` is the container itself, and a container
+     query never matches the element that establishes it — setting it there
+     left the token empty, which made the `min()` using it invalid and
+     collapsed the masthead to shrink-to-fit instead of the shell width. */
+  --wt-shell: var(--shell-consulting);
+
   container-type: size;
   container-name: wt;
 
@@ -723,6 +731,78 @@
 }
 
 /* ===========================================================================
+   WIDE — the large-display composition.
+
+   Container queries again, so the mobile Consulting card, which mounts this
+   same component into a small container, is untouched by all of it.
+
+   The problem: .wt__masthead, .wt__rows and .wt__unfurl are pinned to left AND
+   right, so they stretch to whatever the host card is. On a 3840px display that
+   is a 3720px-wide text block with offer rows spanning the full bezel — label
+   at one end, chevron at the other, and a metre of nothing between them.
+
+   The fix is a shell, not a shrink. Dropping `right` and capping the width
+   leaves the copy as an editorial column at a readable measure and hands the
+   remaining frame to the cityscape, which is this chapter's visual anchor. Type
+   ceilings lift in step, because a 72px headline beside a 3824px photograph
+   reads as a laptop layout parked in the corner of a large card.
+   ======================================================================== */
+
+@container wt (min-width: 1600px) {
+  .wt__masthead,
+  .wt__rows,
+  .wt__unfurl {
+    right: auto;
+    width: min(100% - 2 * clamp(22px, 4cqw, 52px), var(--wt-shell));
+  }
+
+  /* 7cqw saturates at 72px by a ~1030px container, so the headline had stopped
+     growing three tiers below the displays this is aimed at. */
+  .wt__ctaText {
+    font-size: clamp(72px, 4.6cqw, 92px);
+  }
+
+  .wt__label {
+    font-size: clamp(27px, 1.9cqw, 34px);
+  }
+
+  .wt-screen__title {
+    font-size: clamp(30px, 2cqw, 38px);
+  }
+
+  /* The proof blocks are a fixed pair (workTogether.ts types them as a
+     2-tuple), so widening the panel just makes two very long lines: at a
+     1638px panel each column ran ~100 characters. Cap the grid rather than the
+     columns — capping each column would leave the same dead space inside the
+     track that this whole pass is about removing. */
+  .wt-screen__blocks {
+    max-width: 108ch;
+  }
+
+  /* The rows carry the offer hierarchy — give them room against a headline
+     that is now half again as large. */
+  .wt__rowBtn {
+    gap: 26px;
+    padding-block: 18px;
+  }
+}
+
+@container wt (min-width: 2400px) {
+  .wt__ctaText {
+    font-size: clamp(92px, 3.6cqw, 118px);
+  }
+
+  .wt__label {
+    font-size: clamp(34px, 1.5cqw, 42px);
+  }
+
+  .wt__rowBtn {
+    gap: 32px;
+    padding-block: 24px;
+  }
+}
+
+/* ===========================================================================
    REDUCED MOTION
    Every state above is a static rule, so switching motion off is just removing
    the tweening — nothing is left mid-flight.
@@ -757,6 +837,15 @@
 }
 
 .cns-stage__img {
+  /* `.wt__media > *` sizes the <picture>, but the <img> is a grandchild, so it
+     was left at its intrinsic 3440×1440 — and `object-fit` does nothing to an
+     element that hasn't been given a box to fit INTO. The cityscape therefore
+     stopped covering the card once the frame grew past the file's own
+     dimensions, leaving bare card down the right edge and along the bottom of
+     any display wider than 3440px. Sizing the image is what makes the
+     object-fit below actually engage. */
+  width: 100%;
+  height: 100%;
   object-fit: cover;
   object-position: center 62%;
   transform: scale(1.02);
