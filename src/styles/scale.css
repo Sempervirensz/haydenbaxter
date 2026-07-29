@@ -46,6 +46,15 @@
   --text-label: clamp(0.71875rem, 0.652rem + 0.084vw, 0.90625rem); /* 11.5 → 14.5 */
   --text-meta: clamp(0.75rem, 0.664rem + 0.107vw, 0.96875rem); /*     12   → 15.5 */
 
+  /* Body steps for templates whose copy already sat BELOW --text-base at laptop
+     width. Retrofitting those to --text-base is not a no-op: it would drag
+     14px copy up to 16px and 19px copy down to 16px, i.e. visibly re-set a page
+     that was only ever meant to stop shrinking on big displays. These keep the
+     laptop rendering as the floor and add the ramp above it, so 1280px is
+     pixel-identical and only large displays change. */
+  --text-body-sm: clamp(0.875rem, 0.72rem + 0.19vw, 1.3125rem); /* 14 → 21 */
+  --text-body-lg: clamp(1.0625rem, 0.9rem + 0.2vw, 1.4375rem); /*  17 → 23 */
+
   /* Interactive controls get their own step with a higher floor than labels.
      Buttons, tabs, close affordances and inline links were sitting at 8–11px
      fixed; a control the user is expected to hit and read shouldn't render
@@ -60,11 +69,16 @@
   --track-label: clamp(0.1em, 0.15em - 0.02vw, 0.14em);
 
   /* ── Line height ─────────────────────────────────────────────────────────
-     Body copy sits inside the 1.45–1.7 readable band. Display type gets
-     tighter leading as it grows, which is why it's a clamp and not a scalar. */
+     Body copy sits inside the 1.45–1.7 readable band.
+
      Display leading is a plain ratio, not a clamp: `line-height` cannot mix a
      unitless number with `vw` inside calc, so a fluid ramp here silently
-     computes to `normal` and blows the display type apart vertically. */
+     computes to `normal` and blows the display type apart vertically.
+
+     (This block previously had an unterminated comment that ate the
+     `--leading-body` declaration below it — the token resolved to empty and
+     every `line-height: var(--leading-body)` on the site fell back to
+     `normal`. Keep the comment closed.) */
   --leading-body: 1.6;
   --leading-tight: 1.3;
   --leading-display: 1.05;
@@ -99,6 +113,27 @@
   --content-max: 82rem; /*    1312px  */
   --content-wide: 108rem; /*  1728px  */
   --content-ultra: min(92vw, 190rem); /* → 3040px cap */
+
+  /* ── Section shells ──────────────────────────────────────────────────────
+     A composition container is not one-size-fits-all. `--content-wide` grows
+     to 2688px at 4K, which is right for a full-bleed map or globe stage and
+     wrong for an accordion — a 2688px-long row is a scanning problem, not a
+     generous one. These are the per-section working widths, capped where the
+     layout stops earning the extra pixels:
+
+       etb        the Emerging Tech accordion — rows stay scannable
+       consulting the Work Together spread — offer rows stay card-like
+
+     Both are deliberately BELOW --content-wide. The surplus width goes to the
+     photography behind them, which is the intended anchor at these sizes. */
+  --shell-etb: 103rem; /*        1648px */
+  --shell-consulting: 106rem; /* 1696px */
+
+  /* Reading width for a lead-in line that sits above display type. Wider than
+     --measure-tight, narrower than --measure: long enough to hold a full
+     sentence without wrapping awkwardly, short enough that it never reads as a
+     rule of text under a 120px headline. */
+  --measure-lede: clamp(43.75rem, 38rem + 5vw, 53.125rem); /* 700 → 850 */
 
   /* ── Controls and surfaces ───────────────────────────────────────────────
      Controls scale with the composition so a button never becomes a stamp
