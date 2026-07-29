@@ -433,6 +433,12 @@ export const WORK_SCREENS: WorkScreen[] = [
           },
           keepFullSummary: true,
           demo: CASEBRIEF_DEMO,
+          mark: {
+            src: "/assets/casebrief-mark.png",
+            alt: "CaseBrief cube mark",
+            width: 1024,
+            height: 1024,
+          },
         },
         {
           id: "cortex",
