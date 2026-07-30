@@ -253,10 +253,16 @@ html {
   text-wrap: balance;
 }
 
+/* 32ch, not 22ch: the statement runs 121 characters, and a 22ch measure set it
+   as six lines — a wall that pushed the card fan off the fold. Four lines needs
+   31ch; 32ch takes that with a little headroom, and holds the same four-line
+   block the shorter statement had. Still a character cap, not a pixel one, so
+   the line stays editorial at 4K (63% of a 3840px display) instead of running
+   the full width. */
 .hero-heading {
   font-size: var(--text-display);
   line-height: var(--leading-display);
-  max-width: 22ch;
+  max-width: 32ch;
   text-wrap: balance;
 }
 
@@ -270,11 +276,17 @@ html {
     padding-block: 5rem 3rem;
   }
 
-  /* Solved so a 390px phone still renders 22px — the size this was before the
-     scale system landed — rather than inheriting a desktop-shaped ramp. */
+  /* Size: solved so a 390px phone still renders 22px — the size this was before
+     the scale system landed — rather than inheriting a desktop-shaped ramp.
+     Measure: 22ch, not 18ch. At 18ch the longer statement broke to eight lines
+     on a 390px phone and orphaned "to work," on its own, while the column sat
+     at 199px inside a 349px content area. 22ch spends the width that was
+     already there — six even lines, no orphan — and still clears the narrowest
+     phone (243px against ~280px of content at 320px), so the cap, not the
+     viewport, keeps deciding the break. */
   .hero-heading {
     font-size: clamp(1.375rem, 0.79rem + 2.4vw, 2.25rem);
-    max-width: 18ch;
+    max-width: 22ch;
   }
 
   .hero-eyebrow {
