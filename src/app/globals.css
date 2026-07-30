@@ -3225,6 +3225,52 @@ html.is-safari body {
   color: rgba(255, 255, 255, 0.78);
   margin: 0;
 }
+.blog-post__list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 0;
+  padding-left: 1.2rem;
+  max-width: 64ch;
+  font-family: var(--font-sans);
+  font-size: clamp(15.5px, 1.4vw, 17.5px);
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.78);
+}
+.blog-post__li::marker {
+  color: rgba(255, 255, 255, 0.45);
+}
+.blog-post__p strong,
+.blog-post__li strong {
+  color: rgba(255, 255, 255, 0.92);
+  font-weight: 650;
+}
+.blog-post__p em,
+.blog-post__li em {
+  color: rgba(255, 255, 255, 0.82);
+}
+.blog-post__p a,
+.blog-post__li a {
+  color: rgba(232, 205, 128, 0.95);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
+}
+.blog-post__quote {
+  margin: 4px 0;
+  padding: 2px 0 2px 18px;
+  border-left: 2px solid rgba(255, 255, 255, 0.26);
+  font-family: var(--font-serif);
+  font-size: clamp(18px, 1.8vw, 22px);
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.78);
+}
+.blog-post__quote strong {
+  color: rgba(255, 255, 255, 0.94);
+}
+.blog-post__quote a {
+  color: rgba(232, 205, 128, 0.95);
+}
 
 /* ──────────────────────────────────────────────────────────
    /admin/compose — dev-only post composer (clipboard + download)
@@ -3285,12 +3331,28 @@ html.is-safari body {
   flex-direction: column;
   gap: 28px;
 }
+.cmp__manager {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 14px;
+  align-items: end;
+}
+.cmp__select {
+  appearance: none;
+  background-image: linear-gradient(45deg, transparent 50%, rgba(255, 255, 255, 0.6) 50%),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.6) 50%, transparent 50%);
+  background-position: calc(100% - 18px) 50%, calc(100% - 13px) 50%;
+  background-size: 5px 5px, 5px 5px;
+  background-repeat: no-repeat;
+  padding-right: 34px;
+}
 .cmp__grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 28px;
 }
 @media (max-width: 880px) {
+  .cmp__manager,
   .cmp__grid {
     grid-template-columns: 1fr;
   }
@@ -3362,6 +3424,98 @@ html.is-safari body {
   font-size: 13px;
   line-height: 1.6;
   resize: vertical;
+}
+.cmp__toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 4px;
+}
+.cmp__toolbar button {
+  width: 34px;
+  height: 34px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.78);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0;
+  padding: 0;
+  cursor: pointer;
+  transition: background 160ms ease, border-color 160ms ease, color 160ms ease;
+}
+.cmp__toolbar button:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.28);
+  color: #fff;
+}
+.cmp__toolbarSep {
+  width: 1px;
+  min-height: 24px;
+  align-self: center;
+  background: rgba(255, 255, 255, 0.12);
+  margin: 0 2px;
+}
+.cmp-editor {
+  min-height: 520px;
+  max-height: 72vh;
+  overflow: auto;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.32);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  padding: 16px 18px;
+  color: rgba(255, 255, 255, 0.86);
+  font-family: var(--font-sans);
+  font-size: 15px;
+  line-height: 1.7;
+  transition: border-color 160ms ease, background 160ms ease;
+}
+.cmp-editor:focus {
+  outline: none;
+  border-color: rgba(255, 255, 255, 0.4);
+  background: rgba(0, 0, 0, 0.46);
+}
+.cmp-editor:empty::before {
+  content: attr(data-placeholder);
+  color: rgba(255, 255, 255, 0.28);
+}
+.cmp-editor p,
+.cmp-editor h2,
+.cmp-editor blockquote,
+.cmp-editor ul {
+  margin: 0 0 14px;
+}
+.cmp-editor h2 {
+  font-family: var(--font-serif);
+  font-size: 25px;
+  line-height: 1.25;
+  letter-spacing: 0;
+  color: rgba(255, 255, 255, 0.94);
+  font-weight: 500;
+}
+.cmp-editor blockquote {
+  border-left: 2px solid rgba(255, 255, 255, 0.26);
+  padding-left: 14px;
+  color: rgba(255, 255, 255, 0.74);
+  font-style: italic;
+}
+.cmp-editor ul {
+  padding-left: 1.2rem;
+}
+.cmp-editor li {
+  margin: 0 0 8px;
+}
+.cmp-editor a {
+  color: rgba(232, 205, 128, 0.96);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
 }
 .cmp__counts {
   display: flex;
@@ -3511,6 +3665,16 @@ html.is-safari body {
 .cmp__btn--primary:hover:not(:disabled) {
   background: rgba(255, 255, 255, 0.22);
 }
+.cmp__btn--ship {
+  border-color: rgba(210, 184, 110, 0.42);
+  background: rgba(210, 184, 110, 0.12);
+  color: rgba(255, 246, 218, 0.94);
+}
+.cmp__btn--ship:hover:not(:disabled) {
+  border-color: rgba(232, 205, 128, 0.62);
+  background: rgba(232, 205, 128, 0.18);
+  color: #fff;
+}
 .cmp__resetBtn {
   margin-left: auto;
   background: none;
@@ -3526,6 +3690,161 @@ html.is-safari body {
 }
 .cmp__resetBtn:hover {
   color: rgba(255, 255, 255, 0.78);
+}
+
+.cmp-preview {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.cmp-preview__bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.58);
+}
+.cmp-preview__bar a {
+  color: rgba(255, 255, 255, 0.78);
+  text-decoration: none;
+  transition: color 160ms ease;
+}
+.cmp-preview__bar a:hover {
+  color: #fff;
+}
+.cmp-preview__article {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-height: min(78vh, 980px);
+  overflow: auto;
+  padding: clamp(16px, 2.4vw, 28px);
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.035);
+}
+.cmp-preview__hero {
+  aspect-ratio: 16 / 9;
+  overflow: clip;
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.42);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+.cmp-preview__hero img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.cmp-preview__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.52);
+}
+.cmp-preview__title {
+  font-family: var(--font-serif);
+  font-size: clamp(28px, 4vw, 46px);
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+  color: rgba(255, 255, 255, 0.96);
+  margin: 0;
+  font-weight: 400;
+}
+.cmp-preview__excerpt {
+  font-family: var(--font-sans);
+  font-size: 15px;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.68);
+  margin: 0;
+}
+.cmp-preview__tags {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 0;
+  margin: 0;
+}
+.cmp-preview__tags li {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.62);
+  padding: 5px 8px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+.cmp-preview__body {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.cmp-preview__h2 {
+  font-family: var(--font-serif);
+  font-size: clamp(22px, 2.8vw, 28px);
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  color: rgba(255, 255, 255, 0.94);
+  margin: 12px 0 0;
+  font-weight: 500;
+}
+.cmp-preview__p,
+.cmp-preview__list,
+.cmp-preview__quote {
+  font-family: var(--font-sans);
+  font-size: 15px;
+  line-height: 1.72;
+  color: rgba(255, 255, 255, 0.76);
+  margin: 0;
+}
+.cmp-preview__list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-left: 1.1rem;
+}
+.cmp-preview__list li::marker {
+  color: rgba(255, 255, 255, 0.42);
+}
+.cmp-preview__p strong,
+.cmp-preview__list strong {
+  color: rgba(255, 255, 255, 0.92);
+  font-weight: 650;
+}
+.cmp-preview__p em,
+.cmp-preview__list em {
+  color: rgba(255, 255, 255, 0.82);
+}
+.cmp-preview__p a,
+.cmp-preview__list a {
+  color: rgba(232, 205, 128, 0.95);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+.cmp-preview__quote {
+  padding-left: 14px;
+  border-left: 2px solid rgba(255, 255, 255, 0.24);
+  font-family: var(--font-serif);
+  font-size: 18px;
+  line-height: 1.58;
+}
+.cmp-preview__quote strong {
+  color: rgba(255, 255, 255, 0.94);
+}
+.cmp-preview__quote a {
+  color: rgba(232, 205, 128, 0.95);
 }
 
 .cmp__status {

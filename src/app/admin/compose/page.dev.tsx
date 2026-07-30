@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import ComposeForm from "@/components/admin/ComposeForm";
+import { BLOG_POSTS } from "@/data/journal";
 
 export const metadata: Metadata = {
   title: "Compose — Admin",
@@ -13,14 +14,13 @@ export default function ComposePage() {
         <span className="cmp-page__eyebrow">Private — dev only</span>
         <h1 className="cmp-page__title">Compose a journal post</h1>
         <p className="cmp-page__lede">
-          Fill in the fields, drop a hero image, then{" "}
-          <span className="cmp-page__accent">Copy snippet</span> and{" "}
-          <span className="cmp-page__accent">Download image</span>. The next steps below
-          tell you exactly where to paste / drop them. Then commit and push to publish.
+          Draft, edit, preview, and save Journal posts locally. When the preview is
+          right, use <span className="cmp-page__accent">Final commit & push</span>{" "}
+          to ship the Journal files.
         </p>
       </header>
 
-      <ComposeForm />
+      <ComposeForm existingPosts={BLOG_POSTS} />
     </main>
   );
 }
