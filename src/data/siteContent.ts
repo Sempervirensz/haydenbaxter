@@ -30,7 +30,8 @@ export const SITE_CONTENT = {
   },
   hero: {
     eyebrow: "View the work, the supply chain background, and where WorldPulse fits in.",
-    heading: "I build AI products and supply chain systems where data, design, and the real world meet.",
+    heading:
+      "Helping orgs put AI to work, strengthening global supply chains, and innovating where sustainability meets next-gen tech.",
   },
   brands: {
     logos: [
