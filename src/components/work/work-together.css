@@ -802,6 +802,37 @@
   }
 }
 
+/* The paper panel's interior was authored at laptop scale and never grew:
+   17px/28px padding and 11px gaps inside a 1696px-wide sheet. On a 4K card that
+   reads as a small dense card stranded in the corner rather than as the
+   chapter's proof. Scaling the interior gives it presence without touching the
+   copy — the text keeps its own measure, the panel just stops being cramped.
+
+   Top alignment is deliberate and stays: .wt__unfurl animates in with
+   `clip-path: inset(0 0 100% 0)`, i.e. it unfurls DOWNWARD from the row that
+   was chosen. Centring the panel would sever that connection. */
+@container wt (min-width: 1600px) {
+  .wt-screen {
+    gap: clamp(14px, 1cqh, 22px);
+    padding: clamp(24px, 1.6cqh, 40px) clamp(28px, 2.2cqw, 56px)
+      clamp(22px, 1.5cqh, 36px);
+    border-radius: clamp(14px, 1cqw, 22px);
+  }
+
+  .wt-screen__body {
+    gap: clamp(14px, 1cqh, 22px);
+  }
+
+  .wt-screen__head {
+    padding-bottom: clamp(12px, 0.9cqh, 20px);
+  }
+
+  .wt-screen__blocks {
+    gap: clamp(12px, 0.9cqh, 20px) clamp(28px, 3cqw, 56px);
+    padding-top: clamp(16px, 1.1cqh, 26px);
+  }
+}
+
 /* ===========================================================================
    REDUCED MOTION
    Every state above is a static rule, so switching motion off is just removing

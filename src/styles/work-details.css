@@ -588,6 +588,24 @@
   pointer-events: auto;
 }
 
+/* The panel is pinned top-to-bottom, so it inherits whatever height the bar
+   stack has. That was fine at the old 460px ceiling and stops being fine on the
+   tiers that raise the stack to 640/880px: the dossier copy is short, so the
+   sheet grew a third of a metre of empty surface under its CTA. Gated on the
+   same queries that raise the stack, so nothing below them changes. Keeping
+   max-height means long dossiers still cap and scroll exactly as before. */
+@media (min-width: 100rem) and (min-height: 56.25rem) {
+  .etb-overlay {
+    bottom: auto;
+    max-height: 100%;
+  }
+
+  .etb-dos {
+    height: auto;
+    max-height: 100%;
+  }
+}
+
 /* ---- System Dossier overlay ---- */
 
 .etb-dos {
