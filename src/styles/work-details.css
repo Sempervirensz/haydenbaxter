@@ -400,6 +400,18 @@
   overflow: hidden;
 }
 
+/* `all: unset` above strips the UA focus ring, and the only replacement was
+   `.etb-bar:focus-within`, which paints the SAME treatment as hover — so a
+   keyboard user could not tell focus from a stray pointer. The accent ring is
+   inset because the bar clips its own overflow at a 14px radius; an outside
+   outline would be cut off. Accent rather than white: these bars are a
+   near-white candy surface, where a white ring is invisible. */
+.etb-bar__head:focus-visible {
+  outline: 2px solid var(--etb-accent);
+  outline-offset: -4px;
+  border-radius: 12px;
+}
+
 .etb-bar__sheen {
   position: absolute;
   inset: 0;

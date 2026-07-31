@@ -135,5 +135,11 @@ export default function CalendlyEmbed({
     );
   }
 
-  return <div ref={hostRef} className={`calendly-inline-widget ${className}`} />;
+  // Deliberately NOT `calendly-inline-widget`. That class is the selector
+  // Calendly's auto-scan looks for at script load; finding a match it then
+  // reads `data-url` and calls .split() on it, which throws
+  // "Cannot read properties of null" into the console on every homepage load.
+  // This component initialises the widget itself (see above), so opting into
+  // the scan bought nothing — and no stylesheet targets the class either.
+  return <div ref={hostRef} className={className} />;
 }
