@@ -3254,41 +3254,12 @@ html.is-safari body {
   margin: clamp(12px, 2vw, 22px) 0 0;
   font-weight: 500;
 }
-/* Body copy. --text-body-lg rather than the old
-   clamp(15.5px, 1.4vw, 17.5px), which saturated at a 1250px viewport and so
-   never grew again. List items share the token because a list rendered even a
-   half-step off its surrounding paragraphs reads as a styling bug. */
-.blog-post__p,
-.blog-post__li {
+.blog-post__p {
   font-family: var(--font-sans);
-  font-size: var(--text-body-lg);
+  font-size: clamp(15.5px, 1.4vw, 17.5px);
   line-height: 1.75;
   color: rgba(255, 255, 255, 0.78);
   margin: 0;
-}
-
-.blog-post__list {
-  margin: 0;
-  padding-left: 1.2em;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5em;
-}
-
-.blog-post__li::marker {
-  color: rgba(255, 255, 255, 0.45);
-}
-
-/* Pull quote. Serif + a rule rather than italics, matching how the Work
-   chapters set quoted material. */
-.blog-post__quote {
-  margin: 0;
-  padding-left: clamp(0.875rem, 0.7rem + 0.5vw, 1.5rem);
-  border-left: 2px solid rgba(216, 177, 90, 0.55);
-  font-family: var(--font-serif);
-  font-size: var(--text-lg);
-  line-height: var(--leading-tight);
-  color: var(--ink);
 }
 
 /* ──────────────────────────────────────────────────────────
