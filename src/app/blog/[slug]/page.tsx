@@ -24,6 +24,33 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
+function renderInlineText(text: string) {
+  const tokens = text.match(/(\*\*[^*]+\*\*|\*[^*]+\*|\[[^\]]+\]\([^)]+\)|[^*[\]]+)/g) ?? [
+    text,
+  ];
+
+  return tokens.map((part, i) => {
+    if (part.startsWith("**") && part.endsWith("**")) {
+      return <strong key={i}>{part.slice(2, -2)}</strong>;
+    }
+
+    if (part.startsWith("*") && part.endsWith("*")) {
+      return <em key={i}>{part.slice(1, -1)}</em>;
+    }
+
+    const linkMatch = part.match(/^\[([^\]]+)\]\((https?:\/\/[^)]+)\)$/);
+    if (linkMatch) {
+      return (
+        <a key={i} href={linkMatch[2]} target="_blank" rel="noreferrer">
+          {linkMatch[1]}
+        </a>
+      );
+    }
+
+    return part;
+  });
+}
+
 export default async function BlogPostPage({ params }: Props) {
   const { slug } = await params;
   const post = getBlogPostBySlug(slug);
@@ -63,17 +90,41 @@ export default async function BlogPostPage({ params }: Props) {
         </header>
 
         <div className="blog-post__body">
-          {post.body.map((block, i) =>
-            block.type === "heading" ? (
-              <h2 key={i} className="blog-post__h2">
-                {block.text}
-              </h2>
-            ) : (
+          {post.body.map((block, i) => {
+            if (block.type === "heading") {
+              return (
+                <h2 key={i} className="blog-post__h2">
+                  {renderInlineText(block.text)}
+                </h2>
+              );
+            }
+
+            if (block.type === "list") {
+              return (
+                <ul key={i} className="blog-post__list">
+                  {block.items.map((item, itemIndex) => (
+                    <li key={itemIndex} className="blog-post__li">
+                      {renderInlineText(item)}
+                    </li>
+                  ))}
+                </ul>
+              );
+            }
+
+            if (block.type === "quote") {
+              return (
+                <blockquote key={i} className="blog-post__quote">
+                  {renderInlineText(block.text)}
+                </blockquote>
+              );
+            }
+
+            return (
               <p key={i} className="blog-post__p">
-                {block.text}
+                {renderInlineText(block.text)}
               </p>
-            ),
-          )}
+            );
+          })}
         </div>
       </article>
 
