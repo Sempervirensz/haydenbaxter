@@ -62,18 +62,50 @@ export default async function BlogPostPage({ params }: Props) {
           )}
         </header>
 
+        {/* Exhaustive over BlogBlock. The previous version tested for
+            `heading` and rendered EVERYTHING else as <p>{block.text}</p>, but
+            the union also carries `list` (items, no text) and `quote`. Lists
+            therefore rendered as empty paragraphs — the published Innovation
+            Forum post lost six of them silently — and the same mismatch failed
+            the build. The `never` default makes a future block type a compile
+            error instead of another invisible gap. */}
         <div className="blog-post__body">
-          {post.body.map((block, i) =>
-            block.type === "heading" ? (
-              <h2 key={i} className="blog-post__h2">
-                {block.text}
-              </h2>
-            ) : (
-              <p key={i} className="blog-post__p">
-                {block.text}
-              </p>
-            ),
-          )}
+          {post.body.map((block, i) => {
+            switch (block.type) {
+              case "heading":
+                return (
+                  <h2 key={i} className="blog-post__h2">
+                    {block.text}
+                  </h2>
+                );
+              case "list":
+                return (
+                  <ul key={i} className="blog-post__list">
+                    {block.items.map((item, j) => (
+                      <li key={j} className="blog-post__li">
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                );
+              case "quote":
+                return (
+                  <blockquote key={i} className="blog-post__quote">
+                    {block.text}
+                  </blockquote>
+                );
+              case "paragraph":
+                return (
+                  <p key={i} className="blog-post__p">
+                    {block.text}
+                  </p>
+                );
+              default: {
+                const unhandled: never = block;
+                return unhandled;
+              }
+            }
+          })}
         </div>
       </article>
 
