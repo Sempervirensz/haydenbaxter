@@ -216,6 +216,13 @@
   align-items: center;
   gap: 16px;
   padding: clamp(22px, 3vw, 40px);
+  /* Decorative only — a chapter number and a rule. Without this it is a
+     full-width z-index:6 plate across the top ~100px of every card, and it sat
+     directly over Consulting's back button (.wt__back, top: 72px, z-index 4
+     inside a z-index 5 stage), swallowing the click. A visitor in the `paths`
+     step could not return to the intro. Nothing inside is interactive, so the
+     whole plate opts out of hit-testing. */
+  pointer-events: none;
 }
 
 .cstack__num {

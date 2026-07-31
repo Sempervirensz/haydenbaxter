@@ -33,7 +33,11 @@ export default defineConfig({
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 1 : 0,
   workers: process.env.CI ? 2 : 4,
-  reporter: process.env.CI ? [["github"], ["list"]] : [["list"]],
+  // HTML report so results are browsable after the fact — `npx playwright
+  // show-report` opens it with the failure screenshots and traces attached.
+  reporter: process.env.CI
+    ? [["github"], ["list"]]
+    : [["list"], ["html", { open: "never" }]],
   timeout: 60_000,
   expect: { timeout: 10_000 },
 
@@ -52,11 +56,37 @@ export default defineConfig({
     use: { ...devices["Desktop Chrome"], viewport },
   })),
 
+  /* Production build, not `next dev`.
+   *
+   * Dev mode compiles each route on first request, so with parallel workers the
+   * first few tests to touch `/` waited on a 45,000px page being built and
+   * hydrated — enough for the soft-lock gate to miss a 20s budget and report as
+   * a broken gate rather than a slow one. A dev run also went 2.6m → 12.8m and
+   * lost half its assertions purely to compile latency.
+   *
+   * `reuseExistingServer` is off deliberately: a stale `next dev` left over
+   * from a debugging session got adopted by the runner once and produced 26
+   * phantom failures. The suite now always owns its own server. */
+  /* Build once, then serve the static export.
+   *
+   * NOT `next dev`: dev compiles each route on first request, so with parallel
+   * workers the first tests to touch `/` waited on a 45,000px page being built
+   * and hydrated — enough for the soft-lock gate to blow a 20s budget and
+   * report as a broken gate rather than a slow one. A dev run went 2.6m →
+   * 12.8m and lost half its assertions to compile latency alone.
+   *
+   * NOT `next start` either: next.config.ts sets `output: "export"` outside
+   * dev, and `next start` refuses to run against an exported build. `serve out`
+   * is what .claude/launch.json already uses for the same reason.
+   *
+   * `reuseExistingServer` is off deliberately: a stale `next dev` left over
+   * from a debugging session got adopted by the runner once and produced 26
+   * phantom failures. The suite always owns its own server. */
   webServer: {
-    command: `npx next dev -p ${PORT}`,
+    command: `npx next build && npx --yes serve out -l ${PORT}`,
     url: BASE,
-    reuseExistingServer: !process.env.CI,
-    timeout: 180_000,
+    reuseExistingServer: false,
+    timeout: 300_000,
     stdout: "ignore",
     stderr: "pipe",
   },

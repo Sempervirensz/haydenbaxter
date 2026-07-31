@@ -147,16 +147,40 @@ export function collectConsoleErrors(page: Page) {
   return errors;
 }
 
-/** Approximate characters-per-line for a text element. */
+/**
+ * Characters-per-line for a text element, in the SAME unit CSS means by `ch`.
+ *
+ * An earlier version assumed `1ch ≈ 0.5em`. That is wrong for this site's sans:
+ * its `0` advance is nearer 0.67em, so a `max-width: 74ch` rule resolves to
+ * ~758px while the helper reported the same box as "99ch". The test and the
+ * stylesheet were describing the same element in different units, which made a
+ * correctly-capped column look like an uncapped one. Measuring a real `0` in
+ * the element's own computed font keeps both honest.
+ */
 export async function measureCh(page: Page, selector: string) {
   return page.evaluate((sel) => {
     const el = document.querySelector(sel);
     if (!el) return null;
     const r = el.getBoundingClientRect();
-    const fs = parseFloat(getComputedStyle(el).fontSize);
-    if (!fs || !r.width) return null;
-    // 0.5em per character is the standard rough advance for a humanist sans.
-    return Math.round(r.width / (fs * 0.5));
+    if (!r.width) return null;
+
+    const probe = document.createElement("span");
+    const cs = getComputedStyle(el);
+    probe.style.font = cs.font || `${cs.fontSize} ${cs.fontFamily}`;
+    probe.style.fontFamily = cs.fontFamily;
+    probe.style.fontSize = cs.fontSize;
+    probe.style.fontWeight = cs.fontWeight;
+    probe.style.letterSpacing = cs.letterSpacing;
+    probe.style.position = "absolute";
+    probe.style.visibility = "hidden";
+    probe.style.whiteSpace = "pre";
+    probe.textContent = "0".repeat(100);
+    document.body.appendChild(probe);
+    const chWidth = probe.getBoundingClientRect().width / 100;
+    probe.remove();
+
+    if (!chWidth) return null;
+    return Math.round(r.width / chWidth);
   }, selector);
 }
 
