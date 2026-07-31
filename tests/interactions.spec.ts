@@ -33,8 +33,11 @@ test.describe("Emerging Tech accordion + dossier", () => {
     await bars.nth(1).click();
     await expect(overlay).toHaveClass(/is-open/);
 
-    // Close button
-    await page.locator(".etb-dos__close").click();
+    // ETBDetail renders BOTH a desktop side panel (.etb-overlay) and a mobile
+    // dialog (.etb-mobileOverlay), each with its own close button; CSS hides
+    // whichever does not apply. Target the visible one so this test means the
+    // same thing at 375 as at 3840.
+    await page.locator(".etb-dos__close").locator("visible=true").first().click();
     await expect(overlay).not.toHaveClass(/is-open/);
 
     // Escape

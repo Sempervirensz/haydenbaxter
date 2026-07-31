@@ -1,4 +1,4 @@
-import type { Page, ConsoleMessage } from "@playwright/test";
+import { expect, type Page, type ConsoleMessage } from "@playwright/test";
 
 /* Shared harness.
  *
@@ -24,17 +24,33 @@ export function isCinematic(page: Page) {
  * on the page, which reads exactly like "the layout collapsed".
  */
 export async function openSite(page: Page, path = "/") {
-  await page.goto(path, { waitUntil: "domcontentloaded" });
+  await page.goto(path, { waitUntil: "load" });
   await releaseGate(page);
   await page.waitForLoadState("networkidle").catch(() => {});
 }
 
+/**
+ * Press Skip until the gate actually opens.
+ *
+ * A single click is NOT reliable: the markup is server-rendered, so the button
+ * exists and is clickable before React has hydrated, and a click that lands
+ * first is swallowed with no handler attached. That produced a flaky
+ * "waiting for .dlab-gate__content.is-open" timeout that looked like a broken
+ * gate rather than a race. Retrying until the class flips is the only honest
+ * signal that the handler is live.
+ */
 export async function releaseGate(page: Page) {
+  const gate = page.locator(".dlab-gate__content");
+  if (!(await gate.count())) return; // route has no soft lock
   const skip = page.locator("button", { hasText: /Skip the intro/i });
-  if (await skip.count()) {
-    await skip.first().click();
-    await page.locator(".dlab-gate__content.is-open").waitFor({ timeout: 5000 });
-  }
+  if (!(await skip.count())) return;
+
+  await expect(async () => {
+    const open = await gate.first().evaluate((el) => el.classList.contains("is-open"));
+    if (!open) await skip.first().click({ force: true });
+    const nowOpen = await gate.first().evaluate((el) => el.classList.contains("is-open"));
+    expect(nowOpen).toBe(true);
+  }).toPass({ timeout: 20_000, intervals: [150, 300, 600] });
 }
 
 /**
