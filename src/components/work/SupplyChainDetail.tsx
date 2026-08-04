@@ -3,12 +3,26 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { JOURNEY_STOPS, JOURNEY_ARCS } from "@/data/scLab";
 import dynamic from "next/dynamic";
-import type { SupplyChainData } from "@/data/work";
+import { WORK_SCREENS, type SupplyChainData } from "@/data/work";
+import { usePrefersReducedMotion } from "./mobile/shared";
 
 const RealisticGlobe = dynamic(
   () => import("@/components/ui/realistic-globe"),
   { ssr: false }
 );
+
+/** Chapter number + name for the section rail, read from the same source the
+ *  mobile card's <Rail> uses so desktop can never disagree with it. */
+const SC_SCREEN = WORK_SCREENS.find((s) => s.type === "supply-chain");
+
+/** The four heroArt quote styles, mapped onto the desktop type scale. Same four
+ *  roles as the mobile card (`wm-sc__line*`), scaled up with clamp(). */
+const QUOTE_STYLE_CLASS: Record<string, string> = {
+  "serif-heavy": "sc-ed__lineSerif",
+  "mono-caps": "sc-ed__lineMono",
+  "sans-light": "sc-ed__lineSans",
+  "serif-italic": "sc-ed__lineItalic",
+};
 
 interface SupplyChainDetailProps {
   data: SupplyChainData;
@@ -31,6 +45,7 @@ export default function SupplyChainDetail({
   const [isMobile, setIsMobile] = useState(false);
   const globeContainerRef = useRef<HTMLDivElement>(null);
   const [globeSize, setGlobeSize] = useState(360);
+  const reducedMotion = usePrefersReducedMotion();
 
   useEffect(() => {
     const mq = window.matchMedia("(max-width: 768px)");
@@ -54,15 +69,24 @@ export default function SupplyChainDetail({
       if (rect.width < 1 || rect.height < 1) return;
 
       // Reserve a margin so the sphere's halo/dots never touch the card
-      // edge, and so the desktop floating-card overlay has breathing room.
+      // edge, and so the copy beside it keeps its breathing room.
       const margin = isMobile ? 12 : 28;
       const available = Math.min(rect.width, rect.height) - margin * 2;
 
-      // Clamp so the globe stays readable on tiny phones and doesn't
-      // overwhelm 4K monitors. Cap is intentionally tighter than the
-      // available space so the timeline copy beside it stays legible.
+      // Clamp so the globe stays readable on tiny phones and doesn't overwhelm
+      // the copy beside it. The desktop ceiling scales with the viewport rather
+      // than sitting at a flat value, because a fixed ceiling means the sphere
+      // shrinks as a share of the frame on exactly the displays with room for
+      // it: the previous 920px lid stopped the globe growing past ~3540px while
+      // the card kept going. `available` — the measured column, which the
+      // large-display grid in work-details.css now widens — is still the real
+      // constraint, so the copy keeps its room either way. Below ~1920px the
+      // 0.30 slope lands under the 520px floor, leaving laptop and standard
+      // desktop sizing unchanged.
       const minSize = isMobile ? 160 : 260;
-      const maxSize = isMobile ? 240 : 520;
+      const maxSize = isMobile
+        ? 240
+        : Math.min(1280, Math.max(520, Math.round(window.innerWidth * 0.3)));
       const next = Math.round(Math.max(minSize, Math.min(maxSize, available)));
 
       setGlobeSize((prev) => (Math.abs(prev - next) > 2 ? next : prev));
@@ -142,9 +166,6 @@ export default function SupplyChainDetail({
     (a) => a.from < visibleDots.length && a.to < visibleDots.length
   );
 
-  const activeStop =
-    selectedStop !== undefined ? JOURNEY_STOPS[selectedStop] : null;
-
   // ── Mobile: vertical rail layout ────────────────────────────────────
   // Globe pinned at top, scrolling timeline below. One stop per row with
   // a dot on a vertical line. Active stop expands to reveal description.
@@ -204,68 +225,94 @@ export default function SupplyChainDetail({
     );
   }
 
-  // ── Desktop: horizontal topbar + floating card ───────────────────────
+  // ── Desktop: the mobile card, opened out into a two-column editorial panel ──
+  //
+  // Same page, wider screen. Every material below is the mobile card's own
+  // (`wm-sc__*` in work-mobile-cards.css), re-expressed at desktop scale:
+  //   • the "03 / 04 — SUPPLY CHAIN" rail + hairline rule, read from WORK_SCREENS
+  //   • the four heroArt credential lines in their four type roles
+  //   • the vertical journey rail with its gold active node
+  // The globe moves from above the copy into its own column so it can be large
+  // without pushing the timeline off the card. Its props are unchanged.
   return (
-    <section className="sc-journey" aria-label="Supply chain journey">
-      {data.description && (
-        <div className="sc-journey__description">
-          <p>{data.description}</p>
-        </div>
-      )}
-      {/* Horizontal timeline nav */}
-      <nav className="sc-journey__topbar sc-journey__topbar--stacked" aria-label="Journey stops">
-        {JOURNEY_STOPS.map((stop, i) => {
-          const revealed = i < revealedCount;
-          return (
-            <button
-              key={stop.id}
-              type="button"
-              className={`sc-journey__topbarItem ${selectedStop === i ? "is-active" : ""} ${selectedStop !== undefined && i <= selectedStop ? "is-visited" : ""} ${!revealed ? "is-hidden" : ""}`}
-              onClick={() => revealed && setSelectedStop(i)}
-              disabled={!revealed}
-            >
-              <span className="sc-journey__topbarDot">{i + 1}</span>
-              <span className="sc-journey__topbarStack">
-                <span className="sc-journey__topbarHeadline">{stop.headline}</span>
-                <span className="sc-journey__topbarSub">
-                  {stop.label} · {stop.year}
-                </span>
-              </span>
-            </button>
-          );
-        })}
-        <div className="sc-journey__topbarLine" />
-      </nav>
+    <section className="sc-journey sc-ed" aria-label="Supply chain journey">
+      <div className="sc-ed__inner">
+        <header className="sc-ed__rail">
+          <span className="sc-ed__railNum">
+            {SC_SCREEN?.number ?? "03 / 04"} — {SC_SCREEN?.name ?? "Supply Chain"}
+          </span>
+          <span className="sc-ed__railLine" aria-hidden="true" />
+        </header>
 
-      {/* Globe + floating glass card */}
-      <div className="sc-journey__topnavBody" ref={globeContainerRef}>
-        <div className="sc-journey__globe">
-          <RealisticGlobe
-            width={globeSize}
-            height={globeSize}
-            autoRotate={selectedStop === undefined}
-            frozen
-            visualStyle="clouds"
-            lonOffset={-69}
-            latOffset={40}
-            journeyDots={journeyDots}
-            selectedDot={selectedStop}
-            journeyArcs={visibleArcs}
-            onDotClick={handleDotClick}
-          />
-        </div>
-        <div
-          className={`sc-journey__floatingCard sc-journey__floatingCard--bottomRight ${activeStop ? "is-visible" : ""}`}
-        >
-          {activeStop ? (
-            <>
-              <div className="sc-journey__year">{activeStop.year}</div>
-              <h3 className="sc-journey__cardTitle">{activeStop.title}</h3>
-              <p className="sc-journey__desc">{activeStop.description}</p>
-            </>
-          ) : (
-            <p className="sc-journey__hint">Select a stop to explore</p>
-          )}
+        {data.description && (
+          <p className="sc-ed__standfirst">{data.description}</p>
+        )}
+
+        <div className="sc-ed__cols">
+          <div className="sc-ed__globeCol" ref={globeContainerRef}>
+            <span className="sc-ed__globeGlow" aria-hidden="true" />
+            <div className="sc-ed__globe">
+              <RealisticGlobe
+                width={globeSize}
+                height={globeSize}
+                /* Unchanged framing + interaction; the reduced-motion guard
+                   matches what the mobile card already does. */
+                autoRotate={!reducedMotion && selectedStop === undefined}
+                frozen
+                visualStyle="clouds"
+                lonOffset={-69}
+                latOffset={40}
+                journeyDots={journeyDots}
+                selectedDot={selectedStop}
+                journeyArcs={visibleArcs}
+                onDotClick={handleDotClick}
+              />
+            </div>
+          </div>
+
+          <div className="sc-ed__content">
+            <div className="sc-ed__quote">
+              {data.heroArt.quoteLines.map((line, i) => (
+                <p
+                  key={i}
+                  className={QUOTE_STYLE_CLASS[line.style] ?? "sc-ed__lineSans"}
+                >
+                  {line.text}
+                </p>
+              ))}
+            </div>
+
+            <ol className="sc-ed__timeline" aria-label="Journey stops">
+              {JOURNEY_STOPS.map((stop, i) => {
+                const revealed = i < revealedCount;
+                const active = selectedStop === i;
+                return (
+                  <li key={stop.id} className="sc-ed__row">
+                    <button
+                      type="button"
+                      className={`sc-ed__item ${active ? "is-active" : ""} ${
+                        revealed ? "is-revealed" : ""
+                      }`}
+                      onClick={() => revealed && setSelectedStop(i)}
+                      disabled={!revealed}
+                      aria-current={active ? "step" : undefined}
+                    >
+                      <span className="sc-ed__dot" aria-hidden="true" />
+                      <span className="sc-ed__meta">
+                        {stop.year} · {stop.label}
+                      </span>
+                      <span className="sc-ed__headline">{stop.headline}</span>
+                      <span className="sc-ed__desc">
+                        <span className="sc-ed__descInner">
+                          <p>{stop.description}</p>
+                        </span>
+                      </span>
+                    </button>
+                  </li>
+                );
+              })}
+            </ol>
+          </div>
         </div>
       </div>
     </section>

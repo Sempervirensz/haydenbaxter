@@ -1,18 +1,38 @@
 "use client";
 
-// Responsive Viewer — frames the Cinematic Work Stack in a resizable device
-// surface so the real responsive breakpoints can be compared in one place.
-// The page itself can't change the browser viewport, but an <iframe> has its
-// own viewport, so its width genuinely drives the stack's media queries.
+// Responsive Viewer — frames a real route in a resizable device surface so the
+// responsive breakpoints can be compared in one place. The page itself can't
+// change the browser viewport, but an <iframe> has its own viewport, so its
+// width genuinely drives the framed route's media queries and vw units. That
+// makes this the only way to see true 4K layout without a 4K panel.
 //
-// Controls: device presets, width + height sliders, rotate, and fit-to-screen
-// scaling so large widths still fit the lab window.
+// Fit-to-screen scales the frame down to the lab window, so what you're
+// checking here is LAYOUT — composition, emptiness, column counts, collisions.
+// Physical legibility ("is 14px comfortable at arm's length on a 32-inch
+// display") still needs real hardware; no amount of scaling answers that.
+//
+// Controls: route, device presets, width + height sliders, rotate, and
+// fit-to-screen scaling so large widths still fit the lab window.
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import "./responsive-viewer.css";
 
-const SRC = "/site-parallax-lab/work-cinema";
+interface Route {
+  label: string;
+  src: string;
+}
+
+/** The lab this viewer was built around — it's the only route that responds to
+ *  the postMessage experiment controls below. */
+const WORK_CINEMA = "/site-parallax-lab/work-cinema";
+
+const ROUTES: Route[] = [
+  { label: "Home", src: "/" },
+  { label: "Work stack", src: WORK_CINEMA },
+  { label: "Tech builds", src: "/emerging-tech-builds" },
+  { label: "Journal", src: "/blog" },
+];
 
 interface Preset {
   label: string;
@@ -28,6 +48,20 @@ const PRESETS: Preset[] = [
   { label: "Desktop", w: 1512, h: 950 },
 ];
 
+/** The sizes this lab previously couldn't reach. The old preset list stopped at
+ *  1512×950, which is why large-display problems stayed invisible here even
+ *  though the viewer was the right tool to catch them. */
+const LARGE_PRESETS: Preset[] = [
+  { label: "FHD", w: 1920, h: 1080 },
+  { label: "QHD", w: 2560, h: 1440 },
+  { label: "Ultra-wide", w: 3440, h: 1440 },
+  { label: "4K", w: 3840, h: 2160 },
+  { label: "Short 4K", w: 3840, h: 1600 },
+];
+
+const MAX_W = 3840;
+const MAX_H = 2160;
+
 function clamp(v: number, lo: number, hi: number) {
   return Math.max(lo, Math.min(hi, v));
 }
@@ -35,6 +69,7 @@ function clamp(v: number, lo: number, hi: number) {
 export default function ResponsiveViewer() {
   const stageRef = useRef<HTMLDivElement>(null);
   const iframeRef = useRef<HTMLIFrameElement>(null);
+  const [route, setRoute] = useState<Route>(ROUTES[0]);
   const [w, setW] = useState(1280);
   const [h, setH] = useState(800);
   const [fit, setFit] = useState(true);
@@ -100,31 +135,64 @@ export default function ResponsiveViewer() {
     setH(w);
   }, [w, h]);
 
-  const activePreset = PRESETS.find((p) => p.w === w && p.h === h)?.label ?? "Custom";
+  const activePreset =
+    [...PRESETS, ...LARGE_PRESETS].find((p) => p.w === w && p.h === h)?.label ?? "Custom";
+
+  /** The experiment controls talk to the work-cinema lab over postMessage;
+   *  they mean nothing when another route is framed. */
+  const showExperiments = route.src === WORK_CINEMA;
+
+  const renderPresets = (list: Preset[]) => (
+    <div className="rv__presets">
+      {list.map((p) => (
+        <button
+          key={p.label}
+          type="button"
+          className={`rv__preset ${activePreset === p.label ? "is-on" : ""}`}
+          onClick={() => applyPreset(p)}
+        >
+          <span className="rv__presetName">{p.label}</span>
+          <span className="rv__presetDim">
+            {p.w}×{p.h}
+          </span>
+        </button>
+      ))}
+    </div>
+  );
 
   return (
     <div className="rv">
       <aside className="rv__panel">
         <div className="rv__brand">
           <span className="rv__brandTitle">Responsive viewer</span>
-          <span className="rv__brandSub">Cinematic Work Stack</span>
+          <span className="rv__brandSub">{route.label}</span>
+        </div>
+
+        <div className="rv__group">
+          <span className="rv__groupLabel">Route</span>
+          <div className="rv__presets">
+            {ROUTES.map((r) => (
+              <button
+                key={r.src}
+                type="button"
+                className={`rv__preset ${route.src === r.src ? "is-on" : ""}`}
+                onClick={() => setRoute(r)}
+              >
+                <span className="rv__presetName">{r.label}</span>
+                <span className="rv__presetDim">{r.src}</span>
+              </button>
+            ))}
+          </div>
         </div>
 
         <div className="rv__group">
           <span className="rv__groupLabel">Device</span>
-          <div className="rv__presets">
-            {PRESETS.map((p) => (
-              <button
-                key={p.label}
-                type="button"
-                className={`rv__preset ${activePreset === p.label ? "is-on" : ""}`}
-                onClick={() => applyPreset(p)}
-              >
-                <span className="rv__presetName">{p.label}</span>
-                <span className="rv__presetDim">{p.w}×{p.h}</span>
-              </button>
-            ))}
-          </div>
+          {renderPresets(PRESETS)}
+        </div>
+
+        <div className="rv__group">
+          <span className="rv__groupLabel">Large displays</span>
+          {renderPresets(LARGE_PRESETS)}
         </div>
 
         <div className="rv__group">
@@ -136,10 +204,10 @@ export default function ResponsiveViewer() {
             <input
               type="range"
               min={320}
-              max={1600}
+              max={MAX_W}
               step={1}
               value={w}
-              onChange={(e) => setW(clamp(Number(e.target.value), 320, 1600))}
+              onChange={(e) => setW(clamp(Number(e.target.value), 320, MAX_W))}
             />
           </label>
           <label className="rv__slider">
@@ -150,35 +218,37 @@ export default function ResponsiveViewer() {
             <input
               type="range"
               min={480}
-              max={1400}
+              max={MAX_H}
               step={1}
               value={h}
-              onChange={(e) => setH(clamp(Number(e.target.value), 480, 1400))}
+              onChange={(e) => setH(clamp(Number(e.target.value), 480, MAX_H))}
             />
           </label>
         </div>
 
-        <div className="rv__group">
-          <span className="rv__groupLabel">Experiment · WorldPulse (card 01)</span>
-          <div className="rv__row">
-            <button
-              type="button"
-              className={`rv__btn rv__btn--wide ${peek ? "is-on" : ""}`}
-              onClick={togglePeek}
-            >
-              {peek ? "Hide info panel" : "Show info panel"}
-            </button>
+        {showExperiments && (
+          <div className="rv__group">
+            <span className="rv__groupLabel">Experiment · WorldPulse (card 01)</span>
+            <div className="rv__row">
+              <button
+                type="button"
+                className={`rv__btn rv__btn--wide ${peek ? "is-on" : ""}`}
+                onClick={togglePeek}
+              >
+                {peek ? "Hide info panel" : "Show info panel"}
+              </button>
+            </div>
+            <div className="rv__row">
+              <button
+                type="button"
+                className={`rv__btn rv__btn--wide ${motionOn ? "is-on" : ""}`}
+                onClick={toggleMotion}
+              >
+                Motion {motionOn ? "on" : "off"}
+              </button>
+            </div>
           </div>
-          <div className="rv__row">
-            <button
-              type="button"
-              className={`rv__btn rv__btn--wide ${motionOn ? "is-on" : ""}`}
-              onClick={toggleMotion}
-            >
-              Motion {motionOn ? "on" : "off"}
-            </button>
-          </div>
-        </div>
+        )}
 
         <div className="rv__row">
           <button type="button" className="rv__btn" onClick={rotate}>
@@ -205,8 +275,8 @@ export default function ResponsiveViewer() {
           <span className="rv__scale">{Math.round(scale * 100)}%</span>
         </div>
 
-        <Link href="/site-parallax-lab/work-cinema" className="rv__btn rv__btn--wide">
-          Open full →
+        <Link href={route.src} className="rv__btn rv__btn--wide">
+          Open {route.label} full →
         </Link>
         <Link href="/site-parallax-lab/work-handoff" className="rv__btn rv__btn--wide">
           ← Handoff lab
@@ -222,12 +292,14 @@ export default function ResponsiveViewer() {
             className="rv__frame"
             style={{ width: w, height: h, transform: `scale(${scale})` }}
           >
+            {/* Route is part of the key so switching routes remounts the frame
+                rather than leaving the previous page's scroll state behind. */}
             <iframe
-              key={reloadKey}
+              key={`${route.src}:${reloadKey}`}
               ref={iframeRef}
               className="rv__iframe"
-              src={SRC}
-              title={`Cinematic Work Stack at ${w}×${h}`}
+              src={route.src}
+              title={`${route.label} at ${w}×${h}`}
               width={w}
               height={h}
               onLoad={pushAll}
@@ -235,7 +307,7 @@ export default function ResponsiveViewer() {
           </div>
         </div>
         <span className="rv__readout">
-          {activePreset} · {w} × {h} · {Math.round(scale * 100)}%
+          {route.label} · {activePreset} · {w} × {h} · {Math.round(scale * 100)}%
         </span>
       </div>
     </div>

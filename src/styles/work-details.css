@@ -188,7 +188,7 @@
 }
 
 .pd-full__role {
-  font-size: 13px;
+  font-size: var(--text-label);
   font-weight: 600;
   color: rgba(255, 255, 255, 0.9);
   letter-spacing: 0.01em;
@@ -207,7 +207,7 @@
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  font-size: 11.5px;
+  font-size: var(--text-control);
   font-weight: 600;
   letter-spacing: 0.16em;
   text-transform: uppercase;
@@ -231,7 +231,7 @@
 
 .pd-full__linkArrow {
   display: inline-block;
-  font-size: 13px;
+  font-size: var(--text-control);
   letter-spacing: 0;
   transition: transform 180ms cubic-bezier(0.22, 1, 0.36, 1);
 }
@@ -311,14 +311,14 @@
 
 .etb-topStrip__title {
   margin: 0;
-  font-size: 10px;
+  font-size: var(--text-label);
   font-weight: 500;
   letter-spacing: 0.22em;
   color: rgba(255, 255, 255, 0.62);
 }
 
 .etb-topStrip__cred {
-  font-size: 9px;
+  font-size: var(--text-label);
   letter-spacing: 0.12em;
   color: rgba(255, 255, 255, 0.28);
   font-weight: 400;
@@ -339,6 +339,24 @@
 
 .etb-barStack.has-active {
   padding-right: clamp(300px, 35vw, 440px);
+}
+
+/* The 460px ceiling above is a laptop measurement: on a 2160px-tall card it
+   leaves the accordion as a 533px strip centred in 1944px of empty card, which
+   is the "small desktop layout floating in empty space" failure exactly. Both
+   tiers are gated on HEIGHT as well as width — the ceiling has to stay under
+   what the sticky card (90vh, minus the panel's own padding) can actually give
+   it, or the bars overflow their frame on a short ultrawide. */
+@media (min-width: 100rem) and (min-height: 56.25rem) {
+  .etb-barStack {
+    min-height: clamp(260px, calc(100vh - 300px), 640px);
+  }
+}
+
+@media (min-width: 150rem) and (min-height: 75rem) {
+  .etb-barStack {
+    min-height: clamp(260px, calc(100vh - 320px), 880px);
+  }
 }
 
 .etb-bar {
@@ -382,6 +400,18 @@
   overflow: hidden;
 }
 
+/* `all: unset` above strips the UA focus ring, and the only replacement was
+   `.etb-bar:focus-within`, which paints the SAME treatment as hover — so a
+   keyboard user could not tell focus from a stray pointer. The accent ring is
+   inset because the bar clips its own overflow at a 14px radius; an outside
+   outline would be cut off. Accent rather than white: these bars are a
+   near-white candy surface, where a white ring is invisible. */
+.etb-bar__head:focus-visible {
+  outline: 2px solid var(--etb-accent);
+  outline-offset: -4px;
+  border-radius: 12px;
+}
+
 .etb-bar__sheen {
   position: absolute;
   inset: 0;
@@ -410,9 +440,9 @@
 
 .etb-bar__name {
   font-family: var(--font-mono);
-  font-size: clamp(13px, 1.6vw, 17px);
+  font-size: var(--text-base);
   font-weight: 500;
-  letter-spacing: 0.22em;
+  letter-spacing: var(--track-dymo);
   text-transform: uppercase;
   color: var(--etb-text);
   line-height: 1;
@@ -423,11 +453,11 @@
 
 .etb-bar__summary {
   font-family: var(--font-mono);
-  font-size: clamp(9px, 1vw, 11px);
+  font-size: var(--text-sm);
   font-weight: 400;
-  line-height: 1.3;
-  letter-spacing: 0.06em;
-  color: rgba(17, 17, 22, 0.42);
+  line-height: 1.35;
+  letter-spacing: 0.02em;
+  color: rgba(17, 17, 22, 0.62);
   text-align: left;
   display: -webkit-box;
   -webkit-line-clamp: 1;
@@ -545,8 +575,12 @@
   right: 0;
   top: 0;
   bottom: 0;
-  width: clamp(280px, 35vw, 440px);
-  border-radius: 16px;
+  /* The 440px ceiling put the project dossier at 17% of a 2560px display —
+     a reading panel narrower than the summary line it expands. Percentage
+     bound as well as absolute so it stays a side panel rather than swallowing
+     the row list it slides over. */
+  width: min(clamp(17.5rem, 12rem + 18vw, 46rem), 42%);
+  border-radius: var(--card-radius);
   border: 1px solid rgba(255, 255, 255, 0.07);
   background: rgba(7, 8, 11, 0.97);
   box-shadow: 0 18px 48px rgba(0, 0, 0, 0.45);
@@ -564,6 +598,24 @@
   transform: translateX(0);
   opacity: 1;
   pointer-events: auto;
+}
+
+/* The panel is pinned top-to-bottom, so it inherits whatever height the bar
+   stack has. That was fine at the old 460px ceiling and stops being fine on the
+   tiers that raise the stack to 640/880px: the dossier copy is short, so the
+   sheet grew a third of a metre of empty surface under its CTA. Gated on the
+   same queries that raise the stack, so nothing below them changes. Keeping
+   max-height means long dossiers still cap and scroll exactly as before. */
+@media (min-width: 100rem) and (min-height: 56.25rem) {
+  .etb-overlay {
+    bottom: auto;
+    max-height: 100%;
+  }
+
+  .etb-dos {
+    height: auto;
+    max-height: 100%;
+  }
 }
 
 /* ---- System Dossier overlay ---- */
@@ -585,7 +637,7 @@
 
 .etb-dos__eyebrow {
   font-family: var(--font-mono);
-  font-size: 9px;
+  font-size: var(--text-label);
   font-weight: 500;
   letter-spacing: 0.16em;
   text-transform: uppercase;
@@ -596,7 +648,7 @@
   all: unset;
   box-sizing: border-box;
   font-family: var(--font-mono);
-  font-size: 9px;
+  font-size: var(--text-control);
   font-weight: 500;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -673,7 +725,7 @@
 
 .etb-dos__status {
   font-family: var(--font-mono);
-  font-size: 8px;
+  font-size: var(--text-label);
   font-weight: 500;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -716,7 +768,7 @@
 
 .etb-dos__category {
   font-family: var(--font-mono);
-  font-size: 8px;
+  font-size: var(--text-label);
   font-weight: 400;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -748,7 +800,7 @@
 /* One-liner */
 .etb-dos__oneLiner {
   margin: 0;
-  font-size: 13px;
+  font-size: var(--text-sm);
   line-height: 1.48;
   color: var(--etb-muted);
 }
@@ -770,7 +822,7 @@
 }
 
 .etb-dos__bullets li {
-  font-size: 12px;
+  font-size: var(--text-sm);
   line-height: 1.4;
   color: var(--etb-muted);
 }
@@ -784,7 +836,7 @@
 
 .etb-dos__tag {
   font-family: var(--font-mono);
-  font-size: 8px;
+  font-size: var(--text-label);
   font-weight: 500;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -806,7 +858,7 @@
 .etb-dos__notesLabel {
   display: block;
   font-family: var(--font-mono);
-  font-size: 8px;
+  font-size: var(--text-label);
   font-weight: 500;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -823,7 +875,7 @@
 }
 
 .etb-dos__notesList li {
-  font-size: 11px;
+  font-size: var(--text-sm);
   line-height: 1.38;
   color: rgba(17, 17, 22, 0.52);
 }
@@ -833,7 +885,7 @@
   align-items: center;
   margin-top: 10px;
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: var(--text-control);
   font-weight: 500;
   letter-spacing: 0.04em;
   color: rgba(17, 17, 22, 0.55);
@@ -854,7 +906,7 @@
   box-sizing: border-box;
   align-self: flex-start;
   font-family: var(--font-mono);
-  font-size: 10px;
+  font-size: var(--text-control);
   font-weight: 500;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -901,7 +953,7 @@
 .etb-dos__statusLine {
   margin: 10px 0 0;
   font-family: var(--font-mono);
-  font-size: 10px;
+  font-size: var(--text-label);
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: rgba(17, 17, 22, 0.58);
@@ -1055,7 +1107,7 @@
 
 .etb-bar__desc {
   margin: 0;
-  font-size: 11.5px;
+  font-size: var(--text-sm);
   line-height: 1.45;
   color: var(--etb-muted);
   display: -webkit-box;
@@ -1072,7 +1124,7 @@
 }
 
 .etb-bar__bullets li {
-  font-size: 10.5px;
+  font-size: var(--text-sm);
   line-height: 1.35;
   color: rgba(17, 17, 22, 0.58);
   display: -webkit-box;
@@ -1084,9 +1136,9 @@
 .etb-bar__bulletsMore {
   list-style: none;
   margin-left: -15px;
-  color: rgba(17, 17, 22, 0.36) !important;
+  color: rgba(17, 17, 22, 0.5) !important;
   font-family: var(--font-mono);
-  font-size: 9px !important;
+  font-size: var(--text-meta) !important;
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
@@ -1120,7 +1172,7 @@
   padding: 3px 6px;
   border-radius: 999px;
   font-family: var(--font-mono);
-  font-size: 8px;
+  font-size: var(--text-label);
   font-weight: 500;
   line-height: 1;
   letter-spacing: 0.08em;
@@ -1140,7 +1192,7 @@
   border-radius: 999px;
   padding: 6px 14px 5px;
   font-family: var(--font-mono);
-  font-size: 9px;
+  font-size: var(--text-control);
   font-weight: 500;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -1160,7 +1212,7 @@
   padding: 3px 6px 2px;
   border-radius: 999px;
   font-family: var(--font-mono);
-  font-size: 8px;
+  font-size: var(--text-label);
   line-height: 1;
   font-weight: 500;
   letter-spacing: 0.07em;
@@ -1193,7 +1245,7 @@
   padding: 4px 8px;
   border-radius: 999px;
   font-family: var(--font-mono);
-  font-size: 8px;
+  font-size: var(--text-label);
   font-weight: 500;
   line-height: 1;
   letter-spacing: 0.1em;
@@ -1245,7 +1297,7 @@
 .etb-graduate__title {
   margin: 0;
   font-family: var(--font-mono);
-  font-size: 10px;
+  font-size: var(--text-label);
   font-weight: 500;
   letter-spacing: 0.2em;
   text-transform: uppercase;
@@ -1254,7 +1306,7 @@
 
 .etb-graduate__subtitle {
   margin: 8px 0 12px;
-  font-size: 12px;
+  font-size: var(--text-sm);
   line-height: 1.4;
   color: rgba(255, 255, 255, 0.55);
 }
@@ -1276,14 +1328,14 @@
 
 .etb-graduateCard__title {
   margin: 0;
-  font-size: 13px;
+  font-size: var(--text-label);
   line-height: 1.25;
   color: rgba(255, 255, 255, 0.92);
 }
 
 .etb-graduateCard__outcome {
   margin: 0;
-  font-size: 11px;
+  font-size: var(--text-sm);
   line-height: 1.35;
   color: rgba(255, 255, 255, 0.66);
 }
@@ -1296,7 +1348,7 @@
 }
 
 .etb-graduateCard__bullets li {
-  font-size: 10px;
+  font-size: var(--text-sm);
   line-height: 1.35;
   color: rgba(255, 255, 255, 0.62);
 }
@@ -1379,7 +1431,7 @@
 
 .etb-modal__eyebrow {
   font-family: var(--font-mono);
-  font-size: 10px;
+  font-size: var(--text-label);
   line-height: 1;
   font-weight: 700;
   letter-spacing: 0.14em;
@@ -1393,7 +1445,7 @@
   color: rgba(17, 17, 22, 0.86);
   border-radius: 10px;
   padding: 7px 10px;
-  font-size: 11px;
+  font-size: var(--text-control);
   line-height: 1;
   font-weight: 700;
   letter-spacing: 0.08em;
@@ -1473,7 +1525,7 @@
 
 .etb-media__fallback-title {
   font-family: var(--font-mono);
-  font-size: 10px;
+  font-size: var(--text-label);
   font-weight: 500;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -1519,7 +1571,7 @@
 .etb-modal__category {
   margin: 8px 0 0;
   font-family: var(--font-mono);
-  font-size: 10px;
+  font-size: var(--text-label);
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: rgba(17, 17, 22, 0.52);
@@ -1527,7 +1579,7 @@
 
 .etb-modal__oneLiner {
   margin: 8px 0 0;
-  font-size: 13px;
+  font-size: var(--text-sm);
   line-height: 1.45;
   color: rgba(17, 17, 22, 0.78);
 }
@@ -1540,7 +1592,7 @@
 }
 
 .etb-modal__bullets li {
-  font-size: 12px;
+  font-size: var(--text-sm);
   line-height: 1.4;
   color: rgba(17, 17, 22, 0.72);
 }
@@ -1555,7 +1607,7 @@
 .etb-modal__statusLine {
   margin: 12px 0 0;
   font-family: var(--font-mono);
-  font-size: 10px;
+  font-size: var(--text-label);
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: rgba(17, 17, 22, 0.56);
@@ -1566,7 +1618,7 @@
   align-items: center;
   margin-top: 14px;
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: var(--text-control);
   font-weight: 500;
   letter-spacing: 0.04em;
   color: rgba(17,17,22,0.55);
@@ -1584,7 +1636,7 @@
 .etb-modal__snapshotTitle {
   margin: 0 0 8px;
   font-family: var(--font-mono);
-  font-size: 10px;
+  font-size: var(--text-label);
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: rgba(17, 17, 22, 0.6);
@@ -1598,7 +1650,7 @@
 }
 
 .etb-modal__snapshotList li {
-  font-size: 12px;
+  font-size: var(--text-sm);
   line-height: 1.4;
   color: rgba(17, 17, 22, 0.72);
 }
@@ -1779,7 +1831,7 @@
 
 .scs-proof__label {
   margin: 0;
-  font-size: 12px;
+  font-size: var(--text-label);
   color: rgba(255, 255, 255, 0.68);
 }
 
@@ -1790,7 +1842,7 @@
   border-radius: 999px;
   padding: 8px 14px;
   font-family: var(--font-mono);
-  font-size: 10px;
+  font-size: var(--text-control);
   letter-spacing: 0.12em;
   text-transform: uppercase;
   cursor: pointer;
@@ -1838,7 +1890,7 @@
   background: rgba(255, 255, 255, 0.03);
   color: rgba(255, 255, 255, 0.76);
   padding: 9px 12px;
-  font-size: 11px;
+  font-size: var(--text-control);
   cursor: pointer;
 }
 
@@ -1860,7 +1912,7 @@
 
 .scs-proof__panelTitle {
   margin: 0;
-  font-size: 12px;
+  font-size: var(--text-label);
   line-height: 1;
   font-weight: 700;
   letter-spacing: 0.1em;
@@ -1876,7 +1928,7 @@
 }
 
 .scs-proof__panelBullets li {
-  font-size: 12px;
+  font-size: var(--text-sm);
   line-height: 1.4;
   color: rgba(255, 255, 255, 0.72);
 }
@@ -1895,7 +1947,7 @@
   border-radius: 999px;
   border: 1px solid rgba(255, 255, 255, 0.06);
   background: rgba(255, 255, 255, 0.03);
-  font-size: 10px;
+  font-size: var(--text-label);
   color: rgba(255, 255, 255, 0.75);
 }
 
@@ -1907,7 +1959,7 @@
 
 .scs-head__eyebrow {
   margin: 0;
-  font-size: 10px;
+  font-size: var(--text-label);
   line-height: 1;
   font-weight: 700;
   letter-spacing: 0.15em;
@@ -1917,14 +1969,14 @@
 
 .scs-head__intro {
   margin: 0;
-  font-size: 13px;
+  font-size: var(--text-sm);
   line-height: 1.45;
   color: rgba(255, 255, 255, 0.78);
 }
 
 .scs-head__bridge {
   margin: 0;
-  font-size: 12px;
+  font-size: var(--text-label);
   line-height: 1.42;
   color: rgba(255, 255, 255, 0.56);
 }
@@ -1995,7 +2047,7 @@
 
 .scs-feature__badge,
 .scs-card__badge {
-  font-size: 9px;
+  font-size: var(--text-label);
   line-height: 1;
   font-weight: 700;
   letter-spacing: 0.14em;
@@ -2013,7 +2065,7 @@
 
 .scs-feature__role {
   margin: 0;
-  font-size: 12px;
+  font-size: var(--text-label);
   line-height: 1.35;
   color: rgba(255, 255, 255, 0.56);
 }
@@ -2021,7 +2073,7 @@
 .scs-feature__oneLiner,
 .scs-card__oneLiner {
   margin: 10px 0 0;
-  font-size: 12px;
+  font-size: var(--text-sm);
   line-height: 1.45;
   color: rgba(255, 255, 255, 0.62);
 }
@@ -2036,7 +2088,7 @@
 
 .scs-feature__bullets li,
 .scs-card__bullets li {
-  font-size: 11px;
+  font-size: var(--text-sm);
   line-height: 1.35;
   color: rgba(255, 255, 255, 0.72);
 }
@@ -2057,7 +2109,7 @@
 }
 
 .scs-feature__toolsLabel {
-  font-size: 10px;
+  font-size: var(--text-label);
   line-height: 1;
   font-weight: 700;
   letter-spacing: 0.14em;
@@ -2091,7 +2143,7 @@
   border-radius: 999px;
   border: 1px solid rgba(255, 255, 255, 0.06);
   background: rgba(255, 255, 255, 0.03);
-  font-size: 10px;
+  font-size: var(--text-label);
   color: rgba(255, 255, 255, 0.75);
 }
 
@@ -2103,7 +2155,7 @@
 }
 
 .scs-feature__supportLabel {
-  font-size: 9px;
+  font-size: var(--text-label);
   line-height: 1;
   font-weight: 700;
   letter-spacing: 0.12em;
@@ -2113,7 +2165,7 @@
 
 .scs-feature__supportTitle {
   margin-top: 6px;
-  font-size: 12px;
+  font-size: var(--text-label);
   line-height: 1.25;
   color: rgba(255, 255, 255, 0.9);
   font-weight: 600;
@@ -2121,7 +2173,7 @@
 
 .scs-feature__supportDesc {
   margin: 6px 0 0;
-  font-size: 11px;
+  font-size: var(--text-sm);
   line-height: 1.35;
   color: rgba(255, 255, 255, 0.5);
 }
@@ -2195,7 +2247,7 @@
 
 .scs-side__note {
   margin-top: 10px;
-  font-size: 11px;
+  font-size: var(--text-sm);
   line-height: 1.35;
   color: rgba(255, 255, 255, 0.46);
 }
@@ -2213,7 +2265,7 @@
   border: 1px solid rgba(255, 255, 255, 0.06);
   background: rgba(255, 255, 255, 0.04);
   color: rgba(255, 255, 255, 0.8);
-  font-size: 10px;
+  font-size: var(--text-label);
   line-height: 1;
   font-weight: 600;
   letter-spacing: 0.04em;
@@ -2291,7 +2343,7 @@
 .scs-card__glyph-badge {
   width: 34px;
   height: 34px;
-  font-size: 12px;
+  font-size: var(--text-label);
 }
 
 .scs-feature__glyph-copy,
@@ -2308,7 +2360,7 @@
 .scs-card__glyph-title,
 .scs-modalBody__glyph-title,
 .cns-modalBody__glyph-title {
-  font-size: 10px;
+  font-size: var(--text-label);
   line-height: 1.2;
   font-weight: 700;
   letter-spacing: 0.08em;
@@ -2320,7 +2372,7 @@
 .scs-card__glyph-subtitle,
 .scs-modalBody__glyph-subtitle,
 .cns-modalBody__glyph-subtitle {
-  font-size: 9px;
+  font-size: var(--text-sm);
   line-height: 1.2;
   color: rgba(255, 255, 255, 0.42);
   letter-spacing: 0.04em;
@@ -2402,7 +2454,7 @@
 
 .scs-modal__eyebrow,
 .cns-modal__eyebrow {
-  font-size: 10px;
+  font-size: var(--text-label);
   line-height: 1;
   font-weight: 700;
   letter-spacing: 0.16em;
@@ -2417,7 +2469,7 @@
   color: rgba(255, 255, 255, 0.9);
   border-radius: 10px;
   padding: 7px 10px;
-  font-size: 11px;
+  font-size: var(--text-control);
   line-height: 1;
   font-weight: 700;
   letter-spacing: 0.08em;
@@ -2458,7 +2510,7 @@
 
 .scs-modalBody__eyebrow,
 .cns-modalBody__eyebrow {
-  font-size: 10px;
+  font-size: var(--text-label);
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -2477,7 +2529,7 @@
 
 .scs-modalBody__role {
   margin: 0;
-  font-size: 12px;
+  font-size: var(--text-label);
   line-height: 1.4;
   color: rgba(255, 255, 255, 0.52);
 }
@@ -2486,7 +2538,7 @@
 .cns-modalBody__oneLiner,
 .cns-modalBody__bestFor {
   margin: 0;
-  font-size: 13px;
+  font-size: var(--text-sm);
   line-height: 1.5;
   color: rgba(255, 255, 255, 0.74);
 }
@@ -2512,7 +2564,7 @@
 .scs-modalBody__sectionTitle,
 .cns-modalBody__sectionTitle {
   margin: 0 0 10px;
-  font-size: 11px;
+  font-size: var(--text-label);
   line-height: 1;
   font-weight: 700;
   letter-spacing: 0.15em;
@@ -2530,7 +2582,7 @@
 
 .scs-modalBody__bullets li,
 .cns-modalBody__deliverables li {
-  font-size: 12px;
+  font-size: var(--text-sm);
   line-height: 1.45;
   color: rgba(255, 255, 255, 0.8);
 }
@@ -2546,7 +2598,7 @@
 .scs-modalBody__miniLabel,
 .cns-modalBody__miniLabel,
 .cns-modalBody__sectionLabel {
-  font-size: 10px;
+  font-size: var(--text-label);
   line-height: 1;
   font-weight: 700;
   letter-spacing: 0.14em;
@@ -2565,7 +2617,7 @@
 .scs-modalBody__list li,
 .cns-modalBody__list li,
 .cns-modalBody__sectionText {
-  font-size: 12px;
+  font-size: var(--text-sm);
   line-height: 1.4;
   color: rgba(255, 255, 255, 0.68);
   margin: 0;
@@ -2628,7 +2680,7 @@
 
 .cns-hero__eyebrow {
   margin: 0;
-  font-size: 10px;
+  font-size: var(--text-label);
   font-weight: 700;
   line-height: 1;
   letter-spacing: 0.16em;
@@ -2647,7 +2699,7 @@
 
 .cns-hero__subtitle {
   margin: 0;
-  font-size: 13px;
+  font-size: var(--text-sm);
   line-height: 1.5;
   color: rgba(255, 255, 255, 0.72);
   max-width: 64ch;
@@ -2655,7 +2707,7 @@
 
 .cns-hero__identity {
   margin: 2px 0 0;
-  font-size: 11px;
+  font-size: var(--text-label);
   line-height: 1.3;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -2664,7 +2716,7 @@
 
 .cns-hero__founder {
   margin: 0;
-  font-size: 12px;
+  font-size: var(--text-label);
   line-height: 1.45;
   color: rgba(255, 255, 255, 0.5);
   max-width: 76ch;
@@ -2679,7 +2731,7 @@
 
 .cns-hero__orbShell {
   position: relative;
-  width: clamp(176px, 20vw, 248px);
+  width: clamp(11rem, 8rem + 4.5vw, 22rem);
   aspect-ratio: 1 / 1;
   border-radius: 50%;
   overflow: hidden;
@@ -2716,7 +2768,7 @@
 .cns-hero__orbLabel {
   margin: 0;
   text-align: center;
-  font-size: 9px;
+  font-size: var(--text-label);
   line-height: 1;
   font-weight: 700;
   letter-spacing: 0.14em;
@@ -2788,7 +2840,7 @@
 
 .cns-offerCard__oneLiner {
   margin: 8px 0 0;
-  font-size: 12px;
+  font-size: var(--text-sm);
   line-height: 1.45;
   color: rgba(255, 255, 255, 0.62);
 }
@@ -2801,7 +2853,7 @@
 }
 
 .cns-offerCard__deliverables li {
-  font-size: 11px;
+  font-size: var(--text-sm);
   line-height: 1.35;
   color: rgba(255, 255, 255, 0.74);
 }
@@ -2811,7 +2863,7 @@
   padding: 5px 8px;
   border: 1px solid rgba(255, 255, 255, 0.09);
   background: rgba(255, 255, 255, 0.02);
-  font-size: 9px;
+  font-size: var(--text-label);
   line-height: 1;
   font-weight: 700;
   letter-spacing: 0.1em;
@@ -2837,7 +2889,7 @@
   border: 1px solid rgba(255, 255, 255, 0.06);
   background: rgba(255, 255, 255, 0.03);
   color: rgba(255, 255, 255, 0.78);
-  font-size: 10px;
+  font-size: var(--text-label);
   line-height: 1;
   font-weight: 600;
   letter-spacing: 0.04em;
@@ -2859,7 +2911,7 @@
 
 .cns-proof__title {
   margin: 0;
-  font-size: 11px;
+  font-size: var(--text-label);
   line-height: 1;
   font-weight: 700;
   letter-spacing: 0.16em;
@@ -2869,7 +2921,7 @@
 
 .cns-proof__subtitle {
   margin: 0;
-  font-size: 11px;
+  font-size: var(--text-sm);
   line-height: 1.35;
   color: rgba(255, 255, 255, 0.45);
 }
@@ -2889,14 +2941,14 @@
 }
 
 .cns-proofCard__title {
-  font-size: 12px;
+  font-size: var(--text-label);
   line-height: 1.2;
   color: rgba(255, 255, 255, 0.88);
   font-weight: 700;
 }
 
 .cns-proofCard__clientType {
-  font-size: 9px;
+  font-size: var(--text-label);
   line-height: 1;
   font-weight: 700;
   letter-spacing: 0.14em;
@@ -2912,7 +2964,7 @@
 }
 
 .cns-proofCard__row span {
-  font-size: 9px;
+  font-size: var(--text-label);
   line-height: 1.2;
   font-weight: 700;
   letter-spacing: 0.12em;
@@ -2922,7 +2974,7 @@
 
 .cns-proofCard__row p {
   margin: 0;
-  font-size: 11px;
+  font-size: var(--text-sm);
   line-height: 1.35;
   color: rgba(255, 255, 255, 0.62);
 }
@@ -2964,7 +3016,7 @@
 
 .cns-modal__dialog {
   position: relative;
-  width: min(1040px, calc(100% - 28px));
+  width: min(clamp(65rem, 45rem + 24vw, 100rem), calc(100% - 1.75rem));
   max-height: calc(100% - 28px);
   opacity: 0;
   transform: translateY(8px) scale(0.985);
@@ -3152,9 +3204,27 @@
   }
 }
 
-/* ====================================================
-   Supply Chain — Journey Globe (Top Nav L, all-serif)
-   ==================================================== */
+/* ============================================================================
+   Supply Chain — DESKTOP EDITORIAL PANEL (.sc-ed)
+   ============================================================================
+   The approved mobile card (`wm-sc__*`, work-mobile-cards.css) opened out for a
+   wide screen. It is the same page, not a second concept: every colour, type
+   role, and timeline material below is lifted from the mobile card and re-set
+   at desktop scale with clamp().
+
+     rail        "03 / 04 — SUPPLY CHAIN" + hairline rule  ← .wm-rail
+     standfirst  the section description, repositioned under the rule
+     left  44%   the globe, centred, with mobile's own atmospheric glow
+     right 56%   the four credential lines, then the vertical journey rail
+
+   Fidelity rule: if a value here disagrees with `.wm-sc__*`, this file is wrong.
+   Gold is #d8b15a — the one accent, same as mobile.
+
+   Below 960px the two columns stack. Production never reaches that state (the
+   Work section hands off to the mobile cards under 1024px via
+   WorkSectionResponsive); it exists so the labs that mount this component at
+   arbitrary widths degrade instead of overflowing.
+   ========================================================================== */
 
 .sc-journey {
   display: flex;
@@ -3171,260 +3241,345 @@
   overflow: hidden;
 }
 
-/* Horizontal timeline nav */
-.sc-journey__topbar {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 4px;
-  padding: 12px 32px 0;
-  position: relative;
+/* Standalone (labs, legacy WorkSection): the panel carries the mobile card's
+   own frame, so it reads as the same object wherever it is mounted. */
+.sc-ed {
+  background: radial-gradient(120% 70% at 50% 22%, #0c1018 0%, #05060a 72%);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 20px;
 }
 
-/* Illumination values locked to "Snappy + bright" preset (see
-   /supply-chain-lab). Inactive/visited text runs high so all four labels
-   read confidently at a glance; reveal/color transitions are shorter so
-   the sequence feels snappy. */
-.sc-journey__topbarLine {
-  position: absolute;
-  top: 50%;
-  left: 10%;
-  right: 10%;
-  height: 1px;
-  background: rgba(255, 255, 255, 0.28);
-  z-index: 0;
-  pointer-events: none;
-}
-
-.sc-journey__topbarItem {
-  position: relative;
-  z-index: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-  padding: 10px 20px;
+/* Inside the cinematic stack the CARD is already that frame (26px radius,
+   hairline outline, filmic float) — don't draw a second one inside it. */
+.cstack__panelBody--sc .sc-ed {
   background: none;
-  border: 1px solid transparent;
-  border-radius: 8px;
-  color: rgba(255, 255, 255, 0.92);
-  cursor: pointer;
-  transition: color 0.14s ease, border-color 0.14s ease, background 0.14s ease, opacity 0.24s ease, transform 0.24s ease;
-  font-family: inherit;
+  border: 0;
+  border-radius: 0;
 }
 
-.sc-journey__topbarItem:hover:not(:disabled) {
-  color: #fff;
-  border-color: rgba(255, 255, 255, 0.18);
-  background: rgba(255, 255, 255, 0.05);
-}
-
-.sc-journey__topbarItem.is-visited {
-  color: rgba(255, 255, 255, 0.96);
-}
-
-.sc-journey__topbarItem.is-active {
-  color: #fff;
-  border-color: rgba(255, 255, 255, 0.36);
-  background: rgba(255, 255, 255, 0.14);
-}
-
-.sc-journey__topbarItem.is-hidden {
-  opacity: 0;
-  transform: translateY(-8px);
-  pointer-events: none;
-}
-
-.sc-journey__topbarDot {
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  border: 1px solid rgba(255, 255, 255, 0.55);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: var(--font-mono, monospace);
-  font-size: 11px;
-  transition: background 0.14s ease, border-color 0.14s ease, color 0.14s ease;
-}
-
-.sc-journey__topbarItem.is-active .sc-journey__topbarDot {
-  background: #fff;
-  border-color: #fff;
-  color: #0a0a0a;
-}
-
-.sc-journey__topbarItem.is-visited .sc-journey__topbarDot {
-  border-color: rgba(255, 255, 255, 0.75);
-}
-
-.sc-journey__topbarLabel {
-  font-family: var(--font-serif, serif);
-  font-size: 14px;
-  letter-spacing: 0.02em;
-  white-space: nowrap;
-}
-
-.sc-journey__topbarYear {
-  font-family: var(--font-mono, monospace);
-  font-size: 10px;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  opacity: 0.5;
-}
-
-/* Stacked label: accomplishment headline over location subtitle */
-.sc-journey__topbar--stacked {
-  gap: 32px;
-}
-
-.sc-journey__topbarStack {
+.sc-ed__inner {
+  flex: 1 1 auto;
+  min-height: 0;
+  width: 100%;
+  /* Fluid in both directions so the composition tapers on the way down instead
+     of snapping AND keeps growing on the way up: the container drives the globe
+     column width, which is what the globe measures itself against. The old flat
+     1280px ceiling is why the globe stayed small on large displays — it was
+     measuring a box that had stopped growing at roughly laptop width. */
+  max-width: min(var(--content-wide), 92vw);
+  margin: 0 auto;
+  padding: clamp(2.375rem, 5vh, 3.5rem) clamp(2rem, 1.4rem + 2vw, 5rem)
+    clamp(2.125rem, 5vh, 3.5rem);
   display: flex;
   flex-direction: column;
+  gap: clamp(1.125rem, 2.6vh, 1.875rem);
+}
+
+/* ---- Section rail — mirrors .wm-rail / .cstack__head ---- */
+.sc-ed__rail {
+  flex: 0 0 auto;
+  display: flex;
   align-items: center;
-  gap: 3px;
-  line-height: 1.15;
+  gap: 16px;
 }
 
-.sc-journey__topbarHeadline {
-  font-family: var(--font-serif, Georgia, serif);
-  font-size: 15px;
-  font-weight: 500;
-  letter-spacing: 0.005em;
-  line-height: 1.25;
-  white-space: normal;
-  max-width: 200px;
-  text-align: center;
-  text-transform: none;
-}
-
-.sc-journey__topbarSub {
-  font-family: var(--font-mono, monospace);
-  font-size: 11px;
-  letter-spacing: 0.08em;
+.sc-ed__railNum {
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  letter-spacing: var(--track-dymo);
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.6);
+  color: var(--ink-body);
   white-space: nowrap;
 }
 
-/* Globe + card body */
-.sc-journey__topnavBody {
-  flex: 1 1 0%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  padding: 0;
+.sc-ed__railLine {
+  flex: 1;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* ---- Standfirst — the section description, same muted grey it had before ---- */
+.sc-ed__standfirst {
+  flex: 0 0 auto;
+  margin: 0;
+  max-width: var(--measure);
+  font-family: var(--font-sans);
+  font-weight: 400;
+  font-size: var(--text-base);
+  line-height: var(--leading-body);
+  color: var(--ink-body);
+}
+
+/* ---- Two columns: 44% globe / 56% content ---- */
+.sc-ed__cols {
+  flex: 1 1 auto;
   min-height: 0;
-  overflow: hidden;
+  display: grid;
+  grid-template-columns: 44fr 56fr;
+  gap: clamp(44px, 5vw, 88px);
+  align-items: center;
 }
 
-.sc-journey__globe {
+/* A percentage split stops being the right instrument once the display is wide
+   enough that 56% overshoots the copy's own measure. At 3840 the content column
+   was 1366px holding a 657px column of text — 709px of dead space sitting
+   INSIDE the grid, which is why the section read as stranded rather than
+   generous. Above 1600px the text column is sized to the copy instead and the
+   globe takes the entire remainder, so the surplus goes to the one element that
+   can actually use it. `minmax(0, …)` on both tracks keeps the globe column
+   from being forced open by its absolutely-positioned canvas. */
+@media (min-width: 100rem) {
+  .sc-ed__cols {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 62ch);
+  }
+}
+
+/* ---- Left: the globe ----
+   The column stretches to the row height and the globe is taken out of flow
+   inside it, so the measured box can never be a function of the canvas size
+   the measurement produces. */
+.sc-ed__globeCol {
+  position: relative;
+  align-self: stretch;
+  min-width: 0;
+  min-height: 0;
+}
+
+.sc-ed__globe {
+  position: absolute;
+  inset: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  position: relative;
-  max-height: 100%;
-  max-width: 100%;
-  flex-shrink: 0;
 }
 
-/* Canvas is rendered at the exact pixel size measured from
-   .sc-journey__topnavBody, so no CSS scaling is needed. Keep `display:
-   block` to drop the inline-baseline gap that can otherwise add a couple
-   of phantom pixels and trigger overflow clipping. */
-.sc-journey__globe canvas {
+/* Canvas is rendered at the exact pixel size measured from .sc-ed__globeCol,
+   so no CSS scaling is needed. `display: block` drops the inline-baseline gap. */
+.sc-ed__globe canvas {
   display: block;
 }
 
-/* Floating glass card */
-.sc-journey__floatingCard {
-  padding: 20px 24px;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 12px;
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  opacity: 0;
-  transition: opacity 0.5s ease, transform 0.5s ease;
-  pointer-events: none;
-}
-
-.sc-journey__floatingCard.is-visible {
-  opacity: 1;
-  pointer-events: auto;
-}
-
-/* Desktop: card floats to the right, outside the globe */
-.sc-journey__floatingCard--center {
+/* Mobile's own atmospheric glow behind the sphere (.wm-sc__globeGlow). */
+.sc-ed__globeGlow {
   position: absolute;
-  right: 32px;
+  left: 50%;
   top: 50%;
-  transform: translateY(-50%) translateX(12px);
-  max-width: 300px;
-  width: max-content;
-  min-width: 220px;
-  text-align: left;
-  z-index: 2;
+  width: 88%;
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  background: radial-gradient(
+    50% 50% at 50% 50%,
+    rgba(80, 140, 220, 0.16),
+    transparent 70%
+  );
 }
 
-.sc-journey__floatingCard--center.is-visible {
-  transform: translateY(-50%) translateX(0);
+/* ---- Right: credential lines + journey rail ---- */
+.sc-ed__content {
+  align-self: center;
+  min-width: 0;
+  max-width: 60ch;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(20px, 3vh, 34px);
 }
 
-.sc-journey__floatingCard--bottomRight {
-  position: absolute;
-  right: 24px;
-  bottom: 24px;
-  max-width: 340px;
-  transform: translateY(12px);
-  background: rgba(180, 200, 220, 0.12);
-  border-color: rgba(255, 255, 255, 0.15);
-  backdrop-filter: blur(24px) saturate(1.4);
-  -webkit-backdrop-filter: blur(24px) saturate(1.4);
+.sc-ed__quote {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(6px, 1vh, 11px);
 }
 
-.sc-journey__floatingCard--bottomRight.is-visible {
-  transform: translateY(0);
-}
-
-.sc-journey__hint {
-  color: rgba(255, 255, 255, 0.45);
-  font-family: var(--font-serif, serif);
-  font-size: 13px;
-  font-style: italic;
-  letter-spacing: 0.01em;
+/* The four production heroArt quote styles, held at desktop scale. */
+.sc-ed__lineSerif {
   margin: 0;
-}
-
-.sc-journey__year {
-  font-family: var(--font-serif, serif);
-  font-size: 13px;
-  letter-spacing: 0.06em;
-  color: rgba(255, 255, 255, 0.55);
-  margin-bottom: 4px;
-}
-
-.sc-journey__cardTitle {
-  font-family: var(--font-serif, serif);
-  font-size: clamp(20px, 3vw, 26px);
+  font-family: var(--font-serif);
   font-weight: 400;
-  letter-spacing: -0.02em;
-  margin: 0 0 10px;
+  font-size: clamp(28px, 2.6vw, 42px);
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  color: #fff;
 }
 
-.sc-journey__desc {
-  font-family: var(--font-serif, serif);
-  font-size: 15px;
-  line-height: 1.6;
-  color: rgba(255, 255, 255, 0.78);
+.sc-ed__lineMono {
   margin: 0;
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  letter-spacing: var(--track-dymo);
+  text-transform: uppercase;
+  color: rgba(216, 177, 90, 0.9);
+}
+
+.sc-ed__lineSans {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: clamp(15px, 1.15vw, 18px);
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.86);
+}
+
+.sc-ed__lineItalic {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: clamp(14px, 1.05vw, 17px);
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.58);
+}
+
+/* ---- The journey rail — the mobile timeline at desktop scale ---- */
+.sc-ed__timeline {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.sc-ed__row {
+  position: relative;
+  padding-left: 26px;
+}
+
+/* The vertical line the dots sit on. */
+.sc-ed__row::before {
+  content: "";
+  position: absolute;
+  left: 5px;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: rgba(255, 255, 255, 0.14);
+}
+
+.sc-ed__row:first-child::before {
+  top: 17px;
+}
+
+.sc-ed__row:last-child::before {
+  bottom: auto;
+  height: 17px;
+}
+
+.sc-ed__item {
+  all: unset;
+  box-sizing: border-box;
+  display: block;
+  width: 100%;
+  padding: clamp(7px, 1vh, 11px) 0;
+  cursor: pointer;
+  /* Unrevealed stops are dimmed, not removed — the block keeps its height, so
+     the staged reveal can't shift the composition. Mobile does the same. */
+  opacity: 0.35;
+  transition: opacity 420ms ease;
+}
+
+.sc-ed__item.is-revealed {
+  opacity: 1;
+}
+
+.sc-ed__item:disabled {
+  cursor: default;
+}
+
+/* `all: unset` above drops the UA focus ring, and this panel sits outside the
+   `.work--mobile` scope that covers the mobile card. Same gold ring. */
+.sc-ed__item:focus-visible {
+  outline: 2px solid #d8b15a;
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+.sc-ed__dot {
+  position: absolute;
+  left: 0;
+  top: 17px;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.25);
+  transform: translateY(-50%);
+  transition: background 300ms ease, box-shadow 300ms ease, transform 300ms ease;
+}
+
+.sc-ed__item.is-active .sc-ed__dot {
+  background: #d8b15a;
+  box-shadow: 0 0 0 5px rgba(216, 177, 90, 0.18);
+  transform: translateY(-50%) scale(1.15);
+}
+
+.sc-ed__meta {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: var(--text-meta);
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+  color: rgba(216, 177, 90, 0.85);
+}
+
+.sc-ed__headline {
+  display: block;
+  margin-top: 5px;
+  font-family: var(--font-sans);
+  font-size: clamp(15px, 1.15vw, 18px);
+  line-height: 1.3;
+  color: rgba(255, 255, 255, 0.92);
+}
+
+/* Description is the reward for selecting a stop — same as mobile. */
+.sc-ed__desc {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 400ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.sc-ed__item.is-active .sc-ed__desc {
+  grid-template-rows: 1fr;
+}
+
+.sc-ed__descInner {
+  overflow: hidden;
+}
+
+.sc-ed__desc p {
+  margin: 7px 0 0;
+  max-width: 48ch;
+  font-family: var(--font-sans);
+  font-size: clamp(13px, 0.95vw, 15px);
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* ---- Tablet → desktop taper: gap, globe, and headline all ease down ---- */
+@media (max-width: 1180px) {
+  .sc-ed__content {
+    max-width: 54ch;
+  }
+}
+
+/* ---- Below the desktop breakpoint: stack, don't squeeze ----
+   Production hands off to the mobile card before this; it's a safety net for
+   the labs that mount this component directly. */
+@media (max-width: 959px) {
+  .sc-ed__cols {
+    grid-template-columns: minmax(0, 1fr);
+    gap: clamp(18px, 3vh, 28px);
+  }
+
+  .sc-ed__globeCol {
+    align-self: auto;
+    height: clamp(200px, 30vh, 300px);
+  }
+
+  .sc-ed__content {
+    max-width: none;
+  }
 }
 
 /* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
-  .sc-journey__floatingCard,
-  .sc-journey__topbarItem {
+  .sc-ed__item,
+  .sc-ed__dot,
+  .sc-ed__desc {
     transition-duration: 0.01ms !important;
   }
 }
@@ -3552,7 +3707,7 @@
 
 .sc-journey__railMeta {
   font-family: var(--font-mono, ui-monospace, Menlo, monospace);
-  font-size: 11px;
+  font-size: var(--text-label);
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: rgba(255, 255, 255, 0.6);
@@ -3743,7 +3898,7 @@
   right: 0;
   bottom: 0;
   z-index: 10;
-  width: min(460px, 85%);
+  width: min(clamp(28.75rem, 22rem + 9vw, 44rem), 85%);
   background: rgba(10, 10, 10, 0.96);
   border-left: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 0 24px 24px 0;
@@ -3770,7 +3925,7 @@
 
 .cns-photo__eyebrow {
   font-family: var(--font-mono);
-  font-size: 10px;
+  font-size: var(--text-label);
   font-weight: 500;
   letter-spacing: 0.18em;
   text-transform: uppercase;
@@ -3790,7 +3945,7 @@
 
 .cns-photo__subtitle {
   font-family: var(--font-sans);
-  font-size: 13px;
+  font-size: var(--text-sm);
   line-height: 1.55;
   color: rgba(255, 255, 255, 0.45);
   margin: 0;
@@ -3849,7 +4004,7 @@
 
 .cns-photo__card-liner {
   font-family: var(--font-sans);
-  font-size: 12px;
+  font-size: var(--text-sm);
   line-height: 1.5;
   color: rgba(255, 255, 255, 0.42);
   margin: 0 0 8px;
@@ -3862,7 +4017,7 @@
 }
 .cns-photo__card-deliverables li {
   font-family: var(--font-sans);
-  font-size: 11px;
+  font-size: var(--text-sm);
   line-height: 1.55;
   color: rgba(255, 255, 255, 0.35);
   padding-left: 14px;
@@ -3896,7 +4051,7 @@
 
 .cns-photo__section-sub {
   font-family: var(--font-mono);
-  font-size: 10px;
+  font-size: var(--text-sm);
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: rgba(255, 255, 255, 0.28);
@@ -3918,7 +4073,7 @@
 
 .cns-photo__proof-name {
   font-family: var(--font-sans);
-  font-size: 13px;
+  font-size: var(--text-sm);
   font-weight: 500;
   color: rgba(255, 255, 255, 0.72);
   margin-bottom: 2px;
@@ -3926,7 +4081,7 @@
 
 .cns-photo__proof-client {
   font-family: var(--font-mono);
-  font-size: 9px;
+  font-size: var(--text-label);
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: rgba(255, 255, 255, 0.25);
@@ -3939,7 +4094,7 @@
 .cns-photo__proof-row span {
   display: block;
   font-family: var(--font-mono);
-  font-size: 9px;
+  font-size: var(--text-label);
   font-weight: 500;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -3949,7 +4104,7 @@
 
 .cns-photo__proof-row p {
   font-family: var(--font-sans);
-  font-size: 12px;
+  font-size: var(--text-label);
   line-height: 1.5;
   color: rgba(255, 255, 255, 0.42);
   margin: 0;
@@ -3982,14 +4137,14 @@
 
 .cns-photo__identity {
   font-family: var(--font-sans);
-  font-size: 11px;
+  font-size: var(--text-label);
   color: rgba(255, 255, 255, 0.32);
   margin: 0 0 4px;
 }
 
 .cns-photo__founder {
   font-family: var(--font-sans);
-  font-size: 11px;
+  font-size: var(--text-label);
   line-height: 1.5;
   color: rgba(255, 255, 255, 0.22);
   margin: 0;

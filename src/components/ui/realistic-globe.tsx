@@ -454,6 +454,11 @@ export default function RealisticGlobe({
       <Canvas
         camera={{ position: [0, 0, 2.6], fov: 45 }}
         gl={{ antialias: true, alpha: true }}
+        /* Cap the device pixel ratio at 2. R3F otherwise renders at the
+           display's full DPR, so a Retina 4K panel would rasterise the now
+           much larger sphere at 3x — ~9x the fragments for no visible gain.
+           The [1, 2] range still lets low-DPR displays render at 1. */
+        dpr={[1, 2]}
         style={{ background: "transparent" }}
       >
         <Suspense fallback={null}>

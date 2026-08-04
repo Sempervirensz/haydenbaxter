@@ -91,7 +91,7 @@ export default function CardDeck({
               {activeCard.title}
             </h3>
             <p
-              className="text-[10px] mt-0.5 text-white/60 max-w-[260px]"
+              className="card-caption__desc card-caption__desc--deck mt-0.5"
               style={{ fontFamily: "var(--font-sans)" }}
             >
               {activeCard.description}

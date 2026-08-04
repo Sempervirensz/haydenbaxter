@@ -17,5 +17,9 @@
     "paths": { "@/*": ["./src/*"] }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
-  "exclude": ["node_modules", "legacy"]
+  /* The e2e suite is checked by tests/tsconfig.json instead. Playwright's
+     `test.use()` needs PlaywrightTestOptions in scope, which Next's compiler
+     options do not provide — checking it here reports phantom errors on valid
+     config (e.g. `reducedMotion` "does not exist"). */
+  "exclude": ["node_modules", "legacy", "tests", "playwright.config.ts"]
 }

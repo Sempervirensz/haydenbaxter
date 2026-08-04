@@ -39,7 +39,12 @@ export const SITE_CONTENT = {
       { label: "Disney", imageSrc: "/brands/disney-logo.png" },
       { label: "Aosom", imageSrc: "/brands/aosom-logo.svg" },
     ] satisfies BrandLogo[],
-    repeats: 4,
+    /* Passes through `logos` laid end to end. The marquee shifts by one pass
+       per cycle, so the belt has to be at least one viewport PLUS one pass
+       wide or a gap opens at the trailing edge. With the 300px slot ceiling in
+       globals.css, 6 passes (18 slots, 5400px) covers a 3840px display with
+       room to spare; 4 passes left 2493px of blank at that width. */
+    repeats: 6,
     context: "Past employers that shaped how I build.",
     note: "Logos are trademarks of their respective owners and are shown for identification only. No endorsement implied.",
   },

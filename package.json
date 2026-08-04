@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "check:assets": "node scripts/check-assets.mjs",
-    "check": "npx tsc --noEmit && npm run check:assets"
+    "check:scale": "node scripts/check-scale.mjs",
+    "check": "npx tsc --noEmit && npm run check:assets && npm run check:scale"
   },
   "dependencies": {
     "@react-three/drei": "^10.7.7",
