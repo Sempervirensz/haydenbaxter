@@ -31,7 +31,18 @@ export default defineConfig({
   testDir: "./tests",
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
-  retries: process.env.CI ? 1 : 0,
+  /* Retry locally too, not just in CI.
+   *
+   * These pages are heavy enough that four workers against one static server
+   * can push the soft-lock gate's hydration past its budget. The tests that
+   * lose that race are not failing on their assertion — they never get the page
+   * open — and they pass every time when run serially. Without a retry the run
+   * reports them as defects, which is how a 46/47 project came back as 26
+   * "failures" across a full sweep and cost an hour of chasing ghosts.
+   *
+   * A genuine failure still fails twice. A flake shows up as flaky, which is
+   * the information actually worth having. */
+  retries: 1,
   workers: process.env.CI ? 2 : 4,
   // HTML report so results are browsable after the fact — `npx playwright
   // show-report` opens it with the failure screenshots and traces attached.
