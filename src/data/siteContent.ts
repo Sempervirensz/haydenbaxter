@@ -31,7 +31,7 @@ export const SITE_CONTENT = {
   hero: {
     eyebrow: "View the work, the supply chain background, and where WorldPulse fits in.",
     heading:
-      "Helping orgs put AI to work, strengthening global supply chains, and innovating where sustainability meets next-gen tech.",
+      "I help orgs put AI to work, strengthen global supply chains, and innovate where sustainability meets next-gen tech.",
   },
   brands: {
     logos: [
