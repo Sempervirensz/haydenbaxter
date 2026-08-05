@@ -253,18 +253,34 @@ html {
   text-wrap: balance;
 }
 
-/* 32ch, not 22ch: the statement runs 115 characters, and a 22ch measure set it
-   as six lines — a wall that pushed the card fan off the fold. 32ch holds it at
-   four lines everywhere the cap actually binds: measured 4 lines at 1440, 1920
-   and 3840. Below roughly 1100px the viewport binds first, not the cap, so 768
-   sets six — that is the gutter talking, not this rule.
-
-   Still a character cap, not a pixel one, so the line stays editorial at 4K
-   (2410px, 63% of a 3840px display) instead of running the full width. */
+/* Size and measure are one decision, not two.
+ *
+ * The statement runs 115 characters and `text-wrap: balance` divides it evenly,
+ * so the line count is set by the MEASURE: lines ≈ 115 ÷ chars-per-line, and
+ * chars-per-line lands near 0.9× the `ch` cap in this face. 32ch gave four
+ * lines; 46ch gives three. Dropping the size without opening the measure would
+ * only have produced a smaller four-line block.
+ *
+ * Own ramp rather than `--text-display`: that token is shared with
+ * `.cstack__title`, and retuning it to bring the hero down would have taken the
+ * Work headings with it. Fitted the same way src/styles/scale.css fits its
+ * steps — solved to hit the floor at 1280 and the ceiling at 3840, so growth
+ * stays linear across 1440 / 1920 / 2560 / 3440:
+ *
+ *     slope = (127 − 54) ÷ 25.6 = 2.852        base = 54 − 2.852 × 12.8 = 17.5px
+ *
+ * Measured: 3 lines and a binding cap at 1440 (58.6px / 1352px), 1920 (72.3px /
+ * 1669px), 3440 (115.6px / 2670px) and 3840 (127px / 2933px). 46ch was chosen
+ * over the wider options because it is the widest measure whose cap still binds
+ * at 1440 — past roughly 52ch the page gutter sets the line instead, and the
+ * character cap silently stops being the thing in charge.
+ *
+ * Below ~1100px the viewport binds first regardless, so 768 sets five lines.
+ * That is the gutter talking, not this rule. */
 .hero-heading {
-  font-size: var(--text-display);
+  font-size: clamp(3.375rem, 1.09375rem + 2.852vw, 7.9375rem); /* 54 → 127px */
   line-height: var(--leading-display);
-  max-width: 32ch;
+  max-width: 46ch;
   text-wrap: balance;
 }
 
@@ -278,17 +294,20 @@ html {
     padding-block: 5rem 3rem;
   }
 
-  /* Size: solved so a 390px phone still renders 22px — the size this was before
-     the scale system landed — rather than inheriting a desktop-shaped ramp.
-     Measure: 22ch, not 18ch. At 18ch the longer statement broke to eight lines
-     on a 390px phone and orphaned "to work," on its own, while the column sat
-     at 199px inside a 349px content area. 22ch spends the width that was
-     already there — six even lines, no orphan — and still clears the narrowest
-     phone (243px against ~280px of content at 320px), so the cap, not the
-     viewport, keeps deciding the break. */
+  /* Phone sizing is its own decision, not a point on the desktop ramp — that is
+     why this block exists at all.
+
+     Was 22px at 22ch, which set six lines on a 375 phone. Stepping to 20px and
+     26ch trades a little size for a line: measured five lines at 375, in a
+     261px column against ~349px of content, last line "meets next-gen tech."
+     with no orphan. The block goes 139px → 105px tall, which is the card fan
+     moving up a third of a hero.
+
+     Still comfortably inside the narrowest phone, so the cap — not the viewport
+     — keeps deciding the break here, same as before. */
   .hero-heading {
-    font-size: clamp(1.375rem, 0.79rem + 2.4vw, 2.25rem);
-    max-width: 22ch;
+    font-size: clamp(1.25rem, 0.72rem + 2.18vw, 2rem); /* 20 → 32px */
+    max-width: 26ch;
   }
 
   .hero-eyebrow {
