@@ -1,0 +1,194 @@
+/* Hero headline type iterations.
+ *
+ * Every variant is scoped under `[data-hv="…"]`, an attribute that exists only
+ * inside this lab. Production `.hero-heading` is therefore untouched — the lab
+ * renders the real production markup and class names so what you are judging is
+ * the actual element, not a replica that can drift away from it.
+ *
+ * Ramps are fitted the same way src/styles/scale.css fits its steps: solved so
+ * the value hits its floor at 1280px and its ceiling at 3840px, keeping growth
+ * linear and still happening across 1440 / 1920 / 2560 / 3440.
+ *
+ *     slope_vw = (px@3840 − px@1280) ÷ 25.6
+ *     base_px  = px@1280 − slope_vw × 12.8
+ *
+ * Sizes come down; measures open up. Doing only the first makes a smaller
+ * four-line block, which is not what "span" asks for. */
+
+/* ── A · Gentle — 59 → 138px, three lines ───────────────────────────────── */
+[data-hv="a"] .hero-heading {
+  font-size: clamp(3.6875rem, 1.21875rem + 3.086vw, 8.625rem);
+  max-width: 40ch;
+}
+
+/* ── B · Balanced — 54 → 127px, three lines with width behind them ──────── */
+[data-hv="b"] .hero-heading {
+  font-size: clamp(3.375rem, 1.09375rem + 2.852vw, 7.9375rem);
+  max-width: 46ch;
+}
+
+/* ── C · Editorial — 48 → 112px, two long lines ─────────────────────────── */
+[data-hv="c"] .hero-heading {
+  font-size: clamp(3rem, 1rem + 2.5vw, 7rem);
+  max-width: 60ch;
+  line-height: 1.03;
+}
+
+/* ── D · Ultrawide-aware — B's type, C's measure once there is room ──────
+ *
+ * The only variant that treats ultrawide as its own case rather than as "a wide
+ * desktop". A 3440 panel has width a laptop does not, and holding the same 46ch
+ * there spends it on margin instead of on the line. 2200px is the threshold
+ * because it sits above every common laptop and below every 2560 panel, so no
+ * standard desktop changes behaviour. */
+[data-hv="d"] .hero-heading {
+  font-size: clamp(3.375rem, 1.09375rem + 2.852vw, 7.9375rem);
+  max-width: 46ch;
+}
+
+@media (min-width: 2200px) {
+  [data-hv="d"] .hero-heading {
+    max-width: 64ch;
+  }
+}
+
+/* ── E · Compact — 45 → 105px, tightest block on the page ───────────────── */
+[data-hv="e"] .hero-heading {
+  font-size: clamp(2.8125rem, 0.9375rem + 2.344vw, 6.5625rem);
+  max-width: 68ch;
+  line-height: 1;
+}
+
+/* ── Phone sizing ────────────────────────────────────────────────────────
+ *
+ * Production sets 22 → 28px at 22ch below 640px, which lands the statement in
+ * six lines on a 375 phone. Each variant steps the size down a little and opens
+ * the measure, trading a line or two of height for the same copy. Kept as its
+ * own block, matching globals.css, because phone sizing is a deliberate
+ * decision here rather than a point on the desktop ramp. */
+@media (max-width: 640px) {
+  [data-hv="a"] .hero-heading {
+    font-size: clamp(1.3125rem, 0.75rem + 2.28vw, 2.125rem);
+    max-width: 24ch;
+  }
+
+  [data-hv="b"] .hero-heading,
+  [data-hv="d"] .hero-heading {
+    font-size: clamp(1.25rem, 0.72rem + 2.18vw, 2rem);
+    max-width: 26ch;
+  }
+
+  [data-hv="c"] .hero-heading {
+    font-size: clamp(1.1875rem, 0.68rem + 2.06vw, 1.875rem);
+    max-width: 28ch;
+  }
+
+  [data-hv="e"] .hero-heading {
+    font-size: clamp(1.125rem, 0.645rem + 1.97vw, 1.75rem);
+    max-width: 30ch;
+  }
+}
+
+/* ── Lab chrome ──────────────────────────────────────────────────────────
+ *
+ * Deliberately not the portfolio language — flat, tool-grey, mono, no DYMO, no
+ * serif — following cta-lab's LabControls, so the panel never reads as part of
+ * the composition being judged. */
+.hvlab {
+  min-height: 100dvh;
+  background: #0a0a0a;
+}
+
+.hvlab__stage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.hvlab__panel {
+  position: fixed;
+  inset-block-end: 0;
+  inset-inline: 0;
+  z-index: 40;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  background: rgba(18, 18, 18, 0.94);
+  border-block-start: 1px solid #2a2a2a;
+  backdrop-filter: blur(8px);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 12px;
+  color: #b8b8b8;
+}
+
+.hvlab__group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+}
+
+.hvlab__btn {
+  padding: 5px 10px;
+  border: 1px solid #3a3a3a;
+  border-radius: 4px;
+  background: #1c1c1c;
+  color: #ccc;
+  font: inherit;
+  cursor: pointer;
+}
+
+.hvlab__btn:hover {
+  border-color: #555;
+  color: #fff;
+}
+
+.hvlab__btn[aria-pressed="true"] {
+  background: #e8e8e8;
+  border-color: #e8e8e8;
+  color: #111;
+}
+
+.hvlab__btn:focus-visible {
+  outline: 2px solid #6ea8fe;
+  outline-offset: 2px;
+}
+
+.hvlab__sep {
+  width: 1px;
+  align-self: stretch;
+  background: #2a2a2a;
+}
+
+.hvlab__note {
+  flex: 1 1 260px;
+  min-width: 0;
+  color: #8a8a8a;
+}
+
+.hvlab__readout {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+  color: #9a9a9a;
+}
+
+.hvlab__readout b {
+  color: #e8e8e8;
+  font-weight: 500;
+}
+
+/* The panel is fixed, so the stage needs room to clear it. */
+.hvlab__spacer {
+  height: 92px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hvlab__panel {
+    backdrop-filter: none;
+  }
+}

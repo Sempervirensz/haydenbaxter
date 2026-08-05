@@ -32,6 +32,10 @@ const ROUTES: Route[] = [
   { label: "Work stack", src: WORK_CINEMA },
   { label: "Tech builds", src: "/emerging-tech-builds" },
   { label: "Journal", src: "/blog" },
+  // Hero type iterations. Framed rather than viewed directly because the whole
+  // question is how the headline behaves at widths this machine cannot open —
+  // the iframe's own viewport is what makes 3440 and 3840 real here.
+  { label: "Hero type", src: "/hero-type-lab" },
 ];
 
 interface Preset {
