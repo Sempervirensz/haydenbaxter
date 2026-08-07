@@ -1,6 +1,7 @@
 import dynamic from "next/dynamic";
 import HeroSection from "@/components/HeroSection";
 import BrandsCarousel from "@/components/BrandsCarousel";
+import PersonasSection from "@/components/PersonasSection";
 import ConnectSection from "@/components/ConnectSection";
 import AboutSection from "@/components/AboutSection";
 import JournalSection from "@/components/JournalSection";
@@ -20,6 +21,10 @@ export default function Home() {
       <SoftLockGate>
         <BrandsCarousel />
         <WorkSection />
+        {/* Directly below the Work section's closing "Let's work together"
+            chapter, so the three areas that CTA names resolve into what each
+            one actually covers before the page reaches Connect. */}
+        <PersonasSection />
         <ConnectSection />
         <AboutSection />
         <JournalSection />

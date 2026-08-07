@@ -1,0 +1,341 @@
+/* ===========================================================================
+   Personas: three glass cards over a media plate.
+
+   Sits between the Work section's "Let's work together" chapter and Connect,
+   so it borrows the shell those neighbours already use (#0a0a0a ground,
+   --section-gap padding, centred column, serif heading) rather than
+   introducing a surface of its own.
+
+   The glass is the site's own: the same rgba face, backdrop blur and inset
+   highlight the nav button and the Work detail screens already use, not a new
+   material invented here.
+
+   This is variant B from /personas-lab. The values are deliberately RESTATED
+   here rather than imported from personas-lab.css: the lab is disposable and
+   the shipped section must not depend on it. <PersonaIcon> is the exception —
+   it is a real component, so its look travels with it in persona-mark.css.
+
+   Motion is grounded: opacity, a short rise, and a grid-row expand. No scale,
+   no drift, no floaty easing.
+   ======================================================================== */
+
+.personas {
+  --g-face: rgba(255, 255, 255, 0.045);
+  --g-face-hi: rgba(255, 255, 255, 0.08);
+  --g-edge: rgba(255, 255, 255, 0.12);
+  --g-edge-hi: rgba(255, 255, 255, 0.26);
+  --g-blur: blur(18px) saturate(1.35);
+  --g-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --g-fast: 200ms;
+  --g-base: 380ms;
+  /* #d8b15a, the site's single accent. One value for all three cards: the
+     personas are three areas of one practice, not three brands. */
+  --p-accent: #d8b15a;
+
+  background: #0a0a0a;
+  padding: var(--section-gap) var(--page-gutter);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.personas__heading {
+  font-family: var(--font-serif);
+  font-size: var(--text-heading);
+  line-height: var(--leading-display);
+  font-weight: 400;
+  color: var(--ink);
+  margin-bottom: var(--block-gap);
+  text-align: center;
+  max-width: 20ch;
+  text-wrap: balance;
+}
+
+/* ---- The plate ---------------------------------------------------------- */
+
+.personas__stage {
+  position: relative;
+  isolation: isolate;
+  width: 100%;
+  max-width: min(100%, var(--content-max));
+}
+
+.personas__plate {
+  /* The three dials worth turning without re-encoding the clip: how far back it
+     sits, where the crop lands, and how tight the vignette closes. `cover`
+     reframes the plate at every viewport width, which is why the clip is
+     deliberately subject-less — there is no composition to crop away. */
+  --plate-opacity: 0.34;
+  --plate-position: 50% 40%;
+  --plate-mask: radial-gradient(120% 90% at 50% 40%, #000 35%, transparent 78%);
+
+  position: absolute;
+  inset: -8% -4%;
+  z-index: 0;
+  overflow: hidden;
+  border-radius: var(--card-radius);
+  /* Held well back: this is a surface for the glass to sample, not a photo the
+     section is about. The copy has to stay the brightest thing here. */
+  opacity: var(--plate-opacity);
+  -webkit-mask-image: var(--plate-mask);
+  mask-image: var(--plate-mask);
+}
+
+.personas__plate img,
+.personas__plate video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: var(--plate-position);
+  display: block;
+}
+
+/* ---- The three cards ---------------------------------------------------- */
+
+.personas__grid {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--grid-gap);
+  /* Stretch, not start. The three first-bullets are different lengths, so
+     `start` leaves one short card beside two tall ones instead of a set. The
+     slack falls below the copy, where it reads as margin rather than a gap. */
+  align-items: stretch;
+}
+
+.personas__card {
+  display: flex;
+  flex-direction: column;
+  border-radius: var(--card-radius);
+  border: 1px solid var(--g-edge);
+  background: var(--g-face);
+  backdrop-filter: var(--g-blur);
+  -webkit-backdrop-filter: var(--g-blur);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.07);
+  transition:
+    transform var(--g-base) var(--g-ease),
+    border-color var(--g-fast) ease,
+    background var(--g-fast) ease;
+}
+
+.personas__toggle {
+  all: unset;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  cursor: pointer;
+  padding: clamp(1.25rem, 1rem + 1vw, 2.25rem);
+  padding-bottom: 0;
+}
+
+.personas__toggle:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.24);
+  outline-offset: 4px;
+  border-radius: var(--card-radius);
+}
+
+/* No gold TYPE anywhere in the card. The accent survives only as non-text: the
+   mark's tint, the bullet markers, and the lit edge of an open card. The gold
+   eyebrow that used to sit above each title is gone entirely — the title
+   already names the area, so the label was repeating it in a louder colour. */
+.personas__mark {
+  color: color-mix(in srgb, var(--p-accent) 72%, transparent);
+}
+
+/* The Sans voice: DM Sans 500, tracking tightened rather than opened. Quietest
+   of the four in the lab, and the only one that keeps the title at --text-lg —
+   the mono voices step down to --text-base because uppercase mono at a display
+   size runs long, and sentence-case sans has no such problem. */
+.personas__title {
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: var(--text-lg);
+  letter-spacing: -0.015em;
+  text-transform: none;
+  line-height: var(--leading-tight);
+  color: var(--ink);
+  text-wrap: balance;
+}
+
+/* ---- Bullets ------------------------------------------------------------ */
+
+/* The first bullet is always visible, so a card is never a bare title and a
+   touch device is never promised copy it cannot reach. The other two stay
+   collapsed until hover, focus, or tap, and every bullet carries a marker so
+   the visible one reads as the first of a list rather than a stray line. */
+
+.personas__preview,
+.personas__item {
+  position: relative;
+  margin: 0;
+  padding-left: 0.95rem;
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  line-height: 1.5;
+  color: var(--ink-body);
+}
+
+.personas__preview::before,
+.personas__item::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  /* Pinned to the first line, so a bullet that wraps keeps its marker beside
+     the top line rather than drifting to the middle of the block. */
+  top: calc(0.5 * 1.5 * 1em);
+  width: 0.3rem;
+  height: 0.3rem;
+  margin-top: -0.15rem;
+  border-radius: 50%;
+  background: var(--p-accent);
+}
+
+/* The 0fr/1fr grid trick, so the card grows to its own copy rather than to a
+   guessed max-height. */
+.personas__body {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows var(--g-base) var(--g-ease);
+  padding: 0 clamp(1.25rem, 1rem + 1vw, 2.25rem);
+}
+
+.personas__list {
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+
+.personas__item {
+  opacity: 0;
+  transition: opacity var(--g-fast) ease;
+}
+
+/* Padding lives on a spacer rather than on the collapsed list, because padding
+   is not collapsible: put it inside the 0fr track and it leaves a sliver of
+   dead space under every closed card. */
+.personas__card::after {
+  content: "";
+  display: block;
+  height: clamp(1.25rem, 1rem + 1vw, 2.25rem);
+}
+
+/* ---- Open --------------------------------------------------------------- */
+
+/* Open reads as lit, not just lighter: the edge picks up the accent and a very
+   wide inset glow warms the face, which is what stops an opened card from
+   looking merely greyer than its neighbours.
+
+   `:focus-visible`, NOT `:focus-within`. A click focuses the button, so with
+   `:focus-within` a card stayed visually open after being clicked shut — the
+   close was a no-op until focus happened to move elsewhere, which is a card
+   that cannot be closed by the same gesture that opened it. `:focus-visible`
+   fires for the keyboard and not for a mouse click, so Tab still reveals the
+   copy without a keypress and the click toggle behaves. */
+.personas__card.is-open,
+.personas__card:has(.personas__toggle:focus-visible) {
+  border-color: color-mix(in srgb, var(--p-accent) 42%, transparent);
+  background: var(--g-face-hi);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    inset 0 0 40px color-mix(in srgb, var(--p-accent) 6%, transparent),
+    0 0 0 1px color-mix(in srgb, var(--p-accent) 12%, transparent);
+}
+
+/* The title does NOT warm to gold when the card opens. The lab tinted it 30%
+   toward the accent; that is still gold on type, so the open state is carried
+   by the edge and the inner glow alone, which are not writing. */
+
+.personas__card.is-open .personas__body,
+.personas__card:has(.personas__toggle:focus-visible) .personas__body {
+  grid-template-rows: 1fr;
+  padding-top: 0.7rem;
+}
+
+.personas__card.is-open .personas__item,
+.personas__card:has(.personas__toggle:focus-visible) .personas__item {
+  opacity: 1;
+}
+
+/* Hover is additive and gated, so a touch device never gets stuck in a phantom
+   hover after a tap. */
+@media (hover: hover) {
+  .personas__card:hover {
+    border-color: color-mix(in srgb, var(--p-accent) 42%, transparent);
+    background: var(--g-face-hi);
+    transform: translateY(-2px);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.1),
+      inset 0 0 40px color-mix(in srgb, var(--p-accent) 6%, transparent),
+      0 0 0 1px color-mix(in srgb, var(--p-accent) 12%, transparent);
+  }
+
+
+  .personas__card:hover .personas__body {
+    grid-template-rows: 1fr;
+    padding-top: 0.7rem;
+  }
+
+  .personas__card:hover .personas__item {
+    opacity: 1;
+  }
+}
+
+/* ===========================================================================
+   Narrow
+   ======================================================================== */
+
+@media (max-width: 880px) {
+  .personas__grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* One column means the cards are already full width, so there is nothing for
+     the plate to sit behind at the edges. Pull it in. */
+  .personas__plate {
+    inset: -4% -2%;
+  }
+}
+
+@media (max-width: 640px) {
+  .personas__preview,
+  .personas__item {
+    font-size: var(--text-body-sm);
+  }
+}
+
+/* Coarse pointers get no hover, so the toggle must clear a finger. */
+@media (pointer: coarse) {
+  .personas__toggle {
+    min-height: var(--tap-min);
+  }
+}
+
+/* ===========================================================================
+   Reduced motion: the section still answers, it just stops moving. The detail
+   renders open rather than transitioning, so nothing is gated behind a motion
+   the visitor has asked not to see.
+   ======================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .personas__card,
+  .personas__body,
+  .personas__item {
+    transition: none;
+  }
+
+  .personas__card:hover {
+    transform: none;
+  }
+
+  .personas__body {
+    grid-template-rows: 1fr;
+    padding-top: 0.7rem;
+  }
+
+  .personas__item {
+    opacity: 1;
+  }
+}
