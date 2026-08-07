@@ -1,0 +1,1461 @@
+/* ===========================================================================
+   Personas lab: four glass directions.
+
+   Shared vocabulary, so the four variants differ in COMPOSITION rather than in
+   surface. The glass is the site's own: the same rgba face, backdrop blur and
+   inset highlight the nav button and the Work detail screens already use, not
+   a new material invented for this section.
+
+   Motion is grounded throughout: opacity, a short rise, and a grid-row expand.
+   No scale, no drift, no floaty easing. Everything is disabled under
+   prefers-reduced-motion, where the detail simply renders open.
+   ======================================================================== */
+
+.plab {
+  --g-face: rgba(255, 255, 255, 0.045);
+  --g-face-hi: rgba(255, 255, 255, 0.08);
+  --g-edge: rgba(255, 255, 255, 0.12);
+  --g-edge-hi: rgba(255, 255, 255, 0.26);
+  --g-blur: blur(18px) saturate(1.35);
+  --g-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --g-fast: 200ms;
+  --g-base: 380ms;
+
+  background: #0a0a0a;
+  min-height: 100vh;
+  padding: var(--section-gap) var(--page-gutter);
+}
+
+/* ---- Lab chrome ---- */
+
+.plab__head {
+  max-width: var(--content-max);
+  margin: 0 auto clamp(2.5rem, 2rem + 2vw, 5rem);
+}
+
+.plab__eyebrow {
+  margin: 0 0 0.75rem;
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  letter-spacing: var(--track-dymo);
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.plab__title {
+  margin: 0 0 1rem;
+  font-family: var(--font-serif);
+  font-size: var(--text-heading);
+  line-height: var(--leading-display);
+  font-weight: 400;
+  color: var(--ink);
+}
+
+.plab__lede {
+  margin: 0;
+  max-width: var(--measure);
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  line-height: var(--leading-body);
+  color: var(--ink-muted);
+}
+
+.plab__section {
+  max-width: var(--content-max);
+  margin: 0 auto clamp(3.5rem, 2.5rem + 3vw, 7rem);
+}
+
+.plab__meta {
+  margin-bottom: var(--block-gap);
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.plab__label {
+  margin: 0 0 0.35rem;
+  font-family: var(--font-mono);
+  font-size: var(--text-control);
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+  color: var(--ink);
+}
+
+.plab__note {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  line-height: var(--leading-body);
+  color: var(--ink-faint);
+}
+
+/* Shared reset for the variants that use a button as the whole surface. */
+.pb-card,
+.pd-col,
+.pa-row__btn,
+.pc-btn {
+  -webkit-tap-highlight-color: transparent;
+}
+
+.plab :focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.7);
+  outline-offset: 3px;
+}
+
+/* ---- Scheme switcher ---- */
+
+.plab__switch {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: var(--block-gap);
+}
+
+.plab__swatch {
+  all: unset;
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  cursor: pointer;
+  min-height: var(--tap-min);
+  padding: 0.5rem 0.9rem;
+  border-radius: 999px;
+  border: 1px solid var(--g-edge);
+  background: var(--g-face);
+  font-family: var(--font-mono);
+  font-size: var(--text-control);
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  transition: border-color 180ms ease, background 180ms ease, color 180ms ease;
+}
+
+.plab__swatch.is-on {
+  border-color: var(--g-edge-hi);
+  background: var(--g-face-hi);
+  color: var(--ink);
+}
+
+.plab__dots {
+  display: inline-flex;
+  gap: 3px;
+}
+
+.plab__dots i {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: currentColor;
+}
+
+/* The swatch previews the actual scheme it switches to. */
+.plab__dots--mono i {
+  background: rgba(255, 255, 255, 0.72);
+}
+.plab__dots--gold i {
+  background: #d8b15a;
+}
+.plab__dots--chapter i:nth-child(1) {
+  background: #8fa4e8;
+}
+.plab__dots--chapter i:nth-child(2) {
+  background: #6fa3d8;
+}
+.plab__dots--chapter i:nth-child(3) {
+  background: #5fae86;
+}
+.plab__dots--parchment i {
+  background: #f3e6c4;
+}
+
+.plab__note--scheme {
+  margin-top: 0.65rem;
+}
+
+/* ===========================================================================
+   A. Glass rail
+   ======================================================================== */
+
+.pa {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.pa-row {
+  border-radius: var(--card-radius);
+  border: 1px solid var(--g-edge);
+  background: var(--g-face);
+  backdrop-filter: var(--g-blur);
+  -webkit-backdrop-filter: var(--g-blur);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.07);
+  overflow: hidden;
+  transition:
+    border-color var(--g-fast) ease,
+    background var(--g-fast) ease;
+}
+
+.pa-row__btn {
+  all: unset;
+  box-sizing: border-box;
+  display: grid;
+  grid-template-columns: auto 1fr auto auto;
+  align-items: center;
+  gap: clamp(0.875rem, 0.6rem + 1vw, 1.75rem);
+  width: 100%;
+  padding: clamp(1rem, 0.8rem + 0.8vw, 1.6rem) clamp(1.1rem, 0.9rem + 0.9vw, 1.9rem);
+  cursor: pointer;
+}
+
+.pa-row__num {
+  font-family: var(--font-mono);
+  font-size: var(--text-meta);
+  letter-spacing: var(--track-label);
+  color: var(--ink-faint);
+}
+
+.pa-row__title {
+  font-family: var(--font-serif);
+  font-size: var(--text-lg);
+  line-height: var(--leading-tight);
+  color: var(--ink);
+}
+
+.pa-row__area {
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.pa-row__chev {
+  font-family: var(--font-mono);
+  font-size: var(--text-control);
+  color: var(--ink-muted);
+  transition: transform var(--g-base) var(--g-ease);
+}
+
+/* The expand itself. `grid-template-rows: 0fr -> 1fr` animates to the content's
+   own height without hard-coding one, which is what keeps three rows of very
+   different bullet lengths honest. */
+.pa-row__body {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows var(--g-base) var(--g-ease);
+}
+
+.pa-row__list {
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.pa-row__list li {
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  line-height: var(--leading-body);
+  color: var(--ink-body);
+  padding: 0 clamp(1.1rem, 0.9rem + 0.9vw, 1.9rem) 0.85rem
+    clamp(3.2rem, 2.4rem + 2vw, 4.6rem);
+  opacity: 0;
+  transition: opacity var(--g-fast) ease;
+}
+
+.pa-row__list li:last-child {
+  padding-bottom: clamp(1rem, 0.8rem + 0.8vw, 1.6rem);
+}
+
+/* Open state. Hover is additive, and gated so a touch device never gets stuck
+   in it after a tap. */
+.pa-row.is-locked .pa-row__body,
+.pa-row:focus-within .pa-row__body {
+  grid-template-rows: 1fr;
+}
+.pa-row.is-locked .pa-row__list li,
+.pa-row:focus-within .pa-row__list li {
+  opacity: 1;
+  transition-delay: 90ms;
+}
+.pa-row.is-locked,
+.pa-row:focus-within {
+  border-color: var(--g-edge-hi);
+  background: var(--g-face-hi);
+}
+.pa-row.is-locked .pa-row__chev {
+  transform: rotate(45deg);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .pa-row:hover .pa-row__body {
+    grid-template-rows: 1fr;
+  }
+  .pa-row:hover .pa-row__list li {
+    opacity: 1;
+    transition-delay: 90ms;
+  }
+  .pa-row:hover {
+    border-color: var(--g-edge-hi);
+    background: var(--g-face-hi);
+  }
+}
+
+@media (max-width: 640px) {
+  .pa-row__btn {
+    grid-template-columns: auto 1fr auto;
+  }
+  .pa-row__area {
+    display: none;
+  }
+  .pa-row__list li {
+    padding-left: clamp(1.1rem, 0.9rem + 0.9vw, 1.9rem);
+    font-size: var(--text-body-sm);
+  }
+}
+
+/* ===========================================================================
+   B. Glass three-up
+   ======================================================================== */
+
+.pb {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--grid-gap);
+  /* Stretch, not start. The three first-bullets are different lengths — one
+     line for AI against three for supply chain — so `start` left the cards at
+     226/267/267px and the row read as one short card beside two tall ones
+     rather than as a set. Stretch levels them to the tallest; the slack falls
+     to the bottom of the shorter cards, below the copy, where it reads as
+     margin rather than as a gap. */
+  align-items: stretch;
+}
+
+.pb-card {
+  all: unset;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  cursor: pointer;
+  padding: clamp(1.25rem, 1rem + 1vw, 2.25rem);
+  border-radius: var(--card-radius);
+  border: 1px solid var(--g-edge);
+  background: var(--g-face);
+  backdrop-filter: var(--g-blur);
+  -webkit-backdrop-filter: var(--g-blur);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.07);
+  transition:
+    transform var(--g-base) var(--g-ease),
+    border-color var(--g-fast) ease,
+    background var(--g-fast) ease,
+    box-shadow var(--g-base) var(--g-ease);
+}
+
+.pb-card__num {
+  font-family: var(--font-mono);
+  font-size: var(--text-meta);
+  letter-spacing: var(--track-label);
+  color: var(--ink-faint);
+}
+
+.pb-card__area {
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  letter-spacing: var(--track-dymo);
+  text-transform: uppercase;
+  color: var(--ink-muted);
+}
+
+.pb-card__title {
+  font-family: var(--font-serif);
+  font-size: var(--text-lg);
+  line-height: var(--leading-tight);
+  color: var(--ink);
+  text-wrap: balance;
+}
+
+/* Same 0fr trick, so the card grows to its own copy rather than to a guess. */
+.pb-card__body {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows var(--g-base) var(--g-ease);
+}
+
+.pb-card__list {
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  padding-top: 0.5rem;
+}
+
+.pb-card__item {
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  line-height: var(--leading-body);
+  color: var(--ink-body);
+  opacity: 0;
+  transition: opacity var(--g-fast) ease;
+}
+
+.pb-card.is-locked,
+.pb-card:focus-within {
+  border-color: var(--g-edge-hi);
+  background: var(--g-face-hi);
+}
+.pb-card.is-locked .pb-card__body,
+.pb-card:focus-within .pb-card__body {
+  grid-template-rows: 1fr;
+}
+.pb-card.is-locked .pb-card__item,
+.pb-card:focus-within .pb-card__item {
+  opacity: 1;
+  transition-delay: 90ms;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .pb-card:hover {
+    transform: translateY(-6px);
+    border-color: var(--g-edge-hi);
+    background: var(--g-face-hi);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.1),
+      0 18px 40px rgba(0, 0, 0, 0.5);
+  }
+  .pb-card:hover .pb-card__body {
+    grid-template-rows: 1fr;
+  }
+  .pb-card:hover .pb-card__item {
+    opacity: 1;
+    transition-delay: 90ms;
+  }
+}
+
+/* Narrow has no hover to give, so the detail is simply always there. */
+@media (max-width: 880px) {
+  .pb {
+    grid-template-columns: 1fr;
+  }
+  .pb-card__body {
+    grid-template-rows: 1fr;
+  }
+  .pb-card__item {
+    opacity: 1;
+  }
+}
+
+/* ===========================================================================
+   C. Glass buttons + swapping panel
+   ======================================================================== */
+
+.pc {
+  display: flex;
+  flex-direction: column;
+  gap: var(--block-gap);
+  align-items: center;
+}
+
+.pc-bar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+.pc-btn {
+  all: unset;
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  cursor: pointer;
+  min-height: var(--tap-min);
+  padding: 0.7rem clamp(1rem, 0.8rem + 0.6vw, 1.5rem);
+  border-radius: 999px;
+  border: 1px solid var(--g-edge);
+  background: var(--g-face);
+  backdrop-filter: var(--g-blur);
+  -webkit-backdrop-filter: var(--g-blur);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.07);
+  font-family: var(--font-mono);
+  font-size: var(--text-control);
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  transition:
+    border-color var(--g-fast) ease,
+    background var(--g-fast) ease,
+    color var(--g-fast) ease;
+}
+
+.pc-btn__num {
+  font-size: var(--text-xs);
+  color: var(--ink-faint);
+}
+
+.pc-btn.is-active {
+  border-color: var(--g-edge-hi);
+  background: var(--g-face-hi);
+  color: var(--ink);
+}
+
+.pc-panel {
+  width: 100%;
+  max-width: min(100%, calc(var(--measure) + 12rem));
+  padding: clamp(1.5rem, 1.1rem + 1.6vw, 3rem);
+  border-radius: var(--card-radius);
+  border: 1px solid var(--g-edge);
+  background: var(--g-face);
+  backdrop-filter: var(--g-blur);
+  -webkit-backdrop-filter: var(--g-blur);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.07);
+  animation: pc-in var(--g-base) var(--g-ease) both;
+}
+
+@keyframes pc-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.pc-panel__title {
+  margin: 0 0 1rem;
+  font-family: var(--font-serif);
+  font-size: var(--text-xl);
+  line-height: var(--leading-tight);
+  color: var(--ink);
+}
+
+.pc-panel__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.pc-panel__list li {
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  line-height: var(--leading-body);
+  color: var(--ink-body);
+  max-width: var(--measure);
+}
+
+/* ===========================================================================
+   D. Glass filmstrip
+   ======================================================================== */
+
+.pd {
+  display: flex;
+  gap: 0.75rem;
+  min-height: 26rem;
+}
+
+.pd-col {
+  all: unset;
+  box-sizing: border-box;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  flex: 1 1 0;
+  padding: clamp(1.25rem, 1rem + 1vw, 2rem);
+  border-radius: var(--card-radius);
+  border: 1px solid var(--g-edge);
+  background: var(--g-face);
+  backdrop-filter: var(--g-blur);
+  -webkit-backdrop-filter: var(--g-blur);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.07);
+  overflow: hidden;
+  transition:
+    flex-grow var(--g-base) var(--g-ease),
+    border-color var(--g-fast) ease,
+    background var(--g-fast) ease;
+}
+
+.pd-col__head {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+}
+
+.pd-col__num {
+  color: var(--ink-faint);
+}
+
+.pd-col__area {
+  color: var(--ink-muted);
+  white-space: nowrap;
+}
+
+.pd-col__title {
+  font-family: var(--font-serif);
+  font-size: var(--text-lg);
+  line-height: var(--leading-tight);
+  color: var(--ink);
+  text-wrap: balance;
+}
+
+.pd-col__body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  opacity: 0;
+  transform: translateY(6px);
+  transition:
+    opacity var(--g-base) ease,
+    transform var(--g-base) var(--g-ease);
+}
+
+.pd-col__item {
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  line-height: var(--leading-body);
+  color: var(--ink-body);
+}
+
+.pd-col.is-locked,
+.pd-col:focus-within {
+  flex-grow: 2.4;
+  border-color: var(--g-edge-hi);
+  background: var(--g-face-hi);
+}
+.pd-col.is-locked .pd-col__body,
+.pd-col:focus-within .pd-col__body {
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: 110ms;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .pd-col:hover {
+    flex-grow: 2.4;
+    border-color: var(--g-edge-hi);
+    background: var(--g-face-hi);
+  }
+  .pd-col:hover .pd-col__body {
+    opacity: 1;
+    transform: translateY(0);
+    transition-delay: 110ms;
+  }
+}
+
+/* A filmstrip needs width to be a filmstrip. Below this it becomes three
+   stacked rows with their copy already open. */
+@media (max-width: 880px) {
+  .pd {
+    flex-direction: column;
+    min-height: 0;
+  }
+  .pd-col__body {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ===========================================================================
+   Reduced motion. The detail renders open rather than animating open, so
+   nothing is left mid-flight and nothing is unreachable.
+   ======================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .plab *,
+  .plab *::before,
+  .plab *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  .pa-row__body,
+  .pb-card__body {
+    grid-template-rows: 1fr;
+  }
+
+  .pa-row__list li,
+  .pb-card__item,
+  .pd-col__body {
+    opacity: 1;
+    transform: none;
+  }
+
+  .pb-card:hover {
+    transform: none;
+  }
+}
+
+/* ===========================================================================
+   Mark: numeral, icon, or both
+
+   The wrapper keeps each variant's own `__num` class, so the accent rules that
+   set `color` there still land and the SVG inherits it through
+   `fill: currentColor`. That is the whole reason the icon follows the colour
+   scheme without a single extra rule.
+   ======================================================================== */
+
+/* The BASE look of every mark — the wrapper, the icon, the WorldPulse image,
+   the globe and the angel — now lives in components/persona-mark.css, which
+   <PersonaIcon> imports itself, because the shipped Personas section uses the
+   same marks. What remains below is lab composition only: per-variant sizes,
+   the paper regrade, and the reveal states. */
+
+/* B and D stack their mark above the copy, so the icon can carry more weight
+   there than it can inside A's single-line row. */
+.pb-card__num.plab-mark .plab-mark__icon,
+.pd-col__num.plab-mark .plab-mark__icon {
+  width: 2.4em;
+  height: 2.4em;
+}
+
+/* C's pill is a control, not a card. Keep the mark to cap height. */
+.pc-btn__num.plab-mark .plab-mark__icon {
+  width: 1.35em;
+  height: 1.35em;
+}
+
+.pb-card__num .plab-mark__img,
+.pd-col__num .plab-mark__img {
+  width: 2.4em;
+  height: 2.4em;
+}
+.pc-btn__num .plab-mark__img {
+  width: 1.35em;
+  height: 1.35em;
+}
+
+/* Paper puts the mark on a light field, where a lifted globe would wash out and
+   the rim light would vanish. Closer to the original grading there. */
+.plab[data-surface="paper"] .plab-mark__globe {
+  filter: brightness(1.15) saturate(1.15);
+  box-shadow:
+    inset 0 0 0.4em 0.08em rgba(0, 0, 0, 0.45),
+    inset -0.24em -0.28em 0.55em rgba(0, 0, 0, 0.38),
+    inset 0.1em 0.12em 0.3em rgba(170, 214, 255, 0.4),
+    0 0 0.3em rgba(20, 40, 70, 0.25);
+}
+.pb-card__num .plab-mark__globe,
+.pd-col__num .plab-mark__globe {
+  width: 2.4em;
+  height: 2.4em;
+}
+.pc-btn__num .plab-mark__globe {
+  width: 1.35em;
+  height: 1.35em;
+}
+
+.pb-card__num .plab-mark__angel,
+.pd-col__num .plab-mark__angel {
+  width: 2.4em;
+  height: 2.4em;
+}
+.pc-btn__num .plab-mark__angel {
+  width: 1.35em;
+  height: 1.35em;
+}
+
+/* ===========================================================================
+   Type schemes
+
+   Placed here for the same reason the accent block is: these rules compete at
+   equal specificity with each variant's own `font-family`, so they have to
+   come after the variant sections or they lose silently.
+
+   `worldpulse` is the default and is not a look-alike. The values are the
+   mobile WorldPulse card's own, from work-mobile-cards.css:
+     .wm-dos__title  mono 500 / 0.14em / uppercase
+     .wm-label       mono / 0.24em / uppercase
+     .wm-para        sans / 1.5
+   ======================================================================== */
+
+/* ---- WorldPulse ---- */
+
+.plab[data-type="worldpulse"] .pa-row__title,
+.plab[data-type="worldpulse"] .pb-card__title,
+.plab[data-type="worldpulse"] .pc-panel__title,
+.plab[data-type="worldpulse"] .pd-col__title {
+  font-family: var(--font-mono);
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  line-height: 1.35;
+}
+
+/* Uppercase mono at a display size runs long, so the title steps down from
+   --text-lg. Tracking adds roughly a quarter of the width back. */
+.plab[data-type="worldpulse"] .pa-row__title,
+.plab[data-type="worldpulse"] .pb-card__title,
+.plab[data-type="worldpulse"] .pd-col__title {
+  font-size: var(--text-base);
+}
+.plab[data-type="worldpulse"] .pc-panel__title {
+  font-size: var(--text-lg);
+}
+
+.plab[data-type="worldpulse"] .pa-row__area,
+.plab[data-type="worldpulse"] .pb-card__area,
+.plab[data-type="worldpulse"] .pd-col__area {
+  letter-spacing: 0.24em;
+}
+
+.plab[data-type="worldpulse"] .pa-row__list li,
+.plab[data-type="worldpulse"] .pb-card__item,
+.plab[data-type="worldpulse"] .pc-panel__list li,
+.plab[data-type="worldpulse"] .pd-col__item,
+.plab[data-type="worldpulse"] .pa-row__preview,
+.plab[data-type="worldpulse"] .pb-card__preview,
+.plab[data-type="worldpulse"] .pd-col__preview {
+  font-family: var(--font-sans);
+  line-height: 1.5;
+}
+
+/* ---- Editorial (the homepage serif voice) ---- */
+
+.plab[data-type="editorial"] .pa-row__title,
+.plab[data-type="editorial"] .pb-card__title,
+.plab[data-type="editorial"] .pc-panel__title,
+.plab[data-type="editorial"] .pd-col__title {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  letter-spacing: normal;
+  text-transform: none;
+  line-height: var(--leading-tight);
+}
+
+/* ---- Mono stack: body copy included ---- */
+
+.plab[data-type="mono"] .pa-row__title,
+.plab[data-type="mono"] .pb-card__title,
+.plab[data-type="mono"] .pc-panel__title,
+.plab[data-type="mono"] .pd-col__title {
+  font-family: var(--font-mono);
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  line-height: 1.4;
+  font-size: var(--text-base);
+}
+
+/* Mono body copy needs more air between lines and a shorter measure, or it
+   reads as a terminal dump rather than as prose. */
+.plab[data-type="mono"] .pa-row__list li,
+.plab[data-type="mono"] .pb-card__item,
+.plab[data-type="mono"] .pc-panel__list li,
+.plab[data-type="mono"] .pd-col__item,
+.plab[data-type="mono"] .pa-row__preview,
+.plab[data-type="mono"] .pb-card__preview,
+.plab[data-type="mono"] .pd-col__preview {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  line-height: 1.7;
+  letter-spacing: 0.01em;
+  max-width: 58ch;
+}
+
+/* ---- Sans ---- */
+
+.plab[data-type="sans"] .pa-row__title,
+.plab[data-type="sans"] .pb-card__title,
+.plab[data-type="sans"] .pc-panel__title,
+.plab[data-type="sans"] .pd-col__title {
+  font-family: var(--font-sans);
+  font-weight: 500;
+  letter-spacing: -0.015em;
+  text-transform: none;
+  line-height: var(--leading-tight);
+}
+
+/* ---- Switcher chrome ---- */
+
+.plab__switchLabel {
+  margin: var(--block-gap) 0 0.5rem;
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.plab__aa {
+  display: inline-block;
+  min-width: 2.2em;
+  text-transform: none;
+  letter-spacing: normal;
+  color: var(--ink);
+}
+.plab__aa--worldpulse {
+  font-family: var(--font-mono);
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.plab__aa--editorial {
+  font-family: var(--font-serif);
+}
+.plab__aa--mono {
+  font-family: var(--font-mono);
+}
+.plab__aa--sans {
+  font-family: var(--font-sans);
+  font-weight: 500;
+}
+
+/* ===========================================================================
+   Accent application
+
+   This block MUST stay last (ahead of only the reduced-motion guard). Every
+   rule here competes at equal specificity with a variant's own `color`, so
+   source order is what decides. Placed above the variant sections, as it was
+   first written, the accent computed correctly into `--p-accent` and then lost
+   every cascade, which looks exactly like "the colour scheme does nothing".
+
+   `--p-accent` is set inline per persona by the component. The accent is
+   confined to the numeral, the mono label, the chevron, the open-state edge
+   and the open title. Body copy stays --ink-body at every scheme, so contrast
+   never rides on the hue and the section keeps reading as a dark gallery with
+   one point of colour.
+
+   Under `mono` the accent resolves to white at 0.72, so these rules collapse
+   to the neutral look without any extra branching.
+   ======================================================================== */
+
+.pa-row__num,
+.pb-card__num,
+.pc-btn__num,
+.pd-col__num {
+  color: color-mix(in srgb, var(--p-accent) 72%, transparent);
+}
+
+.pa-row__area,
+.pb-card__area,
+.pd-col__area {
+  color: color-mix(in srgb, var(--p-accent) 82%, transparent);
+}
+
+.pa-row__chev {
+  color: var(--p-accent);
+}
+
+/* Open and hover states pick the accent up in the edge and a low glow. The
+   glow is 6% inset and a 12% ring, which reads as lit from within on #0a0a0a
+   without turning the panel into a coloured surface. */
+.plab:not([data-scheme="mono"]) .pa-row.is-locked,
+.plab:not([data-scheme="mono"]) .pa-row:focus-within,
+.plab:not([data-scheme="mono"]) .pb-card.is-locked,
+.plab:not([data-scheme="mono"]) .pb-card:focus-within,
+.plab:not([data-scheme="mono"]) .pd-col.is-locked,
+.plab:not([data-scheme="mono"]) .pd-col:focus-within,
+.plab:not([data-scheme="mono"]) .pc-btn.is-active {
+  border-color: color-mix(in srgb, var(--p-accent) 42%, transparent);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    inset 0 0 40px color-mix(in srgb, var(--p-accent) 6%, transparent),
+    0 0 0 1px color-mix(in srgb, var(--p-accent) 12%, transparent);
+}
+
+.plab:not([data-scheme="mono"]) .pc-btn.is-active {
+  color: var(--p-accent);
+}
+
+.plab:not([data-scheme="mono"]) .pc-panel__title,
+.plab:not([data-scheme="mono"]) .pa-row.is-locked .pa-row__title,
+.plab:not([data-scheme="mono"]) .pb-card.is-locked .pb-card__title,
+.plab:not([data-scheme="mono"]) .pd-col.is-locked .pd-col__title {
+  color: color-mix(in srgb, var(--p-accent) 30%, #ffffff);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .plab:not([data-scheme="mono"]) .pa-row:hover,
+  .plab:not([data-scheme="mono"]) .pd-col:hover {
+    border-color: color-mix(in srgb, var(--p-accent) 42%, transparent);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.1),
+      inset 0 0 40px color-mix(in srgb, var(--p-accent) 6%, transparent),
+      0 0 0 1px color-mix(in srgb, var(--p-accent) 12%, transparent);
+  }
+  /* B keeps its lift, so it keeps the drop shadow rather than the ring. */
+  .plab:not([data-scheme="mono"]) .pb-card:hover {
+    border-color: color-mix(in srgb, var(--p-accent) 42%, transparent);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.1),
+      inset 0 0 40px color-mix(in srgb, var(--p-accent) 6%, transparent),
+      0 18px 40px rgba(0, 0, 0, 0.5);
+  }
+  .plab:not([data-scheme="mono"]) .pa-row:hover .pa-row__title,
+  .plab:not([data-scheme="mono"]) .pb-card:hover .pb-card__title,
+  .plab:not([data-scheme="mono"]) .pd-col:hover .pd-col__title {
+    color: color-mix(in srgb, var(--p-accent) 30%, #ffffff);
+  }
+}
+
+/* ===========================================================================
+   Paper surface
+
+   Last block in the file, for the same cascade reason as the type and accent
+   blocks: these override values the variants set on themselves.
+
+   Not a new palette. #f5f4f1 / #111116 is the paper the repo already uses in
+   work-together.css (--wt-paper / --wt-ink), cta-lab.css and the ETB dossier.
+   The site is documented dark-only, so this is a lab surface to look at, not a
+   theme to ship without a call.
+
+   The glass has to inverT, not just recolour: on a dark ground the glass is a
+   white film lifting off black, on paper it is an ink film settling into
+   white. Same structure, opposite sign.
+   ======================================================================== */
+
+.plab[data-surface="paper"] {
+  --g-face: rgba(17, 17, 22, 0.028);
+  --g-face-hi: rgba(17, 17, 22, 0.055);
+  --g-edge: rgba(17, 17, 22, 0.13);
+  --g-edge-hi: rgba(17, 17, 22, 0.3);
+
+  --ink: rgba(17, 17, 22, 0.96);
+  --ink-body: rgba(17, 17, 22, 0.82);
+  --ink-muted: rgba(17, 17, 22, 0.66);
+  --ink-faint: rgba(17, 17, 22, 0.5);
+
+  background: #f5f4f1;
+  color: #111116;
+}
+
+/* The inset highlight stays white on paper: it is a top-edge catch light, and
+   on a light ground white is still what light looks like. Only the drop
+   shadow changes, from a black bloom to a tight neutral one. */
+.plab[data-surface="paper"] .pa-row,
+.plab[data-surface="paper"] .pb-card,
+.plab[data-surface="paper"] .pd-col,
+.plab[data-surface="paper"] .pc-btn,
+.plab[data-surface="paper"] .pc-panel,
+.plab[data-surface="paper"] .plab__swatch {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.7),
+    0 1px 2px rgba(17, 17, 22, 0.05);
+}
+
+.plab[data-surface="paper"] .plab__meta {
+  border-bottom-color: rgba(17, 17, 22, 0.12);
+}
+
+.plab[data-surface="paper"] .pa-row__list li::marker {
+  color: transparent;
+}
+
+.plab[data-surface="paper"] :focus-visible {
+  outline-color: rgba(17, 17, 22, 0.75);
+}
+
+/* Open and hover states. The dark surface lights a panel UP; paper presses it
+   DOWN, which is what a light material actually does when something is
+   selected on it. */
+.plab[data-surface="paper"]:not([data-scheme="mono"]) .pa-row.is-locked,
+.plab[data-surface="paper"]:not([data-scheme="mono"]) .pa-row:focus-within,
+.plab[data-surface="paper"]:not([data-scheme="mono"]) .pb-card.is-locked,
+.plab[data-surface="paper"]:not([data-scheme="mono"]) .pb-card:focus-within,
+.plab[data-surface="paper"]:not([data-scheme="mono"]) .pd-col.is-locked,
+.plab[data-surface="paper"]:not([data-scheme="mono"]) .pd-col:focus-within,
+.plab[data-surface="paper"]:not([data-scheme="mono"]) .pc-btn.is-active {
+  border-color: color-mix(in srgb, var(--p-accent) 45%, transparent);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.7),
+    inset 0 0 30px color-mix(in srgb, var(--p-accent) 5%, transparent),
+    0 1px 2px rgba(17, 17, 22, 0.06);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .plab[data-surface="paper"]:not([data-scheme="mono"]) .pa-row:hover,
+  .plab[data-surface="paper"]:not([data-scheme="mono"]) .pd-col:hover {
+    border-color: color-mix(in srgb, var(--p-accent) 45%, transparent);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.7),
+      inset 0 0 30px color-mix(in srgb, var(--p-accent) 5%, transparent),
+      0 1px 2px rgba(17, 17, 22, 0.06);
+  }
+  .plab[data-surface="paper"] .pb-card:hover {
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.7),
+      0 14px 30px rgba(17, 17, 22, 0.13);
+  }
+  .plab[data-surface="paper"] .tag--persona:hover,
+  .plab[data-surface="paper"] .pc-btn:hover {
+    background: rgba(17, 17, 22, 0.05);
+  }
+}
+
+/* Swatch previews for the surface switcher. */
+.plab__dots--surface-dark i {
+  background: #0a0a0a;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.4);
+}
+.plab__dots--surface-paper i {
+  background: #f5f4f1;
+  box-shadow: inset 0 0 0 1px rgba(17, 17, 22, 0.3);
+}
+
+/* The three marks carry their own dark grounds (the angel's starfield, the
+   globe's ocean, the WorldPulse gold). On paper they become dark coins on a
+   light page, so they get a hairline to sit on rather than float. */
+.plab[data-surface="paper"] .plab-mark__angel,
+.plab[data-surface="paper"] .plab-mark__globe {
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.18),
+    0 1px 3px rgba(17, 17, 22, 0.28);
+}
+
+/* The open-title rule in the accent block mixes the accent toward #ffffff,
+   because on a dark ground "more prominent" means lighter. On paper that same
+   rule renders a pale cream title on cream: measured 1.37:1, which is not a
+   near miss, it is invisible. Mix toward ink instead, so the direction of
+   emphasis follows the surface. */
+.plab[data-surface="paper"]:not([data-scheme="mono"]) .pc-panel__title,
+.plab[data-surface="paper"]:not([data-scheme="mono"]) .pa-row.is-locked .pa-row__title,
+.plab[data-surface="paper"]:not([data-scheme="mono"]) .pb-card.is-locked .pb-card__title,
+.plab[data-surface="paper"]:not([data-scheme="mono"]) .pd-col.is-locked .pd-col__title {
+  color: color-mix(in srgb, var(--p-accent) 55%, #111116);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .plab[data-surface="paper"]:not([data-scheme="mono"]) .pa-row:hover .pa-row__title,
+  .plab[data-surface="paper"]:not([data-scheme="mono"]) .pb-card:hover .pb-card__title,
+  .plab[data-surface="paper"]:not([data-scheme="mono"]) .pd-col:hover .pd-col__title {
+    color: color-mix(in srgb, var(--p-accent) 55%, #111116);
+  }
+}
+
+/* Same trap, same fix: the active pill took the raw accent as its text colour,
+   which on paper is a mid gold on cream. */
+.plab[data-surface="paper"]:not([data-scheme="mono"]) .pc-btn.is-active {
+  color: color-mix(in srgb, var(--p-accent) 70%, #111116);
+}
+
+/* ===========================================================================
+   Marks scale with selection
+
+   Applied to the .plab-mark WRAPPER, not to each mark type, so it covers the
+   svg, the two discs, the WorldPulse img and the numeral in one rule and stays
+   correct whichever Mark setting is on.
+
+   `transform: scale()` rather than animating width/height on purpose: the mark
+   sits in a grid or flex column, so growing its box would widen that column
+   and shove the title sideways mid-hover. A transform grows the paint without
+   touching layout, so the title never moves.
+
+   The scale factors are tuned to the room each variant actually has. A's mark
+   lives in a narrow column with a gap next to it and gets the smallest lift;
+   B and D put theirs at the top of an open card with space to spare; C's is
+   inside a pill and barely moves, because a pill has no room to give.
+   ======================================================================== */
+
+.plab-mark {
+  transition: transform 320ms cubic-bezier(0.22, 1, 0.36, 1);
+  transform-origin: center;
+  will-change: transform;
+}
+
+.pa-row.is-locked .plab-mark,
+.pa-row:focus-within .plab-mark {
+  transform: scale(1.26);
+}
+
+/* B and D grow from the leading edge, so the mark expands into the card rather
+   than drifting left out of its own padding. */
+.pb-card__num.plab-mark,
+.pd-col__num.plab-mark {
+  transform-origin: left center;
+}
+
+.pb-card.is-locked .plab-mark,
+.pb-card:focus-within .plab-mark,
+.pd-col.is-locked .plab-mark,
+.pd-col:focus-within .plab-mark {
+  transform: scale(1.34);
+}
+
+.pc-btn.is-active .plab-mark {
+  transform: scale(1.12);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .pa-row:hover .plab-mark {
+    transform: scale(1.26);
+  }
+  .pb-card:hover .plab-mark,
+  .pd-col:hover .plab-mark {
+    transform: scale(1.34);
+  }
+  .pc-btn:hover .plab-mark {
+    transform: scale(1.12);
+  }
+}
+
+/* A size change on hover is still motion, so it goes entirely rather than just
+   losing its tween. The reduced-motion block above already strips the
+   transition; this strips the scale itself. */
+@media (prefers-reduced-motion: reduce) {
+  .plab-mark,
+  .pa-row.is-locked .plab-mark,
+  .pa-row:focus-within .plab-mark,
+  .pb-card.is-locked .plab-mark,
+  .pb-card:focus-within .plab-mark,
+  .pd-col.is-locked .plab-mark,
+  .pd-col:focus-within .plab-mark,
+  .pc-btn.is-active .plab-mark {
+    transform: none;
+    will-change: auto;
+  }
+}
+
+/* ===========================================================================
+   The plate, and the glass cards arriving on scroll
+
+   Two things that only work together.
+
+   THE PLATE
+   `backdrop-filter` samples the backdrop image: whatever is painted behind the
+   element within its backdrop root. On a flat #0a0a0a section there is nothing
+   to sample, so every blur value from 0 to 40px renders identically and the
+   "glass" is just a dark rectangle with a border. The plate gives it something
+   to refract. It has to be a SIBLING inside .plab__stage rather than a
+   background on an ancestor, and nothing between it and the cards may carry
+   `transform` or `filter`, because either one opens a new backdrop root and
+   the cards would silently stop sampling it.
+
+   THE ENTRANCE
+   Scroll-driven via `animation-timeline: view()`, so there is no scroll
+   listener and no IntersectionObserver: the compositor drives it and the
+   section costs nothing while it is off screen. Wrapped in @supports so
+   browsers without it simply get the cards, already visible, rather than
+   cards stuck at opacity 0.
+
+   The entrance animates `translate`, NOT `transform`. They are separate
+   properties that compose, and `.pb-card` already uses `transform` for its
+   hover lift. Animating transform here would have made the keyframe's final
+   value win and killed the hover.
+   ======================================================================== */
+
+/* ===========================================================================
+   Preview line
+
+   One accomplishment per persona, visible before anything is expanded. Hover
+   and focus reveal the REST of the bullets; this line never hides. Without it
+   a card is a bare title until hovered, which is an empty promise on a touch
+   screen and invisible to anyone who only scrolls past.
+
+   The marker is drawn rather than a real list marker: B and D build their copy
+   from spans inside a <button>, where a <ul> would be invalid markup.
+   ======================================================================== */
+
+/* ===========================================================================
+   Bullets
+
+   The first bullet is always visible, so a card is never a bare title and a
+   touch device is never promised copy it cannot reach. The other two stay
+   collapsed until hover, focus, or tap, and every bullet carries a marker so
+   the visible one reads as the first of a list rather than as a stray line.
+
+   Markers are drawn rather than real list markers: B and D build their copy
+   from spans inside a <button>, where a <ul> would be invalid markup.
+   ======================================================================== */
+
+.pa-row__preview,
+.pb-card__preview,
+.pd-col__preview,
+.pa-row__list li,
+.pb-card__item,
+.pd-col__item {
+  position: relative;
+}
+
+.pa-row__preview::before,
+.pb-card__preview::before,
+.pd-col__preview::before,
+.pa-row__list li::before,
+.pb-card__item::before,
+.pd-col__item::before {
+  content: "";
+  position: absolute;
+  /* Pinned to the first line, so a bullet that wraps keeps its marker beside
+     the top line rather than drifting to the middle of the block. */
+  top: calc(0.5 * var(--leading-body) * 1em);
+  width: 0.3rem;
+  height: 0.3rem;
+  margin-top: -0.15rem;
+  border-radius: 50%;
+  background: var(--p-accent);
+}
+
+/* The revealed bullets inherit their parent's fade, but the marker is on a
+   pseudo-element of the item itself, so it fades with it for free. */
+
+/* ---- The always-visible first bullet ---- */
+
+.pa-row__preview,
+.pb-card__preview,
+.pd-col__preview {
+  display: block;
+  margin: 0;
+  font-family: var(--font-sans);
+  line-height: var(--leading-body);
+  color: var(--ink-body);
+  text-align: left;
+}
+
+/* A already indents to clear the mark; the marker sits in that existing
+   gutter rather than adding a second one. */
+.pa-row__preview {
+  font-size: var(--text-base);
+  padding: 0 clamp(1.1rem, 0.9rem + 0.9vw, 1.9rem)
+    clamp(1rem, 0.8rem + 0.8vw, 1.6rem)
+    clamp(3.2rem, 2.4rem + 2vw, 4.6rem);
+}
+
+.pa-row__preview::before,
+.pa-row__list li::before {
+  left: calc(clamp(3.2rem, 2.4rem + 2vw, 4.6rem) - 0.95rem);
+}
+
+/* Open: the rest follow directly, so the preview gives up its bottom padding
+   and lets the list carry the rhythm instead. */
+.pa-row.is-locked .pa-row__preview,
+.pa-row:focus-within .pa-row__preview {
+  padding-bottom: 0.85rem;
+}
+
+@media (hover: hover) {
+  .pa-row:hover .pa-row__preview {
+    padding-bottom: 0.85rem;
+  }
+}
+
+.pb-card__preview,
+.pd-col__preview {
+  font-size: var(--text-sm);
+  padding-top: 0.5rem;
+  padding-left: 0.95rem;
+}
+
+.pb-card__preview::before,
+.pd-col__preview::before {
+  left: 0;
+  top: calc(0.5rem + 0.5 * var(--leading-body) * 1em);
+}
+
+/* ---- The bullets held back ---- */
+
+.pb-card__item,
+.pd-col__item {
+  padding-left: 0.95rem;
+}
+
+.pb-card__item::before,
+.pd-col__item::before {
+  left: 0;
+}
+
+.plab__stage {
+  position: relative;
+  isolation: isolate;
+}
+
+.plab__plate {
+  /* The three dials worth turning without re-encoding the clip: how far back it
+     sits, where the crop lands, and how tight the vignette closes. `cover` means
+     the plate is reframed at every viewport width, which is why the clip is
+     deliberately subject-less: there is no composition to crop away, so any
+     --plate-position is safe. */
+  --plate-opacity: 0.34;
+  --plate-position: 50% 40%;
+  --plate-mask: radial-gradient(120% 90% at 50% 40%, #000 35%, transparent 78%);
+
+  position: absolute;
+  inset: -8% -4%;
+  z-index: 0;
+  overflow: hidden;
+  border-radius: var(--card-radius);
+  /* Held well back: this is a surface for the glass to sample, not a photo the
+     section is about. The copy has to stay the brightest thing here. */
+  opacity: var(--plate-opacity);
+  -webkit-mask-image: var(--plate-mask);
+  mask-image: var(--plate-mask);
+}
+
+.plab__plate img,
+.plab__plate video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: var(--plate-position);
+  display: block;
+}
+
+/* Paper cannot carry a dark photograph behind translucent ink cards. Sets the
+   dial rather than `opacity`, so there is one source of truth for it. */
+.plab[data-surface="paper"] .plab__plate {
+  --plate-opacity: 0.1;
+}
+
+/* The variants sit above the plate. */
+.pa,
+.pb,
+.pc,
+.pd {
+  position: relative;
+  z-index: 1;
+}
+
+/* Now that there is something behind them, the cards can actually blur it. */
+.pa-row,
+.pb-card,
+.pd-col,
+.pc-panel {
+  backdrop-filter: blur(22px) saturate(1.4);
+  -webkit-backdrop-filter: blur(22px) saturate(1.4);
+}
+
+/* ---- Arrival ---- */
+
+@keyframes plab-arrive {
+  from {
+    opacity: 0;
+    translate: 0 34px;
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .pa-row,
+    .pb-card,
+    .pd-col {
+      animation: plab-arrive linear both;
+      animation-timeline: view();
+      /* Finishes well before the card reaches the middle of the screen, so it
+         is settled by the time it is worth reading. A range that ran to
+         `cover` would leave cards still fading at eye level. */
+      animation-range: entry 8% cover 26%;
+    }
+
+    /* B's three cards share a row, so they enter at the same scroll position
+       and need the stagger written in rather than inherited from geometry.
+       A and D stagger themselves, being stacked. */
+    .pb-card:nth-child(2) {
+      animation-range: entry 8% cover 34%;
+    }
+    .pb-card:nth-child(3) {
+      animation-range: entry 8% cover 42%;
+    }
+  }
+}

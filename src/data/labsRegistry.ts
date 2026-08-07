@@ -31,6 +31,7 @@ export const LAB_GROUPS: LabGroup[] = [
       { label: "Design Lab", path: "/design-lab", note: "Four-Card Threshold + experiments" },
       { label: "Soft-Lock Entry (homepage mirror)", path: "/design-lab/soft-lock" },
       { label: "Hero type lab", path: "/hero-type-lab", note: "5 size + measure iterations · live line-count readout" },
+      { label: "Personas lab", path: "/personas-lab", note: "4 glass directions · hover, focus and tap expand" },
     ],
   },
   {
