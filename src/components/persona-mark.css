@@ -1,0 +1,105 @@
+/* ===========================================================================
+   Persona marks: the base look, shared.
+
+   These rules belong to <PersonaIcon> itself, which imports this file, so a
+   mark looks the same everywhere it is used. They were extracted from
+   personas-lab.css when the shipped Personas section adopted the same marks:
+   duplicating them would have let the lab and the live section drift, and the
+   whole point of the lab is that it shows what the section will actually be.
+
+   What stays behind in personas-lab.css: the per-variant SIZE overrides
+   (`.pb-card__num`, `.pc-btn__num`, ...), the paper-surface regrade, and the
+   hover/focus reveal states. Those are lab composition, not the mark.
+
+   The `plab-` prefix is inherited from that move and is now a misnomer. It is
+   left alone deliberately: renaming touches the lab markup, this file, and
+   PersonaIcon at once, which is churn better spent when the lab is retired.
+   ======================================================================== */
+
+.plab-mark {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  line-height: 1;
+}
+
+.plab-mark[data-mark="both"] {
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.plab-mark__icon {
+  display: block;
+  width: 1.6em;
+  height: 1.6em;
+  flex: none;
+  /* Icons are decorative and sit beside their own title, so they stay a touch
+     quieter than the accent text they inherit from. */
+  opacity: 0.9;
+}
+
+/* The icon reads small against a title, so it gets its own size rather than
+   inheriting the numeral's --text-meta. Icon-only goes a step larger again,
+   since nothing else is holding that column. */
+.plab-mark[data-mark="icon"] .plab-mark__icon {
+  width: 2.1em;
+  height: 2.1em;
+}
+
+/* The WorldPulse mark is a brand asset, not an icon: it keeps its own gold at
+   every colour scheme. Opacity stays at 1 for the same reason. */
+.plab-mark__img {
+  display: block;
+  width: 2.1em;
+  height: 2.1em;
+  object-fit: contain;
+  flex: none;
+}
+
+/* A real globe. The source is a flat equirectangular crop of the APAC region,
+   so the sphere is made here: `background-size: cover` fills the circle, the
+   first inset shadow is limb darkening around the edge, the second is the
+   terminator falling away to the lower right, and the third is the thin
+   atmospheric rim light that stops it reading as a hole.
+
+   Lit, not eclipsed. The shading was tuned at a larger size and did not survive
+   the shrink: at 2.1em the blur radii are a large fraction of the disc, so a
+   0.72-alpha limb and a 0.62-alpha terminator met in the middle and the whole
+   mark read as a black dot. The source crop is dark ocean to begin with, so it
+   needs lifting before it is shaded, not after — hence the filter, with the
+   shadows pulled back to roughly half strength so they describe a sphere
+   instead of swallowing it. */
+.plab-mark__globe {
+  display: block;
+  width: 2.1em;
+  height: 2.1em;
+  flex: none;
+  border-radius: 50%;
+  background-image: url("/globe-apac.jpg");
+  background-size: cover;
+  background-position: center;
+  filter: brightness(1.75) saturate(1.25) contrast(0.94);
+  box-shadow:
+    inset 0 0 0.34em 0.04em rgba(0, 0, 0, 0.34),
+    inset -0.22em -0.26em 0.5em rgba(0, 0, 0, 0.28),
+    inset 0.12em 0.14em 0.3em rgba(186, 224, 255, 0.5),
+    0 0 0.55em rgba(140, 190, 245, 0.3);
+}
+
+/* The angel emblem off the CD label. Its navy starfield is part of the crop,
+   so it gets the same disc treatment as the globe: circular, with a rim light
+   instead of limb darkening, because this one is flat artwork rather than a
+   sphere and shading it like a ball would just muddy the line work. */
+.plab-mark__angel {
+  display: block;
+  width: 2.1em;
+  height: 2.1em;
+  flex: none;
+  border-radius: 50%;
+  background-image: url("/angel-mark.png");
+  background-size: cover;
+  background-position: center;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.14),
+    0 0 0.5em rgba(140, 165, 220, 0.16);
+}
