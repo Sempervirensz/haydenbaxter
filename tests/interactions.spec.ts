@@ -12,11 +12,15 @@ import { openSite, gotoCard, isCinematic, box, overflowX } from "./helpers";
  * those class names; they will pass vacuously or fail confusingly. */
 
 test.describe("soft-lock gate", () => {
-  test("Skip releases the page and reveals the gated sections", async ({ page }) => {
+  // The gate used to carry a "Skip the intro" button and this drove that. It now
+  // offers two routes instead — flip the four cards, or a link that jumps to
+  // Consulting — so the release path under test is the link. The flip path and
+  // the entry's own rendering are covered in entry-choice.spec.ts.
+  test("the skip-ahead link releases the page and reveals the gated sections", async ({ page }) => {
     await page.goto("/", { waitUntil: "domcontentloaded" });
     const gated = page.locator(".dlab-gate__content");
     await expect(gated).toHaveClass(/is-locked/);
-    await page.locator("button", { hasText: /Skip the intro/i }).first().click();
+    await page.locator(".dlab-soft__line--direct").click();
     await expect(gated).toHaveClass(/is-open/);
     // aria-hidden must lift too, or the whole site stays out of the a11y tree.
     await expect(gated).not.toHaveAttribute("aria-hidden", "true");

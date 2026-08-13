@@ -46,6 +46,14 @@ html {
 
 /* Card caption description — was a fixed Tailwind `text-[10px]` at 60% alpha,
    which stayed 10px on every display and was the smallest text on the page. */
+/* The caption title sat on Tailwind's `text-xs` while its own description used
+   `--text-meta` — so the heading rendered SMALLER than the body under it, at
+   11.19px, below the readability floor. Same token for both puts the pair back
+   on one system. */
+.card-caption__title {
+  font-size: var(--text-meta);
+}
+
 .card-caption__desc {
   font-size: var(--text-meta);
   line-height: var(--leading-tight);

@@ -16,6 +16,12 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import {
+  DEFAULT_VARIANT,
+  ROUTE_VARIANTS,
+  VARIANT_CHANNEL,
+  type RouteVariant,
+} from "@/data/entryCtaLab";
 import "./responsive-viewer.css";
 
 interface Route {
@@ -27,8 +33,13 @@ interface Route {
  *  the postMessage experiment controls below. */
 const WORK_CINEMA = "/site-parallax-lab/work-cinema";
 
+/** Entry route choice — framed here so its type block can be read at every
+ *  width without a second viewer. */
+const ENTRY_ROUTES = "/entry-cta-lab";
+
 const ROUTES: Route[] = [
   { label: "Home", src: "/" },
+  { label: "Entry routes", src: ENTRY_ROUTES },
   { label: "Work stack", src: WORK_CINEMA },
   { label: "Tech builds", src: "/emerging-tech-builds" },
   { label: "Journal", src: "/blog" },
@@ -70,16 +81,20 @@ function clamp(v: number, lo: number, hi: number) {
   return Math.max(lo, Math.min(hi, v));
 }
 
-export default function ResponsiveViewer() {
+export default function ResponsiveViewer({ initialSrc }: { initialSrc?: string } = {}) {
   const stageRef = useRef<HTMLDivElement>(null);
   const iframeRef = useRef<HTMLIFrameElement>(null);
-  const [route, setRoute] = useState<Route>(ROUTES[0]);
+  const [route, setRoute] = useState<Route>(
+    () => ROUTES.find((r) => r.src === initialSrc) ?? ROUTES[0]
+  );
   const [w, setW] = useState(1280);
   const [h, setH] = useState(800);
   const [fit, setFit] = useState(true);
   const [scale, setScale] = useState(1);
   const [stage, setStage] = useState({ w: 0, h: 0 });
   const [reloadKey, setReloadKey] = useState(0);
+
+  const [variant, setVariant] = useState<RouteVariant>(DEFAULT_VARIANT);
 
   // Experiment controls — driven here, applied to the framed stack via postMessage.
   const [motionOn, setMotionOn] = useState(true);
@@ -89,11 +104,22 @@ export default function ResponsiveViewer() {
     iframeRef.current?.contentWindow?.postMessage({ source: "cstack-ctl", action, value }, "*");
   }, []);
 
-  // (Re)sync the framed stack whenever it (re)loads.
+  /** The entry lab listens on its own channel — see EntryCtaLab. */
+  const postVariant = useCallback((value: RouteVariant) => {
+    iframeRef.current?.contentWindow?.postMessage(
+      { source: VARIANT_CHANNEL, action: "variant", value },
+      "*"
+    );
+  }, []);
+
+  // (Re)sync the framed route whenever it (re)loads. A reload drops the iframe's
+  // React state, so the iteration has to be pushed again or the frame silently
+  // reverts to the default while the control still reads as selected.
   const pushAll = useCallback(() => {
     post("motion", motionOn);
     post("peek", peek);
-  }, [post, motionOn, peek]);
+    postVariant(variant);
+  }, [post, motionOn, peek, postVariant, variant]);
 
   const toggleMotion = () =>
     setMotionOn((m) => {
@@ -145,6 +171,7 @@ export default function ResponsiveViewer() {
   /** The experiment controls talk to the work-cinema lab over postMessage;
    *  they mean nothing when another route is framed. */
   const showExperiments = route.src === WORK_CINEMA;
+  const showVariants = route.src === ENTRY_ROUTES;
 
   const renderPresets = (list: Preset[]) => (
     <div className="rv__presets">
@@ -229,6 +256,30 @@ export default function ResponsiveViewer() {
             />
           </label>
         </div>
+
+        {showVariants && (
+          <div className="rv__group">
+            <span className="rv__groupLabel">Iteration · entry choice</span>
+            <div className="rv__presets">
+              {ROUTE_VARIANTS.map((v) => (
+                <button
+                  key={v.id}
+                  type="button"
+                  className={`rv__preset ${variant === v.id ? "is-on" : ""}`}
+                  onClick={() => {
+                    setVariant(v.id);
+                    postVariant(v.id);
+                  }}
+                >
+                  <span className="rv__presetName">
+                    {v.index} · {v.label}
+                  </span>
+                  <span className="rv__presetDim">{v.note}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
 
         {showExperiments && (
           <div className="rv__group">

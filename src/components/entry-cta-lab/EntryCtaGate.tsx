@@ -1,36 +1,67 @@
 "use client";
 
-// Soft-lock gate. Renders the real card-deck section + the soft lock, and holds
-// the rest of the page (`children`) back until the visitor takes one of two
-// routes. This makes the lock REAL on every device (mobile included) — you can't
-// scroll past the entry until you choose — while staying soft, because the
-// second route is always right there. The gated sections are passed as children
-// from the server page, so no server/client import issues.
+// Lab mirror of the production soft-lock gate (components/design-lab/SoftLockGate),
+// with one thing changed: the space under the deck carries a quiet route choice
+// instead of an instruction plus a Skip button.
 //
-// The two routes, presented as a quiet decision point rather than an instruction
-// with an escape hatch (see /entry-cta-lab, where this was designed):
-//   Story Mode — flip all four cards; the indicator fills one mark per card.
-//   Skip ahead — a link that opens the gate and lands on the Consulting chapter.
+// Deliberately a copy rather than a prop on the real gate — nothing on the
+// production homepage moves while this is being reviewed. Everything outside the
+// `.ecta__choice` block is the existing gate verbatim: the card deck, the
+// open-state copy, and the SEO-safe hidden-not-unmounted gating.
 //
-// The old "Skip the intro" button is gone; the second line replaces it. Nav
-// links still release the gate via SOFT_LOCK_RELEASE, as before.
+// Both routes use the gate's existing behaviour. Story Mode releases it by
+// flipping four cards (`onRevealedChange` → `released`), exactly as today. The
+// direct route releases it the way a nav link does (`skipped`) and then lands on
+// the Consulting chapter.
 
 import { useCallback, useEffect, useState } from "react";
 import CardDeck from "@/components/CardDeck";
 import {
-  CONSULTING_TARGET,
-  DECK_SIZE,
-  ENTRY_CHOICE,
-  resolveConsultingChapter,
-} from "@/data/entryChoice";
-import FlipIndicator from "./FlipIndicator";
-import {
   SOFT_LOCK_RELEASE,
   type SoftLockReleaseDetail,
-} from "./softLockEvents";
-import "./design-lab.css";
+} from "@/components/design-lab/softLockEvents";
+import {
+  CONSULTING_TARGET,
+  DECK_SIZE,
+  DEFAULT_INDICATOR,
+  DEFAULT_VARIANT,
+  ROUTE_CHOICE,
+  type IndicatorDesign,
+  type RouteVariant,
+} from "@/data/entryCtaLab";
+import EntryProgress from "./EntryProgress";
+import "@/components/design-lab/design-lab.css";
+import "./entry-cta-lab.css";
 
-export default function SoftLockGate({ children }: { children: React.ReactNode }) {
+/**
+ * The Consulting chapter, or null while the Work section is still a placeholder.
+ * Returning null rather than the `#work` shell is the point: it doubles as the
+ * "Work has actually mounted" signal the click handler waits on.
+ */
+function resolveConsultingChapter(): Element | null {
+  const tagged = document.querySelector(CONSULTING_TARGET.tagged);
+  if (tagged) return tagged;
+
+  const tracks = document.querySelectorAll(CONSULTING_TARGET.detailTracks);
+  return tracks.length > CONSULTING_TARGET.detailIndex
+    ? tracks[CONSULTING_TARGET.detailIndex]
+    : null;
+}
+
+export default function EntryCtaGate({
+  variant = DEFAULT_VARIANT,
+  indicator = DEFAULT_INDICATOR,
+  labControl,
+  children,
+}: {
+  /** Presentation only — every iteration behaves the same. */
+  variant?: RouteVariant;
+  /** Which of the three flip-indicator designs to render. */
+  indicator?: IndicatorDesign;
+  /** Lab furniture, rendered in flow beneath the guide. See the note there. */
+  labControl?: React.ReactNode;
+  children: React.ReactNode;
+}) {
   // Which cards are face-up, straight from CardDeck. The indicator renders this
   // set; nothing else counts flips independently.
   const [flipped, setFlipped] = useState<ReadonlySet<number>>(() => new Set());
@@ -89,8 +120,12 @@ export default function SoftLockGate({ children }: { children: React.ReactNode }
       setPendingConsulting(false);
       // Instant, like the nav jump above. The Work section is scroll-driven for
       // its whole height, so smooth-scrolling several thousand pixels through it
-      // animates the CD spin and the cinematic parallax at once — and this is
-      // the route for someone who chose to skip ahead.
+      // animates the CD spin and the cinematic parallax at once.
+      //
+      // One shot is enough: the cinematic chapters are vh-height tracks that
+      // land in a single commit, so the chapter's offset is already final by the
+      // time the observer below can see it. Covered by the landing assertion in
+      // tests/entry-cta.spec.ts at both breakpoints.
       el.scrollIntoView({ behavior: "auto", block: "start" });
     };
 
@@ -142,29 +177,30 @@ export default function SoftLockGate({ children }: { children: React.ReactNode }
         <CardDeck onRevealedChange={handleRevealed} />
       </section>
 
-      {/* Soft lock — instructions in the black space right under the cards. */}
+      {/* The choice, in the black space right under the cards. */}
       <div className={`dlab-soft__guide ${open ? "is-open" : ""}`} aria-live="polite">
         {!open ? (
-          <div className="dlab-soft__choice">
-            {/* Directly beneath the card row and above the choice. */}
-            <FlipIndicator flipped={flipped} />
+          <div className={`ecta__choice ecta__choice--${variant}`}>
+            {/* Directly beneath the card row and above the route choice. */}
+            <EntryProgress design={indicator} flipped={flipped} />
 
-            <p className="dlab-soft__line">{ENTRY_CHOICE.story}</p>
+            <p className="ecta__line ecta__line--story">{ROUTE_CHOICE.story}</p>
 
             {/* Not aria-hidden: "A or B" is the meaning, and hiding it would
                 leave two unrelated sentences to a screen reader. */}
-            <span className="dlab-soft__or">{ENTRY_CHOICE.divider}</span>
+            <span className="ecta__or">{ROUTE_CHOICE.divider}</span>
 
             <a
-              className="dlab-soft__line dlab-soft__line--direct"
-              href={ENTRY_CHOICE.direct.href}
+              className="ecta__line ecta__line--direct"
+              href={ROUTE_CHOICE.direct.href}
               onClick={handleDirectClick}
             >
-              <span className="dlab-soft__lineText">{ENTRY_CHOICE.direct.text}</span>
-              <span className="dlab-soft__arrow" aria-hidden="true">
+              <span className="ecta__lineText">{ROUTE_CHOICE.direct.text}</span>
+              <span className="ecta__arrow" aria-hidden="true">
                 →
               </span>
             </a>
+
           </div>
         ) : (
           <>
@@ -177,6 +213,13 @@ export default function SoftLockGate({ children }: { children: React.ReactNode }
           </>
         )}
       </div>
+
+      {/* Lab furniture, in flow rather than floating. The entry is about one
+          screen tall and the choice sits at the bottom of it, so a fixed control
+          in any corner lands on either the deck or the type. Nothing here
+          depends on scroll position, so costing the page a few rows of height is
+          free — and it keeps the review surface completely unobstructed. */}
+      {labControl && <div className="ecta__labBar">{labControl}</div>}
 
       {/* SEO-safe lock: the rest of the site is ALWAYS rendered (so it's in the
           HTML for crawlers), just hidden until the lock releases on flip-all /

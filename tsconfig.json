@@ -1,7 +1,11 @@
 {
   "compilerOptions": {
     "target": "ES2017",
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -13,13 +17,40 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "incremental": true,
-    "plugins": [{ "name": "next" }],
-    "paths": { "@/*": ["./src/*"] }
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ]
+    }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "include": [
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    "next-env.d.ts"
+  ],
   /* The e2e suite is checked by tests/tsconfig.json instead. Playwright's
      `test.use()` needs PlaywrightTestOptions in scope, which Next's compiler
      options do not provide — checking it here reports phantom errors on valid
      config (e.g. `reducedMotion` "does not exist"). */
-  "exclude": ["node_modules", "legacy", "tests", "playwright.config.ts"]
+  /* `.next-alt` is the escape-hatch dist dir from next.config.ts, used when a
+     second dev server runs against this folder. Starting that server makes Next
+     add `.next-alt/types/**` to the `include` above, and those types are
+     generated in DEV mode — where `pageExtensions` registers the `.dev.tsx`
+     admin routes. A production `next build` then typechecks them against a route
+     map that has no `/admin` and fails with "Type '"/admin"' is not assignable
+     to type '"/"'", in a file nobody edited. Excluding it here neutralises the
+     include even when Next re-adds it. */
+  "exclude": [
+    "node_modules",
+    "legacy",
+    "tests",
+    "playwright.config.ts",
+    ".next-alt"
+  ]
 }

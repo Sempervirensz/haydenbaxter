@@ -302,16 +302,6 @@
   justify-content: flex-start;
 }
 
-.dlab-soft__cue {
-  font-family: var(--font-mono);
-  font-size: var(--text-label);
-  letter-spacing: var(--track-dymo);
-  text-transform: uppercase;
-  /* The pulse animation multiplies this down to ~0.33 effective at its trough;
-     0.4 as the base left the site's first piece of wayfinding barely visible. */
-  color: var(--ink-muted);
-  animation: dlab-soft-pulse 2.6s ease-in-out infinite;
-}
 
 .dlab-soft__prompt {
   margin: 0;
@@ -325,35 +315,6 @@
   color: #f3e6c4;
 }
 
-.dlab-soft__hint {
-  margin: 0;
-  font-family: var(--font-mono);
-  font-size: var(--text-label);
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.5);
-}
-
-.dlab-soft__skip {
-  margin-top: 6px;
-  padding: 9px 18px;
-  border-radius: 999px;
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  background: transparent;
-  color: rgba(255, 255, 255, 0.7);
-  font-family: var(--font-mono);
-  font-size: var(--text-control);
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  cursor: pointer;
-  transition: border-color 200ms ease, color 200ms ease, background 200ms ease;
-}
-.dlab-soft__skip:hover {
-  border-color: rgba(255, 255, 255, 0.4);
-  color: #fff;
-  background: rgba(255, 255, 255, 0.05);
-}
-
 .dlab-soft__scroll {
   font-family: var(--font-mono);
   font-size: var(--text-label);
@@ -363,16 +324,11 @@
   animation: dlab-soft-bob 2.2s ease-in-out infinite;
 }
 
-@keyframes dlab-soft-pulse {
-  0%, 100% { opacity: 0.4; }
-  50% { opacity: 0.85; }
-}
 @keyframes dlab-soft-bob {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(4px); }
 }
 @media (prefers-reduced-motion: reduce) {
-  .dlab-soft__cue,
   .dlab-soft__scroll {
     animation: none;
   }
@@ -518,5 +474,235 @@
 @media (prefers-reduced-motion: reduce) {
   .dlab-gate__content.is-open {
     animation: none;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Entry choice — the three lines under the deck, plus the flip indicator.
+   Designed in /entry-cta-lab (indicator 01 "Mini cards", choice 02 "Even").
+   These rules SHIP: `.dlab-soft*` is deliberately outside check-scale's lab
+   exemption, so anything sub-14px here needs an explicit `scale-ok` note.
+   -------------------------------------------------------------------------*/
+
+.dlab-soft__choice {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  /* The pause between the two routes lives entirely in this gap — no rule and
+     no ornament. Rules either side of the "or" read as a menu separator. */
+  gap: clamp(1.1rem, 0.8rem + 1.4vw, 2.1rem);
+  width: 100%;
+  padding-top: clamp(0.25rem, 1.5vh, 1rem);
+}
+
+/* "Even": both lines at one brightness, so the underline and arrow are the only
+   things marking which one is the link. */
+.dlab-soft__line {
+  margin: 0;
+  font-family: var(--font-serif);
+  /* A narrow range on purpose: the phone gets the same reading size as the
+     desktop, not a shrunken copy. 18.4px → 24px across the whole ramp. */
+  font-size: clamp(1.15rem, 1.06rem + 0.42vw, 1.5rem);
+  line-height: 1.45;
+  letter-spacing: -0.008em;
+  color: rgba(255, 255, 255, 0.86);
+  /* Each sentence sits on one line on a wide screen and breaks evenly when it
+     cannot — `balance` is what stops a two-word orphan on the second line. */
+  max-width: 46ch;
+  text-wrap: balance;
+}
+
+.dlab-soft__or {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: clamp(0.95rem, 0.9rem + 0.22vw, 1.15rem);
+  line-height: 1;
+  color: rgba(255, 255, 255, 0.34);
+}
+
+.dlab-soft__line--direct {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.45em;
+  text-decoration: none;
+  transition: color 220ms ease;
+}
+
+/* Underlined at a typographic offset rather than boxed, with the arrow held
+   outside so the rule stops where the sentence does. */
+.dlab-soft__lineText {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-decoration-color: rgba(255, 255, 255, 0.42);
+  text-underline-offset: 0.22em;
+  transition: text-decoration-color 220ms ease;
+}
+
+.dlab-soft__arrow {
+  display: inline-block;
+  color: rgba(255, 255, 255, 0.45);
+  transition: transform 220ms cubic-bezier(0.22, 1, 0.36, 1), color 220ms ease;
+}
+
+.dlab-soft__line--direct:hover,
+.dlab-soft__line--direct:focus-visible {
+  color: #f3e6c4;
+}
+
+.dlab-soft__line--direct:hover .dlab-soft__lineText,
+.dlab-soft__line--direct:focus-visible .dlab-soft__lineText {
+  text-decoration-color: rgba(243, 230, 196, 0.75);
+}
+
+/* Grounded: the arrow travels a few pixels, the sentence does not move. */
+.dlab-soft__line--direct:hover .dlab-soft__arrow,
+.dlab-soft__line--direct:focus-visible .dlab-soft__arrow {
+  color: #f3e6c4;
+  transform: translateX(4px);
+}
+
+.dlab-soft__line--direct:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.7);
+  outline-offset: 6px;
+  border-radius: 2px;
+}
+
+.dlab-soft__srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ---- Flip indicator: four mini cards, one per playing card -------------- */
+
+.dlab-soft__ind {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 26px;
+}
+
+.dlab-soft__indRow {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  /* Passive by construction: nothing here takes a pointer or a tab stop. */
+  pointer-events: none;
+}
+
+/* Face-down: an empty outline the shape of the deck above. Face-up: it fills
+   with card stock and the rank and pip appear in the card's own colour. The
+   SHAPE change is what carries completion; colour only says which card. */
+.dlab-soft__mark {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  width: 15px;
+  height: 21px;
+  border-radius: 2.5px;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  background: rgba(255, 255, 255, 0.03);
+  /* A hair of tilt, alternating, so the row echoes the fanned deck rather than
+     reading as a row of chips. Within the 1–2deg the label system allows. */
+  transform: rotate(-1.5deg);
+  transition: background-color 260ms cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 260ms ease;
+}
+
+.dlab-soft__mark:nth-child(even) {
+  transform: rotate(1.5deg);
+}
+
+.dlab-soft__mark.is-on {
+  border-color: rgba(255, 255, 255, 0.55);
+  background: #f4efe4;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.55);
+}
+
+.dlab-soft__markRank,
+.dlab-soft__markPip {
+  font-family: var(--font-serif);
+  font-weight: 700;
+  line-height: 1;
+  opacity: 0;
+  transition: opacity 200ms ease 90ms;
+}
+
+.dlab-soft__mark.is-on .dlab-soft__markRank,
+.dlab-soft__mark.is-on .dlab-soft__markPip {
+  opacity: 1;
+}
+
+.dlab-soft__markRank {
+  position: absolute;
+  top: 1.5px;
+  left: 2px;
+  font-size: 7px; /* scale-ok: pip on a 15px card mark, decorative and aria-hidden */
+}
+
+.dlab-soft__markPip {
+  font-size: 8px; /* scale-ok: pip on a 15px card mark, decorative and aria-hidden */
+  margin-top: 3px;
+}
+
+.dlab-soft__mark[data-color="red"] .dlab-soft__markRank,
+.dlab-soft__mark[data-color="red"] .dlab-soft__markPip {
+  color: #b3202b;
+}
+
+.dlab-soft__mark[data-color="black"] .dlab-soft__markRank,
+.dlab-soft__mark[data-color="black"] .dlab-soft__markPip {
+  color: #16151a;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dlab-soft__line--direct,
+  .dlab-soft__lineText,
+  .dlab-soft__arrow,
+  .dlab-soft__mark,
+  .dlab-soft__markRank,
+  .dlab-soft__markPip {
+    transition: none;
+  }
+  .dlab-soft__line--direct:hover .dlab-soft__arrow,
+  .dlab-soft__line--direct:focus-visible .dlab-soft__arrow {
+    transform: none;
+  }
+}
+
+/* Phones. The type keeps its size; only the measure narrows, so each sentence
+   becomes an even two-line block instead of a ragged three. The marks hold
+   their size — they are already small. */
+@media (max-width: 640px) {
+  .dlab-soft__choice {
+    gap: clamp(0.9rem, 3vw, 1.35rem);
+  }
+
+  .dlab-soft__line {
+    max-width: 24ch;
+  }
+
+  /* Inline so the sentence wraps as prose and the arrow stays on the last line.
+     `display: inline` drops the flex `gap`, so restate it as a margin. */
+  .dlab-soft__line--direct {
+    display: inline;
+  }
+
+  .dlab-soft__arrow {
+    margin-left: 0.35em;
+    white-space: nowrap;
+  }
+
+  .dlab-soft__indRow {
+    gap: 8px;
   }
 }

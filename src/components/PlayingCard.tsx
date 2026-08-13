@@ -99,7 +99,7 @@ export default function PlayingCard({
         }}
       >
         <h3
-          className="text-xs font-bold tracking-wider leading-tight"
+          className="card-caption__title font-bold tracking-wider leading-tight"
           style={{
             color: textColor,
             fontFamily: "var(--font-serif)",

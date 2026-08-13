@@ -30,6 +30,8 @@ export const LAB_GROUPS: LabGroup[] = [
     items: [
       { label: "Design Lab", path: "/design-lab", note: "Four-Card Threshold + experiments" },
       { label: "Soft-Lock Entry (homepage mirror)", path: "/design-lab/soft-lock" },
+      { label: "Entry route chooser", path: "/entry-cta-lab", note: "Story Mode vs. Business Mode beneath the deck · 5 layout directions" },
+      { label: "↳ Display sizes", path: "/entry-cta-lab/viewer", note: "The five directions framed from 375 to 4K" },
       { label: "Hero type lab", path: "/hero-type-lab", note: "5 size + measure iterations · live line-count readout" },
       { label: "Personas lab", path: "/personas-lab", note: "4 glass directions · hover, focus and tap expand" },
     ],
@@ -74,9 +76,14 @@ export const LAB_GROUPS: LabGroup[] = [
     title: "Consulting",
     items: [
       {
-        label: "CTA interaction lab",
+        label: "CTA row lab",
         path: "/cta-lab",
-        note: "Let's work together → Advisory & Partnerships / Profile & Experience · 3 concepts",
+        note: "Choices always visible, wired to the screens · 5 iterations (incl. ETB bars) × blue/gold",
+      },
+      {
+        label: "↳ CTA interaction lab (3 concepts)",
+        path: "/cta-lab/concepts",
+        note: "Rail / Split / Fold — the explorer that shipped Rail to production",
       },
       { label: "Consulting hero lab", path: "/consulting-hero-lab" },
       { label: "Consulting lab", path: "/consulting-lab" },

@@ -5,13 +5,14 @@ import { CARDS } from "@/data/cards";
 import { useScrollProgress } from "@/hooks/useScrollProgress";
 import PlayingCard from "./PlayingCard";
 
-// Optional `onRevealedChange` reports how many cards are currently face-up.
-// Unused on the homepage (default no-op), so behavior/look there is unchanged;
-// the Design Lab's soft-lock prototype uses it to know when all four are revealed.
+// Optional `onRevealedChange` reports how many cards are currently face-up, and
+// WHICH ones — the second argument carries the set of face-up card ids, so a
+// caller can render one marker per specific card rather than a running total.
+// It is additive: callers that only take `count` are unaffected.
 export default function CardDeck({
   onRevealedChange,
 }: {
-  onRevealedChange?: (count: number) => void;
+  onRevealedChange?: (count: number, flipped: ReadonlySet<number>) => void;
 } = {}) {
   const [flippedCards, setFlippedCards] = useState<Set<number>>(new Set());
   const [lastFlippedId, setLastFlippedId] = useState<number | null>(null);
@@ -26,7 +27,7 @@ export default function CardDeck({
   }, []);
 
   useEffect(() => {
-    onRevealedChange?.(flippedCards.size);
+    onRevealedChange?.(flippedCards.size, flippedCards);
   }, [flippedCards, onRevealedChange]);
 
   const handleFlip = useCallback((cardId: number) => {
@@ -82,7 +83,7 @@ export default function CardDeck({
         {activeCard && (
           <>
             <h3
-              className="text-xs font-bold tracking-wider"
+              className="card-caption__title font-bold tracking-wider"
               style={{
                 color: activeCard.color === "red" ? "#b91c1c" : "#ffffff",
                 fontFamily: "var(--font-serif)",

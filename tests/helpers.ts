@@ -30,27 +30,41 @@ export async function openSite(page: Page, path = "/") {
 }
 
 /**
- * Press Skip until the gate actually opens.
+ * Flip all four cards until the gate actually opens.
  *
- * A single click is NOT reliable: the markup is server-rendered, so the button
- * exists and is clickable before React has hydrated, and a click that lands
- * first is swallowed with no handler attached. That produced a flaky
- * "waiting for .dlab-gate__content.is-open" timeout that looked like a broken
- * gate rather than a race. Retrying until the class flips is the only honest
- * signal that the handler is live.
+ * The entry used to carry a "Skip the intro" button and this drove that. It no
+ * longer exists — the gate now offers Story Mode (flip four cards) or a link
+ * that jumps to Consulting — so flipping is the route that opens the gate and
+ * leaves the visitor at the top of the page, which is what every caller wants.
+ *
+ * Two details that are not optional:
+ *  - Only unflipped cards are clicked. A second click flips a card back, so a
+ *    naive retry that re-clicks everything oscillates instead of converging.
+ *  - No `force: true`. Force skips Playwright's actionability wait, which is the
+ *    only thing that notices the intro splash still covering the deck — with it
+ *    on, every click lands on `.splash` and reports success while nothing flips.
+ *
+ * The retry itself is for hydration: the deck is server-rendered, so a click
+ * that lands before React attaches is swallowed with no handler.
  */
 export async function releaseGate(page: Page) {
   const gate = page.locator(".dlab-gate__content");
   if (!(await gate.count())) return; // route has no soft lock
-  const skip = page.locator("button", { hasText: /Skip the intro/i });
-  if (!(await skip.count())) return;
+
+  const cards = page.locator("button.card-hover-wrapper");
+  if (!(await cards.count())) return;
 
   await expect(async () => {
-    const open = await gate.first().evaluate((el) => el.classList.contains("is-open"));
-    if (!open) await skip.first().click({ force: true });
-    const nowOpen = await gate.first().evaluate((el) => el.classList.contains("is-open"));
+    const n = await cards.count();
+    for (let i = 0; i < n; i++) {
+      const card = cards.nth(i);
+      if ((await card.getAttribute("aria-pressed")) === "false") await card.click();
+    }
+    const nowOpen = await gate
+      .first()
+      .evaluate((el) => el.classList.contains("is-open"));
     expect(nowOpen).toBe(true);
-  }).toPass({ timeout: 20_000, intervals: [150, 300, 600] });
+  }).toPass({ timeout: 30_000, intervals: [200, 400, 800] });
 }
 
 /**
