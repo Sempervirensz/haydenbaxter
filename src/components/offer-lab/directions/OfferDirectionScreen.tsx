@@ -195,6 +195,51 @@ export default function OfferDirectionScreen({
       // heading directly under a "Leadership" chapter label. The block's own
       // label is dropped rather than the section's, because the section
       // heading is what `aria-labelledby` points at and what the rail lists.
+      case "tracks":
+        // Two lanes, not two paragraphs. Each carries its own evidence link and
+        // its own ask, and the asks are bottom-aligned so the two front doors
+        // sit on one line however unevenly the descriptions wrap.
+        return (
+          <div className="ofd-tracks">
+            {d.blocks.map((block, bi) => (
+              <article className="ofd-track" key={block.label} data-track-index={bi}>
+                <h3 className="ofd-track__label">{block.label}</h3>
+                <p className="ofd-track__desc">{block.descriptor}</p>
+                <div className="ofd-track__foot">
+                  {block.action && (
+                    <a
+                      className="ofd-block__action"
+                      href={block.action.href}
+                      {...(block.action.external
+                        ? { target: "_blank", rel: "noopener noreferrer" }
+                        : {})}
+                    >
+                      <span>{block.action.label}</span>
+                      <span className="ofd-block__actionChev" aria-hidden="true">
+                        ›
+                      </span>
+                    </a>
+                  )}
+                  {block.ask && (
+                    <a
+                      className="ofd-action ofd-action--primary ofd-track__ask"
+                      href={block.ask.href}
+                      {...(block.ask.external
+                        ? { target: "_blank", rel: "noopener noreferrer" }
+                        : {})}
+                    >
+                      <span className="ofd-action__label">{block.ask.label}</span>
+                      <span className="ofd-action__chev" aria-hidden="true">
+                        ›
+                      </span>
+                    </a>
+                  )}
+                </div>
+              </article>
+            ))}
+          </div>
+        );
+
       case "lead":
         return (
           <div className="ofd-blocks ofd-blocks--single">

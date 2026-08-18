@@ -169,6 +169,7 @@ export type OfferKind = "service" | "venture" | "credential";
 export type SectionId =
   | "hero"
   | "scope" // the two blocks, as a pair
+  | "tracks" // the two blocks as parallel lanes, each with its own way in
   | "lead" // block A alone, given the frame
   | "audience" // block B alone, as "who this is for"
   | "method" // the method statement, promoted to a movement
@@ -201,6 +202,17 @@ export const OFFER_TEMPLATES: Record<OfferKind, OfferTemplate> = {
     // Without that filtering the rewrite rendered two empty movements.
     sections: [
       { id: "hero", label: "The offer" },
+      // The two capabilities are not a list of things this service does — they
+      // are two distinct practices with separate audiences, separate evidence
+      // and separate conversations. `tracks` gives each one a lane that runs
+      // the width of the page and ends in its own ask, so a reader who
+      // identifies with one never has to read past the other to act.
+      { id: "tracks", label: "Two ways in" },
+      // `scope` is the fallback for offers whose blocks carry no per-track
+      // action — `uniform` mode runs WorldPulse and Experience through this
+      // same template, and without this entry their capabilities would filter
+      // out entirely and the page would lose its middle. Exactly one of these
+      // two ever survives `availableSections`.
       { id: "scope", label: "Scope" },
       { id: "method", label: "How it works" },
       { id: "engagements", label: "Engagements" },
@@ -290,6 +302,12 @@ export function resolveTemplate(id: PathId, mode: OfferTemplateModeId): OfferTem
 export function availableSections(sections: SectionDef[], copy: OfferCopy): SectionDef[] {
   const has = (id: SectionId): boolean => {
     switch (id) {
+      case "tracks":
+        // Only a real diptych when both capabilities carry their own way in.
+        return copy.blocks.every((b) => Boolean(b.action || b.ask));
+      case "scope":
+        // Falls back to the paired-blocks layout when `tracks` cannot apply.
+        return !copy.blocks.every((b) => Boolean(b.action || b.ask));
       case "method":
         return Boolean(copy.method);
       case "engagements":

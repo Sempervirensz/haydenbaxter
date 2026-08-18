@@ -43,8 +43,14 @@ export interface OfferBlock {
   descriptor: string;
   /** The old bullet list. Absent on the rewritten Consulting copy. */
   items?: string[];
-  /** The block's own way in. This is what makes each capability actionable. */
+  /** "Explore ..." — proof for the reader who wants evidence before booking. */
   action?: DestinationAction;
+  /**
+   * "Discuss a ... Project" — the track's own conversion, sitting inside the
+   * track rather than only in a shared footer. A reader who identifies with one
+   * of the two should never have to scroll past the other to act.
+   */
+  ask?: DestinationAction;
 }
 
 export interface OfferCopy {
@@ -94,6 +100,7 @@ const CONSULTING: OfferCopy = {
         "I help teams find the right use cases, redesign the workflows around them, build the roadmap, and prototype what comes next.",
       // A real route that already ships.
       action: { label: "Explore Emerging Tech Builds", href: "/emerging-tech-builds" },
+      ask: { label: "Discuss an AI Project", href: CALENDLY_URL, external: true },
     },
     {
       label: "Global Supply Chain & Supplier Relations",
@@ -102,6 +109,11 @@ const CONSULTING: OfferCopy = {
       // The supply-chain work is a chapter of the Work section rather than a
       // route of its own — same anchor consultingHeroTransition.ts already uses.
       action: { label: "Explore Supply Chain Work", href: "/#supply-chain" },
+      ask: {
+        label: "Discuss a Supply Chain Project",
+        href: CALENDLY_URL,
+        external: true,
+      },
     },
   ],
   why: {
