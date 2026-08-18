@@ -83,7 +83,17 @@ export const LAB_GROUPS: LabGroup[] = [
       {
         label: "Offer page lab",
         path: "/offer-lab",
-        note: "5 layouts × dark/paper for the three offers — dossier, editorial, index, stack, split",
+        note: "6 art directions × per-offer templates × dark/paper for the three offers",
+      },
+      {
+        label: "↳ Offer directions — side by side",
+        path: "/offer-lab/directions",
+        note: "All six directions in one column, at one width, for a straight comparison",
+      },
+      {
+        label: "↳ Offer — cinematic",
+        path: "/offer-lab/consulting?direction=cinematic&surface=dark",
+        note: "The photograph-led direction, as a real routed page",
       },
       {
         label: "↳ CTA row — in site",

@@ -1,0 +1,181 @@
+/* ===========================================================================
+   Directions comparison route. Scoped under .ofdc-.
+
+   Deliberately NOT in the portfolio's visual language — flat, tool-grey, no
+   serif — so the chrome never reads as part of what is being judged. Same
+   posture as the lab control panel.
+   ======================================================================== */
+
+.ofdc {
+  min-height: 100vh;
+  background: #06070a;
+  color: #f4f4f2;
+  padding-bottom: 120px;
+}
+
+.ofdc__head {
+  padding: 40px clamp(20px, 4vw, 56px) 32px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.ofdc__title {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.ofdc__sub {
+  margin: 10px 0 0;
+  max-width: 66ch;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.ofdc__controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.ofdc__group {
+  display: inline-flex;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 7px;
+  overflow: hidden;
+}
+
+.ofdc__btn {
+  all: unset;
+  box-sizing: border-box;
+  padding: 8px 13px;
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.55);
+  transition: background 150ms ease, color 150ms ease;
+}
+
+.ofdc__btn + .ofdc__btn {
+  border-left: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.ofdc__btn:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.ofdc__btn.is-active {
+  background: rgba(255, 255, 255, 0.92);
+  color: #0a0b0f;
+}
+
+.ofdc__btn:focus-visible {
+  outline: 2px solid #7aa2ff;
+  outline-offset: -2px;
+}
+
+.ofdc__readout {
+  margin: 18px 0 0;
+  max-width: 90ch;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.44);
+}
+
+.ofdc__readout strong {
+  color: rgba(255, 255, 255, 0.78);
+}
+
+/* ---- One direction ---- */
+
+.ofdc__item {
+  padding: 44px clamp(20px, 4vw, 56px) 0;
+}
+
+.ofdc__meta {
+  max-width: 74ch;
+  margin-bottom: 20px;
+}
+
+.ofdc__name {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #d8b15a;
+}
+
+.ofdc__note {
+  margin: 7px 0 0;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.62);
+}
+
+.ofdc__buys,
+.ofdc__cost {
+  margin: 10px 0 0;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.ofdc__tag {
+  display: inline-block;
+  margin-right: 7px;
+  padding: 2px 7px;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.1);
+  font-size: 9px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+/* Cost is not a footnote — it reads at the same size as what it buys. */
+.ofdc__tag--cost {
+  background: rgba(216, 177, 90, 0.22);
+  color: #d8b15a;
+}
+
+.ofdc__links {
+  margin: 12px 0 0;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+}
+
+.ofdc__links a {
+  color: #7aa2ff;
+  text-decoration: none;
+}
+
+.ofdc__links a:hover {
+  text-decoration: underline;
+}
+
+.ofdc__links a:focus-visible {
+  outline: 2px solid #7aa2ff;
+  outline-offset: 3px;
+}
+
+/* The stage. `overflow: hidden` clips the direction to its frame; it must NOT
+   be `auto` — a second scroller inside a page that already scrolls is exactly
+   the failure the routed offers were built to remove. */
+.ofdc__stage {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  overflow: hidden;
+}

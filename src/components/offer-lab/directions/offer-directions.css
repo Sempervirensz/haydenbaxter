@@ -40,7 +40,7 @@
   /* The measure. Every direction respects it; only the grid around it moves. */
   --ofd-measure: 68ch;
   --ofd-pad: clamp(22px, 5cqw, 96px);
-  --ofd-gap: clamp(52px, 9cqw, 132px);
+  --ofd-gap: clamp(48px, 6.6cqw, 104px);
 
   position: relative;
   isolation: isolate;
@@ -242,11 +242,15 @@
 
 .ofd-method {
   margin: 0;
-  max-width: 46ch;
 }
 
 .ofd-method__text {
   margin: 0;
+  /* On the TEXT, not the blockquote: `ch` resolves against the font-size of
+     the element it is declared on, and the display size lives here. Declared
+     on the parent it measured the inherited 16px sans and produced a column
+     a third of the intended width. */
+  max-width: 30ch;
   font-family: var(--font-serif);
   font-weight: 400;
   font-size: clamp(21px, 2.6cqw, 38px);
@@ -264,7 +268,10 @@
   padding: 0;
   display: grid;
   gap: 0;
-  max-width: 62ch;
+  /* A row measure, not a text measure — the rule under each engagement is
+     part of the composition, so this is set in absolute units rather than in
+     `ch` against a font-size that lives two elements down. */
+  max-width: min(100%, 720px);
 }
 
 .ofd-engagement {
@@ -507,6 +514,14 @@
   display: none;
 }
 
+/* The eyebrow sits highest in the copy block, which at narrow widths lands it
+   on the lit buildings where the scrim has already ramped out. The title and
+   lede carried a shadow and it did not, so gold-on-city-lights was the one
+   unreadable element in the hero. */
+.ofd[data-direction="cinematic"] .ofd-sec[data-sec="hero"] .ofd-hero__eyebrow {
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.85), 0 0 26px rgba(0, 0, 0, 0.6);
+}
+
 .ofd[data-direction="cinematic"] .ofd-sec[data-sec="hero"] .ofd-hero__title {
   text-shadow: 0 4px 28px rgba(0, 0, 0, 0.62);
 }
@@ -619,12 +634,40 @@
   padding-block: clamp(60px, 10cqw, 148px);
 }
 
-/* A hairline seam so the band change reads as a deliberate edge rather than as
-   a rendering artefact where two large fills meet. */
+/* The paper region is ONE SLAB, not three stacked bands.
+   `bandFor()` marks every middle movement as paper, so seaming each section
+   individually drew hairlines THROUGH the slab and it read as a single paper
+   area with arbitrary lines in it rather than as a deliberate change of
+   ground. The seam belongs only where the surface actually changes. */
 .ofd[data-direction="alternating"] .ofd-sec[data-band="paper"] {
-  box-shadow:
-    inset 0 1px 0 rgba(17, 17, 22, 0.18),
-    inset 0 -1px 0 rgba(17, 17, 22, 0.18);
+  box-shadow: none;
+}
+
+/* Top of the slab: the first paper section after a dark one. */
+.ofd[data-direction="alternating"]
+  .ofd-sec:not([data-band="paper"])
+  + .ofd-sec[data-band="paper"] {
+  box-shadow: inset 0 1px 0 rgba(17, 17, 22, 0.18);
+}
+
+/* Bottom of the slab: the last paper section before a dark one. */
+.ofd[data-direction="alternating"]
+  .ofd-sec[data-band="paper"]:has(+ .ofd-sec:not([data-band="paper"])) {
+  box-shadow: inset 0 -1px 0 rgba(17, 17, 22, 0.18);
+}
+
+/* Inside the slab, consecutive movements were paying full padding on both
+   sides of an invisible join — 208px of empty paper between two sections that
+   the reader sees as one continuous region. */
+.ofd[data-direction="alternating"]
+  .ofd-sec[data-band="paper"]
+  + .ofd-sec[data-band="paper"] {
+  padding-top: clamp(28px, 3.4cqw, 56px);
+}
+
+.ofd[data-direction="alternating"]
+  .ofd-sec[data-band="paper"]:has(+ .ofd-sec[data-band="paper"]) {
+  padding-bottom: clamp(28px, 3.4cqw, 56px);
 }
 
 /* On paper the near-white candy bar has nothing to sit against, so the primary
@@ -876,7 +919,6 @@
 /* The note as a genuine pull quote, with the mark set in the margin. */
 .ofd[data-direction="broadsheet"] .ofd-method {
   position: relative;
-  max-width: 34ch;
   padding-left: clamp(18px, 2cqw, 34px);
   border-left: 2px solid var(--ofd-gold);
 }
@@ -884,6 +926,7 @@
 .ofd[data-direction="broadsheet"] .ofd-method__text {
   font-size: clamp(23px, 3.1cqw, 46px);
   line-height: 1.16;
+  max-width: 26ch;
 }
 
 .ofd[data-direction="broadsheet"] .ofd-engagement__name {
@@ -1038,7 +1081,7 @@
 
 @container ofd (min-width: 1100px) {
   .ofd[data-direction="chaptered"] {
-    grid-template-columns: minmax(190px, 0.2fr) minmax(0, 1fr);
+    grid-template-columns: minmax(212px, 0.2fr) minmax(0, 1fr);
     align-items: start;
   }
 

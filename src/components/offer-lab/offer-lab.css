@@ -849,9 +849,12 @@
   gap: 16px;
   padding: 16px clamp(20px, 4vw, 56px);
   border-bottom: 1px solid var(--ofrp-rule);
+  /* Opaque, inherited from the page ground — so there is nothing behind this
+     bar to see and nothing to blur. `backdrop-filter` was declared here
+     anyway, which promoted the whole backdrop to a resampled texture for a
+     frost effect that is invisible under an opaque fill. Removed rather than
+     set to `blur(0px)`: declaring the property at all is the cost. */
   background: inherit;
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
 }
 
 .ofrp__back,

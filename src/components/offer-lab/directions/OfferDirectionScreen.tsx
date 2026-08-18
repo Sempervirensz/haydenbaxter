@@ -167,17 +167,22 @@ export default function OfferDirectionScreen({
           </div>
         );
 
+      // A single-block movement is ALREADY named by its chapter header — the
+      // credential template's "Leadership" section rendered a "Leadership"
+      // heading directly under a "Leadership" chapter label. The block's own
+      // label is dropped rather than the section's, because the section
+      // heading is what `aria-labelledby` points at and what the rail lists.
       case "lead":
         return (
           <div className="ofd-blocks ofd-blocks--single">
-            <Block block={d.blocks[0]} index={0} />
+            <Block block={d.blocks[0]} index={0} showLabel={false} />
           </div>
         );
 
       case "audience":
         return (
           <div className="ofd-blocks ofd-blocks--single">
-            <Block block={d.blocks[1]} index={1} />
+            <Block block={d.blocks[1]} index={1} showLabel={false} />
           </div>
         );
 
@@ -321,13 +326,16 @@ export default function OfferDirectionScreen({
 function Block({
   block,
   index,
+  showLabel = true,
 }: {
   block: PathDef["destination"]["blocks"][number];
   index: number;
+  /** False when the section header already carries this block's name. */
+  showLabel?: boolean;
 }) {
   return (
     <div className="ofd-block" data-block-index={index}>
-      <h3 className="ofd-block__label">{block.label}</h3>
+      {showLabel && <h3 className="ofd-block__label">{block.label}</h3>}
       <p className="ofd-block__desc">{block.descriptor}</p>
       <ul className="ofd-block__list">
         {block.items.map((item) => (
