@@ -1,0 +1,76 @@
+/* ===========================================================================
+   Headline scale — a LAB-ONLY override on the shipped chapter headline.
+   ===========================================================================
+
+   "Let's work together" ships at `clamp(34px, 7cqw, 72px)`, which saturates at
+   72px by roughly a 1030px container — so on every desktop the headline has
+   already stopped growing, and on a large display it reads as a laptop layout
+   parked in a big frame. This scopes a bigger ramp so the sizes can be
+   compared in place before anything is decided.
+
+   NOTHING HERE TOUCHES PRODUCTION. `work-together.css` is untouched; these
+   rules hang off `[data-headline]`, which only `/cta-lab/in-site` sets. With
+   no attribute the shipped sizing applies unchanged.
+
+   MOBILE IS DELIBERATELY EXCLUDED. Production's own
+   `@container wt (max-width: 700px)` block is what positions the copy on a
+   phone, and the brief is to leave that placement alone — so every rule below
+   is guarded by `@container wt (min-width: 701px)`. Without that guard a
+   headline sized in `cqw` would grow on a narrow card too, because `cqw` is a
+   share of the container rather than a fixed step, and the phone card would
+   inherit the desktop experiment.
+   ======================================================================== */
+
+@container wt (min-width: 701px) {
+  /* Roughly 1.8x the shipped cap. Still clearly a headline rather than a
+     poster: the bars and the hint keep their weight underneath it. */
+  [data-headline="large"] .wt__title {
+    font-size: clamp(34px, 9cqw, 128px);
+    letter-spacing: -0.028em;
+    line-height: 0.95;
+  }
+
+  /* About 2.3x. This is the size in the reference — the headline occupies the
+     sky above the city rather than sitting under it. */
+  [data-headline="huge"] .wt__title {
+    font-size: clamp(34px, 11.5cqw, 164px);
+    letter-spacing: -0.032em;
+    line-height: 0.93;
+  }
+
+  /* The upper bound worth looking at. Past this the ascenders start to crowd
+     the chapter rail at the top of the card. */
+  [data-headline="display"] .wt__title {
+    font-size: clamp(34px, 14cqw, 200px);
+    letter-spacing: -0.036em;
+    line-height: 0.9;
+  }
+}
+
+/* THE WIDE CEILING IS SET BY THE COPY SHELL, NOT BY TASTE.
+
+   At 1600 and above, production caps the copy column at `--shell-consulting`
+   (106rem, 1696px) so the headline keeps an editorial measure instead of
+   spanning a 4K bezel. "Let's work together" renders at roughly 8x the font
+   size, so anything past about 205px cannot fit that column on one line.
+
+   The first pass ignored this and raised the ceilings to 262 and 344. The type
+   duly grew and then wrapped to two lines at 1920, 2560 and 3840 — the width
+   stuck at exactly 1696px in every one, which is the shell telling you what it
+   is. These ceilings hold the headline on one line inside that column.
+
+   The consequence is worth stating plainly: on a very large display this fills
+   the 1696px column and no more, so it reads smaller relative to the frame.
+   Making it fill a 4K screen means widening the copy shell, which is a
+   different and much larger decision than the size of the headline. */
+@container wt (min-width: 1600px) {
+  [data-headline="large"] .wt__title {
+    font-size: clamp(128px, 9cqw, 158px);
+  }
+  [data-headline="huge"] .wt__title {
+    font-size: clamp(164px, 11.5cqw, 186px);
+  }
+  [data-headline="display"] .wt__title {
+    font-size: clamp(186px, 14cqw, 204px);
+  }
+}

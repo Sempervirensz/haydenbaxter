@@ -29,6 +29,7 @@ import {
   type OfferDirectionId,
 } from "@/data/offerDirections";
 import "./cta-row-lab.css";
+import "./headline-scale.css";
 
 const WorkSection = dynamic(() => import("@/components/work/WorkSectionResponsive"));
 
@@ -38,6 +39,13 @@ const WorkSection = dynamic(() => import("@/components/work/WorkSectionResponsiv
  * than panels opening inside the card.
  */
 type ScreenChoice = OfferLayoutId | "dossier" | "routed" | "decision" | "disc";
+
+const HEADLINES = [
+  { id: "shipped", label: "Shipped", note: "clamp(34px, 7cqw, 72px). Saturates at 72px by a ~1030px card." },
+  { id: "large", label: "Large", note: "About 1.8x. Still a headline; the bars keep their weight under it." },
+  { id: "huge", label: "Huge", note: "About 2.3x. The size in the reference: it occupies the sky." },
+  { id: "display", label: "Display", note: "The upper bound. Past this the ascenders crowd the chapter rail." },
+] as const;
 
 const DISC_PLACEMENTS = [
   { id: "right", label: "Right", note: "Enters from the right edge, below the statue." },
@@ -83,6 +91,10 @@ export default function InSitePreview() {
       setDiscPlacement(placeParam as (typeof DISC_PLACEMENTS)[number]["id"]);
     }
     if (sp.get("rest") === "peek") setDiscRest(true);
+    const headlineParam = sp.get("headline");
+    if (HEADLINES.some((o) => o.id === headlineParam)) {
+      setHeadline(headlineParam as (typeof HEADLINES)[number]["id"]);
+    }
     const surfaceParam = sp.get("surface");
     if (OFFER_SURFACES.some((o) => o.id === surfaceParam)) {
       setSurface(surfaceParam as OfferSurfaceId);
@@ -94,6 +106,8 @@ export default function InSitePreview() {
   const [discPlacement, setDiscPlacement] =
     useState<(typeof DISC_PLACEMENTS)[number]["id"]>("right");
   const [discRest, setDiscRest] = useState(false);
+  const [headline, setHeadline] =
+    useState<(typeof HEADLINES)[number]["id"]>("shipped");
   // The decision chooser navigates for the same reason the routed row does:
   // the offer content is a page, not a panel inside this card.
   // The disc variant renders the SHIPPED row, which discloses in place; it is
@@ -134,7 +148,7 @@ export default function InSitePreview() {
           In site
           <span className="ctarl__state">
             {screen === "disc"
-              ? `Disc reveal · ${discPlacement}`
+              ? `Disc reveal · ${discPlacement}${headline !== "shipped" ? ` · ${headline}` : ""}`
               : screen === "decision"
               ? "Decision chooser"
               : screen === "routed"
@@ -209,6 +223,28 @@ export default function InSitePreview() {
                   </button>
                 ))}
               </div>
+            </div>
+
+            <div className="ctarl__group">
+              <h2 className="ctarl__groupTitle">Headline scale</h2>
+              <div className="ctarl__col">
+                {HEADLINES.map((o) => (
+                  <button
+                    key={o.id}
+                    type="button"
+                    className={`ctarl__row ${headline === o.id ? "is-active" : ""}`}
+                    aria-pressed={headline === o.id}
+                    onClick={() => setHeadline(o.id)}
+                  >
+                    <span className="ctarl__rowName">{o.label}</span>
+                    <span className="ctarl__rowNote">{o.note}</span>
+                  </button>
+                ))}
+              </div>
+              <p className="ctarl__readout">
+                Desktop only. Below 701px the shipped sizing and the phone copy
+                placement are left exactly as they are.
+              </p>
             </div>
 
             {disc && (
@@ -342,7 +378,7 @@ export default function InSitePreview() {
         )}
       </aside>
 
-      <main>
+      <main data-headline={headline === "shipped" ? undefined : headline}>
         <HeroSection />
         <BrandsCarousel />
         <WorkSection />

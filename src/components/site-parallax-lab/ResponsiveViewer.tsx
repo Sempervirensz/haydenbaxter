@@ -56,6 +56,13 @@ const ROUTES: Route[] = [
   { label: "Disc reveal", src: "/cta-lab/in-site?screen=disc&place=right" },
   { label: "Disc · corner", src: "/cta-lab/in-site?screen=disc&place=corner&rest=peek" },
   { label: "Shipped row", src: "/cta-lab/in-site?screen=routed" },
+  // Headline scale. Framed rather than opened directly because the question is
+  // how a headline sized in `cqw` behaves on displays this machine cannot open,
+  // and the iframe's own viewport is what makes 2560 and 3840 real.
+  { label: "Headline · shipped", src: "/cta-lab/in-site?screen=disc&headline=shipped" },
+  { label: "Headline · large", src: "/cta-lab/in-site?screen=disc&headline=large" },
+  { label: "Headline · huge", src: "/cta-lab/in-site?screen=disc&headline=huge" },
+  { label: "Headline · display", src: "/cta-lab/in-site?screen=disc&headline=display" },
 ];
 
 interface Preset {
