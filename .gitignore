@@ -1,4 +1,7 @@
 .next/
+# Build dir for the `next-dev-alt` launch config (NEXT_DIST_DIR), used when a
+# second dev server has to run against this folder.
+.next-alt/
 node_modules/
 out/
 .DS_Store

@@ -9,6 +9,16 @@
       "autoPort": true
     },
     {
+      "//": "Second dev server for when another one is already running against this folder. Its own port AND its own build dir — two `next dev` sharing .next flap a live route between 200 and 404, and a different port alone does not fix that.",
+      "name": "next-dev-alt",
+      "runtimeExecutable": "/bin/sh",
+      "runtimeArgs": [
+        "-c",
+        "NEXT_DIST_DIR=.next-alt exec /Users/haydenbaxter/.nvm/versions/node/v20.19.6/bin/node node_modules/.bin/next dev -p 3007"
+      ],
+      "port": 3007
+    },
+    {
       "name": "static-export",
       "runtimeExecutable": "npx",
       "runtimeArgs": ["--yes", "serve", "out"],

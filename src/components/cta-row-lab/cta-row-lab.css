@@ -1,0 +1,1535 @@
+/* ===========================================================================
+   Direct CTA row — the lab at /cta-lab. Scoped under .ctar- / .ctarl-.
+   ===========================================================================
+
+   The composition is the production Consulting stage: the cityscape, the
+   grain, the vignette, and the serif headline low in the frame. The one change
+   is that the three choices are already on screen underneath the headline.
+
+   Two attributes drive everything:
+
+     .ctar[data-variant]   etb | dymo | rule | glass | editorial
+     .ctar[data-motion]    full | reduced
+
+   Layout, copy, markup and links are identical across all five variants —
+   `data-variant` only ever changes how a button is DRAWN. That is what makes
+   them comparable rather than five different sections.
+
+   `.ctar` is a size container, so every layout rule is a @container query —
+   the same approach `work-together.css` takes. The 390px frame is therefore a
+   real narrow layout, not a scaled-down approximation of one.
+
+   Nothing here invents brand vocabulary. The DYMO emboss is lifted from
+   globals.css `.tag`, the gold is #d8b15a (the site's single accent), the
+   paper/ink pair is --wt-paper / --wt-ink from the destination screens, and
+   the white ramp is --ink-body / --ink-muted / --ink-faint from scale.css.
+   ======================================================================== */
+
+.ctar-root {
+  --ctar-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --ctar-fast: 170ms;
+  --ctar-base: 420ms;
+
+  min-height: 100vh;
+  padding: 28px 24px 96px;
+  background: #06070a;
+  color: #f4f4f2;
+}
+
+/* Keep the stages clear of the floating panel on wide screens. */
+@media (min-width: 1100px) {
+  .ctar-root {
+    padding-right: 344px;
+  }
+}
+
+.ctar-stages {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 24px;
+}
+
+.ctar-frame {
+  min-width: 0;
+}
+
+.ctar-frame--desktop {
+  flex: 1 1 720px;
+  max-width: 1180px;
+}
+
+.ctar-frame--narrow {
+  flex: 0 0 390px;
+  max-width: 390px;
+}
+
+.ctar-frame__tag {
+  margin: 8px 0 0;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.28);
+  text-align: center;
+}
+
+/* ===========================================================================
+   STAGE — the reproduced Consulting card
+   ======================================================================== */
+
+.ctar {
+  /* `.wt-screen` is production CSS scoped under `.wt`, which this stage is
+     not — without these three the destination screen renders with an invalid
+     `background: var(--wt-paper)` (i.e. transparent) and an un-eased body
+     animation. Same values `.wt` declares. */
+  --wt-paper: #f5f4f1;
+  --wt-ink: #111116;
+  --wt-ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+  --ctar-paper: var(--wt-paper);
+  --ctar-ink: var(--wt-ink);
+  --ctar-shell: var(--shell-consulting);
+
+  /* DYMO emboss, lifted from globals.css `.tag` so the lab can't drift. */
+  --ctar-dymo-shadow:
+    inset 0 2px 4px rgba(0, 0, 0, 0.75),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.05),
+    0 3px 0 #0b0b0b,
+    0 4px 7px rgba(0, 0, 0, 0.85);
+  --ctar-dymo-shadow-pressed:
+    inset 0 3px 6px rgba(0, 0, 0, 0.85),
+    0 0 0 #0b0b0b,
+    0 1px 2px rgba(0, 0, 0, 0.5);
+
+  /* Definite size, so `container-type: size` and cq units are legal.
+     TWO names, and the second is load-bearing: `.wt-screen`'s own narrow and
+     large-display rules in work-together.css are `@container wt (...)`
+     queries. Without `wt` here they never match, and the screen keeps its
+     two-column blocks and loses its sticky action bar inside the 390px
+     frame — silently, because a container query that matches nothing just
+     doesn't apply. */
+  container-type: size;
+  container-name: ctar wt;
+
+  position: relative;
+  width: 100%;
+  height: min(780px, 84vh);
+  border-radius: 26px;
+  overflow: hidden;
+  background: #0a0b0f;
+  /* Backdrop root for .ctar__focus. The photo is a child, so the blur has
+     something to sample. */
+  isolation: isolate;
+
+  /* Borderless filmic edge — matches .cstack__card and the sibling lab. */
+  outline: 1px solid rgba(255, 255, 255, 0.06);
+  outline-offset: -1px;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.05) inset,
+    0 0 130px 8px rgba(0, 0, 0, 0.5) inset,
+    0 54px 130px -34px rgba(0, 0, 0, 0.9),
+    0 14px 50px -18px rgba(0, 0, 0, 0.7);
+}
+
+.ctar-frame--narrow .ctar {
+  border-radius: 22px;
+  height: min(780px, 84vh);
+}
+
+/* ---- Accent --------------------------------------------------------------
+   A second axis, independent of the skin. Neither value is new:
+
+     blue  #2563eb is what the destination screen ALREADY uses for its block
+           labels, list bullets and primary action, so this is the option that
+           matches the screens the row opens into.
+     gold  #d8b15a, the site's single accent.
+
+   Each needs three values, not one, because the same hue has to work as ink
+   on a near-black photograph AND as ink on the screen's #f5f4f1 paper:
+
+     --ctar-accent      the true brand value. Borders, fills, non-text.
+     --ctar-accent-ink  the same hue lifted until it clears as TEXT on dark.
+                        #2563eb on near-black is about 3.5:1 and fails; gold
+                        already clears, so it is unchanged.
+     --ctar-accent-pap  the same hue darkened until it clears as TEXT on
+                        paper. #d8b15a on #f5f4f1 is about 1.9:1 — #8a6a1f is
+                        the value personas-lab landed on for exactly this.
+   ------------------------------------------------------------------------ */
+
+.ctar[data-accent="blue"] {
+  --ctar-accent: #2563eb;
+  --ctar-accent-rgb: 37, 99, 235;
+  --ctar-accent-ink: #7aa2ff;
+  --ctar-accent-ink-bright: #a9c4ff;
+  --ctar-accent-pap: #1e4ebe;
+  --ctar-accent-pap-rgb: 37, 99, 235;
+  /* The bottom stop of an accent FILL, and the ink that sits on it. Blue's
+     pair is `.etb-bar`'s Cobalt Select gradient exactly. */
+  --ctar-accent-deep: #1d4ed8;
+  --ctar-on-accent: #fff;
+  --ctar-on-accent-dim: rgba(255, 255, 255, 0.72);
+}
+
+.ctar[data-accent="gold"] {
+  --ctar-accent: #d8b15a;
+  --ctar-accent-rgb: 216, 177, 90;
+  --ctar-accent-ink: #d8b15a;
+  --ctar-accent-ink-bright: #f0dcae;
+  --ctar-accent-pap: #8a6a1f;
+  --ctar-accent-pap-rgb: 138, 106, 31;
+  --ctar-accent-deep: #b8924a;
+  /* NOT white. White on #d8b15a is about 1.9:1; the fill is light enough that
+     the ink on it has to be dark, where blue's has to be light. */
+  --ctar-on-accent: #17150e;
+  --ctar-on-accent-dim: rgba(23, 21, 14, 0.72);
+}
+
+/* ---- Environment ---------------------------------------------------------
+   Photo, then a light focus pass, then a scrim under the copy, then grain.
+   The photo stays essentially sharp: with no interaction to move away from,
+   there is no reason to push the city back — the live section's own `intro`
+   level sits at 0px blur for the same reason. Legibility is bought by the
+   scrim under the copy instead, which leaves the top of the frame as
+   photograph.
+   ------------------------------------------------------------------------ */
+
+.ctar__media {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.ctar__media > * {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* AT REST THIS LAYER DOES NOTHING. It is not `blur(0px)` and not a 6% dim —
+   it is inert, and that is deliberate on both counts.
+
+   Two separate things were softening the photograph:
+
+   1. A literal `blur(1px)`, which contradicted the paragraph above it.
+   2. Declaring `backdrop-filter` AT ALL. The property promotes the backdrop
+      into a composited texture that is rasterised and resampled, so even a
+      zero-radius filter costs real sharpness on high-frequency detail — the
+      statue's wing edges and the pinpoint city lights are exactly that.
+
+   So the property is absent until there is something to blur for, rather than
+   present-but-zero. `will-change` is likewise NOT set here: it would promote
+   the layer permanently and reintroduce the same resampling. The blur arrives
+   only under [data-open="true"], and closing removes it again. */
+.ctar__focus {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: transparent;
+}
+
+/* Legibility only, and it now clears the statue.
+
+   This is a plain gradient, not a filter — it never blurs. But it used to ramp
+   out at 72%, and the statue sits around 64% up the frame, so it was laying
+   ~8% black over the one subject that has to read as sharp. The copy block
+   occupies roughly the bottom third, so the ramp only has to cover that; it is
+   fully transparent from 52% up and the statue is untouched. */
+.ctar__scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background: linear-gradient(
+    to top,
+    rgba(4, 5, 10, 0.84) 0%,
+    rgba(4, 5, 10, 0.6) 18%,
+    rgba(4, 5, 10, 0.2) 38%,
+    transparent 52%
+  );
+}
+
+/* Narrow frames stack the row, so the copy block is far taller — headline,
+   hint and three full-width bars instead of one line of buttons. The desktop
+   ramp fades out at 52% and left the headline sitting on the brightest part of
+   the city. There is room to extend it: at these widths the statue sits around
+   67% up the frame, so a ramp that clears at 62% still never touches it. */
+@container ctar (max-width: 900px) {
+  .ctar__scrim {
+    background: linear-gradient(
+      to top,
+      rgba(4, 5, 10, 0.88) 0%,
+      rgba(4, 5, 10, 0.72) 26%,
+      rgba(4, 5, 10, 0.34) 46%,
+      transparent 62%
+    );
+  }
+}
+
+/* ---- The photograph itself ----------------------------------------------
+
+   Production's `.cns-stage__img` carries `transform: scale(1.02)`. A 2%
+   upscale resamples every pixel to hide edge seams the live card needs and
+   this stage does not, so it is reverted here — sharpness is the whole point
+   of this frame. Nothing in work-together.css is modified; this simply wins on
+   specificity inside `.ctar`.
+
+   `object-position` then moves with the container, because `cover` crops
+   HORIZONTALLY on the wide plate and the statue (x≈70%) is the first thing to
+   fall off the right edge as the frame narrows. At a 720px-wide stage a
+   centred crop shows x 31%–69% — the statue misses by a hair, which is
+   precisely the tablet case. Walking the focal point right keeps it in frame
+   while the city still fills the left of the shot.
+
+   `data-crop` says which plate is actually loaded rather than inferring it
+   from a media query, because the lab's 390px frame is a CONTAINER inside a
+   wide viewport: a viewport-based `<source>` would hand it the wide plate and
+   the narrow preview would quietly be testing the wrong image. */
+.ctar .cns-stage__img {
+  transform: none;
+  image-rendering: auto;
+}
+
+/* Wide plate — statue at x≈70%, city spanning 6%–94%. */
+.ctar .cns-stage__img[data-crop="wide"] {
+  object-position: 50% 46%;
+}
+
+@container ctar (max-width: 1100px) {
+  .ctar .cns-stage__img[data-crop="wide"] {
+    object-position: 62% 46%;
+  }
+}
+
+@container ctar (max-width: 900px) {
+  .ctar .cns-stage__img[data-crop="wide"] {
+    object-position: 70% 46%;
+  }
+}
+
+/* Portrait plate — statue already centred at x≈49%, subject band y 28%–63%. */
+.ctar .cns-stage__img[data-crop="narrow"] {
+  object-position: 50% 44%;
+}
+
+/* Same inline-SVG grain as the live section — no asset, no dependency. */
+.ctar__grain {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  opacity: 0.4;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='0.3'/%3E%3C/svg%3E");
+  background-size: 180px 180px;
+}
+
+/* ---- Copy block ----------------------------------------------------------
+   Anchored to the bottom-left, which is where the live section's headline
+   settles at rest (--mast-y: 44cqh). Keeping it there is what preserves the
+   cinematic read: photograph above, type below.
+   ------------------------------------------------------------------------ */
+
+.ctar__copy {
+  position: absolute;
+  z-index: 4;
+  left: clamp(22px, 4cqw, 52px);
+  right: clamp(22px, 4cqw, 52px);
+  bottom: clamp(34px, 7cqh, 76px);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.ctar__title {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-size: clamp(34px, 7cqw, 72px);
+  line-height: 0.98;
+  letter-spacing: -0.02em;
+  color: rgba(246, 245, 240, 0.96);
+  text-shadow: 0 4px 24px rgba(0, 0, 0, 0.6);
+}
+
+/* Labels the row rather than repeating it: it names how many choices there
+   are, and the row underneath is the choices. */
+.ctar__hint {
+  /* Stretched so the hairline below spans the copy column rather than the
+     width of the two words — the live section's `.wt__rule` sits across the
+     masthead the same way, and on large displays both cap to the shell. */
+  align-self: stretch;
+  margin: 18px 0 0;
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.ctar__hint::after {
+  content: "";
+  display: block;
+  height: 1px;
+  margin-top: 12px;
+  background: rgba(255, 255, 255, 0.16);
+}
+
+.ctar__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+/* ===========================================================================
+   BUTTONS — shared skeleton
+   Sizing, layout, focus, motion and the stack all live here. `data-variant`
+   below only ever changes the skin.
+   ======================================================================== */
+
+.ctar-btn {
+  --btn-rot: 0deg;
+
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-mono);
+  font-weight: 500;
+  text-transform: uppercase;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  /* Grounded: a 1px lift and a colour shift, no scale, no float. */
+  transform: rotate(var(--btn-rot));
+  transition:
+    transform var(--ctar-fast) ease,
+    background var(--ctar-fast) ease,
+    border-color var(--ctar-fast) ease,
+    color var(--ctar-fast) ease,
+    box-shadow var(--ctar-fast) ease;
+  /* `backwards`, not `both`: a filled-forwards animation keeps its end-state
+     transform applied for good and would win the cascade over the hover lift
+     and the press, leaving the buttons visually inert. The live section's Back
+     control does the same thing for the same reason. */
+  animation: ctar-rise var(--ctar-base) var(--ctar-ease) backwards;
+  animation-delay: calc(var(--btn-index, 0) * 70ms + 120ms);
+}
+
+/* The rotation has to be carried through the keyframes as well as the base
+   rule — a keyframe that set `translateY` alone would drop the DYMO tilt for
+   the length of the animation and snap it back at the end. Custom properties
+   resolve per element inside keyframes, so one pair covers all four variants. */
+@keyframes ctar-rise {
+  from { opacity: 0; transform: translateY(9px) rotate(var(--btn-rot)); }
+  to   { opacity: 1; transform: translateY(0) rotate(var(--btn-rot)); }
+}
+
+.ctar-btn:hover,
+.ctar-btn:focus-visible {
+  transform: translateY(-1px) rotate(var(--btn-rot));
+}
+
+/* Pressed — the button takes the press rather than animating past it. */
+.ctar-btn:active {
+  transform: translateY(1px) rotate(var(--btn-rot));
+  transition-duration: 60ms;
+}
+
+.ctar-btn:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.85);
+  outline-offset: 3px;
+}
+
+/* The arrow belongs to the primary only; on the others it would flatten the
+   hierarchy the row exists to express. */
+.ctar-btn__arrow {
+  font-size: 13px;
+  letter-spacing: 0;
+  transition: transform 220ms var(--ctar-ease);
+}
+
+.ctar-btn.is-secondary .ctar-btn__arrow {
+  display: none;
+}
+
+.ctar-btn.is-primary:hover .ctar-btn__arrow,
+.ctar-btn.is-primary:focus-visible .ctar-btn__arrow {
+  transform: translateX(4px);
+}
+
+.ctar-btn__content {
+  display: flex;
+  flex-direction: column;
+  align-items: inherit;
+  min-width: 0;
+}
+
+/* The supporting line is in the DOM for every iteration so it always reaches
+   assistive tech; only ETB, whose bars are a name over a summary, draws it. */
+.ctar-btn__lede {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Painted by ETB only. */
+.ctar-btn__sheen {
+  display: none;
+}
+
+/* ===========================================================================
+   A · ETB — the Emerging Tech Builds candy bar.
+   ===========================================================================
+
+   A close mirror of `.etb-bar` in work-details.css: the near-white gradient
+   slab, the 14px radius, the white inset highlight over a deep drop shadow,
+   the mono uppercase name at --track-dymo over a mono summary line, the '›'
+   chevron, the diagonal sheen sweep, and Cobalt Select — the blue gradient
+   fill — on hover and focus.
+
+   Two deliberate departures from the source:
+
+   1. The bars sit in a ROW, not a vertical stack. The stack is the builds
+      page's own layout; the brief here is one row on desktop. The surface,
+      the type and the states are what carry the resemblance.
+   2. The fill follows the accent axis rather than being hard-wired cobalt, so
+      the same bar can be judged in gold. Blue IS the native state — those
+      values are `.etb-bar`'s verbatim.
+
+   Consulting is ranked by being already selected: cobalt at rest. In a
+   language whose entire selection signal is the blue fill, that is the most
+   native way to say "this one".
+   ======================================================================== */
+
+.ctar[data-variant="etb"] .ctar__actions {
+  gap: 14px; /* .etb-barStack */
+  align-items: stretch;
+}
+
+.ctar[data-variant="etb"] .ctar-btn {
+  position: relative;
+  overflow: hidden;
+  flex: 1 1 0;
+  min-width: 0;
+  align-items: center;
+  gap: 12px;
+  padding: 14px clamp(16px, 2cqw, 24px);
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  background: linear-gradient(180deg, #fefefe 0%, #f6f5f2 100%);
+  text-transform: none;
+  letter-spacing: normal;
+  white-space: normal;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.85) inset,
+    0 -1px 0 rgba(0, 0, 0, 0.04) inset,
+    0 4px 16px rgba(0, 0, 0, 0.45),
+    0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.ctar[data-variant="etb"] .ctar-btn__content {
+  align-items: flex-start;
+  gap: 4px;
+  flex: 1;
+  text-align: left;
+}
+
+.ctar[data-variant="etb"] .ctar-btn__label {
+  font-family: var(--font-mono);
+  font-size: var(--text-control);
+  font-weight: 500;
+  letter-spacing: var(--track-dymo);
+  text-transform: uppercase;
+  line-height: 1;
+  color: var(--wt-ink);
+}
+
+/* Un-clips the node the other iterations keep screen-reader-only. */
+.ctar[data-variant="etb"] .ctar-btn__lede {
+  position: static;
+  width: auto;
+  height: auto;
+  margin: 0;
+  overflow: hidden;
+  clip: auto;
+  white-space: normal;
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  font-weight: 400;
+  line-height: 1.35;
+  letter-spacing: 0.02em;
+  color: rgba(17, 17, 22, 0.62);
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+}
+
+.ctar[data-variant="etb"] .ctar-btn__arrow {
+  display: block;
+  flex-shrink: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: rgba(17, 17, 22, 0.42);
+  transition: color 200ms ease, transform 200ms ease;
+}
+
+.ctar[data-variant="etb"] .ctar-btn__sheen {
+  display: block;
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    105deg,
+    transparent 32%,
+    rgba(255, 255, 255, 0.7) 46%,
+    rgba(255, 255, 255, 0.15) 54%,
+    transparent 66%
+  );
+  opacity: 0;
+  transform: translateX(-160%);
+  transition:
+    transform 1s cubic-bezier(0.16, 0.84, 0.44, 1),
+    opacity 300ms ease;
+}
+
+/* ---- Cobalt Select ----------------------------------------------------------
+   BLUE IS AN INTERACTION STATE, NOT A RANK. No bar carries the fill at rest —
+   all three load as the plain candy plate, exactly as the bars on
+   /emerging-tech-builds do. The fill appears on hover and on keyboard focus,
+   and persists while that bar's screen is open, so blue only ever means
+   "this one, right now" rather than "this one is important".
+
+   `.is-primary` is deliberately absent from these selectors. It used to be
+   here, which made Consulting load pre-filled and read as already selected. */
+
+.ctar[data-variant="etb"] .ctar-btn.is-current,
+.ctar[data-variant="etb"] .ctar-btn:hover,
+.ctar[data-variant="etb"] .ctar-btn:focus-visible {
+  background: linear-gradient(180deg, var(--ctar-accent) 0%, var(--ctar-accent-deep) 100%);
+  border-color: rgba(var(--ctar-accent-rgb), 0.6);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.2) inset,
+    0 -1px 0 rgba(0, 0, 0, 0.15) inset,
+    0 6px 24px rgba(var(--ctar-accent-rgb), 0.25),
+    0 2px 6px rgba(0, 0, 0, 0.4);
+}
+
+.ctar[data-variant="etb"] .ctar-btn.is-current .ctar-btn__label,
+.ctar[data-variant="etb"] .ctar-btn:hover .ctar-btn__label,
+.ctar[data-variant="etb"] .ctar-btn:focus-visible .ctar-btn__label {
+  color: var(--ctar-on-accent);
+}
+
+.ctar[data-variant="etb"] .ctar-btn.is-current .ctar-btn__lede,
+.ctar[data-variant="etb"] .ctar-btn:hover .ctar-btn__lede,
+.ctar[data-variant="etb"] .ctar-btn:focus-visible .ctar-btn__lede,
+.ctar[data-variant="etb"] .ctar-btn.is-current .ctar-btn__arrow,
+.ctar[data-variant="etb"] .ctar-btn:hover .ctar-btn__arrow,
+.ctar[data-variant="etb"] .ctar-btn:focus-visible .ctar-btn__arrow {
+  color: var(--ctar-on-accent-dim);
+}
+
+/* Consulting still leads, but on depth rather than colour: it sits a little
+   forward of the other two instead of being painted a different colour. That
+   keeps the rank readable at a glance while leaving blue free to mean
+   interaction. */
+.ctar[data-variant="etb"] .ctar-btn.is-primary:not(:hover):not(:focus-visible):not(.is-current) {
+  /* Rest-only, and the :not() guards are load-bearing rather than decorative:
+     this rule and the Cobalt Select block have the same specificity, and this
+     one comes later in the file, so unguarded it would win on source order and
+     strip the blue glow from the primary the moment you hovered it. */
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.95) inset,
+    0 -1px 0 rgba(0, 0, 0, 0.04) inset,
+    0 8px 26px rgba(0, 0, 0, 0.55),
+    0 2px 5px rgba(0, 0, 0, 0.38);
+}
+
+.ctar[data-variant="etb"] .ctar-btn.is-secondary:not(:hover):not(:focus-visible):not(.is-current) {
+  /* A hair recessed, not disabled — the plate is still fully legible. */
+  filter: brightness(0.965);
+}
+
+
+.ctar[data-variant="etb"] .ctar-btn:hover .ctar-btn__arrow,
+.ctar[data-variant="etb"] .ctar-btn:focus-visible .ctar-btn__arrow {
+  transform: translateX(2px);
+}
+
+/* The wipe runs on hover, and dims to a sheen once the bar is already filled
+   so it reads as light moving over cobalt rather than a white flash. */
+.ctar[data-variant="etb"] .ctar-btn:hover .ctar-btn__sheen,
+.ctar[data-variant="etb"] .ctar-btn:focus-visible .ctar-btn__sheen {
+  opacity: 0.5;
+  transform: translateX(160%);
+  background: linear-gradient(
+    105deg,
+    transparent 32%,
+    rgba(255, 255, 255, 0.18) 46%,
+    rgba(255, 255, 255, 0.04) 54%,
+    transparent 66%
+  );
+}
+
+/* The bar does not lift — `.etb-bar` grows and dims its siblings instead. */
+.ctar[data-variant="etb"] .ctar-btn:hover,
+.ctar[data-variant="etb"] .ctar-btn:focus-visible {
+  transform: none;
+}
+
+.ctar[data-variant="etb"] .ctar-btn:active {
+  transform: translateY(1px);
+}
+
+/* Opening one bar dims the other two, the same recipe `.etb-barStack` uses for
+   `.has-expanded`. */
+.ctar[data-variant="etb"] .ctar__actions:has(.ctar-btn.is-current) .ctar-btn:not(.is-current) {
+  opacity: 0.45;
+  filter: saturate(0.8) brightness(0.96);
+}
+
+/* Inset, and in the ink that sits on the fill. `.etb-bar` insets its ring
+   because the bar clips its own overflow at a 14px radius; and since focus
+   always coincides with the fill here, a ring in the fill's own ink is the one
+   value guaranteed to contrast in both accents. */
+.ctar[data-variant="etb"] .ctar-btn:focus-visible {
+  outline: 2px solid var(--ctar-on-accent);
+  outline-offset: -4px;
+}
+
+/* ===========================================================================
+   B · DYMO — the label plate from the header nav and the connect row.
+   The emboss, the radius, the tracking and the collapsing bottom edge are the
+   globals.css `.tag` recipe. The primary is ranked by gold ink on the lighter
+   `.tag--cta` plate rather than by a bigger or louder button, so the three
+   still read as one set of labels.
+   ======================================================================== */
+
+.ctar[data-variant="dymo"] .ctar-btn {
+  font-size: var(--text-label);
+  letter-spacing: var(--track-dymo);
+  padding: 13px 17px 12px;
+  border-radius: 3px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: #1c1c1c;
+  color: var(--ink-body);
+  box-shadow: var(--ctar-dymo-shadow);
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.7);
+}
+
+/* Subtle rotation, 1–2deg max, alternating — labels applied by hand, not a
+   toolbar. Carried on --btn-rot so the entrance and the press keep it. */
+.ctar[data-variant="dymo"] .ctar-btn:nth-child(1) { --btn-rot: -1.2deg; }
+.ctar[data-variant="dymo"] .ctar-btn:nth-child(2) { --btn-rot: 0.9deg; }
+.ctar[data-variant="dymo"] .ctar-btn:nth-child(3) { --btn-rot: -0.5deg; }
+
+.ctar[data-variant="dymo"] .ctar-btn.is-primary {
+  background: #262626;
+  border-color: rgba(var(--ctar-accent-rgb), 0.34);
+  color: var(--ctar-accent-ink);
+}
+
+.ctar[data-variant="dymo"] .ctar-btn:hover,
+.ctar[data-variant="dymo"] .ctar-btn:focus-visible {
+  color: #fff;
+  /* The plate does not lift — the nav and connect rows deliberately dropped
+     the hover lift, and a plate that rises off its own hard edge reads as a
+     sticker peeling rather than as a label. */
+  transform: rotate(var(--btn-rot));
+}
+
+.ctar[data-variant="dymo"] .ctar-btn.is-primary:hover,
+.ctar[data-variant="dymo"] .ctar-btn.is-primary:focus-visible {
+  color: var(--ctar-accent-ink-bright);
+  border-color: rgba(var(--ctar-accent-rgb), 0.6);
+}
+
+/* Current — the screen for this path is open below. */
+.ctar[data-variant="dymo"] .ctar-btn.is-current {
+  background: #262626;
+  border-color: rgba(var(--ctar-accent-rgb), 0.7);
+  color: var(--ctar-accent-ink);
+  box-shadow: var(--ctar-dymo-shadow-pressed);
+}
+
+/* The whole point of the plate: the 3px hard edge collapses and the label
+   sinks into it. */
+.ctar[data-variant="dymo"] .ctar-btn:active {
+  box-shadow: var(--ctar-dymo-shadow-pressed);
+  transform: translateY(2px) rotate(var(--btn-rot));
+}
+
+.ctar[data-variant="dymo"] .ctar-btn:focus-visible {
+  outline: 1px solid rgba(255, 255, 255, 0.32);
+  outline-offset: 3px;
+}
+
+/* ===========================================================================
+   C · Rule — type on a hairline. The live section's rows are type on a rule
+   too, so this is the direction that reads as the same family rather than as
+   controls bolted underneath. The primary is marked by a 2px gold rule
+   against the others' hairline.
+   ======================================================================== */
+
+.ctar[data-variant="rule"] .ctar__actions {
+  gap: 28px;
+}
+
+.ctar[data-variant="rule"] .ctar-btn {
+  font-size: var(--text-label);
+  letter-spacing: var(--track-dymo);
+  padding: 7px 1px 9px;
+  border: 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.24);
+  border-radius: 0;
+  background: none;
+  color: var(--ink-muted);
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.7);
+}
+
+.ctar[data-variant="rule"] .ctar-btn.is-primary {
+  border-bottom: 2px solid var(--ctar-accent);
+  color: var(--ctar-accent-ink);
+}
+
+.ctar[data-variant="rule"] .ctar-btn:hover,
+.ctar[data-variant="rule"] .ctar-btn:focus-visible {
+  color: #fff;
+  border-bottom-color: rgba(255, 255, 255, 0.85);
+}
+
+.ctar[data-variant="rule"] .ctar-btn.is-primary:hover,
+.ctar[data-variant="rule"] .ctar-btn.is-primary:focus-visible {
+  color: var(--ctar-accent-ink-bright);
+  border-bottom-color: var(--ctar-accent-ink-bright);
+}
+
+.ctar[data-variant="rule"] .ctar-btn.is-current {
+  border-bottom: 2px solid var(--ctar-accent);
+  color: var(--ctar-accent-ink);
+}
+
+.ctar[data-variant="rule"] .ctar-btn:focus-visible {
+  outline-offset: 5px;
+}
+
+/* ===========================================================================
+   D · Glass — the personas cards' language at control size. Frosted, hairline
+   bordered, and sitting ON the photograph rather than over it, so the city
+   stays readable through the row. Gold does the ranking.
+   ======================================================================== */
+
+.ctar[data-variant="glass"] .ctar-btn {
+  font-size: var(--text-control);
+  letter-spacing: 0.14em;
+  padding: 11px 20px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(16, 18, 22, 0.4);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: rgba(255, 255, 255, 0.74);
+}
+
+.ctar[data-variant="glass"] .ctar-btn.is-primary {
+  border-color: rgba(var(--ctar-accent-rgb), 0.55);
+  background: rgba(var(--ctar-accent-rgb), 0.12);
+  color: var(--ctar-accent-ink);
+}
+
+.ctar[data-variant="glass"] .ctar-btn:hover,
+.ctar[data-variant="glass"] .ctar-btn:focus-visible {
+  border-color: rgba(255, 255, 255, 0.42);
+  background: rgba(24, 28, 34, 0.6);
+  color: #fff;
+}
+
+.ctar[data-variant="glass"] .ctar-btn.is-primary:hover,
+.ctar[data-variant="glass"] .ctar-btn.is-primary:focus-visible {
+  border-color: var(--ctar-accent);
+  background: rgba(var(--ctar-accent-rgb), 0.2);
+  color: var(--ctar-accent-ink-bright);
+}
+
+.ctar[data-variant="glass"] .ctar-btn.is-current {
+  border-color: var(--ctar-accent);
+  background: rgba(var(--ctar-accent-rgb), 0.22);
+  color: var(--ctar-accent-ink-bright);
+}
+
+.ctar[data-variant="glass"] .ctar-btn:active {
+  background: rgba(10, 12, 16, 0.66);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35) inset;
+}
+
+/* ===========================================================================
+   E · Editorial — paper fill on the primary, glass ghosts behind it. The
+   paper is the destination screens' own surface, so the loudest button in the
+   set still introduces no colour the section doesn't already own.
+   ======================================================================== */
+
+.ctar[data-variant="editorial"] .ctar-btn {
+  font-size: var(--text-control);
+  letter-spacing: 0.14em;
+  padding: 11px 17px;
+  border-radius: 9px;
+}
+
+.ctar[data-variant="editorial"] .ctar-btn.is-primary {
+  border: 1px solid rgba(255, 255, 255, 0.86);
+  background: rgba(245, 244, 241, 0.95);
+  color: var(--ctar-ink);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.6) inset,
+    0 10px 26px rgba(0, 0, 0, 0.42);
+}
+
+.ctar[data-variant="editorial"] .ctar-btn.is-primary:hover,
+.ctar[data-variant="editorial"] .ctar-btn.is-primary:focus-visible {
+  background: var(--ctar-paper);
+  border-color: #fff;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.7) inset,
+    0 14px 32px rgba(0, 0, 0, 0.5);
+}
+
+.ctar[data-variant="editorial"] .ctar-btn.is-primary:active {
+  background: #e9e7e2;
+  box-shadow:
+    0 2px 5px rgba(0, 0, 0, 0.3) inset,
+    0 3px 10px rgba(0, 0, 0, 0.34);
+}
+
+/* The white ring has to clear the paper fill, hence the dark halo behind it. */
+.ctar[data-variant="editorial"] .ctar-btn.is-primary:focus-visible {
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.7) inset,
+    0 0 0 5px rgba(4, 5, 10, 0.55),
+    0 14px 32px rgba(0, 0, 0, 0.5);
+}
+
+.ctar[data-variant="editorial"] .ctar-btn.is-secondary {
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(16, 18, 22, 0.46);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: rgba(255, 255, 255, 0.76);
+}
+
+.ctar[data-variant="editorial"] .ctar-btn.is-secondary:hover,
+.ctar[data-variant="editorial"] .ctar-btn.is-secondary:focus-visible {
+  border-color: rgba(255, 255, 255, 0.42);
+  background: rgba(24, 28, 34, 0.66);
+  color: #fff;
+}
+
+.ctar[data-variant="editorial"] .ctar-btn.is-secondary:active {
+  background: rgba(10, 12, 16, 0.7);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35) inset;
+}
+
+/* Editorial is the one direction that carries no accent at rest — that is its
+   whole argument. It still needs to say which screen is open, so the accent
+   appears here and nowhere else in this variant. */
+.ctar[data-variant="editorial"] .ctar-btn.is-current.is-secondary {
+  border-color: var(--ctar-accent);
+  background: rgba(var(--ctar-accent-rgb), 0.16);
+  color: var(--ctar-accent-ink-bright);
+}
+
+.ctar[data-variant="editorial"] .ctar-btn.is-current.is-primary {
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.6) inset,
+    0 0 0 2px var(--ctar-accent),
+    0 10px 26px rgba(0, 0, 0, 0.42);
+}
+
+/* ===========================================================================
+   OPEN — a destination screen is showing underneath the row.
+   ===========================================================================
+
+   The row does NOT collapse. That is the difference between this prototype and
+   the live section: there, choosing a path dismisses the other two and the
+   chosen row becomes the header. Here the three choices stay put and act as
+   persistent navigation, so switching paths is one click rather than
+   back-then-forward. Keeping them also keeps the premise — the choices are
+   always visible — true after the first click instead of only before it.
+   ======================================================================== */
+
+/* Push the city back once there is a paper panel to read, matching the live
+   section's `destination` level. This is the ONLY place a blur is introduced,
+   and it is gated on a click: closing the screen drops the rule entirely and
+   the backdrop-filter is gone again, not merely animated to zero. The
+   transition lives here rather than on the base rule for that reason — a
+   transition on the resting layer would keep the property declared. */
+.ctar[data-open="true"] .ctar__focus {
+  backdrop-filter: blur(22px) saturate(1.06);
+  -webkit-backdrop-filter: blur(22px) saturate(1.06);
+  background: rgba(4, 5, 10, 0.4);
+  transition:
+    backdrop-filter 640ms var(--ctar-ease),
+    -webkit-backdrop-filter 640ms var(--ctar-ease),
+    background-color 640ms var(--ctar-ease);
+}
+
+/* Bottom-anchored at rest, top-anchored once the screen needs the frame. */
+.ctar[data-open="true"] .ctar__copy {
+  top: clamp(26px, 5cqh, 54px);
+  bottom: clamp(16px, 2.4cqh, 30px);
+  align-items: stretch;
+}
+
+/* The headline demotes to a mono eyebrow to hand its ~90px to the screen —
+   the same trade the live section makes. Swapped in JSX rather than restyled,
+   because font-family cannot tween. */
+.ctar__eyebrow {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  animation: ctar-fade var(--ctar-base) var(--ctar-ease) backwards;
+}
+
+@keyframes ctar-fade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.ctar[data-open="true"] .ctar__hint {
+  /* The row underneath is now navigation rather than the one thing on offer,
+     so the line that counts it off would be describing the wrong thing. */
+  display: none;
+}
+
+.ctar[data-open="true"] .ctar__actions {
+  margin-top: 14px;
+}
+
+.ctar__unfurl {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  align-items: flex-start;
+  margin-top: 14px;
+  /* Unfurls downward from the row that opened it, so the panel is visibly
+     caused by the button rather than arriving from off-screen. */
+  animation: ctar-unfurl 460ms var(--ctar-ease) 40ms both;
+}
+
+@keyframes ctar-unfurl {
+  from { opacity: 0; transform: translateY(-12px); clip-path: inset(0 0 100% 0); }
+  to   { opacity: 1; transform: translateY(0);     clip-path: inset(0 0 0 0); }
+}
+
+/* ---- The screen's own accent ---------------------------------------------
+   `.wt-screen` hard-codes rgba(37, 99, 235) for its block labels, its list
+   bullets and its primary action. That is the blue option, so blue needs no
+   override — but leaving it there under the gold option would put a gold row
+   on top of a blue screen, which is exactly the mismatch this axis exists to
+   let you see. Scoped to the lab; the production screen is untouched.
+
+   The values are the PAPER ones (--ctar-accent-pap), not the dark ones: this
+   panel is #f5f4f1.
+   ------------------------------------------------------------------------ */
+
+.ctar[data-accent="gold"] .wt-screen__blockLabel {
+  color: var(--ctar-accent-pap);
+}
+
+.ctar[data-accent="gold"] .wt-screen__list li::before {
+  background: rgba(var(--ctar-accent-pap-rgb), 0.75);
+}
+
+.ctar[data-accent="gold"] .wt-action--primary {
+  border-color: rgba(var(--ctar-accent-pap-rgb), 0.5);
+  background: rgba(var(--ctar-accent-pap-rgb), 0.1);
+  color: var(--ctar-accent-pap);
+}
+
+.ctar[data-accent="gold"] .wt-action--primary:hover,
+.ctar[data-accent="gold"] .wt-action--primary:focus-visible {
+  border-color: rgba(var(--ctar-accent-pap-rgb), 0.78);
+  background: rgba(var(--ctar-accent-pap-rgb), 0.16);
+}
+
+.ctar[data-accent="gold"] .wt-action:focus-visible,
+.ctar[data-accent="gold"] .wt-screen__back:focus-visible {
+  outline-color: rgba(var(--ctar-accent-pap-rgb), 0.7);
+}
+
+/* ===========================================================================
+   NARROW — the row becomes a stack. Container query, so this fires from the
+   composition's own width rather than the viewport's, and the 390px lab frame
+   gets the real phone layout.
+   ======================================================================== */
+
+@container ctar (max-width: 700px) {
+  .ctar__copy {
+    left: clamp(20px, 6cqw, 30px);
+    right: clamp(20px, 6cqw, 30px);
+    bottom: clamp(26px, 5cqh, 46px);
+    align-items: stretch;
+  }
+
+  .ctar__hint {
+    margin-top: 14px;
+    letter-spacing: 0.24em;
+  }
+
+  .ctar__actions {
+    /* Stacked, full width, and in the same order as the row. */
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+
+  .ctar-btn {
+    justify-content: center;
+    /* The labels are the section's own wording and the longest is 25
+       characters, which stops fitting one line on the narrowest phones. */
+    white-space: normal;
+    text-align: center;
+  }
+
+  /* A tilted plate at full width overhangs its own column and clips against
+     the card's rounded edge. The tilt is a desktop-only affordance. */
+  .ctar[data-variant="dymo"] .ctar-btn {
+    --btn-rot: 0deg !important;
+  }
+
+  /* ETB stacks into what the builds page actually is — a vertical bar stack —
+     so it keeps its left-aligned content and its chevron on the right rather
+     than taking the shared centring. */
+  .ctar[data-variant="etb"] .ctar-btn {
+    justify-content: space-between;
+    text-align: left;
+    padding: 13px 16px;
+    /* `flex: 1 1 0` distributes WIDTH across the desktop row, which is what
+       `.etb-bar` does. Once the row becomes a column that same declaration
+       distributes HEIGHT, and with a screen open the copy block is height-
+       constrained — so the three bars were squeezed to a fraction of their
+       content and `overflow: hidden` silently clipped the labels. Stacked
+       bars size to their content. */
+    flex: 0 0 auto;
+  }
+
+  .ctar[data-variant="etb"] .ctar__actions {
+    gap: 10px;
+  }
+
+  /* Type-on-a-rule stacks as three full-width rules, which is close enough to
+     a list to need its own breathing room rather than the desktop gap. */
+  .ctar[data-variant="rule"] .ctar__actions {
+    gap: 4px;
+  }
+
+  .ctar[data-variant="rule"] .ctar-btn {
+    padding: 12px 1px 11px;
+  }
+}
+
+/* ===========================================================================
+   WIDE — cap the copy to an editorial measure and let the photograph keep the
+   rest of the frame, exactly as the live section does past 1600px.
+   ======================================================================== */
+
+@container ctar (min-width: 1600px) {
+  .ctar__copy {
+    right: auto;
+    width: min(100% - 2 * clamp(22px, 4cqw, 52px), var(--ctar-shell));
+  }
+
+  .ctar__title {
+    font-size: clamp(72px, 4.6cqw, 92px);
+  }
+
+  .ctar-btn {
+    padding-inline: 22px;
+  }
+}
+
+@container ctar (min-width: 2400px) {
+  .ctar__title {
+    font-size: clamp(92px, 3.6cqw, 118px);
+  }
+
+  .ctar-btn {
+    padding-inline: 26px;
+  }
+}
+
+/* ===========================================================================
+   REDUCED MOTION
+   Every state above is a static rule and the entrance is the only tween that
+   moves anything, so switching motion off leaves nothing mid-flight — the row
+   is simply already there. The lab's own toggle uses the same rules as the OS
+   preference, so what is reviewed is what a visitor gets.
+   ======================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .ctar,
+  .ctar *,
+  .ctar *::before,
+  .ctar *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+.ctar[data-motion="reduced"],
+.ctar[data-motion="reduced"] *,
+.ctar[data-motion="reduced"] *::before,
+.ctar[data-motion="reduced"] *::after {
+  animation: none !important;
+  transition: none !important;
+}
+
+/* ===========================================================================
+   LAB PANEL
+   Deliberately not in the portfolio's visual language — flat, tool-grey, no
+   DYMO, no serif — so it never reads as part of the composition being judged.
+   Same shape as the sibling lab's panel.
+   ======================================================================== */
+
+.ctarl {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  z-index: 100;
+  width: min(300px, calc(100vw - 32px));
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(11, 12, 16, 0.94);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: 0 22px 60px rgba(0, 0, 0, 0.6);
+  font-family: var(--font-mono);
+  overflow: hidden;
+}
+
+.ctarl__toggle {
+  all: unset;
+  box-sizing: border-box;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 13px;
+  cursor: pointer;
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.86);
+}
+
+.ctarl__toggle:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.5);
+  outline-offset: -2px;
+}
+
+.ctarl__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: #4ade80;
+  box-shadow: 0 0 8px rgba(74, 222, 128, 0.7);
+  flex: none;
+}
+
+.ctarl__state {
+  margin-left: auto;
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  text-transform: none;
+  color: rgba(255, 255, 255, 0.42);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 150px;
+}
+
+.ctarl__body {
+  max-height: min(72vh, 640px);
+  overflow-y: auto;
+  padding: 4px 13px 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.ctarl__group {
+  padding: 12px 0 0;
+}
+
+.ctarl__groupTitle {
+  margin: 0 0 8px;
+  font-size: 9px;
+  font-weight: 400;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.ctarl__col {
+  display: grid;
+  gap: 5px;
+}
+
+.ctarl__row {
+  all: unset;
+  box-sizing: border-box;
+  display: grid;
+  gap: 4px;
+  padding: 8px 10px;
+  border-radius: 7px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.02);
+  cursor: pointer;
+  transition: background 140ms ease, border-color 140ms ease;
+}
+
+.ctarl__row:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.ctarl__row.is-active {
+  border-color: rgba(216, 177, 90, 0.6);
+  background: rgba(216, 177, 90, 0.12);
+}
+
+.ctarl__row:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.5);
+  outline-offset: 1px;
+}
+
+.ctarl__rowName {
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.ctarl__rowNote {
+  font-size: 9.5px;
+  line-height: 1.4;
+  letter-spacing: 0.01em;
+  color: rgba(255, 255, 255, 0.44);
+}
+
+.ctarl__seg {
+  display: flex;
+  gap: 4px;
+}
+
+.ctarl__segBtn {
+  all: unset;
+  box-sizing: border-box;
+  flex: 1 1 0;
+  text-align: center;
+  padding: 7px 4px;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.6);
+  cursor: pointer;
+  transition: background 140ms ease, border-color 140ms ease, color 140ms ease;
+}
+
+.ctarl__segBtn:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.ctarl__segBtn.is-active {
+  border-color: rgba(216, 177, 90, 0.6);
+  background: rgba(216, 177, 90, 0.12);
+  color: #fff;
+}
+
+.ctarl__segBtn:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.5);
+  outline-offset: 1px;
+}
+
+.ctarl__check {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  color: rgba(255, 255, 255, 0.78);
+  cursor: pointer;
+}
+
+.ctarl__check input {
+  accent-color: #d8b15a;
+  cursor: pointer;
+}
+
+.ctarl__readout {
+  margin: 7px 0 0;
+  font-size: 9px;
+  line-height: 1.5;
+  letter-spacing: 0.04em;
+  color: rgba(255, 255, 255, 0.38);
+}
+
+.ctarl__verdict {
+  margin: 0;
+  font-size: 9.5px;
+  line-height: 1.55;
+  letter-spacing: 0.01em;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ctarl *,
+  .ctarl *::before,
+  .ctarl *::after {
+    transition: none !important;
+  }
+}
+
+/* ===========================================================================
+   INLINE — the composition dropped into a real host card.
+   ===========================================================================
+
+   Used by /cta-lab/in-site, where the Consulting chapter's own card already
+   supplies the rounded edge, the height and the filmic shadow. The stage stops
+   being a framed object and becomes a layer filling that card, exactly as
+   `.wt` does — same `position: absolute; inset: 0` and the same z-index, so it
+   stacks against the host's rail and vignette identically.
+
+   It keeps `container-type: size` and BOTH container names: every layout rule
+   here is a `@container ctar` query, and `.wt-screen`'s own rules are
+   `@container wt` queries. Dropping either name would silently strip a whole
+   layer of layout.
+   ======================================================================== */
+
+.ctar--inline {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  width: 100%;
+  height: 100%;
+  border-radius: 0;
+  background: transparent;
+  outline: none;
+  box-shadow: none;
+}
+
+/* ===========================================================================
+   OFFER SCREEN INSIDE THE CARD
+   ===========================================================================
+
+   When a choice opens an offer-lab layout instead of the production dossier,
+   the panel is a full page shape being asked to live in a card. It therefore
+   scrolls within the unfurl rather than pushing the card taller, and carries
+   its own back control — `.wt-screen` ships one, `OfferScreen` does not.
+   ======================================================================== */
+
+.ctar__unfurl[data-screen="offer"] {
+  display: block;
+  overflow: hidden;
+}
+
+.ctar__offer {
+  position: relative;
+  height: 100%;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  border-radius: 14px;
+}
+
+/* Sits above the scrolling panel so it stays reachable at any scroll depth. */
+.ctar__offerBack {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  float: right;
+  margin: 12px 14px 0 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  background: rgba(12, 14, 18, 0.72);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  font-family: var(--font-mono);
+  font-size: var(--text-control);
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.86);
+  cursor: pointer;
+  transition: color 160ms ease, border-color 160ms ease, background 160ms ease;
+}
+
+.ctar__offerBack:hover,
+.ctar__offerBack:focus-visible {
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.5);
+  background: rgba(20, 24, 30, 0.85);
+}
+
+.ctar__offerBack:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.85);
+  outline-offset: 3px;
+}
+
+/* On paper the glass pill would vanish into the sheet. */
+.ctar__offer:has([data-surface="paper"]) .ctar__offerBack {
+  border-color: rgba(17, 17, 22, 0.2);
+  background: rgba(245, 244, 241, 0.86);
+  color: rgba(17, 17, 22, 0.7);
+}
+
+.ctar__offer:has([data-surface="paper"]) .ctar__offerBack:hover,
+.ctar__offer:has([data-surface="paper"]) .ctar__offerBack:focus-visible {
+  color: rgba(17, 17, 22, 0.95);
+  border-color: rgba(17, 17, 22, 0.42);
+  background: #f5f4f1;
+}
+
+/* The offer screen is the panel here, so it fills the unfurl rather than
+   sitting as a card inside a card. */
+.ctar__offer .ofr-shell,
+.ctar__offer .ofr {
+  height: auto;
+}
+
+.ctar__offer .ofr {
+  border-radius: 14px;
+  min-height: 100%;
+}
+
+/* ===========================================================================
+   INLINE HEADER CLEARANCE
+   ===========================================================================
+
+   The host card paints its own chapter label — "04 — Consulting" — across the
+   top. At rest the copy block is bottom-anchored and never reaches it, but
+   opening a screen moves the block to the top of the frame, where the eyebrow
+   landed directly on that label. Both were legible on their own and illegible
+   together. Only the inline mount has a chapter rail, so only it pays the
+   clearance.
+   ======================================================================== */
+
+.ctar--inline[data-open="true"] .ctar__copy {
+  top: clamp(52px, 8cqh, 84px);
+}
