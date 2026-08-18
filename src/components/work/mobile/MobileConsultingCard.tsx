@@ -16,6 +16,8 @@
 
 import { useRef } from "react";
 import WorkTogether from "@/components/work/WorkTogether";
+import CtaRowInline from "@/components/cta-row-lab/CtaRowInline";
+import { useCtaVariant } from "@/components/work/CtaVariant";
 import { Rail } from "./shared";
 import { useCardDrift } from "./useCardDrift";
 
@@ -32,18 +34,21 @@ export default function MobileConsultingCard() {
   // .wm-cns__media wherever that ends up in the tree.
   useCardDrift(rootRef);
 
+  // "live" unless a route explicitly opts in, so the homepage is unaffected.
+  const variant = useCtaVariant();
+
+  const media = (
+    <>
+      <div className="wm-cns__media">
+        <img className="wm-cns__img" src={IMG} alt={IMG_ALT} />
+      </div>
+      <span className="wm-cns__vignette" aria-hidden="true" />
+    </>
+  );
+
   return (
     <article ref={rootRef as React.RefObject<HTMLElement>} className="wm-card wm-card--cns">
-      <WorkTogether
-        media={
-          <>
-            <div className="wm-cns__media">
-              <img className="wm-cns__img" src={IMG} alt={IMG_ALT} />
-            </div>
-            <span className="wm-cns__vignette" aria-hidden="true" />
-          </>
-        }
-      />
+      {variant === "row" ? <CtaRowInline media={media} /> : <WorkTogether media={media} />}
 
       {/* Outside .wt so it keeps resolving its cq units against .wmob-screen,
           exactly like the other three chapters. */}

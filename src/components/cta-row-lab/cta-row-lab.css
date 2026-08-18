@@ -1401,3 +1401,31 @@
     transition: none !important;
   }
 }
+
+/* ===========================================================================
+   INLINE — the composition dropped into a real host card.
+   ===========================================================================
+
+   Used by /cta-lab/in-site, where the Consulting chapter's own card already
+   supplies the rounded edge, the height and the filmic shadow. The stage stops
+   being a framed object and becomes a layer filling that card, exactly as
+   `.wt` does — same `position: absolute; inset: 0` and the same z-index, so it
+   stacks against the host's rail and vignette identically.
+
+   It keeps `container-type: size` and BOTH container names: every layout rule
+   here is a `@container ctar` query, and `.wt-screen`'s own rules are
+   `@container wt` queries. Dropping either name would silently strip a whole
+   layer of layout.
+   ======================================================================== */
+
+.ctar--inline {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  width: 100%;
+  height: 100%;
+  border-radius: 0;
+  background: transparent;
+  outline: none;
+  box-shadow: none;
+}

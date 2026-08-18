@@ -53,6 +53,21 @@ interface Props {
   /** Only the primary stage claims focus, so a side-by-side compare has one
       tab sequence rather than two interleaved ones. */
   primary: boolean;
+  /**
+   * The photo plane, when a host supplies its own. It must render INSIDE
+   * `.ctar` rather than behind it: `.ctar__focus`'s backdrop-filter only
+   * samples what is painted beneath it within the same backdrop root, and
+   * `.ctar` is that root. A host-owned photo sitting outside it makes the
+   * whole blur ladder silently do nothing — the same trap documented on
+   * WorkTogether's `media` prop. Omitted, the stage renders its own plates.
+   */
+  media?: React.ReactNode;
+  /**
+   * false drops the lab's card chrome — the rounded frame, the filmic edge,
+   * the fixed height and the caption — so the composition can fill a host
+   * card that already provides them. Defaults to the lab's framed stage.
+   */
+  frame?: boolean;
 }
 
 export default function CtaRowStage({
@@ -63,6 +78,8 @@ export default function CtaRowStage({
   openId,
   onOpenChange,
   primary,
+  media,
+  frame = true,
 }: Props) {
   const rootRef = useRef<HTMLElement | null>(null);
 
@@ -108,11 +125,11 @@ export default function CtaRowStage({
 
   const path = openId ? getPath(openId) : null;
 
-  return (
-    <div className={`ctar-frame ctar-frame--${width}`}>
+  const stage = (
+    <>
       <section
         ref={rootRef}
-        className="ctar"
+        className={`ctar ${frame ? "" : "ctar--inline"}`.trim()}
         data-variant={variant}
         data-accent={accent}
         data-motion={reducedMotion ? "reduced" : "full"}
@@ -125,7 +142,9 @@ export default function CtaRowStage({
             flatten to a dim — the trap documented on WorkTogether's `media`
             prop. */}
         <div className="ctar__media" aria-hidden="true">
-          {width === "narrow" ? (
+          {media ? (
+            media
+          ) : width === "narrow" ? (
             /* The 390px frame is a CONTAINER inside a wide viewport, so a
                viewport-based <source> would hand it the 3440px-wide plate and
                the narrow preview would silently be testing the wrong image.
@@ -226,9 +245,19 @@ export default function CtaRowStage({
         </div>
       </section>
 
-      <p className="ctar-frame__tag">
-        {width === "narrow" ? "390px — container query" : "desktop"}
-      </p>
-    </div>
+      {frame && (
+        <p className="ctar-frame__tag">
+          {width === "narrow" ? "390px — container query" : "desktop"}
+        </p>
+      )}
+    </>
+  );
+
+  // Frameless drops the lab wrapper entirely rather than styling it away, so a
+  // host card's own layout sees the stage as a direct child.
+  return frame ? (
+    <div className={`ctar-frame ctar-frame--${width}`}>{stage}</div>
+  ) : (
+    stage
   );
 }

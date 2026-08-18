@@ -13,6 +13,8 @@
 // sits inside the backdrop root its blur ladder samples.
 
 import WorkTogether from "@/components/work/WorkTogether";
+import CtaRowInline from "@/components/cta-row-lab/CtaRowInline";
+import { useCtaVariant } from "@/components/work/CtaVariant";
 import "@/components/work/work-together.css";
 
 /** Production swaps to the portrait crop at ≤640px — both are committed. */
@@ -23,20 +25,26 @@ const ALT =
   "A winged victory statue lit against a golden hillside cityscape at night, above still water.";
 
 export default function ConsultingHeroStage({ isActive }: { isActive?: boolean }) {
+  // "live" unless a route explicitly opts in, so the homepage is unaffected.
+  const variant = useCtaVariant();
+
+  const media = (
+    <>
+      <picture>
+        <source media="(max-width: 640px)" srcSet={HERO_NARROW} />
+        <img className="cns-stage__img" src={HERO_WIDE} alt={ALT} />
+      </picture>
+      <span className="cns-stage__vignette" aria-hidden="true" />
+    </>
+  );
+
   return (
     <section className="cns-photo cns-photo--hero cns-stage">
-      <WorkTogether
-        isActive={isActive}
-        media={
-          <>
-            <picture>
-              <source media="(max-width: 640px)" srcSet={HERO_NARROW} />
-              <img className="cns-stage__img" src={HERO_WIDE} alt={ALT} />
-            </picture>
-            <span className="cns-stage__vignette" aria-hidden="true" />
-          </>
-        }
-      />
+      {variant === "row" ? (
+        <CtaRowInline media={media} />
+      ) : (
+        <WorkTogether isActive={isActive} media={media} />
+      )}
     </section>
   );
 }
