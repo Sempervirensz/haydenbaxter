@@ -603,9 +603,16 @@
     opacity 300ms ease;
 }
 
-/* ---- Cobalt Select ---- */
+/* ---- Cobalt Select ----------------------------------------------------------
+   BLUE IS AN INTERACTION STATE, NOT A RANK. No bar carries the fill at rest —
+   all three load as the plain candy plate, exactly as the bars on
+   /emerging-tech-builds do. The fill appears on hover and on keyboard focus,
+   and persists while that bar's screen is open, so blue only ever means
+   "this one, right now" rather than "this one is important".
 
-.ctar[data-variant="etb"] .ctar-btn.is-primary,
+   `.is-primary` is deliberately absent from these selectors. It used to be
+   here, which made Consulting load pre-filled and read as already selected. */
+
 .ctar[data-variant="etb"] .ctar-btn.is-current,
 .ctar[data-variant="etb"] .ctar-btn:hover,
 .ctar[data-variant="etb"] .ctar-btn:focus-visible {
@@ -618,23 +625,42 @@
     0 2px 6px rgba(0, 0, 0, 0.4);
 }
 
-.ctar[data-variant="etb"] .ctar-btn.is-primary .ctar-btn__label,
 .ctar[data-variant="etb"] .ctar-btn.is-current .ctar-btn__label,
 .ctar[data-variant="etb"] .ctar-btn:hover .ctar-btn__label,
 .ctar[data-variant="etb"] .ctar-btn:focus-visible .ctar-btn__label {
   color: var(--ctar-on-accent);
 }
 
-.ctar[data-variant="etb"] .ctar-btn.is-primary .ctar-btn__lede,
 .ctar[data-variant="etb"] .ctar-btn.is-current .ctar-btn__lede,
 .ctar[data-variant="etb"] .ctar-btn:hover .ctar-btn__lede,
 .ctar[data-variant="etb"] .ctar-btn:focus-visible .ctar-btn__lede,
-.ctar[data-variant="etb"] .ctar-btn.is-primary .ctar-btn__arrow,
 .ctar[data-variant="etb"] .ctar-btn.is-current .ctar-btn__arrow,
 .ctar[data-variant="etb"] .ctar-btn:hover .ctar-btn__arrow,
 .ctar[data-variant="etb"] .ctar-btn:focus-visible .ctar-btn__arrow {
   color: var(--ctar-on-accent-dim);
 }
+
+/* Consulting still leads, but on depth rather than colour: it sits a little
+   forward of the other two instead of being painted a different colour. That
+   keeps the rank readable at a glance while leaving blue free to mean
+   interaction. */
+.ctar[data-variant="etb"] .ctar-btn.is-primary:not(:hover):not(:focus-visible):not(.is-current) {
+  /* Rest-only, and the :not() guards are load-bearing rather than decorative:
+     this rule and the Cobalt Select block have the same specificity, and this
+     one comes later in the file, so unguarded it would win on source order and
+     strip the blue glow from the primary the moment you hovered it. */
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.95) inset,
+    0 -1px 0 rgba(0, 0, 0, 0.04) inset,
+    0 8px 26px rgba(0, 0, 0, 0.55),
+    0 2px 5px rgba(0, 0, 0, 0.38);
+}
+
+.ctar[data-variant="etb"] .ctar-btn.is-secondary:not(:hover):not(:focus-visible):not(.is-current) {
+  /* A hair recessed, not disabled — the plate is still fully legible. */
+  filter: brightness(0.965);
+}
+
 
 .ctar[data-variant="etb"] .ctar-btn:hover .ctar-btn__arrow,
 .ctar[data-variant="etb"] .ctar-btn:focus-visible .ctar-btn__arrow {
