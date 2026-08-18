@@ -662,3 +662,434 @@
   /* The disc still takes each path's resting angle — that is information about
      which track is playing, not decoration. It simply arrives without travel. */
 }
+
+/* ===========================================================================
+   THE AXES
+   ===========================================================================
+
+   Five independent controls on the disc: ROLE, PLACEMENT, SCALE, MOTION and
+   FINISH. They are attributes on `.cdx` rather than props threaded into
+   styles, so adding a sixth option is a rule here and nothing else.
+
+   Every option is a static end state, and every animation below supplies only
+   the offset it arrives FROM. That is what lets the reduced-motion block at
+   the end of this file simply remove the tweening without leaving anything
+   mid-flight or invisible.
+   ======================================================================== */
+
+/* ---- ROLE: none ---- */
+
+/* The disc is not rendered at all in this mode (see CtaDecision.tsx), so the
+   field stops reserving a column for it. A hidden-but-present disc would leave
+   the layout lying about itself, and the whole point of this setting is to see
+   the page honestly without the object. */
+.cdx[data-disc="none"] .cdx__field {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.cdx[data-disc="none"] .cdx__left {
+  /* With no object beside it, the column would run to a 1250px measure. */
+  max-width: 74ch;
+}
+
+/* ---- ROLE: backdrop ---- */
+
+/* Oversized, centred behind everything, and out of the flow. This is the one
+   mode where the disc stops being an object you read and becomes atmosphere,
+   which is exactly the trade it exists to let you judge. */
+.cdx[data-disc="backdrop"] .cdx__field {
+  grid-template-columns: minmax(0, 1fr);
+  position: relative;
+}
+
+.cdx[data-disc="backdrop"] .cdx__left {
+  position: relative;
+  z-index: 1;
+  max-width: 74ch;
+}
+
+.cdx[data-disc="backdrop"] .cdx__discWrap {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  translate: -50% -50%;
+  z-index: 0;
+  width: min(150vh, 148vw);
+  pointer-events: none;
+}
+
+.cdx[data-disc="backdrop"] .cdx__disc {
+  width: 100%;
+  /* No drop shadow: a shadow says "object sitting on a surface", and this is
+     behind the page rather than on it. */
+  box-shadow: none;
+}
+
+/* The handwritten label and the track count belong to the object, not to the
+   atmosphere. At backdrop scale they would be enormous and would collide with
+   the copy sitting on top of them. */
+.cdx[data-disc="backdrop"] .cdx__discLabel,
+.cdx[data-disc="backdrop"] .cdx__discMeta {
+  display: none;
+}
+
+/* The spindle hole too. It is an opaque disc drawn over the artwork to give
+   the anchor a crisp centre — blown up to backdrop size it became a large
+   black circle punched straight through the middle of the copy. The photograph
+   already has its own hole; at this scale that is the one to use. */
+.cdx[data-disc="backdrop"] .cdx__discHole {
+  display: none;
+}
+
+/* ---- PLACEMENT ---- */
+
+/* `direction` rather than `order`, so the columns swap without the DOM order
+   changing — the tracklist stays first in the reading and tab order whichever
+   side the object is on. */
+.cdx[data-disc="anchor"][data-place="left"] .cdx__field {
+  direction: rtl;
+}
+
+.cdx[data-disc="anchor"][data-place="left"] .cdx__left,
+.cdx[data-disc="anchor"][data-place="left"] .cdx__discWrap {
+  direction: ltr;
+}
+
+/* ---- SCALE ---- */
+
+.cdx[data-scale="sm"] .cdx__disc { width: min(100%, 240px); }
+.cdx[data-scale="md"] .cdx__disc { width: min(100%, 340px); }
+.cdx[data-scale="lg"] .cdx__disc { width: min(100%, 460px); }
+/* XL is allowed to exceed its column. Capped at `100%` it came out 520px
+   against L's 460px on a 1440px screen, so "dominant" was a 60px difference
+   and the option meant nothing. `.cdx` clips horizontally, so the bleed costs
+   no page scroll. */
+.cdx[data-scale="xl"] .cdx__disc { width: 600px; max-width: none; }
+
+/* Scale is about the object's presence beside the copy. Once it is atmosphere
+   its size is set by the viewport, so the ladder does not apply. */
+.cdx[data-disc="backdrop"] .cdx__disc {
+  width: 100%;
+}
+
+/* ---- FINISH ---- */
+
+.cdx[data-finish="faded"] .cdx__disc {
+  opacity: 0.42;
+  filter: contrast(0.86) brightness(0.86);
+}
+
+.cdx[data-finish="faded"] .cdx__discSheen {
+  opacity: 0.5;
+}
+
+/* Sharp in the middle, falling into the dark at the rim. Keeps the concentric
+   detail that makes the disc read as a physical object while still letting the
+   page breathe around it — the compromise between the other two. */
+.cdx[data-finish="spotlit"] .cdx__disc {
+  -webkit-mask-image: radial-gradient(circle at 50% 46%, #000 34%, rgba(0, 0, 0, 0.55) 66%, transparent 92%);
+  mask-image: radial-gradient(circle at 50% 46%, #000 34%, rgba(0, 0, 0, 0.55) 66%, transparent 92%);
+}
+
+/* A mask cuts the shadow off with the element, so it has to go or it hangs in
+   the air below a disc whose rim has faded out. */
+.cdx[data-finish="spotlit"] .cdx__disc {
+  box-shadow: none;
+}
+
+/* Backdrop is already atmosphere; at full strength it would fight the type. */
+.cdx[data-disc="backdrop"][data-finish="sharp"] .cdx__disc {
+  opacity: 0.3;
+}
+
+.cdx[data-disc="backdrop"][data-finish="faded"] .cdx__disc {
+  opacity: 0.16;
+}
+
+/* The scale ladder is about presence beside a column of copy. On a phone there
+   is no column beside it, and XL's deliberate bleed past its container just
+   crops the disc on both edges.
+
+   Declared AFTER the ladder above, not in the earlier responsive block: these
+   have identical specificity, so placed there they lost on source order and a
+   390px screen still rendered a 600px disc. */
+@media (max-width: 720px) {
+  .cdx[data-scale="sm"] .cdx__disc { width: min(46vw, 190px); }
+  .cdx[data-scale="md"] .cdx__disc { width: min(60vw, 240px); }
+  .cdx[data-scale="lg"] .cdx__disc { width: min(72vw, 280px); }
+  .cdx[data-scale="xl"] .cdx__disc { width: min(88vw, 340px); max-width: 88vw; }
+}
+
+/* ===========================================================================
+   MOTION
+   ======================================================================== */
+
+/* SETTLE — the default. Rotates to this track's resting angle and stops. */
+.cdx[data-motion="settle"] .cdx__disc {
+  transition: transform 720ms var(--cdx-ease);
+}
+
+/* CUE — sweeps through a longer arc before settling, so the change reads as
+   caused by the press. `backwards`, never `both`: a filled-forwards animation
+   pins its end-state transform and would override the resting angle for good. */
+.cdx[data-motion="cue"] .cdx__disc {
+  transition: none;
+  animation: cdx-cue 900ms var(--cdx-ease) backwards;
+}
+
+@keyframes cdx-cue {
+  from {
+    transform: rotate(calc(var(--disc-angle, 0deg) - 190deg));
+  }
+}
+
+/* DRIFT — continuous and very slow. 90s for a full turn is under a quarter of
+   a degree per second: alive rather than animated, which is the only version
+   of a permanently moving element this site's motion rules would allow. */
+.cdx[data-motion="drift"] .cdx__disc {
+  transition: none;
+  animation: cdx-drift 90s linear infinite;
+}
+
+@keyframes cdx-drift {
+  from { transform: rotate(var(--disc-angle, 0deg)); }
+  to   { transform: rotate(calc(var(--disc-angle, 0deg) + 360deg)); }
+}
+
+/* PARALLAX — scroll-driven, so there is no listener and no rAF. Where
+   `animation-timeline` is unsupported the disc simply holds its resting angle,
+   because the base style IS the resting state and the keyframes supply only
+   the offsets it travels between. */
+@supports (animation-timeline: view()) {
+  .cdx[data-motion="parallax"] .cdx__disc {
+    transition: none;
+    animation: cdx-parallax linear;
+    animation-timeline: view();
+    animation-range: cover;
+  }
+}
+
+@keyframes cdx-parallax {
+  from {
+    transform: rotate(calc(var(--disc-angle, 0deg) - 14deg)) translateY(-4%);
+  }
+  to {
+    transform: rotate(calc(var(--disc-angle, 0deg) + 14deg)) translateY(4%);
+  }
+}
+
+/* NONE — static. What every reduced-motion visitor already sees. */
+.cdx[data-motion="none"] .cdx__disc {
+  transition: none;
+  animation: none;
+}
+
+/* ===========================================================================
+   THE CONTROL PANEL — tool chrome, never part of what is judged
+   ======================================================================== */
+
+.dcl {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  z-index: 100;
+  width: min(320px, calc(100vw - 32px));
+  max-height: calc(100vh - 32px);
+  display: flex;
+  flex-direction: column;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(11, 12, 16, 0.97);
+  box-shadow: 0 22px 60px rgba(0, 0, 0, 0.6);
+  font-family: var(--font-mono);
+  color: #f4f4f2;
+  overflow: hidden;
+}
+
+.dcl__toggle {
+  all: unset;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 12px 14px;
+  cursor: pointer;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.dcl__toggle:focus-visible {
+  outline: 2px solid #d8b15a;
+  outline-offset: -2px;
+}
+
+.dcl__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: #4ade80;
+}
+
+.dcl__state {
+  margin-left: auto;
+  color: rgba(255, 255, 255, 0.42);
+  letter-spacing: 0.1em;
+  text-transform: none;
+}
+
+.dcl__body {
+  padding: 0 14px 14px;
+  overflow-y: auto;
+  /* The panel is tool chrome and is allowed to scroll: it is fixed over the
+     page rather than part of the page's own flow, so this is not the nested
+     scrolling the layout rules are about. */
+  overscroll-behavior: contain;
+}
+
+.dcl__group {
+  padding-top: 14px;
+  margin-top: 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.09);
+}
+
+.dcl__group:first-child {
+  border-top: none;
+  margin-top: 0;
+}
+
+.dcl__groupTitle {
+  margin: 0 0 9px;
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.dcl__col {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.dcl__row {
+  all: unset;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  cursor: pointer;
+  transition: background 150ms ease, border-color 150ms ease;
+}
+
+.dcl__row:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.dcl__row.is-active {
+  border-color: rgba(216, 177, 90, 0.55);
+  background: rgba(216, 177, 90, 0.09);
+}
+
+.dcl__row:focus-visible {
+  outline: 2px solid #d8b15a;
+  outline-offset: 1px;
+}
+
+.dcl__rowName {
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.86);
+}
+
+.dcl__rowNote {
+  font-size: 9px;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.dcl__seg {
+  display: flex;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 7px;
+  overflow: hidden;
+}
+
+.dcl__segBtn {
+  all: unset;
+  box-sizing: border-box;
+  flex: 1;
+  text-align: center;
+  padding: 8px 4px;
+  cursor: pointer;
+  font-size: 9.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.55);
+  transition: background 150ms ease, color 150ms ease;
+}
+
+.dcl__segBtn + .dcl__segBtn {
+  border-left: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.dcl__segBtn:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.dcl__segBtn.is-active {
+  background: rgba(255, 255, 255, 0.9);
+  color: #0a0b0f;
+}
+
+.dcl__segBtn:focus-visible {
+  outline: 2px solid #d8b15a;
+  outline-offset: -2px;
+}
+
+.dcl__readout {
+  margin: 8px 0 0;
+  font-size: 9px;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.42);
+}
+
+.dcl__readout--warn {
+  color: rgba(216, 177, 90, 0.72);
+}
+
+.dcl__readout--foot {
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.09);
+}
+
+/* ===========================================================================
+   REDUCED MOTION — every axis, not only the default
+   ======================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .cdx .cdx__disc {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  /* The resting angle is INFORMATION — it says which track is playing — so it
+     survives. What goes is the travel to reach it. */
+  .cdx .cdx__disc {
+    transform: rotate(var(--disc-angle, 0deg));
+  }
+
+  .dcl,
+  .dcl * {
+    animation: none !important;
+    transition: none !important;
+  }
+}

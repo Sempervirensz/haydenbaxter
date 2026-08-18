@@ -15,7 +15,7 @@
 // Isolated by construction — nothing here imports from the homepage, the Work
 // section or the production CTA, and nothing outside this folder imports it.
 
-import { useCallback, useId, useRef, useState } from "react";
+import { useCallback, useEffect, useId, useRef, useState } from "react";
 import {
   DEFAULT_PATH,
   DISC_ALT,
@@ -26,6 +26,13 @@ import {
   type DecisionAction,
   type PathKey,
 } from "@/data/ctaDecision";
+import {
+  DEFAULT_DISC,
+  discQuery,
+  readDiscSettings,
+  type DiscSettings,
+} from "@/data/ctaDecisionAxes";
+import DiscControls from "./DiscControls";
 import "./cta-decision.css";
 
 export default function CtaDecision() {
@@ -33,6 +40,31 @@ export default function CtaDecision() {
   const path = getPath(active);
   const baseId = useId();
   const tabRefs = useRef<Array<HTMLButtonElement | null>>([]);
+
+  const [disc, setDisc] = useState<DiscSettings>(DEFAULT_DISC);
+  const [panelOpen, setPanelOpen] = useState(true);
+
+  // Read the axes from the URL on mount rather than during render: this is a
+  // static export, so the server has no query string and reading it while
+  // rendering would hydrate against different markup than the server produced.
+  useEffect(() => {
+    setDisc(readDiscSettings(new URLSearchParams(window.location.search)));
+    if (window.innerWidth < 1100) setPanelOpen(false);
+  }, []);
+
+  const setAxis = useCallback(
+    <K extends keyof DiscSettings>(key: K, value: DiscSettings[K]) => {
+      setDisc((prev) => {
+        const next = { ...prev, [key]: value };
+        // Keep the combination linkable without adding a history entry per
+        // click — `replaceState` means the browser back button still returns
+        // to wherever the visitor actually came from.
+        window.history.replaceState(null, "", discQuery(next));
+        return next;
+      });
+    },
+    []
+  );
 
   // Arrow keys move between tracks, which is what a tablist owes a keyboard
   // user — Tab alone would make the three selectors three separate stops and
@@ -51,7 +83,14 @@ export default function CtaDecision() {
   }, []);
 
   return (
-    <main className="cdx">
+    <main
+      className="cdx"
+      data-disc={disc.role}
+      data-place={disc.place}
+      data-scale={disc.scale}
+      data-motion={disc.motion}
+      data-finish={disc.finish}
+    >
       <span className="cdx__grain" aria-hidden="true" />
 
       <div className="cdx__inner">
@@ -150,10 +189,18 @@ export default function CtaDecision() {
             </section>
           </div>
 
-          {/* ---- The disc: one object, every path a track on it ---- */}
+          {/* ---- The disc: one object, every path a track on it ----
+              Rendered only when it has a role. `none` is a real setting, not a
+              hidden element: the point of that option is to see the page
+              without the object, and a display:none disc would still occupy a
+              grid column and leave the layout lying about itself. */}
+          {disc.role !== "none" && (
           <div className="cdx__discWrap" aria-hidden="true">
             <div
               className="cdx__disc"
+              /* Keyed on the path so the cue animation replays on every change;
+                 a persisted node animates once and then sits still. */
+              key={`${path.id}-${disc.motion}`}
               style={{ "--disc-angle": `${path.discAngle}deg` } as React.CSSProperties}
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -170,12 +217,25 @@ export default function CtaDecision() {
               {path.index} / {String(PATHS.length).padStart(2, "0")}
             </p>
           </div>
+          )}
         </div>
       </div>
 
       {/* The disc is decorative, so its alt text is empty above. The object is
           described once here for anyone not seeing it. */}
-      <p className="cdx__srOnly">{DISC_ALT}</p>
+      {disc.role !== "none" && <p className="cdx__srOnly">{DISC_ALT}</p>}
+
+      <DiscControls
+        settings={disc}
+        onChange={setAxis}
+        open={panelOpen}
+        onToggle={() => setPanelOpen((o) => !o)}
+        summary={
+          disc.role === "none"
+            ? "No disc"
+            : `${disc.role} · ${disc.scale} · ${disc.motion}`
+        }
+      />
     </main>
   );
 }
