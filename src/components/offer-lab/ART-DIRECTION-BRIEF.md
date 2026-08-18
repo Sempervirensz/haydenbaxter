@@ -54,6 +54,12 @@ it:
 5. **None of my signature furniture.** The site has DYMO label plates, the
    Emerging Tech Builds "Cobalt Select" candy bars, a CD-scroll interaction.
    The offer pages use none of it, so they read as generic.
+6. **They do not continue the door they came through.** The CTA row that opens
+   them shipped to production today: three near-white candy bars, mono
+   uppercase at `--track-dymo`, a `›` chevron, a cobalt fill on hover, over a
+   sharp night photograph. Then you press one and land somewhere with none of
+   that vocabulary. The page should read as the next room in the same building,
+   not a different building.
 
 ### What I want from you
 
@@ -84,8 +90,10 @@ compromises somewhere. Per-offer templates, not per-offer styling.
 
 - **Do not change the live homepage.** `src/app/page.tsx`,
   `WorkTogether.tsx`, `work-together.css` and everything the homepage renders
-  stay untouched. Verify it: `/` must show zero `.ctar` and `.ofr` elements and
-  one live `.wt`.
+  stay untouched — the CTA row in there shipped to production today and is
+  working. Borrow its language freely; do not edit it. Verify: `/` must show
+  zero `.ofr` elements and exactly one `.wt` whose three `.wt__row` bars carry
+  no cobalt fill at rest.
 - Labs only, under `/offer-lab` and `/cta-lab`. Register new routes in
   `src/data/labsRegistry.ts`, `src/components/Splash.tsx` and
   `src/data/site.ts`.
