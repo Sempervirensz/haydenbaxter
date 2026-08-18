@@ -1,0 +1,288 @@
+/* ===========================================================================
+   The quarter-disc reveal. Scoped under .cdr-.
+   ===========================================================================
+
+   The rotation is arithmetic, not a table of magic numbers:
+
+       rotate = WINDOW ANGLE  -  FEATURE ANGLE
+
+   FEATURE ANGLE is where a mark sits on the printed disc, measured off
+   public/cd-disc-final.png with 0deg at the top and clockwise positive:
+
+       winged victory mark   355deg   (top, just left of centre)
+       WORLDPULSE             53deg   (upper right)
+       EMERGING TECH BUILDS  135deg   (lower right)
+       SUPPLY CHAIN          229deg   (lower left)
+       CONSULTING            297deg   (upper left)
+
+   WINDOW ANGLE is the part of the disc facing INTO the frame, which depends on
+   which edge it enters from. A disc off the right edge shows its left side, so
+   its window is at 270deg.
+
+   Expressing it this way means adding a placement is one custom property and
+   adding a mark is one more, rather than twelve hand-tuned rotations that all
+   have to be redone when anything moves.
+   ======================================================================== */
+
+.cdr {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+
+  /* Feature angles on the printed disc. */
+  --feat-consulting: 297deg;
+  --feat-worldpulse: 53deg;
+  --feat-experience: 355deg;
+
+  /* Overridden per placement below. */
+  --win: 270deg;
+  /* Sized and placed to stay BELOW the statue, which sits around x 70%, y 34%
+     of the plate. At 78cqh anchored near the bottom the disc reached up to
+     y 146 on an 810px card and cut straight across the figure — the one thing
+     on this plate that must not be covered. */
+  --disc-size: 60cqh;
+  /* Visible fraction is 1 - shift, because the disc is anchored to the edge it
+     enters from. 26% left 68% of the disc on screen, which is most of a CD
+     rather than the sliver this is meant to be — the point is a window onto
+     one mark, not the whole object. 64% leaves roughly a third: enough for the
+     word or the figure to read, little enough that the statue is still the
+     subject. */
+  --rest-shift: 104%;
+  --in-shift: 64%;
+}
+
+/* This lives inside `.wt__media`, as a sibling of the photograph.
+
+   `.wt__media > *` is already given `position: absolute; inset: 0` with full
+   width and height by work-together.css, so this element inherits the plane's
+   box and only needs to clip and stay untouchable. Its depth comes from
+   document order inside the media plane — after the photo, before the scrim —
+   rather than from a z-index of its own, which is why there is none here. */
+.cdr__stage {
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.cdr__disc {
+  position: absolute;
+  width: var(--disc-size);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  /* Only ever a quarter in frame: the rest is pushed off the edge. */
+  translate: var(--tx, 0) var(--ty, 0);
+  rotate: calc(var(--win) - var(--feat, 0deg));
+  opacity: 0;
+  transition:
+    rotate 900ms cubic-bezier(0.22, 1, 0.36, 1),
+    translate 760ms cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 520ms ease;
+}
+
+.cdr__discImg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.cdr__discSheen {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: linear-gradient(
+    118deg,
+    rgba(255, 255, 255, 0.14) 0%,
+    rgba(255, 255, 255, 0.03) 28%,
+    transparent 48%,
+    rgba(255, 255, 255, 0.05) 74%,
+    transparent 90%
+  );
+}
+
+/* ---- Placement: where it enters from, and which face is the window ---- */
+
+/* Off the right edge, below the statue, showing its left face. */
+.cdr[data-place="right"] {
+  --win: 270deg;
+}
+.cdr[data-place="right"] .cdr__disc {
+  right: 0;
+  bottom: -8%;
+  --tx: var(--rest-shift);
+  --ty: 0%;
+}
+
+/* Bottom-right corner, showing its upper-left face. The most restrained: the
+   disc reads as something resting behind the card rather than arriving. */
+.cdr[data-place="corner"] {
+  --win: 315deg;
+}
+.cdr[data-place="corner"] .cdr__disc {
+  right: 0;
+  bottom: 0;
+  --tx: 42%;
+  --ty: 46%;
+}
+
+/* Off the left edge, showing its right face. Behind the copy, so the type sits
+   over the disc rather than beside it. */
+.cdr[data-place="left"] {
+  --win: 90deg;
+}
+.cdr[data-place="left"] .cdr__disc {
+  left: 0;
+  bottom: -8%;
+  --tx: calc(-1 * var(--rest-shift));
+  --ty: 0%;
+}
+
+/* Rising from the bottom edge, showing its top face. */
+.cdr[data-place="bottom"] {
+  --win: 0deg;
+}
+.cdr[data-place="bottom"] .cdr__disc {
+  left: 50%;
+  bottom: 0;
+  --tx: -50%;
+  --ty: var(--rest-shift);
+}
+
+/* ---- Rest state ---- */
+
+/* A quarter stays in frame at rest, so the object is discoverable rather than
+   only existing for people who happen to point at a bar. */
+.cdr[data-rest="peek"] .cdr__disc {
+  opacity: 0.5;
+}
+
+.cdr[data-rest="peek"][data-place="right"] .cdr__disc,
+.cdr[data-rest="peek"][data-place="left"] .cdr__disc,
+.cdr[data-rest="peek"][data-place="bottom"] .cdr__disc {
+  --tx: var(--in-shift);
+}
+
+.cdr[data-rest="peek"][data-place="left"] .cdr__disc {
+  --tx: calc(-1 * var(--in-shift));
+}
+
+.cdr[data-rest="peek"][data-place="bottom"] .cdr__disc {
+  --tx: -50%;
+  --ty: var(--in-shift);
+}
+
+/* ===========================================================================
+   THE REVEAL — driven off the REAL row, via :has()
+   ===========================================================================
+
+   `.wt__rows` holds the three shipped bars as its children, so hovering or
+   focusing the nth one is matchable from here without touching, wrapping or
+   reimplementing WorkTogether. `:focus-within` is included so a keyboard user
+   gets the same reveal a pointer does.
+
+   `.is-current` is matched too: in the shipped flow a bar keeps that class
+   while its screen is open, so the disc holds the mark of whatever is showing
+   rather than snapping back the moment the pointer leaves.
+   ======================================================================== */
+
+.cdr:has(.wt__rows > *:nth-child(1):hover) .cdr__disc,
+.cdr:has(.wt__rows > *:nth-child(1):focus-within) .cdr__disc,
+.cdr:has(.wt__rows > *:nth-child(1).is-current) .cdr__disc {
+  --feat: var(--feat-consulting);
+}
+
+.cdr:has(.wt__rows > *:nth-child(2):hover) .cdr__disc,
+.cdr:has(.wt__rows > *:nth-child(2):focus-within) .cdr__disc,
+.cdr:has(.wt__rows > *:nth-child(2).is-current) .cdr__disc {
+  --feat: var(--feat-worldpulse);
+}
+
+.cdr:has(.wt__rows > *:nth-child(3):hover) .cdr__disc,
+.cdr:has(.wt__rows > *:nth-child(3):focus-within) .cdr__disc,
+.cdr:has(.wt__rows > *:nth-child(3).is-current) .cdr__disc {
+  --feat: var(--feat-experience);
+}
+
+/* Any of the three brings it in. Declared after the three above so it cannot
+   be beaten on source order, and kept as one rule so the disc travels the same
+   distance whichever bar is pointed at. */
+.cdr:has(.wt__rows > *:hover) .cdr__disc,
+.cdr:has(.wt__rows > *:focus-within) .cdr__disc,
+.cdr:has(.wt__rows > *.is-current) .cdr__disc {
+  opacity: 1;
+  --tx: var(--in-shift);
+  --ty: 0%;
+}
+
+.cdr[data-place="left"]:has(.wt__rows > *:hover) .cdr__disc,
+.cdr[data-place="left"]:has(.wt__rows > *:focus-within) .cdr__disc,
+.cdr[data-place="left"]:has(.wt__rows > *.is-current) .cdr__disc {
+  --tx: calc(-1 * var(--in-shift));
+}
+
+.cdr[data-place="bottom"]:has(.wt__rows > *:hover) .cdr__disc,
+.cdr[data-place="bottom"]:has(.wt__rows > *:focus-within) .cdr__disc,
+.cdr[data-place="bottom"]:has(.wt__rows > *.is-current) .cdr__disc {
+  --tx: -50%;
+  --ty: var(--in-shift);
+}
+
+.cdr[data-place="corner"]:has(.wt__rows > *:hover) .cdr__disc,
+.cdr[data-place="corner"]:has(.wt__rows > *:focus-within) .cdr__disc,
+.cdr[data-place="corner"]:has(.wt__rows > *.is-current) .cdr__disc {
+  --tx: 26%;
+  --ty: 30%;
+}
+
+/* ===========================================================================
+   NARROW — the mobile Consulting card
+   ======================================================================== */
+
+/* Declared on `.cdr__disc`, NOT on `.cdr`.
+
+   `.cdr` WRAPS WorkTogether, so it is an ancestor of the `wt` container rather
+   than a descendant of it — and a container query can only style elements
+   INSIDE the container it queries. Setting the tokens on `.cdr` meant this
+   block never applied at any width, and the mobile card silently kept the
+   desktop sizing. `.cdr__disc` lives inside `.wt__media`, so it is genuinely
+   in the container and the query reaches it. */
+/* NOT SHOWN ON NARROW, deliberately.
+
+   Two reasons, and the first is decisive: at this width the bars stack and
+   fill the lower half of the card, and the disc enters from the bottom edge
+   BEHIND them — it renders into a region that is completely covered, so it
+   costs paint and shows nothing. The clear space left is the sky above, which
+   is where the statue is, and covering the statue is the one thing this
+   treatment exists to avoid.
+
+   The second: this is a pointer affordance. There is no hover on touch, and a
+   tap navigates immediately, so there is no moment in which a reveal could be
+   read even if it were visible.
+
+   Reversible in one rule if a narrow placement is worth designing separately —
+   the sizing tokens it would need are kept here rather than deleted. */
+@container wt (max-width: 700px) {
+  .cdr__stage {
+    display: none;
+  }
+
+  .cdr__disc {
+    --disc-size: 82cqw;
+    --rest-shift: 104%;
+    --in-shift: 58%;
+  }
+}
+
+/* ===========================================================================
+   REDUCED MOTION
+
+   The disc still ARRIVES and still shows the right mark — that is information
+   about which choice is being considered, not decoration. What goes is the
+   travel and the turn, so it simply appears already in position.
+   ======================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .cdr__disc {
+    transition: none !important;
+  }
+}
