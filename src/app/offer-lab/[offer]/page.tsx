@@ -1,14 +1,17 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { notFound } from "next/navigation";
-import OfferPage from "@/components/offer-lab/OfferPage";
+import OfferRouteClient from "@/components/offer-lab/OfferRouteClient";
 import { PATHS, getPath, type PathId } from "@/data/offerLab";
-import type { OfferLayoutId, OfferSurfaceId } from "@/data/offerLab";
 
 // Each offer as its own route — the structural alternative to the in-card
-// panel. Real URL, real history, shareable, indexable, one scroll.
+// panel. Real URL, real history, shareable, one scroll.
 //
-// `output: "export"` outside dev means every param has to be enumerated, which
-// is exactly the point: three offers, three pages, all statically rendered.
+// `output: "export"` outside dev means every param is enumerated here, which
+// is the point: three offers, three static pages. It ALSO means this page must
+// not read `searchParams` — a statically exported route cannot, and the build
+// fails with `dynamic = "error"`. Layout and surface are therefore read on the
+// client, inside the Suspense boundary `useSearchParams` requires.
 
 export function generateStaticParams() {
   return PATHS.map((p) => ({ offer: p.id }));
@@ -33,35 +36,15 @@ export async function generateMetadata({
 
 export default async function OfferRoutePage({
   params,
-  searchParams,
 }: {
   params: Promise<{ offer: string }>;
-  searchParams: Promise<{ layout?: string; surface?: string }>;
 }) {
   const { offer } = await params;
   if (!VALID.has(offer)) notFound();
 
-  // Layout and surface ride in the query string so a specific treatment can be
-  // linked and compared without rebuilding — the lab's own switcher writes it.
-  const sp = await searchParams;
-  const layout = (sp.layout ?? "editorial") as OfferLayoutId;
-  const surface = (sp.surface ?? "dark") as OfferSurfaceId;
-
-  const path = getPath(offer as PathId);
-  const qs = `?layout=${layout}&surface=${surface}`;
-
   return (
-    <OfferPage
-      path={path}
-      layout={layout}
-      surface={surface}
-      backHref={`/cta-lab/in-site${qs}`}
-      backLabel="Back to the site"
-      siblings={PATHS.filter((p) => p.id !== offer).map((p) => ({
-        id: p.id,
-        label: p.label,
-        href: `/offer-lab/${p.id}${qs}`,
-      }))}
-    />
+    <Suspense fallback={null}>
+      <OfferRouteClient offer={offer as PathId} />
+    </Suspense>
   );
 }
