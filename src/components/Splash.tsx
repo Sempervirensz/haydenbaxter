@@ -16,6 +16,7 @@ const NO_SPLASH_ROUTES = [
   "/atomicos-preview",
   "/lab/scroll",
   "/cta-lab",
+  "/offer-lab",
 ];
 
 export default function Splash() {

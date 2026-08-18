@@ -81,6 +81,16 @@ export const LAB_GROUPS: LabGroup[] = [
         note: "Choices always visible, wired to the screens · 5 iterations (incl. ETB bars) × blue/gold",
       },
       {
+        label: "Offer page lab",
+        path: "/offer-lab",
+        note: "5 layouts × dark/paper for the three offers — dossier, editorial, index, stack, split",
+      },
+      {
+        label: "↳ CTA row — in site",
+        path: "/cta-lab/in-site",
+        note: "The row rendered inside the real page, among its neighbours",
+      },
+      {
         label: "↳ CTA interaction lab (3 concepts)",
         path: "/cta-lab/concepts",
         note: "Rail / Split / Fold — the explorer that shipped Rail to production",

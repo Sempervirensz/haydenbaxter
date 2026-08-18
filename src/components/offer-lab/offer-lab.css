@@ -1,0 +1,798 @@
+/* ===========================================================================
+   Offer page lab. Scoped under .ofr- / .ofrl-.
+   ===========================================================================
+
+   Two attributes drive every layout:
+
+     .ofr[data-layout]    dossier | editorial | index | stack | split
+     .ofr[data-surface]   dark | paper
+
+   The MARKUP IS IDENTICAL across all five layouts — same eyebrow, title, lede,
+   two labelled blocks, signals strip, note and two actions, in the same order.
+   Only the structure they are poured into changes. That is what makes the five
+   comparable rather than five different pages, and it is why `data-layout`
+   never gates content, only presentation.
+
+   `.ofr` is a size container, so every layout rule is a `@container` query —
+   the 390px frame is therefore a real narrow layout, not a scaled-down
+   approximation, and dropping one of these screens into a card would work
+   without touching a line.
+
+   Nothing here invents brand vocabulary: --font-serif / --font-mono /
+   --font-sans and the --text-* ramp, #2563eb as the accent the destination
+   screens already use, #d8b15a as the site's single accent, and the
+   #f5f4f1 / #111116 paper pair from the ETB dossier and the live screens.
+   ======================================================================== */
+
+.ofr-root {
+  --ofr-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  min-height: 100vh;
+  padding: 28px 24px 96px;
+  background: #06070a;
+  color: #f4f4f2;
+}
+
+@media (min-width: 1100px) {
+  .ofr-root {
+    padding-right: 344px;
+  }
+}
+
+.ofr-stages {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 24px;
+}
+
+.ofr-frame {
+  min-width: 0;
+}
+
+.ofr-frame--desktop {
+  flex: 1 1 720px;
+  max-width: 1180px;
+}
+
+.ofr-frame--narrow {
+  flex: 0 0 390px;
+  max-width: 390px;
+}
+
+.ofr-frame__tag {
+  margin: 8px 0 0;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.28);
+  text-align: center;
+}
+
+/* ===========================================================================
+   THE OFFER — shared skeleton
+   ======================================================================== */
+
+/* The container lives here, one level ABOVE the element the queries style.
+   A container query never matches the element that establishes it, so with
+   `container-type` on `.ofr` itself every `@container` rule targeting
+   `.ofr[data-layout=...]` was a silent no-op — no warning, no error, the rule
+   simply never applied. That is what let Split stay a two-column row at 390px
+   and overflow its frame. Descendant rules worked fine throughout, which is
+   exactly what made it hard to see. */
+.ofr-shell {
+  container-type: inline-size;
+  container-name: ofr;
+}
+
+.ofr {
+  position: relative;
+  border-radius: 18px;
+  overflow: hidden;
+  padding: clamp(26px, 4cqw, 56px);
+  display: flex;
+  flex-direction: column;
+  gap: clamp(22px, 3cqw, 40px);
+}
+
+/* ---- Surfaces ---- */
+
+.ofr[data-surface="dark"] {
+  --ofr-ink: rgba(255, 255, 255, 0.92);
+  --ofr-body: var(--ink-body, rgba(255, 255, 255, 0.82));
+  --ofr-muted: var(--ink-muted, rgba(255, 255, 255, 0.68));
+  --ofr-faint: var(--ink-faint, rgba(255, 255, 255, 0.54));
+  --ofr-rule: rgba(255, 255, 255, 0.14);
+  --ofr-rule-strong: rgba(255, 255, 255, 0.28);
+  /* Lifted from #2563eb, which fails as text on near-black. */
+  --ofr-accent: #7aa2ff;
+  --ofr-accent-edge: #2563eb;
+  background: #0a0b0f;
+  outline: 1px solid rgba(255, 255, 255, 0.06);
+  outline-offset: -1px;
+}
+
+.ofr[data-surface="paper"] {
+  --ofr-ink: #111116;
+  --ofr-body: rgba(17, 17, 22, 0.82);
+  --ofr-muted: rgba(17, 17, 22, 0.66);
+  --ofr-faint: rgba(17, 17, 22, 0.46);
+  --ofr-rule: rgba(17, 17, 22, 0.12);
+  --ofr-rule-strong: rgba(17, 17, 22, 0.26);
+  --ofr-accent: #1e4ebe;
+  --ofr-accent-edge: #2563eb;
+  background: #f5f4f1;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.55) inset,
+    0 28px 72px rgba(0, 0, 0, 0.45);
+}
+
+/* ---- Identity ---- */
+
+.ofr__identity {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.ofr__eyebrow {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  font-weight: 500;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--ofr-faint);
+}
+
+.ofr__title {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-size: clamp(30px, 5cqw, 60px);
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+  color: var(--ofr-ink);
+}
+
+.ofr__lede {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  line-height: 1.5;
+  color: var(--ofr-muted);
+  max-width: 62ch;
+}
+
+/* ---- Actions ---- */
+
+.ofr__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.ofr-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-family: var(--font-mono);
+  font-size: var(--text-control);
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background 160ms ease, border-color 160ms ease, color 160ms ease,
+    transform 160ms ease;
+}
+
+.ofr-action--primary {
+  border: 1px solid var(--ofr-accent-edge);
+  background: var(--ofr-accent-edge);
+  color: #fff;
+}
+
+.ofr-action--primary:hover,
+.ofr-action--primary:focus-visible {
+  transform: translateY(-1px);
+  background: #1d4ed8;
+  border-color: #1d4ed8;
+}
+
+.ofr-action--ghost {
+  border: 1px solid var(--ofr-rule-strong);
+  background: transparent;
+  color: var(--ofr-body);
+}
+
+.ofr-action--ghost:hover,
+.ofr-action--ghost:focus-visible {
+  border-color: var(--ofr-ink);
+  color: var(--ofr-ink);
+  transform: translateY(-1px);
+}
+
+.ofr-action:active {
+  transform: translateY(1px);
+  transition-duration: 60ms;
+}
+
+.ofr-action:focus-visible {
+  outline: 2px solid var(--ofr-accent);
+  outline-offset: 3px;
+}
+
+.ofr-action span {
+  transition: transform 200ms var(--ofr-ease);
+}
+
+.ofr-action--primary:hover span {
+  transform: translateX(3px);
+}
+
+/* ---- Proof ---- */
+
+.ofr__proof {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(18px, 2.4cqw, 32px);
+}
+
+.ofr__blocks {
+  display: grid;
+  gap: clamp(20px, 3cqw, 44px);
+}
+
+.ofr__block {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ofr__blockHead {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+
+/* Only Index shows the numeral. */
+.ofr__blockNum {
+  display: none;
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  letter-spacing: 0.2em;
+  color: var(--ofr-faint);
+}
+
+.ofr__blockLabel {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ofr-accent);
+}
+
+.ofr__blockDesc {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  line-height: 1.5;
+  color: var(--ofr-muted);
+  max-width: 54ch;
+}
+
+.ofr__list {
+  list-style: none;
+  margin: 4px 0 0;
+  padding: 0;
+  display: grid;
+  gap: 6px;
+}
+
+.ofr__list li {
+  position: relative;
+  padding-left: 15px;
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  line-height: 1.4;
+  color: var(--ofr-body);
+}
+
+.ofr__list li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.6em;
+  width: 4px;
+  height: 4px;
+  border-radius: 999px;
+  background: var(--ofr-accent);
+}
+
+.ofr__signals {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.ofr__signals li {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ofr-faint);
+  padding: 5px 10px;
+  border-radius: 4px;
+  border: 1px solid var(--ofr-rule);
+}
+
+.ofr__note {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  line-height: 1.55;
+  color: var(--ofr-muted);
+  max-width: 76ch;
+}
+
+/* ===========================================================================
+   A · DOSSIER — what ships today. Two blocks side by side on paper, compact
+   rhythm, everything at one weight.
+   ======================================================================== */
+
+.ofr[data-layout="dossier"] {
+  gap: 14px;
+  padding: clamp(20px, 2.4cqw, 34px);
+  border-radius: 14px;
+}
+
+.ofr[data-layout="dossier"] .ofr__title {
+  font-size: clamp(22px, 2.8cqw, 32px);
+}
+
+.ofr[data-layout="dossier"] .ofr__lede {
+  font-size: var(--text-sm);
+}
+
+.ofr[data-layout="dossier"] .ofr__proof {
+  gap: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--ofr-rule);
+}
+
+.ofr[data-layout="dossier"] .ofr__blocks {
+  grid-template-columns: 1fr 1fr;
+  gap: 10px clamp(20px, 3cqw, 40px);
+}
+
+/* The actions sit at the foot of the panel, as they do today. */
+.ofr[data-layout="dossier"] {
+  flex-direction: column;
+}
+
+.ofr[data-layout="dossier"] .ofr__identity {
+  order: 0;
+}
+
+.ofr[data-layout="dossier"] .ofr__actions {
+  order: 2;
+}
+
+/* ===========================================================================
+   B · EDITORIAL — no panel. Display headline, wide measure, type on hairlines.
+   ======================================================================== */
+
+.ofr[data-layout="editorial"] {
+  gap: clamp(30px, 4cqw, 56px);
+}
+
+.ofr[data-layout="editorial"] .ofr__title {
+  font-size: clamp(38px, 7cqw, 84px);
+  line-height: 0.98;
+}
+
+.ofr[data-layout="editorial"] .ofr__lede {
+  font-size: clamp(16px, 1.6cqw, 22px);
+  max-width: 46ch;
+}
+
+.ofr[data-layout="editorial"] .ofr__blocks {
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(24px, 4cqw, 64px);
+  padding-top: clamp(20px, 2.4cqw, 34px);
+  border-top: 1px solid var(--ofr-rule-strong);
+}
+
+.ofr[data-layout="editorial"] .ofr__block + .ofr__block {
+  padding-left: clamp(24px, 4cqw, 64px);
+  border-left: 1px solid var(--ofr-rule);
+}
+
+.ofr[data-layout="editorial"] .ofr__note {
+  font-family: var(--font-serif);
+  font-size: clamp(17px, 1.7cqw, 23px);
+  line-height: 1.4;
+  color: var(--ofr-body);
+  max-width: 52ch;
+  padding-top: clamp(18px, 2cqw, 28px);
+  border-top: 1px solid var(--ofr-rule);
+}
+
+/* ===========================================================================
+   C · INDEX — numbered and tabular. Labels at the left margin, items as rows.
+   ======================================================================== */
+
+.ofr[data-layout="index"] .ofr__blockNum {
+  display: block;
+}
+
+.ofr[data-layout="index"] .ofr__title {
+  font-family: var(--font-mono);
+  font-size: clamp(22px, 2.6cqw, 34px);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+}
+
+.ofr[data-layout="index"] .ofr__blocks {
+  grid-template-columns: 1fr;
+  gap: 0;
+}
+
+.ofr[data-layout="index"] .ofr__block {
+  display: grid;
+  grid-template-columns: minmax(140px, 22%) 1fr;
+  gap: 4px clamp(20px, 3cqw, 44px);
+  padding: clamp(16px, 2cqw, 26px) 0;
+  border-top: 1px solid var(--ofr-rule);
+}
+
+.ofr[data-layout="index"] .ofr__blockHead {
+  grid-row: 1 / span 2;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+}
+
+.ofr[data-layout="index"] .ofr__list {
+  gap: 0;
+}
+
+.ofr[data-layout="index"] .ofr__list li {
+  padding: 7px 0 7px 15px;
+  border-top: 1px solid var(--ofr-rule);
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+}
+
+.ofr[data-layout="index"] .ofr__list li:first-child {
+  border-top: 0;
+}
+
+.ofr[data-layout="index"] .ofr__signals {
+  padding-top: clamp(16px, 2cqw, 26px);
+  border-top: 1px solid var(--ofr-rule);
+}
+
+/* ===========================================================================
+   D · STACK — one column at every width, generous rhythm.
+   ======================================================================== */
+
+.ofr[data-layout="stack"] {
+  gap: clamp(28px, 3.4cqw, 48px);
+}
+
+.ofr[data-layout="stack"] .ofr__identity,
+.ofr[data-layout="stack"] .ofr__proof,
+.ofr[data-layout="stack"] .ofr__note {
+  max-width: 68ch;
+}
+
+.ofr[data-layout="stack"] .ofr__blocks {
+  grid-template-columns: 1fr;
+  gap: clamp(20px, 2.6cqw, 34px);
+}
+
+.ofr[data-layout="stack"] .ofr__block {
+  padding: clamp(18px, 2.2cqw, 28px);
+  border-radius: 12px;
+  border: 1px solid var(--ofr-rule);
+}
+
+.ofr[data-layout="stack"] .ofr__title {
+  font-size: clamp(32px, 5cqw, 56px);
+}
+
+/* ===========================================================================
+   E · SPLIT — sticky identity pane, the proof scrolls beside it.
+   ======================================================================== */
+
+.ofr[data-layout="split"] {
+  flex-direction: row;
+  align-items: flex-start;
+  gap: clamp(28px, 4cqw, 64px);
+}
+
+.ofr[data-layout="split"] .ofr__pane--identity {
+  flex: 0 0 38%;
+  position: sticky;
+  top: clamp(26px, 4cqw, 56px);
+}
+
+.ofr[data-layout="split"] .ofr__pane--proof {
+  flex: 1 1 0;
+  min-width: 0;
+  padding-left: clamp(28px, 4cqw, 64px);
+  border-left: 1px solid var(--ofr-rule);
+}
+
+.ofr[data-layout="split"] .ofr__blocks {
+  grid-template-columns: 1fr;
+  gap: clamp(22px, 2.8cqw, 36px);
+}
+
+.ofr[data-layout="split"] .ofr__title {
+  font-size: clamp(30px, 3.6cqw, 48px);
+}
+
+/* Split needs two real columns. Below this it becomes the Stack — which is
+   why the verdict calls it two layouts to maintain, not one. */
+@container ofr (max-width: 900px) {
+  .ofr[data-layout="split"] {
+    flex-direction: column;
+    /* The base rule sets align-items: flex-start for the two-column row. Once
+       this is a column that same value governs the HORIZONTAL axis and shrinks
+       both panes to their content width, which overflows. */
+    align-items: stretch;
+  }
+
+  .ofr[data-layout="split"] .ofr__pane--identity {
+    position: static;
+    flex: none;
+    width: 100%;
+  }
+
+  .ofr[data-layout="split"] .ofr__pane--proof {
+    padding-left: 0;
+    border-left: 0;
+    border-top: 1px solid var(--ofr-rule);
+    padding-top: clamp(20px, 3cqw, 30px);
+    width: 100%;
+  }
+}
+
+/* ===========================================================================
+   NARROW — every layout collapses to one column. Container query, so this is
+   the composition's own width, not the viewport's.
+   ======================================================================== */
+
+@container ofr (max-width: 700px) {
+  .ofr[data-layout="dossier"] .ofr__blocks,
+  .ofr[data-layout="editorial"] .ofr__blocks {
+    grid-template-columns: 1fr;
+  }
+
+  .ofr[data-layout="editorial"] .ofr__block + .ofr__block {
+    padding-left: 0;
+    border-left: 0;
+    padding-top: clamp(18px, 3cqw, 26px);
+    border-top: 1px solid var(--ofr-rule);
+  }
+
+  .ofr[data-layout="index"] .ofr__block {
+    grid-template-columns: 1fr;
+  }
+
+  .ofr[data-layout="index"] .ofr__blockHead {
+    grid-row: auto;
+    flex-direction: row;
+    align-items: baseline;
+  }
+
+  .ofr__actions {
+    width: 100%;
+  }
+
+  .ofr-action {
+    flex: 1 1 auto;
+    justify-content: center;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ofr,
+  .ofr *,
+  .ofr *::before,
+  .ofr *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* ===========================================================================
+   LAB PANEL — tool-grey, not portfolio language.
+   ======================================================================== */
+
+.ofrl {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  z-index: 100;
+  width: min(300px, calc(100vw - 32px));
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(11, 12, 16, 0.94);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: 0 22px 60px rgba(0, 0, 0, 0.6);
+  font-family: var(--font-mono);
+  overflow: hidden;
+  color: #f4f4f2;
+}
+
+.ofrl__toggle {
+  all: unset;
+  box-sizing: border-box;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 13px;
+  cursor: pointer;
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.86);
+}
+
+.ofrl__toggle:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.5);
+  outline-offset: -2px;
+}
+
+.ofrl__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: #4ade80;
+  box-shadow: 0 0 8px rgba(74, 222, 128, 0.7);
+  flex: none;
+}
+
+.ofrl__state {
+  margin-left: auto;
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  text-transform: none;
+  color: rgba(255, 255, 255, 0.42);
+  white-space: nowrap;
+}
+
+.ofrl__body {
+  max-height: min(72vh, 660px);
+  overflow-y: auto;
+  padding: 4px 13px 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.ofrl__group {
+  padding: 12px 0 0;
+}
+
+.ofrl__groupTitle {
+  margin: 0 0 8px;
+  font-size: 9px;
+  font-weight: 400;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.ofrl__col {
+  display: grid;
+  gap: 5px;
+}
+
+.ofrl__row {
+  all: unset;
+  box-sizing: border-box;
+  display: grid;
+  gap: 4px;
+  padding: 8px 10px;
+  border-radius: 7px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.02);
+  cursor: pointer;
+  transition: background 140ms ease, border-color 140ms ease;
+}
+
+.ofrl__row:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.ofrl__row.is-active {
+  border-color: rgba(122, 162, 255, 0.6);
+  background: rgba(37, 99, 235, 0.16);
+}
+
+.ofrl__row:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.5);
+  outline-offset: 1px;
+}
+
+.ofrl__rowName {
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.ofrl__rowNote {
+  font-size: 9.5px;
+  line-height: 1.4;
+  color: rgba(255, 255, 255, 0.44);
+}
+
+.ofrl__seg {
+  display: flex;
+  gap: 4px;
+}
+
+.ofrl__segBtn {
+  all: unset;
+  box-sizing: border-box;
+  flex: 1 1 0;
+  text-align: center;
+  padding: 7px 4px;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.6);
+  cursor: pointer;
+  transition: background 140ms ease, border-color 140ms ease, color 140ms ease;
+}
+
+.ofrl__segBtn:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.ofrl__segBtn.is-active {
+  border-color: rgba(122, 162, 255, 0.6);
+  background: rgba(37, 99, 235, 0.16);
+  color: #fff;
+}
+
+.ofrl__segBtn:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.5);
+  outline-offset: 1px;
+}
+
+.ofrl__readout {
+  margin: 7px 0 0;
+  font-size: 9px;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.38);
+}
+
+.ofrl__verdict {
+  margin: 0;
+  font-size: 9.5px;
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.5);
+}

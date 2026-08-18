@@ -41,6 +41,7 @@ export const NON_PUBLIC_PREFIXES = [
   "/consulting-hero-lab",
   "/consulting-parallax-lab",
   "/cta-lab",
+  "/offer-lab",
   "/etb-lab",
   "/etb-overlay-sandbox",
   "/globe-sandbox",
