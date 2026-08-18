@@ -208,16 +208,36 @@
   height: 100%;
 }
 
+/* AT REST THIS LAYER DOES NOTHING. It is not `blur(0px)` and not a 6% dim —
+   it is inert, and that is deliberate on both counts.
+
+   Two separate things were softening the photograph:
+
+   1. A literal `blur(1px)`, which contradicted the paragraph above it.
+   2. Declaring `backdrop-filter` AT ALL. The property promotes the backdrop
+      into a composited texture that is rasterised and resampled, so even a
+      zero-radius filter costs real sharpness on high-frequency detail — the
+      statue's wing edges and the pinpoint city lights are exactly that.
+
+   So the property is absent until there is something to blur for, rather than
+   present-but-zero. `will-change` is likewise NOT set here: it would promote
+   the layer permanently and reintroduce the same resampling. The blur arrives
+   only under [data-open="true"], and closing removes it again. */
 .ctar__focus {
   position: absolute;
   inset: 0;
   z-index: 1;
   pointer-events: none;
-  backdrop-filter: blur(1px) saturate(1.06);
-  -webkit-backdrop-filter: blur(1px) saturate(1.06);
-  background: rgba(4, 5, 10, 0.1);
+  background: transparent;
 }
 
+/* Legibility only, and it now clears the statue.
+
+   This is a plain gradient, not a filter — it never blurs. But it used to ramp
+   out at 72%, and the statue sits around 64% up the frame, so it was laying
+   ~8% black over the one subject that has to read as sharp. The copy block
+   occupies roughly the bottom third, so the ramp only has to cover that; it is
+   fully transparent from 52% up and the statue is untouched. */
 .ctar__scrim {
   position: absolute;
   inset: 0;
@@ -225,11 +245,74 @@
   pointer-events: none;
   background: linear-gradient(
     to top,
-    rgba(4, 5, 10, 0.82) 0%,
-    rgba(4, 5, 10, 0.62) 22%,
-    rgba(4, 5, 10, 0.24) 48%,
-    transparent 72%
+    rgba(4, 5, 10, 0.84) 0%,
+    rgba(4, 5, 10, 0.6) 18%,
+    rgba(4, 5, 10, 0.2) 38%,
+    transparent 52%
   );
+}
+
+/* Narrow frames stack the row, so the copy block is far taller — headline,
+   hint and three full-width bars instead of one line of buttons. The desktop
+   ramp fades out at 52% and left the headline sitting on the brightest part of
+   the city. There is room to extend it: at these widths the statue sits around
+   67% up the frame, so a ramp that clears at 62% still never touches it. */
+@container ctar (max-width: 900px) {
+  .ctar__scrim {
+    background: linear-gradient(
+      to top,
+      rgba(4, 5, 10, 0.88) 0%,
+      rgba(4, 5, 10, 0.72) 26%,
+      rgba(4, 5, 10, 0.34) 46%,
+      transparent 62%
+    );
+  }
+}
+
+/* ---- The photograph itself ----------------------------------------------
+
+   Production's `.cns-stage__img` carries `transform: scale(1.02)`. A 2%
+   upscale resamples every pixel to hide edge seams the live card needs and
+   this stage does not, so it is reverted here — sharpness is the whole point
+   of this frame. Nothing in work-together.css is modified; this simply wins on
+   specificity inside `.ctar`.
+
+   `object-position` then moves with the container, because `cover` crops
+   HORIZONTALLY on the wide plate and the statue (x≈70%) is the first thing to
+   fall off the right edge as the frame narrows. At a 720px-wide stage a
+   centred crop shows x 31%–69% — the statue misses by a hair, which is
+   precisely the tablet case. Walking the focal point right keeps it in frame
+   while the city still fills the left of the shot.
+
+   `data-crop` says which plate is actually loaded rather than inferring it
+   from a media query, because the lab's 390px frame is a CONTAINER inside a
+   wide viewport: a viewport-based `<source>` would hand it the wide plate and
+   the narrow preview would quietly be testing the wrong image. */
+.ctar .cns-stage__img {
+  transform: none;
+  image-rendering: auto;
+}
+
+/* Wide plate — statue at x≈70%, city spanning 6%–94%. */
+.ctar .cns-stage__img[data-crop="wide"] {
+  object-position: 50% 46%;
+}
+
+@container ctar (max-width: 1100px) {
+  .ctar .cns-stage__img[data-crop="wide"] {
+    object-position: 62% 46%;
+  }
+}
+
+@container ctar (max-width: 900px) {
+  .ctar .cns-stage__img[data-crop="wide"] {
+    object-position: 70% 46%;
+  }
+}
+
+/* Portrait plate — statue already centred at x≈49%, subject band y 28%–63%. */
+.ctar .cns-stage__img[data-crop="narrow"] {
+  object-position: 50% 44%;
 }
 
 /* Same inline-SVG grain as the live section — no asset, no dependency. */
@@ -858,8 +941,12 @@
    always visible — true after the first click instead of only before it.
    ======================================================================== */
 
-/* Push the city further back once there is a paper panel to read, matching the
-   live section's `destination` level. */
+/* Push the city back once there is a paper panel to read, matching the live
+   section's `destination` level. This is the ONLY place a blur is introduced,
+   and it is gated on a click: closing the screen drops the rule entirely and
+   the backdrop-filter is gone again, not merely animated to zero. The
+   transition lives here rather than on the base rule for that reason — a
+   transition on the resting layer would keep the property declared. */
 .ctar[data-open="true"] .ctar__focus {
   backdrop-filter: blur(22px) saturate(1.06);
   -webkit-backdrop-filter: blur(22px) saturate(1.06);

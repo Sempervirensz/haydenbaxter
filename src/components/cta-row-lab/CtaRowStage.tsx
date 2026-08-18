@@ -125,11 +125,37 @@ export default function CtaRowStage({
             flatten to a dim — the trap documented on WorkTogether's `media`
             prop. */}
         <div className="ctar__media" aria-hidden="true">
-          <picture>
-            <source media="(max-width: 640px)" srcSet={HERO_NARROW} />
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img className="cns-stage__img" src={HERO_WIDE} alt={HERO_ALT} />
-          </picture>
+          {width === "narrow" ? (
+            /* The 390px frame is a CONTAINER inside a wide viewport, so a
+               viewport-based <source> would hand it the 3440px-wide plate and
+               the narrow preview would silently be testing the wrong image.
+               Pick the portrait crop directly from the frame instead. */
+            /* eslint-disable-next-line @next/next/no-img-element */
+            <img
+              className="cns-stage__img"
+              data-crop="narrow"
+              src={HERO_NARROW}
+              alt={HERO_ALT}
+              width={1440}
+              height={3200}
+            />
+          ) : (
+            <picture>
+              {/* 900px, not 640px: at a ~720px stage the wide plate's crop
+                  cuts the statue off the right edge. The portrait crop keeps
+                  it centred, so tablet belongs on that plate too. */}
+              <source media="(max-width: 900px)" srcSet={HERO_NARROW} />
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                className="cns-stage__img"
+                data-crop="wide"
+                src={HERO_WIDE}
+                alt={HERO_ALT}
+                width={3440}
+                height={1440}
+              />
+            </picture>
+          )}
           <span className="cns-stage__vignette" />
         </div>
 

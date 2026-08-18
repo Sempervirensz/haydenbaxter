@@ -15,7 +15,7 @@
 //
 // Nothing on the live homepage imports any of this.
 
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { DEFAULT_ACCENT, DEFAULT_VARIANT, type PathId } from "@/data/ctaRowLab";
 import { usePrefersReducedMotion } from "@/components/cta-lab/usePrefersReducedMotion";
 import CtaRowControls, { type LabSettings } from "./CtaRowControls";
@@ -33,6 +33,16 @@ const DEFAULT_SETTINGS: LabSettings = {
 export default function CtaRowLab() {
   const [settings, setSettings] = useState<LabSettings>(DEFAULT_SETTINGS);
   const [panelOpen, setPanelOpen] = useState(true);
+
+  // Below 1100px `.ctar-root` stops reserving a 344px gutter for the panel, so
+  // an open panel sits directly on top of the button row and swallows clicks on
+  // the third choice — the composition becomes untestable at exactly the two
+  // widths most worth testing. Collapsed, the chip clears the card entirely.
+  // Done in an effect rather than in the initial state so server and first
+  // client render agree.
+  useEffect(() => {
+    if (window.innerWidth < 1100) setPanelOpen(false);
+  }, []);
   // Which destination screen is showing. Owned here, not by the stage: in a
   // side-by-side compare both widths must show ONE state, and switching
   // viewport mode unmounts a stage, which would otherwise drop the screen.
