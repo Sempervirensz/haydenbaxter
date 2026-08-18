@@ -2,55 +2,40 @@
 
 // "Let's work together" — the final Work section's interaction.
 //
-// Promoted from the CTA lab's Concept A (Rail). One component serves both
-// breakpoints: the desktop cinematic card and the mobile Consulting card each
-// supply their own background and chapter header, and mount this on top. Every
-// layout rule is a `@container` query against this element, so the narrow
-// layout is a property of the composition, not of the viewport.
+// Promoted from the CTA lab's ETB row (see src/components/cta-row-lab/). One
+// component serves both breakpoints: the desktop cinematic card and the mobile
+// Consulting card each supply their own background and chapter header, and
+// mount this on top. Every layout rule is a `@container` query against this
+// element, so the narrow layout is a property of the composition, not of the
+// viewport.
 //
-// Two levels, and the second is terminal:
+// WHAT CHANGED FROM THE RAIL MODEL IT REPLACES
 //
-//   intro       →  the CTA, alone
-//   paths       →  the three things a visitor could actually want
-//   destination →  one complete screen. Nothing branches out of it.
+// The Rail opened on the headline alone: the three paths only existed once you
+// pressed it, and choosing one dismissed the other two. This shows all three
+// choices from the first frame and keeps them there. The row is persistent
+// navigation — switching path is one click rather than back-then-forward — and
+// "the choices are always visible" stays true after the first click instead of
+// only before it.
 //
-// `back` steps up exactly one level, so Back and Escape mean the same thing
-// everywhere, and there is exactly one back control at each level.
+// The photograph is now SHARP at rest. The Rail blurred it by degrees as you
+// descended; with nothing to descend from, there is nothing to blur for. The
+// blur arrives only when a screen is open and there is a panel to read.
+//
+// Two states, and the second is terminal:
+//
+//   intro        the headline and the three choices
+//   destination  one complete screen, opened beneath the row
+//
+// The choices are `<button>` with `aria-expanded`, because they disclose a
+// panel in place rather than navigating. If they ever become links to real
+// offer pages, `aria-expanded` must go with them — it is a lie to a screen
+// reader on something that navigates.
 
-import { useCallback, useEffect, useReducer, useRef } from "react";
-import { CTA_HINT, CTA_LABEL, PATHS, getPath, type PathId, type Step } from "@/data/workTogether";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { CTA_HINT, CTA_LABEL, PATHS, getPath, type PathId } from "@/data/workTogether";
 import WorkTogetherScreen from "@/components/work/WorkTogetherScreen";
 import "@/components/work/work-together.css";
-
-interface FlowState {
-  step: Step;
-  path: PathId | null;
-}
-
-type FlowAction =
-  | { type: "open" }
-  | { type: "choosePath"; path: PathId }
-  | { type: "back" }
-  | { type: "reset" };
-
-const INITIAL: FlowState = { step: "intro", path: null };
-
-function reducer(state: FlowState, action: FlowAction): FlowState {
-  switch (action.type) {
-    case "open":
-      return state.step === "intro" ? { step: "paths", path: null } : state;
-    case "choosePath":
-      return { step: "destination", path: action.path };
-    case "back":
-      if (state.step === "destination") return { step: "paths", path: null };
-      if (state.step === "paths") return INITIAL;
-      return state;
-    case "reset":
-      return INITIAL;
-    default:
-      return state;
-  }
-}
 
 interface Props {
   /**
@@ -69,125 +54,117 @@ interface Props {
 }
 
 export default function WorkTogether({ media, isActive, className = "" }: Props) {
-  const [state, dispatch] = useReducer(reducer, INITIAL);
+  const [openId, setOpenId] = useState<PathId | null>(null);
   const rootRef = useRef<HTMLDivElement | null>(null);
 
-  const open = useCallback(() => dispatch({ type: "open" }), []);
-  const back = useCallback(() => dispatch({ type: "back" }), []);
-  const choosePath = useCallback(
-    (path: PathId) => dispatch({ type: "choosePath", path }),
-    []
-  );
+  const close = useCallback(() => setOpenId(null), []);
 
   // Scrolling away from the chapter returns it to the start, so the section is
-  // always found in its opening state — matches the previous Stage behaviour.
+  // always found in its opening state.
   useEffect(() => {
-    if (isActive === false) dispatch({ type: "reset" });
+    if (isActive === false) setOpenId(null);
   }, [isActive]);
 
-  // Escape steps up one level. stopPropagation so it doesn't also close a
+  // Escape closes the screen. stopPropagation so it doesn't also close a
   // parent card on the mobile stack.
   useEffect(() => {
-    if (state.step === "intro") return;
+    if (!openId) return;
     const onKey = (e: KeyboardEvent) => {
       if (e.key !== "Escape") return;
       e.stopPropagation();
-      back();
+      close();
     };
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
-  }, [state.step, back]);
+  }, [openId, close]);
 
-  // Move focus to whatever the new level made primary.
-  const stepRef = useRef<Step>(state.step);
+  // Focus moves into the screen when one opens and back to the button that
+  // opened it when it closes — otherwise closing drops focus to <body> and a
+  // keyboard user loses their place in the row.
+  const prevOpen = useRef<PathId | null>(null);
   useEffect(() => {
-    if (stepRef.current === state.step) return;
-    stepRef.current = state.step;
-    rootRef.current
-      ?.querySelector<HTMLElement>(`[data-wt-focus="${state.step}"]`)
-      ?.focus({ preventScroll: true });
-  }, [state.step]);
+    if (prevOpen.current === openId) return;
+    const opening = openId !== null;
+    const returnTo = prevOpen.current;
+    prevOpen.current = openId;
 
-  const path = state.step === "destination" && state.path ? getPath(state.path) : null;
+    const root = rootRef.current;
+    if (!root) return;
+
+    if (opening) {
+      root
+        .querySelector<HTMLElement>("[data-wt-focus='destination']")
+        ?.focus({ preventScroll: true });
+    } else if (returnTo) {
+      root
+        .querySelector<HTMLElement>(`[data-wt-row='${returnTo}']`)
+        ?.focus({ preventScroll: true });
+    }
+  }, [openId]);
+
+  const path = openId ? getPath(openId) : null;
 
   return (
     <div
       ref={rootRef}
       className={`wt ${className}`.trim()}
-      data-step={state.step}
+      data-step={openId ? "destination" : "intro"}
     >
       <div className="wt__media" aria-hidden="true">
         {media}
       </div>
       <div className="wt__focus" aria-hidden="true" />
+      <div className="wt__scrim" aria-hidden="true" />
       <div className="wt__grain" aria-hidden="true" />
 
-      {state.step === "paths" && (
-        <button type="button" className="wt__back" onClick={back}>
-          <span aria-hidden="true">←</span> Back
-        </button>
-      )}
-
-      <div className="wt__masthead">
-        {state.step === "intro" ? (
-          <button
-            type="button"
-            className="wt__cta"
-            onClick={open}
-            data-wt-focus="intro"
-          >
-            <span className="wt__ctaText">{CTA_LABEL}</span>
-            <span className="wt__ctaHint">
-              {CTA_HINT} <span aria-hidden="true">→</span>
-            </span>
-          </button>
-        ) : (
+      <div className="wt__copy">
+        {/* Same id either way, so nothing referencing it breaks. Swapping the
+            element rather than restyling it avoids a serif-to-mono
+            font-family change mid-transition, which cannot tween. */}
+        {openId ? (
           <p className="wt__eyebrow">{CTA_LABEL}</p>
+        ) : (
+          <h2 className="wt__title">{CTA_LABEL}</h2>
         )}
-        <span className="wt__rule" aria-hidden="true" />
-      </div>
 
-      <div className="wt__rows">
-        {PATHS.map((p, i) => {
-          const chosen = state.path === p.id;
-          const dismissed = state.step === "destination" && !chosen;
-          return (
-            <div
-              key={p.id}
-              className={`wt__row ${chosen ? "is-chosen" : ""} ${
-                dismissed ? "is-dismissed" : ""
-              }`}
-              style={{ ["--row-index" as string]: i }}
-            >
+        <p className="wt__hint" id="wt-hint">
+          {CTA_HINT}
+        </p>
+
+        <nav className="wt__rows" aria-labelledby="wt-hint">
+          {PATHS.map((p, i) => {
+            const current = openId === p.id;
+            return (
               <button
+                key={p.id}
                 type="button"
-                className="wt__rowBtn"
-                onClick={() => (chosen ? back() : choosePath(p.id))}
-                tabIndex={state.step === "intro" ? -1 : 0}
-                aria-expanded={chosen}
-                {...(i === 0 ? { "data-wt-focus": "paths" } : {})}
+                data-wt-row={p.id}
+                className={`wt__row ${p.id === "consulting" ? "is-primary" : "is-secondary"} ${
+                  current ? "is-current" : ""
+                }`}
+                style={{ ["--row-index" as string]: i }}
+                aria-expanded={current}
+                onClick={() => setOpenId(current ? null : p.id)}
               >
-                <span className="wt__num">{p.index}</span>
+                <span className="wt__rowSheen" aria-hidden="true" />
                 <span className="wt__rowMain">
                   <span className="wt__label">{p.label}</span>
                   <span className="wt__lede">{p.lede}</span>
                 </span>
-                <span className="wt__meta">{p.meta}</span>
                 <span className="wt__chev" aria-hidden="true">
-                  {chosen ? "↑" : "→"}
+                  {current ? "↑" : "›"}
                 </span>
               </button>
-              <span className="wt__rowRule" aria-hidden="true" />
-            </div>
-          );
-        })}
-      </div>
+            );
+          })}
+        </nav>
 
-      {path && (
-        <div className="wt__unfurl">
-          <WorkTogetherScreen path={path} onBack={back} />
-        </div>
-      )}
+        {path && (
+          <div className="wt__unfurl">
+            <WorkTogetherScreen path={path} onBack={close} />
+          </div>
+        )}
+      </div>
     </div>
   );
 }

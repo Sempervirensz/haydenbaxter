@@ -57,41 +57,56 @@
   height: 100%;
 }
 
-/* Depth ladder. Each level pushes the city further back. */
-.wt[data-step="intro"] {
-  --focus-blur: 0px;
-  --focus-dim: 0.06;
-}
-.wt[data-step="paths"] {
-  --focus-blur: 13px;
-  --focus-dim: 0.22;
-}
-.wt[data-step="destination"] {
-  --focus-blur: 24px;
-  --focus-dim: 0.4;
-}
+/* Depth ladder. AT REST THERE IS NO BLUR AND NO DIM.
 
-/* Blurs whatever the host painted behind it — the cityscape on desktop, the
-   statue on mobile. */
+   `backdrop-filter` is absent at `intro`, not set to `blur(0px)`. Declaring
+   the property at all promotes the backdrop into a composited texture that is
+   rasterised and resampled, which costs real sharpness on high-frequency
+   detail — the statue's wing edges and the pinpoint city lights are exactly
+   that. So it is omitted entirely until there is a panel to read, and closing
+   a screen removes the rule rather than animating it to zero. */
 .wt__focus {
   position: absolute;
   inset: 0;
   z-index: 1;
   pointer-events: none;
-  backdrop-filter: blur(var(--focus-blur)) saturate(1.06);
-  -webkit-backdrop-filter: blur(var(--focus-blur)) saturate(1.06);
-  background: rgba(4, 5, 10, var(--focus-dim));
+  background: transparent;
+}
+
+.wt[data-step="destination"] .wt__focus {
+  backdrop-filter: blur(22px) saturate(1.06);
+  -webkit-backdrop-filter: blur(22px) saturate(1.06);
+  background: rgba(4, 5, 10, 0.4);
   transition:
     backdrop-filter var(--wt-slow) var(--wt-ease-out),
     -webkit-backdrop-filter var(--wt-slow) var(--wt-ease-out),
     background-color var(--wt-slow) var(--wt-ease-out);
 }
 
+/* Legibility for the copy block, and it clears the statue. A plain gradient,
+   never a filter — it does not blur. The statue sits around 64% up the frame,
+   so the ramp is fully transparent from 52%. Narrow frames stack the row,
+   which makes the copy block taller, so they get a longer ramp below. */
+.wt__scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background: linear-gradient(
+    to top,
+    rgba(4, 5, 10, 0.84) 0%,
+    rgba(4, 5, 10, 0.6) 18%,
+    rgba(4, 5, 10, 0.2) 38%,
+    transparent 52%
+  );
+}
+
+
 /* Film grain. Generated inline — no asset, no dependency. */
 .wt__grain {
   position: absolute;
   inset: 0;
-  z-index: 2;
+  z-index: 3;
   pointer-events: none;
   opacity: 0.4;
   mix-blend-mode: overlay;
@@ -104,124 +119,83 @@
   outline-offset: 3px;
 }
 
-/* ---- Back (paths level only; the screen carries its own) ---- */
+/* ===========================================================================
+   COPY BLOCK — headline, the line that counts the choices, the row, the screen
+   ===========================================================================
 
-.wt__back {
+   One flow container rather than three absolutely positioned blocks. The Rail
+   could position its masthead, rows and panel independently because only one
+   of them was ever the focus; here all three are on screen at once and have to
+   stack predictably at every width.
+
+   Anchored to the bottom at rest — photograph above, type below, which is the
+   cinematic read the chapter is built on. Opening a screen re-anchors it to the
+   top so the panel gets the frame.
+   ======================================================================== */
+
+.wt__copy {
   position: absolute;
-  top: 72px;
-  left: clamp(22px, 4cqw, 52px);
   z-index: 4;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 13px;
-  border-radius: 999px;
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  background: rgba(16, 18, 22, 0.5);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  font-family: var(--font-mono);
-  font-size: var(--text-control);
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.86);
-  cursor: pointer;
-  animation: wt-back-in 340ms var(--wt-ease) 60ms backwards;
-  transition: border-color 180ms ease, background 180ms ease, color 180ms ease;
-}
-
-.wt__back:hover,
-.wt__back:focus-visible {
-  border-color: rgba(255, 255, 255, 0.4);
-  background: rgba(24, 28, 34, 0.66);
-  color: #fff;
-  outline: none;
-}
-
-.wt__back > span {
-  font-size: var(--text-control);
-  letter-spacing: 0;
-}
-
-@keyframes wt-back-in {
-  from { opacity: 0; transform: translateY(-6px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-/* ---- Masthead ---- */
-
-.wt__masthead {
-  position: absolute;
   left: clamp(22px, 4cqw, 52px);
   right: clamp(22px, 4cqw, 52px);
-  top: 124px;
-  z-index: 3;
-  transform: translateY(var(--mast-y));
-  transition: transform var(--wt-slow) var(--wt-ease);
-}
-
-.wt[data-step="intro"] .wt__masthead {
-  --mast-y: 44cqh;
-}
-.wt[data-step="paths"] .wt__masthead,
-.wt[data-step="destination"] .wt__masthead {
-  --mast-y: 0cqh;
-}
-
-.wt__cta {
-  all: unset;
-  box-sizing: border-box;
+  bottom: clamp(34px, 7cqh, 76px);
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  cursor: pointer;
-  padding-bottom: 18px;
+  align-items: flex-start;
+  transition: none;
 }
 
-.wt__ctaText {
+.wt[data-step="destination"] .wt__copy {
+  top: clamp(26px, 5cqh, 54px);
+  bottom: clamp(16px, 2.4cqh, 30px);
+  align-items: stretch;
+}
+
+.wt__title {
+  margin: 0;
   font-family: var(--font-serif);
+  font-weight: 400;
   font-size: clamp(34px, 7cqw, 72px);
   line-height: 0.98;
   letter-spacing: -0.02em;
   color: rgba(246, 245, 240, 0.96);
   text-shadow: 0 4px 24px rgba(0, 0, 0, 0.6);
-  transition: color 200ms ease;
 }
 
-.wt__cta:hover .wt__ctaText,
-.wt__cta:focus-visible .wt__ctaText {
-  color: #fff;
-}
-
-.wt__ctaHint {
-  font-family: var(--font-mono);
-  font-size: var(--text-control);
-  letter-spacing: 0.3em;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.55);
-  display: inline-flex;
-  gap: 10px;
-  align-items: center;
-}
-
-.wt__cta:hover .wt__ctaHint {
-  color: rgba(255, 255, 255, 0.9);
-}
-
+/* The headline demotes to a mono eyebrow when a screen opens, handing it
+   ~90px. Swapped in markup rather than restyled — font-family cannot tween. */
 .wt__eyebrow {
-  margin: 0 0 14px;
+  margin: 0;
   font-family: var(--font-mono);
   font-size: var(--text-label);
   letter-spacing: 0.32em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.58);
-  animation: wt-fade-in var(--wt-base) var(--wt-ease) both;
+  color: var(--ink-faint);
+  animation: wt-fade-in var(--wt-base) var(--wt-ease) backwards;
 }
 
-.wt__rule {
+/* Labels the row rather than repeating it. Stretched so the hairline spans the
+   copy column, as the old `.wt__rule` did across the masthead. */
+.wt__hint {
+  align-self: stretch;
+  margin: 18px 0 0;
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.wt__hint::after {
+  content: "";
   display: block;
   height: 1px;
-  background: rgba(255, 255, 255, 0.22);
+  margin-top: 12px;
+  background: rgba(255, 255, 255, 0.16);
+}
+
+.wt[data-step="destination"] .wt__hint {
+  display: none;
 }
 
 @keyframes wt-fade-in {
@@ -229,165 +203,231 @@
   to   { opacity: 1; }
 }
 
-/* ---- The three rows ---- */
+/* ===========================================================================
+   THE THREE CHOICES — the Emerging Tech Builds candy bar
+   ===========================================================================
+
+   The same plate `/emerging-tech-builds` uses, so the two surfaces read as one
+   system: `linear-gradient(180deg, #fefefe, #f6f5f2)`, 14px radius, white
+   inset over a deep drop shadow, mono uppercase name at --track-dymo over a
+   summary line, a '›' chevron, a 105deg sheen wipe, and Cobalt Select on
+   hover.
+
+   BLUE IS AN INTERACTION STATE, NOT A RANK. No bar carries the fill at rest —
+   all three load as the plain plate. The fill appears on hover and keyboard
+   focus and persists while that bar's screen is open, so blue only ever means
+   "this one, right now". Consulting leads on depth instead: a deeper shadow
+   sets it forward while the other two sit a hair recessed.
+   ======================================================================== */
 
 .wt__rows {
-  position: absolute;
-  left: clamp(22px, 4cqw, 52px);
-  right: clamp(22px, 4cqw, 52px);
-  top: 190px;
-  z-index: 3;
-  display: grid;
-  grid-template-rows: auto auto auto;
-  transition: grid-template-rows var(--wt-base) var(--wt-ease);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  gap: 14px;
+  margin-top: 16px;
+}
+
+.wt[data-step="destination"] .wt__rows {
+  margin-top: 14px;
 }
 
 .wt__row {
-  min-height: 0;
-  overflow: hidden;
-  opacity: 0;
-  transform: translateY(26px);
-  transition:
-    opacity var(--wt-slow) var(--wt-ease),
-    transform var(--wt-slow) var(--wt-ease);
-  transition-delay: calc(var(--row-index) * 80ms + 110ms);
-  pointer-events: none;
-}
-
-.wt[data-step="paths"] .wt__row,
-.wt[data-step="destination"] .wt__row {
-  opacity: 1;
-  transform: translateY(0);
-  pointer-events: auto;
-}
-
-.wt__row.is-dismissed {
-  opacity: 0;
-  transform: translateX(-28px);
-  pointer-events: none;
-  transition-delay: 0ms;
-}
-
-/* Collapse the two rows that weren't chosen so the survivor rises to the top. */
-.wt__rows:has(.wt__row:nth-child(1).is-chosen) { grid-template-rows: auto 0fr 0fr; }
-.wt__rows:has(.wt__row:nth-child(2).is-chosen) { grid-template-rows: 0fr auto 0fr; }
-.wt__rows:has(.wt__row:nth-child(3).is-chosen) { grid-template-rows: 0fr 0fr auto; }
-
-.wt__rowBtn {
   all: unset;
   box-sizing: border-box;
-  width: 100%;
-  display: grid;
-  grid-template-columns: auto 1fr auto auto;
+  position: relative;
+  overflow: hidden;
+  flex: 1 1 0;
+  min-width: 0;
+  display: inline-flex;
   align-items: center;
-  gap: 18px;
-  padding: 13px 4px;
+  gap: 12px;
+  padding: 14px clamp(16px, 2cqw, 24px);
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  background: linear-gradient(180deg, #fefefe 0%, #f6f5f2 100%);
   cursor: pointer;
-  transition: padding-left 260ms var(--wt-ease);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.85) inset,
+    0 -1px 0 rgba(0, 0, 0, 0.04) inset,
+    0 4px 16px rgba(0, 0, 0, 0.45),
+    0 1px 3px rgba(0, 0, 0, 0.3);
+  transition:
+    background 170ms ease,
+    border-color 170ms ease,
+    color 170ms ease,
+    box-shadow 170ms ease,
+    opacity 200ms ease,
+    filter 200ms ease;
+  /* `backwards`, not `both`: a filled-forwards animation keeps its end-state
+     transform applied for good and would win the cascade over the press. */
+  animation: wt-row-in var(--wt-base) var(--wt-ease) backwards;
+  animation-delay: calc(var(--row-index) * 70ms + 120ms);
 }
 
-.wt__rowBtn:hover,
-.wt__rowBtn:focus-visible {
-  padding-left: 12px;
-}
-
-.wt__num {
-  font-family: var(--font-mono);
-  font-size: var(--text-label);
-  letter-spacing: 0.24em;
-  color: rgba(255, 255, 255, 0.38);
+@keyframes wt-row-in {
+  from { opacity: 0; transform: translateY(9px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
 .wt__rowMain {
   min-width: 0;
+  flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  align-items: flex-start;
+  gap: 4px;
+  text-align: left;
 }
 
 .wt__label {
-  font-family: var(--font-serif);
-  font-size: clamp(19px, 2.7cqw, 27px);
-  line-height: 1.04;
-  letter-spacing: -0.015em;
-  color: rgba(246, 245, 240, 0.95);
-  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.5);
+  font-family: var(--font-mono);
+  font-size: var(--text-control);
+  font-weight: 500;
+  letter-spacing: var(--track-dymo);
+  text-transform: uppercase;
+  line-height: 1;
+  color: var(--wt-ink);
 }
 
 .wt__lede {
-  font-family: var(--font-sans);
-  font-size: var(--text-sm);
-  line-height: 1.4;
-  color: rgba(255, 255, 255, 0.56);
-}
-
-.wt__meta {
   font-family: var(--font-mono);
-  font-size: var(--text-label);
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.34);
-  white-space: nowrap;
-  opacity: 0;
-  transition: opacity 200ms ease;
-}
-
-.wt__rowBtn:hover .wt__meta,
-.wt__rowBtn:focus-visible .wt__meta,
-.wt__row.is-chosen .wt__meta {
-  opacity: 1;
+  font-size: var(--text-sm);
+  font-weight: 400;
+  line-height: 1.35;
+  letter-spacing: 0.02em;
+  color: rgba(17, 17, 22, 0.62);
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .wt__chev {
+  flex-shrink: 0;
   font-family: var(--font-mono);
-  font-size: 14px;
-  color: rgba(255, 255, 255, 0.5);
-  transition: transform 240ms var(--wt-ease), color 200ms ease;
+  font-size: 18px;
+  font-weight: 600;
+  color: rgba(17, 17, 22, 0.42);
+  transition: color 200ms ease, transform 200ms ease;
 }
 
-.wt__rowBtn:hover .wt__chev {
-  transform: translateX(5px);
+.wt__rowSheen {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    105deg,
+    transparent 32%,
+    rgba(255, 255, 255, 0.7) 46%,
+    rgba(255, 255, 255, 0.15) 54%,
+    transparent 66%
+  );
+  opacity: 0;
+  transform: translateX(-160%);
+  transition:
+    transform 1s cubic-bezier(0.16, 0.84, 0.44, 1),
+    opacity 300ms ease;
+}
+
+/* ---- Cobalt Select ---- */
+
+.wt__row.is-current,
+.wt__row:hover,
+.wt__row:focus-visible {
+  background: linear-gradient(180deg, #2563eb 0%, #1d4ed8 100%);
+  border-color: rgba(37, 99, 235, 0.6);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.2) inset,
+    0 -1px 0 rgba(0, 0, 0, 0.15) inset,
+    0 6px 24px rgba(37, 99, 235, 0.25),
+    0 2px 6px rgba(0, 0, 0, 0.4);
+}
+
+.wt__row.is-current .wt__label,
+.wt__row:hover .wt__label,
+.wt__row:focus-visible .wt__label {
   color: #fff;
 }
 
-.wt__rowRule {
-  display: block;
-  height: 1px;
-  background: rgba(255, 255, 255, 0.14);
-  transform: scaleX(0);
-  transform-origin: 0 50%;
-  transition: transform var(--wt-base) var(--wt-ease), background 200ms ease;
-  transition-delay: calc(var(--row-index) * 80ms + 190ms);
+.wt__row.is-current .wt__lede,
+.wt__row:hover .wt__lede,
+.wt__row:focus-visible .wt__lede,
+.wt__row.is-current .wt__chev,
+.wt__row:hover .wt__chev,
+.wt__row:focus-visible .wt__chev {
+  color: rgba(255, 255, 255, 0.72);
 }
 
-.wt[data-step="paths"] .wt__rowRule,
-.wt[data-step="destination"] .wt__rowRule {
-  transform: scaleX(1);
+.wt__row:hover .wt__chev,
+.wt__row:focus-visible .wt__chev {
+  transform: translateX(2px);
 }
 
-.wt__row:hover .wt__rowRule,
-.wt__row.is-chosen .wt__rowRule {
-  background: rgba(255, 255, 255, 0.42);
+.wt__row:hover .wt__rowSheen,
+.wt__row:focus-visible .wt__rowSheen {
+  opacity: 0.5;
+  transform: translateX(160%);
+  background: linear-gradient(
+    105deg,
+    transparent 32%,
+    rgba(255, 255, 255, 0.18) 46%,
+    rgba(255, 255, 255, 0.04) 54%,
+    transparent 66%
+  );
+}
+
+.wt__row:active {
+  transform: translateY(1px);
+  transition-duration: 60ms;
+}
+
+/* Rest-only, and the :not() guards are load-bearing rather than decorative:
+   this rule and Cobalt Select share specificity and this one comes later, so
+   unguarded it would win on source order and strip the blue glow on hover. */
+.wt__row.is-primary:not(:hover):not(:focus-visible):not(.is-current) {
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.95) inset,
+    0 -1px 0 rgba(0, 0, 0, 0.04) inset,
+    0 8px 26px rgba(0, 0, 0, 0.55),
+    0 2px 5px rgba(0, 0, 0, 0.38);
+}
+
+.wt__row.is-secondary:not(:hover):not(:focus-visible):not(.is-current) {
+  filter: brightness(0.965);
+}
+
+/* Opening one bar dims the other two, matching `.etb-barStack.has-expanded`. */
+.wt__rows:has(.wt__row.is-current) .wt__row:not(.is-current) {
+  opacity: 0.45;
+  filter: saturate(0.8) brightness(0.96);
+}
+
+/* Inset, and white: the bar clips its own overflow at a 14px radius, and focus
+   always coincides with the cobalt fill, so white is guaranteed to contrast. */
+.wt__row:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: -4px;
 }
 
 /* ---- In-place unfurl ---- */
 
 .wt__unfurl {
-  position: absolute;
-  left: clamp(22px, 4cqw, 52px);
-  right: clamp(22px, 4cqw, 52px);
-  top: 272px;
-  bottom: clamp(16px, 2.4cqh, 30px);
-  z-index: 3;
+  flex: 1 1 auto;
+  min-height: 0;
   display: flex;
   align-items: flex-start;
-  animation: wt-unfurl 460ms var(--wt-ease) 60ms both;
+  margin-top: 14px;
+  /* Unfurls downward from the row that opened it, so the panel is visibly
+     caused by the press rather than arriving from off-screen. */
+  animation: wt-unfurl 460ms var(--wt-ease) 40ms both;
 }
 
 @keyframes wt-unfurl {
-  from { opacity: 0; transform: translateY(-14px); clip-path: inset(0 0 100% 0); }
+  from { opacity: 0; transform: translateY(-12px); clip-path: inset(0 0 100% 0); }
   to   { opacity: 1; transform: translateY(0);     clip-path: inset(0 0 0 0); }
 }
+
 
 /* ===========================================================================
    DESTINATION SCREEN — one complete answer, no navigation inside it
@@ -663,29 +703,49 @@
    ======================================================================== */
 
 @container wt (max-width: 700px) {
-  .wt__back {
-    top: 66px;
-    letter-spacing: 0.16em;
+  .wt__copy {
+    left: clamp(20px, 6cqw, 30px);
+    right: clamp(20px, 6cqw, 30px);
+    bottom: clamp(26px, 5cqh, 46px);
+    align-items: stretch;
   }
 
+  .wt[data-step="destination"] .wt__copy {
+    top: clamp(22px, 4cqh, 40px);
+  }
+
+  .wt__hint {
+    margin-top: 14px;
+    letter-spacing: 0.24em;
+  }
+
+  /* The row becomes the bar stack the builds page actually is. */
   .wt__rows {
-    top: 158px;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
   }
-  .wt__rowBtn {
-    grid-template-columns: auto 1fr;
-    gap: 12px;
-    padding: 12px 2px;
+
+  .wt__row {
+    /* `flex: 1 1 0` distributes WIDTH across the row. Once this is a column it
+       distributes HEIGHT instead, and with a screen open the copy block is
+       height-constrained — the bars get crushed and `overflow: hidden` eats
+       the labels. Stacked bars size to their content. */
+    flex: 0 0 auto;
+    justify-content: space-between;
+    padding: 13px 16px;
   }
-  .wt__meta,
-  .wt__chev {
-    display: none;
-  }
-  .wt__unfurl {
-    top: 250px;
-    bottom: 16px;
-  }
-  .wt[data-step="intro"] .wt__masthead {
-    --mast-y: 40cqh;
+
+  /* The copy block is taller when stacked, so the scrim needs a longer ramp.
+     The statue sits around 67% up at this width, so 62% still clears it. */
+  .wt__scrim {
+    background: linear-gradient(
+      to top,
+      rgba(4, 5, 10, 0.88) 0%,
+      rgba(4, 5, 10, 0.72) 26%,
+      rgba(4, 5, 10, 0.34) 46%,
+      transparent 62%
+    );
   }
 
   .wt-screen {
@@ -736,10 +796,10 @@
    Container queries again, so the mobile Consulting card, which mounts this
    same component into a small container, is untouched by all of it.
 
-   The problem: .wt__masthead, .wt__rows and .wt__unfurl are pinned to left AND
-   right, so they stretch to whatever the host card is. On a 3840px display that
-   is a 3720px-wide text block with offer rows spanning the full bezel — label
-   at one end, chevron at the other, and a metre of nothing between them.
+   The problem: .wt__copy is pinned to left AND right, so it stretches to
+   whatever the host card is. On a 3840px display that is a 3720px-wide text
+   block with three bars spanning the full bezel — label at one end, chevron at
+   the other, and a metre of nothing between them.
 
    The fix is a shell, not a shrink. Dropping `right` and capping the width
    leaves the copy as an editorial column at a readable measure and hands the
@@ -749,21 +809,15 @@
    ======================================================================== */
 
 @container wt (min-width: 1600px) {
-  .wt__masthead,
-  .wt__rows,
-  .wt__unfurl {
+  .wt__copy {
     right: auto;
     width: min(100% - 2 * clamp(22px, 4cqw, 52px), var(--wt-shell));
   }
 
   /* 7cqw saturates at 72px by a ~1030px container, so the headline had stopped
      growing three tiers below the displays this is aimed at. */
-  .wt__ctaText {
+  .wt__title {
     font-size: clamp(72px, 4.6cqw, 92px);
-  }
-
-  .wt__label {
-    font-size: clamp(27px, 1.9cqw, 34px);
   }
 
   .wt-screen__title {
@@ -779,25 +833,21 @@
     max-width: 108ch;
   }
 
-  /* The rows carry the offer hierarchy — give them room against a headline
+  /* The bars carry the offer hierarchy — give them room against a headline
      that is now half again as large. */
-  .wt__rowBtn {
-    gap: 26px;
+  .wt__row {
+    gap: 20px;
     padding-block: 18px;
   }
 }
 
 @container wt (min-width: 2400px) {
-  .wt__ctaText {
+  .wt__title {
     font-size: clamp(92px, 3.6cqw, 118px);
   }
 
-  .wt__label {
-    font-size: clamp(34px, 1.5cqw, 42px);
-  }
-
-  .wt__rowBtn {
-    gap: 32px;
+  .wt__row {
+    gap: 26px;
     padding-block: 24px;
   }
 }
@@ -847,12 +897,6 @@
     animation: none !important;
     transition: none !important;
   }
-  .wt__row.is-dismissed {
-    display: none;
-  }
-  .wt__rowRule {
-    transform: scaleX(1);
-  }
 }
 
 /* ===========================================================================
@@ -878,8 +922,12 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center 62%;
-  transform: scale(1.02);
+  /* `cover` crops HORIZONTALLY on this plate and the statue sits at x≈70%, so
+     it is the first thing off the right edge as the card narrows. */
+  object-position: 56% 46%;
+  /* No `scale(1.02)`. A 2% upscale resamples every pixel to hide an edge seam
+     the sharp-background pass made unnecessary, and sharpness is the point. */
+  transform: none;
 }
 
 @media (max-width: 640px) {
