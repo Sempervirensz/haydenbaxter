@@ -47,6 +47,15 @@ const ROUTES: Route[] = [
   // question is how the headline behaves at widths this machine cannot open —
   // the iframe's own viewport is what makes 3440 and 3840 real here.
   { label: "Hero type", src: "/hero-type-lab" },
+  // Chapter 04 with the quarter-disc reveal. Framed rather than opened
+  // directly because the whole question is how a disc anchored to the card's
+  // HEIGHT behaves on displays this machine cannot open — the iframe's own
+  // viewport is what makes 2560 and 3840 real here. The configuration rides in
+  // the query string because the viewer drives an iframe by src and cannot
+  // press a control inside it.
+  { label: "Disc reveal", src: "/cta-lab/in-site?screen=disc&place=right" },
+  { label: "Disc · corner", src: "/cta-lab/in-site?screen=disc&place=corner&rest=peek" },
+  { label: "Shipped row", src: "/cta-lab/in-site?screen=routed" },
 ];
 
 interface Preset {

@@ -238,11 +238,38 @@
    NARROW — the mobile Consulting card
    ======================================================================== */
 
+/* Declared on `.cdr__disc`, NOT on `.cdr`.
+
+   `.cdr` WRAPS WorkTogether, so it is an ancestor of the `wt` container rather
+   than a descendant of it — and a container query can only style elements
+   INSIDE the container it queries. Setting the tokens on `.cdr` meant this
+   block never applied at any width, and the mobile card silently kept the
+   desktop sizing. `.cdr__disc` lives inside `.wt__media`, so it is genuinely
+   in the container and the query reaches it. */
+/* NOT SHOWN ON NARROW, deliberately.
+
+   Two reasons, and the first is decisive: at this width the bars stack and
+   fill the lower half of the card, and the disc enters from the bottom edge
+   BEHIND them — it renders into a region that is completely covered, so it
+   costs paint and shows nothing. The clear space left is the sky above, which
+   is where the statue is, and covering the statue is the one thing this
+   treatment exists to avoid.
+
+   The second: this is a pointer affordance. There is no hover on touch, and a
+   tap navigates immediately, so there is no moment in which a reveal could be
+   read even if it were visible.
+
+   Reversible in one rule if a narrow placement is worth designing separately —
+   the sizing tokens it would need are kept here rather than deleted. */
 @container wt (max-width: 700px) {
-  .cdr {
-    --disc-size: 74cqw;
-    --rest-shift: 58%;
-    --in-shift: 34%;
+  .cdr__stage {
+    display: none;
+  }
+
+  .cdr__disc {
+    --disc-size: 82cqw;
+    --rest-shift: 104%;
+    --in-shift: 58%;
   }
 }
 

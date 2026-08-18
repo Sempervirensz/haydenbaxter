@@ -58,6 +58,35 @@ export default function InSitePreview() {
 
   useEffect(() => {
     if (window.innerWidth < 1100) setOpen(false);
+
+    // Read the configuration off the URL so a specific setup is linkable — and,
+    // more to the point, so the Responsive Viewer can frame this route at a
+    // given configuration. The viewer drives an iframe by src; it cannot reach
+    // in and press a control, so anything only settable by clicking is
+    // invisible to it.
+    //
+    // On mount rather than during render: this is a static export, the server
+    // has no query string, and reading it while rendering would hydrate
+    // against different markup than the server produced.
+    const sp = new URLSearchParams(window.location.search);
+    const screenParam = sp.get("screen");
+    if (
+      screenParam &&
+      ["routed", "dossier", "decision", "disc", ...OFFER_LAYOUTS.map((l) => l.id)].includes(
+        screenParam
+      )
+    ) {
+      setScreen(screenParam as ScreenChoice);
+    }
+    const placeParam = sp.get("place");
+    if (DISC_PLACEMENTS.some((o) => o.id === placeParam)) {
+      setDiscPlacement(placeParam as (typeof DISC_PLACEMENTS)[number]["id"]);
+    }
+    if (sp.get("rest") === "peek") setDiscRest(true);
+    const surfaceParam = sp.get("surface");
+    if (OFFER_SURFACES.some((o) => o.id === surfaceParam)) {
+      setSurface(surfaceParam as OfferSurfaceId);
+    }
   }, []);
 
   const decision = screen === "decision";
