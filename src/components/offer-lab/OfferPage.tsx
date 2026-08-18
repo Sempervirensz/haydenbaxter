@@ -21,13 +21,17 @@
 
 import Link from "next/link";
 import type { OfferLayoutId, OfferSurfaceId, PathDef } from "@/data/offerLab";
-import OfferScreen from "./OfferScreen";
+import type { OfferDirectionId, OfferTemplateModeId } from "@/data/offerDirections";
+import OfferRender from "./OfferRender";
 import "./offer-lab.css";
 
 interface Props {
   path: PathDef;
+  /** The art direction. `baseline` is the page that ships today. */
+  direction: OfferDirectionId;
   layout: OfferLayoutId;
   surface: OfferSurfaceId;
+  templateMode: OfferTemplateModeId;
   /** Where "back" goes. A real destination, not a state reset. */
   backHref: string;
   backLabel: string;
@@ -37,14 +41,20 @@ interface Props {
 
 export default function OfferPage({
   path,
+  direction,
   layout,
   surface,
+  templateMode,
   backHref,
   backLabel,
   siblings,
 }: Props) {
   return (
-    <div className="ofrp" data-surface={surface}>
+    /* `data-direction` is on the PAGE CHROME, not only the screen: the
+       cinematic direction opens on a full-bleed photograph, and a solid back
+       bar sitting above it would put a horizon line across the top of the
+       plate. The bar has to know. */
+    <div className="ofrp" data-surface={surface} data-direction={direction}>
       <header className="ofrp__bar">
         <Link href={backHref} className="ofrp__back">
           <span aria-hidden="true">←</span> {backLabel}
@@ -53,7 +63,14 @@ export default function OfferPage({
       </header>
 
       <main className="ofrp__main">
-        <OfferScreen path={path} layout={layout} surface={surface} />
+        <OfferRender
+          path={path}
+          direction={direction}
+          layout={layout}
+          surface={surface}
+          templateMode={templateMode}
+          idPrefix={`ofd-${path.id}`}
+        />
       </main>
 
       {/* Sideways movement. The in-card model forces a visitor back to the row

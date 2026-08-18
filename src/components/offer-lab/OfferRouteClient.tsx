@@ -22,9 +22,16 @@ import {
   type OfferSurfaceId,
   type PathId,
 } from "@/data/offerLab";
+import {
+  DEFAULT_DIRECTION,
+  OFFER_TEMPLATE_MODES,
+  isDirection,
+  type OfferTemplateModeId,
+} from "@/data/offerDirections";
 
 const LAYOUTS = new Set(OFFER_LAYOUTS.map((l) => l.id));
 const SURFACES = new Set(OFFER_SURFACES.map((s) => s.id));
+const TEMPLATE_MODES = new Set<string>(OFFER_TEMPLATE_MODES.map((m) => m.id));
 
 export default function OfferRouteClient({ offer }: { offer: PathId }) {
   const sp = useSearchParams();
@@ -33,16 +40,30 @@ export default function OfferRouteClient({ offer }: { offer: PathId }) {
   // every layout rule, and an unknown value would silently style nothing.
   const rawLayout = sp.get("layout") ?? "";
   const rawSurface = sp.get("surface") ?? "";
+  const rawDirection = sp.get("direction") ?? "";
+  const rawTemplate = sp.get("template") ?? "";
+
   const layout = (LAYOUTS.has(rawLayout as OfferLayoutId) ? rawLayout : "editorial") as OfferLayoutId;
   const surface = (SURFACES.has(rawSurface as OfferSurfaceId) ? rawSurface : "dark") as OfferSurfaceId;
+  const direction = isDirection(rawDirection) ? rawDirection : DEFAULT_DIRECTION;
+  const templateMode = (
+    TEMPLATE_MODES.has(rawTemplate) ? rawTemplate : "perOffer"
+  ) as OfferTemplateModeId;
 
-  const qs = `?layout=${layout}&surface=${surface}`;
+  // Every axis rides in the query string, so a specific treatment stays
+  // linkable while it is still being argued about — and moving sideways to a
+  // sibling offer keeps the treatment you were looking at.
+  const qs =
+    `?direction=${direction}&template=${templateMode}` +
+    `&layout=${layout}&surface=${surface}`;
 
   return (
     <OfferPage
       path={getPath(offer)}
+      direction={direction}
       layout={layout}
       surface={surface}
+      templateMode={templateMode}
       backHref={`/cta-lab/in-site${qs}`}
       backLabel="Back to the site"
       siblings={PATHS.filter((p) => p.id !== offer).map((p) => ({

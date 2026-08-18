@@ -964,3 +964,79 @@
     transition: none !important;
   }
 }
+
+/* ===========================================================================
+   PAGE CHROME under an ART DIRECTION
+   ===========================================================================
+
+   The baseline offer is a measured column inside a 1180px main, which is
+   right for a page made of type. The art-directed screens are full-bleed
+   compositions that carry their own padding (`--ofd-pad`) and, in the
+   cinematic case, a photograph that has to reach the edges. So `__main`
+   stops being a container for them and becomes a pass-through.
+   ======================================================================== */
+
+.ofrp[data-direction]:not([data-direction="baseline"]) .ofrp__main {
+  max-width: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* The cinematic direction opens on a full-bleed plate. A solid sticky bar
+   above it would draw a horizon line across the top of the photograph, and a
+   `backdrop-filter` bar would be worse — it promotes the plate to a resampled
+   texture and costs exactly the sharpness the direction exists to show. So the
+   bar loses its fill and its blur entirely and rides on a short gradient,
+   which is enough to hold mono uppercase over a night sky. */
+.ofrp[data-direction="cinematic"] .ofrp__bar {
+  border-bottom: none;
+  background: linear-gradient(
+    to bottom,
+    rgba(4, 5, 10, 0.72) 0%,
+    rgba(4, 5, 10, 0.34) 55%,
+    transparent 100%
+  );
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  --ofrp-ink: rgba(255, 255, 255, 0.9);
+  --ofrp-faint: rgba(255, 255, 255, 0.6);
+  --ofrp-hover: #fff;
+}
+
+/* The bar overlays the plate rather than pushing it down. */
+.ofrp[data-direction="cinematic"] {
+  position: relative;
+}
+
+.ofrp[data-direction="cinematic"] .ofrp__main {
+  margin-top: calc(-1 * (16px * 2 + 1.4em));
+}
+
+/* ===========================================================================
+   CONTROL PANEL — additions for the direction and template axes
+   ======================================================================== */
+
+.ofrl__verdict + .ofrl__verdict {
+  margin-top: 8px;
+}
+
+.ofrl__verdict strong {
+  color: rgba(255, 255, 255, 0.78);
+  font-weight: 600;
+}
+
+/* Cost is not a footnote. It reads at the same size as what the direction
+   buys, so the two are weighed against each other rather than one being
+   skimmed past. */
+.ofrl__verdict--cost {
+  padding-left: 8px;
+  border-left: 2px solid rgba(216, 177, 90, 0.5);
+}
+
+/* The structural layouts belong to the baseline. Dimmed rather than removed,
+   so the axis does not vanish from the panel and leave the reader wondering
+   where it went — and still operable, because switching back to the baseline
+   with a layout already chosen is a normal thing to want. */
+.ofrl__col[data-inactive] {
+  opacity: 0.42;
+}

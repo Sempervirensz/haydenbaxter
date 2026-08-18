@@ -16,14 +16,17 @@ import {
   PATHS,
   getPath,
 } from "@/data/offerLab";
+import { DEFAULT_DIRECTION } from "@/data/offerDirections";
 import OfferControls, { type OfferSettings } from "./OfferControls";
-import OfferScreen from "./OfferScreen";
+import OfferRender from "./OfferRender";
 import "./offer-lab.css";
 
 const DEFAULT_SETTINGS: OfferSettings = {
   offer: PATHS[0].id,
+  direction: DEFAULT_DIRECTION,
   layout: DEFAULT_LAYOUT,
   surface: DEFAULT_SURFACE,
+  templateMode: "perOffer",
   viewport: "desktop",
 };
 
@@ -45,20 +48,26 @@ export default function OfferLab() {
   );
 
   const path = getPath(settings.offer);
-  const screen = { path, layout: settings.layout, surface: settings.surface };
+  const screen = {
+    path,
+    direction: settings.direction,
+    layout: settings.layout,
+    surface: settings.surface,
+    templateMode: settings.templateMode,
+  };
 
   return (
     <main className="ofr-root" data-surface={settings.surface}>
       <div className="ofr-stages">
         {settings.viewport !== "narrow" && (
           <div className="ofr-frame ofr-frame--desktop">
-            <OfferScreen {...screen} />
+            <OfferRender {...screen} idPrefix="ofd-desktop" />
             <p className="ofr-frame__tag">desktop</p>
           </div>
         )}
         {settings.viewport !== "desktop" && (
           <div className="ofr-frame ofr-frame--narrow">
-            <OfferScreen {...screen} />
+            <OfferRender {...screen} idPrefix="ofd-narrow" />
             <p className="ofr-frame__tag">390px — container query</p>
           </div>
         )}
