@@ -1,13 +1,19 @@
 import type { Metadata } from "next";
-import CtaLab from "@/components/cta-lab/CtaLab";
+import CtaRowLab from "@/components/cta-row-lab/CtaRowLab";
+
+// The "Let's work together" section with its three choices already on screen,
+// in four iterations.
+//
+// The three-concept interaction explorer that used to live at this path is
+// unchanged and now sits at /cta-lab/concepts.
 
 export const metadata: Metadata = {
-  title: "CTA Interaction Lab",
+  title: "CTA row lab",
   description:
-    "Isolated lab for the final-section CTA — three concepts branching Advisory & Partnerships from Profile & Experience.",
+    "The Let's work together section with its three choices shown immediately as a small button row — DYMO, rule, glass and editorial iterations.",
   robots: { index: false, follow: false },
 };
 
 export default function CtaLabPage() {
-  return <CtaLab />;
+  return <CtaRowLab />;
 }

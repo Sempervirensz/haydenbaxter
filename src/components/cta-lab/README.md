@@ -17,7 +17,11 @@ for comparison and have not been deleted.
 npm run dev
 ```
 
-Then open <http://localhost:3000/cta-lab>.
+Then open <http://localhost:3000/cta-lab/concepts>.
+
+> This explorer moved from `/cta-lab` to `/cta-lab/concepts` when the
+> direct-row prototype (`src/components/cta-row-lab/`) took the shorter path.
+> Nothing in this lab changed — only the route that mounts it.
 
 The lab is noindexed, listed under **Consulting** in `/admin/labs`, and skips
 the site splash.
@@ -203,7 +207,7 @@ automatically, with no other change.
 ## Files
 
 ```
-src/app/cta-lab/page.tsx                  route (noindex)
+src/app/cta-lab/concepts/page.tsx         route (noindex)
 src/data/ctaLab.ts                        three paths, three destinations, copy
 src/components/cta-lab/
   CtaLab.tsx                              shell — owns settings + one flow
