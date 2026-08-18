@@ -1,0 +1,335 @@
+/* ===========================================================================
+   The expanded chapter. Scoped under .ofx-.
+   ===========================================================================
+
+   The offer page as a CONTINUATION of the Work chapter rather than a separate
+   document. Three things make that read:
+
+     1. The photograph carries over, sharp, from the card you pressed in.
+     2. The three choices ride at the top of the plate, with the one you
+        pressed filled cobalt — the thing you touched is still on screen.
+     3. The answer unfurls DOWNWARD from that row, so the page is visibly
+        caused by the press.
+
+   What it replaces: a sticky "Back to the site" bar that announced a new
+   document, and an "also worth a look" footer that restated the same three
+   choices at the bottom of every page.
+
+   Every plate value below is copied from `.wt__row` in work-together.css.
+   Copied, not imported — the homepage shipped and a lab must not be able to
+   reach into it.
+   ======================================================================== */
+
+.ofx__masthead {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 16px;
+}
+
+/* The escape hatch. A quiet mono link, NOT a bar: a bordered sticky strip is
+   what made the page announce itself as somewhere else. */
+.ofx__back {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  font-weight: 500;
+  letter-spacing: var(--track-dymo);
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.62);
+  text-decoration: none;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.8);
+  transition: color 160ms ease;
+}
+
+.ofx__back:hover,
+.ofx__back:focus-visible {
+  color: #fff;
+}
+
+.ofx__back:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.8);
+  outline-offset: 4px;
+  border-radius: 3px;
+}
+
+/* Labels the row rather than repeating it — the same job `.wt__hint` does on
+   the homepage, and the same copy (CTA_HINT). */
+.ofx__hint {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  letter-spacing: var(--track-dymo);
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.55);
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.8);
+}
+
+.ofx__hint::after {
+  content: "";
+  display: block;
+  height: 1px;
+  margin-top: 12px;
+  background: rgba(255, 255, 255, 0.18);
+}
+
+/* ---- The three choices ---- */
+
+.ofx__rows {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  gap: 14px;
+}
+
+.ofx__rowItem {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+}
+
+.ofx__row {
+  box-sizing: border-box;
+  position: relative;
+  overflow: hidden;
+  flex: 1 1 auto;
+  min-width: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px clamp(16px, 2cqw, 24px);
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  background: linear-gradient(180deg, #fefefe 0%, #f6f5f2 100%);
+  text-decoration: none;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.85) inset,
+    0 -1px 0 rgba(0, 0, 0, 0.04) inset,
+    0 4px 16px rgba(0, 0, 0, 0.45),
+    0 1px 3px rgba(0, 0, 0, 0.3);
+  transition:
+    background 170ms ease,
+    border-color 170ms ease,
+    box-shadow 170ms ease,
+    opacity 200ms ease,
+    filter 200ms ease;
+  /* `backwards`, not `both`: a filled-forwards animation keeps its end-state
+     transform applied for good and would win the cascade over the press. */
+  animation: ofx-row-in 420ms cubic-bezier(0.22, 1, 0.36, 1) backwards;
+  animation-delay: calc(var(--row-index) * 70ms + 120ms);
+}
+
+a.ofx__row {
+  cursor: pointer;
+}
+
+@keyframes ofx-row-in {
+  from {
+    opacity: 0;
+    transform: translateY(9px);
+  }
+}
+
+.ofx__rowMain {
+  min-width: 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  text-align: left;
+}
+
+.ofx__label {
+  font-family: var(--font-mono);
+  font-size: var(--text-control);
+  font-weight: 500;
+  letter-spacing: var(--track-dymo);
+  text-transform: uppercase;
+  line-height: 1;
+  color: #111116;
+}
+
+.ofx__lede {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  font-weight: 400;
+  line-height: 1.35;
+  letter-spacing: 0.02em;
+  color: rgba(17, 17, 22, 0.62);
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.ofx__chev {
+  flex-shrink: 0;
+  font-family: var(--font-mono);
+  font-size: 18px;
+  font-weight: 600;
+  color: rgba(17, 17, 22, 0.42);
+  transition: color 200ms ease, transform 200ms ease;
+}
+
+.ofx__rowSheen {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    105deg,
+    transparent 32%,
+    rgba(255, 255, 255, 0.7) 46%,
+    rgba(255, 255, 255, 0.15) 54%,
+    transparent 66%
+  );
+  opacity: 0;
+  transform: translateX(-160%);
+  transition:
+    transform 1s cubic-bezier(0.16, 0.84, 0.44, 1),
+    opacity 300ms ease;
+}
+
+/* ---- Cobalt Select ----
+   Blue is an interaction state, not a rank. Here the current offer's bar holds
+   it because the reader IS on that one right now — the same meaning it carries
+   on the homepage, where the fill persists while that bar's screen is open. */
+
+.ofx__row.is-current,
+a.ofx__row:hover,
+a.ofx__row:focus-visible {
+  background: linear-gradient(180deg, #2563eb 0%, #1d4ed8 100%);
+  border-color: rgba(37, 99, 235, 0.6);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.2) inset,
+    0 -1px 0 rgba(0, 0, 0, 0.15) inset,
+    0 6px 24px rgba(37, 99, 235, 0.25),
+    0 2px 6px rgba(0, 0, 0, 0.4);
+}
+
+.ofx__row.is-current .ofx__label,
+a.ofx__row:hover .ofx__label,
+a.ofx__row:focus-visible .ofx__label {
+  color: #fff;
+}
+
+.ofx__row.is-current .ofx__lede,
+.ofx__row.is-current .ofx__chev,
+a.ofx__row:hover .ofx__lede,
+a.ofx__row:focus-visible .ofx__lede,
+a.ofx__row:hover .ofx__chev,
+a.ofx__row:focus-visible .ofx__chev {
+  color: rgba(255, 255, 255, 0.72);
+}
+
+a.ofx__row:hover .ofx__chev,
+a.ofx__row:focus-visible .ofx__chev {
+  transform: translateX(2px);
+}
+
+a.ofx__row:hover .ofx__rowSheen,
+a.ofx__row:focus-visible .ofx__rowSheen {
+  opacity: 0.5;
+  transform: translateX(160%);
+  background: linear-gradient(
+    105deg,
+    transparent 32%,
+    rgba(255, 255, 255, 0.18) 46%,
+    rgba(255, 255, 255, 0.04) 54%,
+    transparent 66%
+  );
+}
+
+a.ofx__row:active {
+  transform: translateY(1px);
+  transition-duration: 60ms;
+}
+
+/* DELIBERATELY NOT the homepage's 0.45 dim.
+   There, dimming the other two is right: a panel has opened below them and it
+   is the focus, so the unchosen bars step back. Here the row IS the
+   navigation — those two bars are the only way to move sideways, and there is
+   no sibling footer repeating them. Dimmed to 0.45 over a near-black sky they
+   stopped reading as near-white plates at all and looked disabled, which
+   discourages the exact action this chrome exists to enable.
+
+   So the setback is slight, and the cobalt fill does the work of marking which
+   one is current. The `:not()` guard is load-bearing rather than decorative —
+   without it this would also mute the bar being hovered. */
+.ofx__rows:has(.ofx__row.is-current) a.ofx__row:not(:hover):not(:focus-visible) {
+  opacity: 0.9;
+}
+
+/* Inset and white: the bar clips its own overflow at a 14px radius, and focus
+   always coincides with the cobalt fill, so white is guaranteed to contrast. */
+a.ofx__row:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: -4px;
+}
+
+/* ===========================================================================
+   THE UNFURL — the answer arrives from the row that opened it
+   ======================================================================== */
+
+.ofx__unfurl {
+  animation: ofx-unfurl 520ms cubic-bezier(0.22, 1, 0.36, 1) 120ms backwards;
+}
+
+@keyframes ofx-unfurl {
+  from {
+    opacity: 0;
+    transform: translateY(-14px);
+    clip-path: inset(0 0 100% 0);
+  }
+}
+
+/* ===========================================================================
+   NARROW
+   ======================================================================== */
+
+@container ofd (max-width: 760px) {
+  /* `flex: 1 1 0` distributes WIDTH across a row. Once this is a column it
+     distributes HEIGHT instead and the bars get crushed against a
+     height-constrained plate, with `overflow: hidden` eating the labels.
+     Stacked bars size to their content. */
+  .ofx__rows {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .ofx__rowItem {
+    flex: 0 0 auto;
+  }
+
+  .ofx__row {
+    justify-content: space-between;
+    padding: 13px 16px;
+  }
+
+  .ofx__hint {
+    letter-spacing: 0.24em;
+  }
+}
+
+/* ===========================================================================
+   REDUCED MOTION
+   Every state above is a static rule and each animation supplies only the
+   offset it arrives from, so removing the tweening leaves nothing mid-flight.
+   ======================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .ofx__row,
+  .ofx__rowSheen,
+  .ofx__unfurl,
+  .ofx__back {
+    animation: none !important;
+    transition: none !important;
+  }
+}

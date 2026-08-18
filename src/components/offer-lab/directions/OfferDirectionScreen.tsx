@@ -18,7 +18,7 @@
 // cinematic photo plane, and the chaptered rail. Both are additive; neither
 // changes how a section itself is built.
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import type { OfferSurfaceId, PathDef } from "@/data/offerLab";
 import {
   type OfferDirectionId,
@@ -40,6 +40,15 @@ interface Props {
   templateMode: OfferTemplateModeId;
   /** The lab renders several of these at once; ids must not collide. */
   idPrefix?: string;
+  /**
+   * Rendered at the TOP of the hero movement, on the plate.
+   *
+   * This is how the choice row travels onto the page: the shell hands it in,
+   * the hero pins it to the top of the photograph and keeps its own copy at
+   * the bottom. Passing it here rather than wrapping the screen means the row
+   * shares the hero's plate instead of needing a second one.
+   */
+  masthead?: ReactNode;
 }
 
 const HERO_WIDE = "/consulting/hero-2.png";
@@ -67,6 +76,7 @@ export default function OfferDirectionScreen({
   surface,
   templateMode,
   idPrefix = "ofd",
+  masthead,
 }: Props) {
   const d = path.destination;
   const kind = getKind(path.id);
@@ -147,15 +157,22 @@ export default function OfferDirectionScreen({
   function sectionBody(s: SectionDef) {
     switch (s.id) {
       case "hero":
+        // The masthead is a SIBLING of the copy, not a child: the hero body is
+        // a column that fills the plate and pushes these two apart, so the row
+        // pins to the top of the photograph and the title stays at the bottom
+        // where the scrim is strongest.
         return (
-          <div className="ofd-hero">
-            <p className="ofd-hero__eyebrow">{d.eyebrow}</p>
-            <h1 className="ofd-hero__title">{d.title}</h1>
-            {/* The drop cap is a CSS ::first-letter on this element in the
-                broadsheet direction; no extra span, so the text stays one
-                selectable, screen-reader-correct run. */}
-            <p className="ofd-hero__lede">{d.lede}</p>
-          </div>
+          <>
+            {masthead}
+            <div className="ofd-hero">
+              <p className="ofd-hero__eyebrow">{d.eyebrow}</p>
+              <h1 className="ofd-hero__title">{d.title}</h1>
+              {/* The drop cap is a CSS ::first-letter on this element in the
+                  broadsheet direction; no extra span, so the text stays one
+                  selectable, screen-reader-correct run. */}
+              <p className="ofd-hero__lede">{d.lede}</p>
+            </div>
+          </>
         );
 
       case "scope":
@@ -276,6 +293,11 @@ export default function OfferDirectionScreen({
         data-surface={surface}
         data-kind={kind}
         data-template={templateMode}
+        /* Declared on the root rather than sniffed with `:has(~ ...)`: the
+           plate is a SIBLING of the flow that contains the row, so matching it
+           structurally meant a selector that broke the moment anything was
+           nested differently. */
+        data-masthead={masthead ? "true" : undefined}
       >
         {meta.usesPhoto && (
           <div className="ofd__plate" aria-hidden="true">

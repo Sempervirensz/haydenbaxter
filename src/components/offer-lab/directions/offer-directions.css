@@ -508,6 +508,31 @@
   padding-bottom: clamp(36px, 5cqw, 76px);
 }
 
+/* When the choice row travels onto the page, the hero body becomes the column
+   that holds both: the row pinned to the top of the plate, the title held at
+   the bottom where the scrim is strongest. Without `flex: 1` the body would
+   shrink to its content and `space-between` would have nothing to distribute,
+   which reads as the row simply sitting on top of the title. */
+.ofd[data-masthead] .ofd-sec[data-sec="hero"] .ofd-sec__body {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: clamp(30px, 5cqw, 68px);
+}
+
+/* The plate has to clear the row AND the title now, so the hero is taller and
+   the section stops pushing its copy right to the bottom edge. */
+.ofd[data-direction="cinematic"][data-masthead] .ofd-sec[data-sec="hero"] {
+  min-height: clamp(560px, 58cqw, 840px);
+  justify-content: stretch;
+  padding-top: clamp(24px, 3.2cqw, 44px);
+}
+
+.ofd[data-direction="cinematic"][data-masthead] .ofd__plate {
+  height: clamp(560px, 58cqw, 840px);
+}
+
 /* The hero's own chapter header is redundant against a full-bleed photograph
    and a display headline — the eyebrow already names the offer. */
 .ofd[data-direction="cinematic"] .ofd-sec[data-sec="hero"] .ofd-sec__head {
@@ -1034,6 +1059,26 @@
 
   .ofd[data-direction="cinematic"] .ofd__plate {
     height: clamp(420px, 118cqw, 620px);
+  }
+
+  /* The bars stack into a column at this width and take roughly 300px of the
+     plate. At 190cqw that put all three straight over the statue, which is the
+     one thing in the frame worth not covering — it read as clutter rather than
+     as composition. The plate grows so the figure clears the row. */
+  .ofd[data-direction="cinematic"][data-masthead] .ofd__plate,
+  .ofd[data-direction="cinematic"][data-masthead] .ofd-sec[data-sec="hero"] {
+    height: auto;
+    min-height: clamp(780px, 240cqw, 1020px);
+  }
+
+  .ofd[data-direction="cinematic"][data-masthead] .ofd__plate {
+    height: clamp(780px, 240cqw, 1020px);
+  }
+
+  /* Pull the crop down so the figure sits in the band between the row and the
+     title rather than behind the bars. */
+  .ofd[data-direction="cinematic"][data-masthead] .ofd__plateImg {
+    object-position: 50% 78%;
   }
 
   /* The scrim has a taller copy block to clear when the type stacks. */

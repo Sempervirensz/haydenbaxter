@@ -22,6 +22,9 @@
 import Link from "next/link";
 import type { OfferLayoutId, OfferSurfaceId, PathDef } from "@/data/offerLab";
 import type { OfferDirectionId, OfferTemplateModeId } from "@/data/offerDirections";
+import type { OfferChromeId } from "@/data/offerDirections";
+import { CTA_HINT } from "@/data/workTogether";
+import OfferChoiceRow from "./OfferChoiceRow";
 import OfferRender from "./OfferRender";
 import "./offer-lab.css";
 
@@ -37,6 +40,18 @@ interface Props {
   backLabel: string;
   /** The other two offers, so a visitor can move sideways without going back. */
   siblings: Array<{ id: string; label: string; href: string }>;
+  /**
+   * `expanded` reads as the Work chapter continuing: the photograph carries
+   * over, the choice row travels to the top of the plate with the pressed bar
+   * still lit, and the offer unfurls beneath it. No sticky back bar, no
+   * sibling footer — the row is the navigation.
+   *
+   * `standalone` is the earlier chrome, kept switchable so the two can be
+   * compared rather than argued about.
+   */
+  chrome: OfferChromeId;
+  /** Carried onto the sibling links so switching offers keeps the treatment. */
+  qs?: string;
 }
 
 export default function OfferPage({
@@ -48,19 +63,42 @@ export default function OfferPage({
   backHref,
   backLabel,
   siblings,
+  chrome,
+  qs = "",
 }: Props) {
+  const expanded = chrome === "expanded";
+
+  // The row travels with the reader. It carries the back link and the same
+  // hint the homepage uses, so nothing here is new vocabulary.
+  const masthead = expanded ? (
+    <div className="ofx__masthead">
+      <Link href={backHref} className="ofx__back">
+        <span aria-hidden="true">←</span> {backLabel}
+      </Link>
+      <p className="ofx__hint">{CTA_HINT}</p>
+      <OfferChoiceRow current={path.id} qs={qs} />
+    </div>
+  ) : undefined;
+
   return (
     /* `data-direction` is on the PAGE CHROME, not only the screen: the
        cinematic direction opens on a full-bleed photograph, and a solid back
        bar sitting above it would put a horizon line across the top of the
        plate. The bar has to know. */
-    <div className="ofrp" data-surface={surface} data-direction={direction}>
-      <header className="ofrp__bar">
-        <Link href={backHref} className="ofrp__back">
-          <span aria-hidden="true">←</span> {backLabel}
-        </Link>
-        <span className="ofrp__crumb">{path.destination.eyebrow}</span>
-      </header>
+    <div
+      className="ofrp"
+      data-surface={surface}
+      data-direction={direction}
+      data-chrome={chrome}
+    >
+      {!expanded && (
+        <header className="ofrp__bar">
+          <Link href={backHref} className="ofrp__back">
+            <span aria-hidden="true">←</span> {backLabel}
+          </Link>
+          <span className="ofrp__crumb">{path.destination.eyebrow}</span>
+        </header>
+      )}
 
       <main className="ofrp__main">
         <OfferRender
@@ -70,12 +108,16 @@ export default function OfferPage({
           surface={surface}
           templateMode={templateMode}
           idPrefix={`ofd-${path.id}`}
+          masthead={masthead}
         />
       </main>
 
       {/* Sideways movement. The in-card model forces a visitor back to the row
           to change their mind; a page can simply offer the other two. */}
-      {siblings.length > 0 && (
+      {/* In expanded mode this footer is dead weight: the row at the top of
+          the plate already offers the other two, still lit, without the reader
+          having to reach the bottom of the page to find them. */}
+      {!expanded && siblings.length > 0 && (
         <nav className="ofrp__siblings" aria-label="Other ways to work together">
           <p className="ofrp__siblingsTitle">Also worth a look</p>
           <div className="ofrp__siblingsRow">

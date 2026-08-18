@@ -11,6 +11,7 @@
 // Keeping the baseline reachable from the same control is the only way to
 // compare against the real thing rather than against a memory of it.
 
+import type { ReactNode } from "react";
 import type { OfferLayoutId, OfferSurfaceId, PathDef } from "@/data/offerLab";
 import type { OfferDirectionId, OfferTemplateModeId } from "@/data/offerDirections";
 import OfferScreen from "./OfferScreen";
@@ -23,6 +24,8 @@ export interface OfferRenderProps {
   surface: OfferSurfaceId;
   templateMode: OfferTemplateModeId;
   idPrefix?: string;
+  /** The travelling choice row, when the shell is in expanded chrome. */
+  masthead?: ReactNode;
 }
 
 export default function OfferRender({
@@ -32,6 +35,7 @@ export default function OfferRender({
   surface,
   templateMode,
   idPrefix,
+  masthead,
 }: OfferRenderProps) {
   if (direction === "baseline") {
     return <OfferScreen path={path} layout={layout} surface={surface} />;
@@ -44,6 +48,7 @@ export default function OfferRender({
       surface={surface}
       templateMode={templateMode}
       idPrefix={idPrefix}
+      masthead={masthead}
     />
   );
 }

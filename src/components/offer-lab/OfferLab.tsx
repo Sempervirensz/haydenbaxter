@@ -16,7 +16,7 @@ import {
   PATHS,
   getPath,
 } from "@/data/offerLab";
-import { DEFAULT_DIRECTION } from "@/data/offerDirections";
+import { DEFAULT_CHROME, DEFAULT_DIRECTION } from "@/data/offerDirections";
 import OfferControls, { type OfferSettings } from "./OfferControls";
 import OfferRender from "./OfferRender";
 import "./offer-lab.css";
@@ -27,6 +27,7 @@ const DEFAULT_SETTINGS: OfferSettings = {
   layout: DEFAULT_LAYOUT,
   surface: DEFAULT_SURFACE,
   templateMode: "perOffer",
+  chrome: DEFAULT_CHROME,
   viewport: "desktop",
 };
 

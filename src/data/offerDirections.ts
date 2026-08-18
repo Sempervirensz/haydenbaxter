@@ -270,6 +270,52 @@ export function resolveTemplate(id: PathId, mode: OfferTemplateModeId): OfferTem
   return mode === "uniform" ? OFFER_TEMPLATES.service : getTemplate(id);
 }
 
+/* ---------------------------------------------------------------------------
+   Chrome
+
+   How the offer page ARRIVES — the difference between reading as a separate
+   document and reading as the Work chapter continuing.
+
+   `expanded` carries the photograph over, puts the three choices back at the
+   top of the plate with the pressed one still filled cobalt, and unfurls the
+   answer beneath them. The reader can see the thing they touched, and moving
+   between offers is sideways along a row that is already there.
+
+   `standalone` is the earlier chrome: a sticky "back to the site" bar, a
+   crumb, and an "also worth a look" footer restating the same three choices at
+   the bottom of every page. Kept switchable so the two can be compared.
+
+   Neither changes the fact that each offer is a real route with its own URL —
+   that is what DECISION.md settles, and both modes honour it.
+   ------------------------------------------------------------------------ */
+
+export type OfferChromeId = "expanded" | "standalone";
+
+export const OFFER_CHROMES: Array<{
+  id: OfferChromeId;
+  label: string;
+  note: string;
+}> = [
+  {
+    id: "expanded",
+    label: "Expanded",
+    note: "The row travels with you. Photo carries over, pressed bar stays lit.",
+  },
+  {
+    id: "standalone",
+    label: "Standalone",
+    note: "Sticky back bar, crumb, sibling footer — reads as its own document.",
+  },
+];
+
+export const DEFAULT_CHROME: OfferChromeId = "expanded";
+
+const CHROME_IDS = new Set<string>(OFFER_CHROMES.map((c) => c.id));
+
+export function isChrome(v: string): v is OfferChromeId {
+  return CHROME_IDS.has(v);
+}
+
 /** Offer roster with kinds attached, for the lab's own labelling. */
 export const OFFERS_WITH_KIND = PATHS.map((p) => ({
   id: p.id,

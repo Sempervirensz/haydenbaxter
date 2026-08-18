@@ -23,8 +23,10 @@ import {
   type PathId,
 } from "@/data/offerLab";
 import {
+  DEFAULT_CHROME,
   DEFAULT_DIRECTION,
   OFFER_TEMPLATE_MODES,
+  isChrome,
   isDirection,
   type OfferTemplateModeId,
 } from "@/data/offerDirections";
@@ -42,10 +44,12 @@ export default function OfferRouteClient({ offer }: { offer: PathId }) {
   const rawSurface = sp.get("surface") ?? "";
   const rawDirection = sp.get("direction") ?? "";
   const rawTemplate = sp.get("template") ?? "";
+  const rawChrome = sp.get("chrome") ?? "";
 
   const layout = (LAYOUTS.has(rawLayout as OfferLayoutId) ? rawLayout : "editorial") as OfferLayoutId;
   const surface = (SURFACES.has(rawSurface as OfferSurfaceId) ? rawSurface : "dark") as OfferSurfaceId;
   const direction = isDirection(rawDirection) ? rawDirection : DEFAULT_DIRECTION;
+  const chrome = isChrome(rawChrome) ? rawChrome : DEFAULT_CHROME;
   const templateMode = (
     TEMPLATE_MODES.has(rawTemplate) ? rawTemplate : "perOffer"
   ) as OfferTemplateModeId;
@@ -54,7 +58,7 @@ export default function OfferRouteClient({ offer }: { offer: PathId }) {
   // linkable while it is still being argued about — and moving sideways to a
   // sibling offer keeps the treatment you were looking at.
   const qs =
-    `?direction=${direction}&template=${templateMode}` +
+    `?direction=${direction}&template=${templateMode}&chrome=${chrome}` +
     `&layout=${layout}&surface=${surface}`;
 
   return (
@@ -64,6 +68,8 @@ export default function OfferRouteClient({ offer }: { offer: PathId }) {
       layout={layout}
       surface={surface}
       templateMode={templateMode}
+      chrome={chrome}
+      qs={qs}
       backHref={`/cta-lab/in-site${qs}`}
       backLabel="Back to the site"
       siblings={PATHS.filter((p) => p.id !== offer).map((p) => ({

@@ -14,11 +14,13 @@ import {
   type PathId,
 } from "@/data/offerLab";
 import {
+  OFFER_CHROMES,
   OFFER_DIRECTIONS,
   OFFER_TEMPLATE_MODES,
   getDirection,
   getKind,
   resolveTemplate,
+  type OfferChromeId,
   type OfferDirectionId,
   type OfferTemplateModeId,
 } from "@/data/offerDirections";
@@ -33,6 +35,8 @@ export interface OfferSettings {
   surface: OfferSurfaceId;
   /** Per-offer templates on, or all three forced through one shape. */
   templateMode: OfferTemplateModeId;
+  /** How the page arrives — the chapter expanding, or its own document. */
+  chrome: OfferChromeId;
   viewport: ViewportMode;
 }
 
@@ -119,6 +123,29 @@ export default function OfferControls({
             </p>
             <p className="ofrl__verdict ofrl__verdict--cost">
               <strong>Costs.</strong> {direction.cost}
+            </p>
+          </Group>
+
+          <Group title="Arrival">
+            <div className="ofrl__seg" role="group" aria-label="Chrome">
+              {OFFER_CHROMES.map((c) => (
+                <button
+                  key={c.id}
+                  type="button"
+                  className={`ofrl__segBtn ${settings.chrome === c.id ? "is-active" : ""}`}
+                  aria-pressed={settings.chrome === c.id}
+                  onClick={() => onChange("chrome", c.id)}
+                >
+                  {c.label}
+                </button>
+              ))}
+            </div>
+            <p className="ofrl__readout">
+              {OFFER_CHROMES.find((c) => c.id === settings.chrome)?.note}
+            </p>
+            <p className="ofrl__readout">
+              Only visible on the routed page — the lab stage renders the screen
+              without its shell.
             </p>
           </Group>
 
