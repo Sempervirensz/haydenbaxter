@@ -18,6 +18,7 @@
 // that already exists in `src/data/workTogether.ts`.
 
 import { PATHS, type PathId } from "@/data/workTogether";
+import { getOfferCopy, type OfferCopy } from "@/data/offerCopy";
 
 /* ---------------------------------------------------------------------------
    Directions
@@ -170,9 +171,10 @@ export type SectionId =
   | "scope" // the two blocks, as a pair
   | "lead" // block A alone, given the frame
   | "audience" // block B alone, as "who this is for"
-  | "method" // the note, promoted to a movement
+  | "method" // the method statement, promoted to a movement
   | "engagements" // the signals, as things on offer
   | "proof" // the signals, as credentials
+  | "why" // credentials as prose, not chips
   | "ask"; // the actions, plus the note when it has not been promoted
 
 export interface SectionDef {
@@ -191,12 +193,18 @@ export interface OfferTemplate {
 export const OFFER_TEMPLATES: Record<OfferKind, OfferTemplate> = {
   service: {
     kind: "service",
-    premise: "A service. Scope, method, and how to start.",
+    premise: "A service. Scope, credentials, and how to start.",
+    // A SUPERSET. `availableSections()` drops the movements whose copy does not
+    // exist, so this one list serves both the rewritten Consulting page (which
+    // has "Why me" prose and no method statement or engagement list) and the
+    // two offers still on the production shape (which have the reverse).
+    // Without that filtering the rewrite rendered two empty movements.
     sections: [
       { id: "hero", label: "The offer" },
       { id: "scope", label: "Scope" },
       { id: "method", label: "How it works" },
       { id: "engagements", label: "Engagements" },
+      { id: "why", label: "Why me" },
       { id: "ask", label: "Start" },
     ],
   },
@@ -267,7 +275,35 @@ export const OFFER_TEMPLATE_MODES: Array<{
 ];
 
 export function resolveTemplate(id: PathId, mode: OfferTemplateModeId): OfferTemplate {
-  return mode === "uniform" ? OFFER_TEMPLATES.service : getTemplate(id);
+  const base = mode === "uniform" ? OFFER_TEMPLATES.service : getTemplate(id);
+  return { ...base, sections: availableSections(base.sections, getOfferCopy(id)) };
+}
+
+/**
+ * Drops movements whose copy does not exist.
+ *
+ * A template names every movement its KIND can have; a given offer may not
+ * carry all of them. Rendering a section header over nothing is worse than
+ * omitting it — it reads as a page that failed to load rather than as a page
+ * that is simply shorter.
+ */
+export function availableSections(sections: SectionDef[], copy: OfferCopy): SectionDef[] {
+  const has = (id: SectionId): boolean => {
+    switch (id) {
+      case "method":
+        return Boolean(copy.method);
+      case "engagements":
+      case "proof":
+        return Boolean(copy.signals?.length);
+      case "why":
+        return Boolean(copy.why);
+      default:
+        // hero, scope, lead, audience and ask are always present — every offer
+        // has a title, two blocks and a way to start.
+        return true;
+    }
+  };
+  return sections.filter((s) => has(s.id));
 }
 
 /* ---------------------------------------------------------------------------

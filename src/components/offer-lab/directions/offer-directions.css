@@ -40,7 +40,7 @@
   /* The measure. Every direction respects it; only the grid around it moves. */
   --ofd-measure: 68ch;
   --ofd-pad: clamp(22px, 5cqw, 96px);
-  --ofd-gap: clamp(48px, 6.6cqw, 104px);
+  --ofd-gap: clamp(44px, 5.2cqw, 84px);
 
   position: relative;
   isolation: isolate;
@@ -187,13 +187,23 @@
 }
 
 .ofd-block__label {
-  margin: 0 0 10px;
+  margin: 0 0 12px;
   font-family: var(--font-mono);
   font-size: var(--text-control);
   font-weight: 500;
   letter-spacing: var(--track-dymo);
   text-transform: uppercase;
   color: var(--ofd-ink);
+}
+
+/* With the bullet lists gone, each capability is a label, one paragraph and a
+   link. The paragraph is now the block's whole substance rather than a caption
+   above a list, so it stops being set at caption size. */
+.ofd-block:not(:has(.ofd-block__list)) .ofd-block__desc {
+  font-size: clamp(15px, 1.28cqw, 19px);
+  line-height: 1.55;
+  color: var(--ofd-body);
+  max-width: 40ch;
 }
 
 .ofd-block__desc {
@@ -236,6 +246,65 @@
   height: 5px;
   border-radius: 999px;
   background: var(--ofd-blue);
+}
+
+/* The capability's own way in.
+
+   A quiet text link, NOT a plate. The page already ends in two candy bars, and
+   a screen with four competing buttons has no obvious next move — the block
+   CTAs are for the reader who wants proof before they book, so they read as
+   "more on this" rather than as a second ask. */
+.ofd-block__action {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: clamp(16px, 2cqw, 24px);
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  font-weight: 500;
+  letter-spacing: var(--track-dymo);
+  text-transform: uppercase;
+  color: var(--ofd-blue);
+  text-decoration: none;
+  padding-bottom: 4px;
+  border-bottom: 1px solid transparent;
+  transition: color 160ms ease, border-color 160ms ease;
+}
+
+.ofd-block__action:hover,
+.ofd-block__action:focus-visible {
+  color: var(--ofd-ink);
+  border-bottom-color: var(--ofd-rule-strong);
+}
+
+.ofd-block__actionChev {
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1;
+  transition: transform 200ms ease;
+}
+
+.ofd-block__action:hover .ofd-block__actionChev,
+.ofd-block__action:focus-visible .ofd-block__actionChev {
+  transform: translateX(3px);
+}
+
+/* ---- Why me (credentials as prose) ----------------------------------- */
+
+/* Set larger than body copy and at a tight measure, because it is an argument
+   rather than a list — a degree, a language and eight years read as one claim.
+   The old chip strip shredded exactly that sentence into five tags. */
+.ofd-why {
+  max-width: 100%;
+}
+
+.ofd-why__text {
+  margin: 0;
+  max-width: 42ch;
+  font-family: var(--font-sans);
+  font-size: clamp(16px, 1.55cqw, 23px);
+  line-height: 1.5;
+  color: var(--ofd-ink);
 }
 
 /* ---- Method (the note, promoted) ------------------------------------- */
@@ -327,12 +396,31 @@
 /* ---- Ask ------------------------------------------------------------- */
 
 .ofd-ask__note {
-  margin: 0 0 clamp(22px, 2.8cqw, 34px);
+  margin: 0 0 clamp(26px, 3.2cqw, 42px);
   max-width: 58ch;
   font-family: var(--font-sans);
   font-size: var(--text-sm);
   line-height: 1.55;
   color: var(--ofd-muted);
+}
+
+/* The closing line is an invitation, not a caption. On the directions that
+   carry display type it is set as one — it is the last thing read before the
+   decision to get in touch, and at --text-sm it was the smallest text in the
+   movement it is supposed to lead. */
+.ofd:not([data-direction="baseline"]) .ofd-ask__note {
+  font-family: var(--font-serif);
+  font-size: clamp(22px, 2.6cqw, 40px);
+  line-height: 1.22;
+  letter-spacing: -0.012em;
+  color: var(--ofd-ink);
+  max-width: 22ch;
+}
+
+/* And the plates that follow it grow to match. A 14px control under a 40px
+   invitation reads as an afterthought. */
+.ofd:not([data-direction="baseline"]) .ofd-ask .ofd-action {
+  padding: 18px 26px;
 }
 
 .ofd-ask__actions {
@@ -554,6 +642,20 @@
 .ofd[data-direction="cinematic"] .ofd-sec[data-sec="hero"] .ofd-hero__lede {
   max-width: 56ch;
   text-shadow: 0 2px 16px rgba(0, 0, 0, 0.6);
+}
+
+/* Why me carries the weight of the close on the cinematic page, so it gets
+   the serif rather than sitting as another paragraph of sans. */
+.ofd[data-direction="cinematic"] .ofd-why__text,
+.ofd[data-direction="chaptered"] .ofd-why__text {
+  font-family: var(--font-serif);
+  font-size: clamp(19px, 2.1cqw, 31px);
+  line-height: 1.34;
+  letter-spacing: -0.01em;
+  /* 30ch at this size wrapped a four-sentence credential into nine short
+     lines — a ribbon down the left edge with the rest of the frame empty.
+     A credential is read as one paragraph, so it gets a paragraph's measure. */
+  max-width: 46ch;
 }
 
 /* Below the plate the page is the site's own dark ground — the photograph is
@@ -939,6 +1041,41 @@
 
 .ofd[data-direction="broadsheet"] .ofd-blocks .ofd-block[data-block-index="1"] {
   padding-top: clamp(20px, 3cqw, 48px);
+}
+
+/* Broadsheet treats the credentials as a standfirst — the paragraph that sits
+   under a headline and earns the rest of the piece. */
+.ofd[data-direction="broadsheet"] .ofd-why__text {
+  font-family: var(--font-serif);
+  font-size: clamp(21px, 2.5cqw, 36px);
+  line-height: 1.26;
+  letter-spacing: -0.014em;
+  max-width: 26ch;
+}
+
+.ofd[data-direction="broadsheet"] .ofd-block__action {
+  font-family: var(--font-mono);
+}
+
+/* Furniture keeps its plate vocabulary consistent: the block CTA becomes an
+   embossed tape label rather than a text link, since every other piece of
+   metadata on that direction is one. */
+.ofd[data-direction="furniture"] .ofd-block__action {
+  padding: 8px 13px;
+  border-radius: 5px;
+  border-bottom: none;
+  background: linear-gradient(180deg, #26262d 0%, #16161b 100%);
+  color: rgba(255, 255, 255, 0.9);
+  transform: rotate(-0.8deg);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.14) inset,
+    0 -2px 4px rgba(0, 0, 0, 0.55) inset,
+    0 2px 6px rgba(0, 0, 0, 0.4);
+}
+
+.ofd[data-direction="furniture"] .ofd-block__action:hover,
+.ofd[data-direction="furniture"] .ofd-block__action:focus-visible {
+  color: #fff;
 }
 
 /* The note as a genuine pull quote, with the mark set in the margin. */

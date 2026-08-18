@@ -20,6 +20,7 @@
 
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import type { OfferSurfaceId, PathDef } from "@/data/offerLab";
+import { getOfferCopy, type OfferBlock } from "@/data/offerCopy";
 import {
   type OfferDirectionId,
   type OfferTemplateModeId,
@@ -78,15 +79,20 @@ export default function OfferDirectionScreen({
   idPrefix = "ofd",
   masthead,
 }: Props) {
-  const d = path.destination;
+  // The lab's copy layer, which carries the Consulting rewrite. Production
+  // copy is adapted into the same shape, so one renderer serves all three.
+  const d = getOfferCopy(path.id);
   const kind = getKind(path.id);
   const template = resolveTemplate(path.id, templateMode);
   const meta = getDirection(direction);
   const sections = template.sections;
 
-  // The note is one sentence and must appear exactly once. When the template
-  // promotes it to a Method movement, the ask must not repeat it.
-  const noteIsPromoted = sections.some((s) => s.id === "method");
+  // The method statement and the ask's note are the same sentence on the
+  // production shape, so it must appear exactly once: when the template
+  // promotes it to a Method movement, the ask must not repeat it. The rewritten
+  // Consulting copy has a distinct note, so this never fires there.
+  const noteIsPromoted =
+    sections.some((s) => s.id === "method") && d.method === d.ask.note;
 
   const rootRef = useRef<HTMLDivElement | null>(null);
   const [activeIndex, setActiveIndex] = useState(0);
@@ -208,7 +214,7 @@ export default function OfferDirectionScreen({
         // rather than shrunk into a footnote above the buttons.
         return (
           <blockquote className="ofd-method">
-            <p className="ofd-method__text">{d.note}</p>
+            <p className="ofd-method__text">{d.method}</p>
           </blockquote>
         );
 
@@ -217,7 +223,7 @@ export default function OfferDirectionScreen({
         // reading of the same strip the credential template treats as proof.
         return (
           <ul className="ofd-engagements" aria-label="Engagements">
-            {d.signals.map((sig, si) => (
+            {(d.signals ?? []).map((sig, si) => (
               <li key={sig} className="ofd-engagement">
                 <span className="ofd-engagement__num" aria-hidden="true">
                   {String(si + 1).padStart(2, "0")}
@@ -228,10 +234,20 @@ export default function OfferDirectionScreen({
           </ul>
         );
 
+      case "why":
+        // Credentials as one paragraph. The old chip strip shredded a sentence
+        // that reads as a single claim — a degree, a language and eight years
+        // are one argument, not five tags.
+        return (
+          <div className="ofd-why">
+            <p className="ofd-why__text">{d.why?.text}</p>
+          </div>
+        );
+
       case "proof":
         return (
           <ul className="ofd-proof" aria-label="Credentials">
-            {d.signals.map((sig) => (
+            {(d.signals ?? []).map((sig) => (
               <li key={sig} className="ofd-proof__item">
                 {sig}
               </li>
@@ -242,34 +258,31 @@ export default function OfferDirectionScreen({
       case "ask":
         return (
           <div className="ofd-ask">
-            {!noteIsPromoted && <p className="ofd-ask__note">{d.note}</p>}
+            {!noteIsPromoted && <p className="ofd-ask__note">{d.ask.note}</p>}
             <div className="ofd-ask__actions">
-              <a
-                className="ofd-action ofd-action--primary"
-                href={d.primary.href}
-                {...(d.primary.external
-                  ? { target: "_blank", rel: "noopener noreferrer" }
-                  : {})}
-              >
-                <span className="ofd-action__label">{d.primary.label}</span>
-                <span className="ofd-action__chev" aria-hidden="true">
-                  ›
-                </span>
-              </a>
-              {d.secondary && (
+              {d.ask.actions.map((a, ai) => (
                 <a
-                  className="ofd-action ofd-action--ghost"
-                  href={d.secondary.href}
-                  {...(d.secondary.external
-                    ? { target: "_blank", rel: "noopener noreferrer" }
-                    : {})}
+                  key={a.label}
+                  // `peers` is declared by the copy, not inferred from the
+                  // count — Consulting and Experience both have two actions but
+                  // only Consulting's are equal front doors. Demoting one of
+                  // those would tell half the audience they are the
+                  // afterthought; flattening Experience's would erase a real
+                  // hierarchy.
+                  className={`ofd-action ${
+                    d.ask.peers || ai === 0
+                      ? "ofd-action--primary"
+                      : "ofd-action--ghost"
+                  }`}
+                  href={a.href}
+                  {...(a.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
                 >
-                  <span className="ofd-action__label">{d.secondary.label}</span>
+                  <span className="ofd-action__label">{a.label}</span>
                   <span className="ofd-action__chev" aria-hidden="true">
                     ›
                   </span>
                 </a>
-              )}
+              ))}
             </div>
           </div>
         );
@@ -350,22 +363,44 @@ function Block({
   index,
   showLabel = true,
 }: {
-  block: PathDef["destination"]["blocks"][number];
+  block: OfferBlock;
   index: number;
   /** False when the section header already carries this block's name. */
   showLabel?: boolean;
 }) {
+  const items = block.items ?? [];
   return (
     <div className="ofd-block" data-block-index={index}>
       {showLabel && <h3 className="ofd-block__label">{block.label}</h3>}
       <p className="ofd-block__desc">{block.descriptor}</p>
-      <ul className="ofd-block__list">
-        {block.items.map((item) => (
-          <li key={item} className="ofd-block__item">
-            <span className="ofd-block__itemText">{item}</span>
-          </li>
-        ))}
-      </ul>
+
+      {items.length > 0 && (
+        <ul className="ofd-block__list">
+          {items.map((item) => (
+            <li key={item} className="ofd-block__item">
+              <span className="ofd-block__itemText">{item}</span>
+            </li>
+          ))}
+        </ul>
+      )}
+
+      {/* The capability's own way in. A quiet text link rather than a plate:
+          the page already ends in two plates, and three competing buttons per
+          screen is how an offer page stops having an obvious next move. */}
+      {block.action && (
+        <a
+          className="ofd-block__action"
+          href={block.action.href}
+          {...(block.action.external
+            ? { target: "_blank", rel: "noopener noreferrer" }
+            : {})}
+        >
+          <span>{block.action.label}</span>
+          <span className="ofd-block__actionChev" aria-hidden="true">
+            ›
+          </span>
+        </a>
+      )}
     </div>
   );
 }
