@@ -28,7 +28,7 @@
 // only a quarter of it is ever in frame. Placement is an axis because where it
 // comes from changes whether it enchants or interrupts.
 
-import WorkTogether from "@/components/work/WorkTogether";
+import WorkTogether from "./WorkTogether";
 import "./cta-disc-reveal.css";
 
 export type DiscPlacement = "right" | "corner" | "left" | "bottom";
@@ -38,12 +38,19 @@ interface Props {
   placement?: DiscPlacement;
   /** Keeps a quarter of the disc in frame at rest instead of fully retracted. */
   restPeek?: boolean;
+  /**
+   * Forwarded straight through to WorkTogether. The Work stack passes this to
+   * the chapter to say it is the active one, and dropping it here would change
+   * live behaviour while looking like a pure addition.
+   */
+  isActive?: boolean;
 }
 
 export default function CtaDiscReveal({
   media,
   placement = "right",
   restPeek = false,
+  isActive,
 }: Props) {
   return (
     <div
@@ -62,6 +69,7 @@ export default function CtaDiscReveal({
           the depth it wants. WorkTogether is still not edited: `media` is the
           prop it already takes for this plane. */}
       <WorkTogether
+        isActive={isActive}
         media={
           <>
             {media}

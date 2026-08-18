@@ -18,7 +18,7 @@ import { useRef } from "react";
 import WorkTogether from "@/components/work/WorkTogether";
 import CtaRowInline from "@/components/cta-row-lab/CtaRowInline";
 import CtaDecisionCard from "@/components/cta-decision/CtaDecisionCard";
-import CtaDiscReveal from "@/components/cta-decision/CtaDiscReveal";
+import CtaDiscReveal from "@/components/work/CtaDiscReveal";
 import { useCtaVariant } from "@/components/work/CtaVariant";
 import { Rail } from "./shared";
 import { useCardDrift } from "./useCardDrift";

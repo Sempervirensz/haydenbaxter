@@ -12,10 +12,9 @@
 // The photo is passed IN to WorkTogether rather than rendered behind it, so it
 // sits inside the backdrop root its blur ladder samples.
 
-import WorkTogether from "@/components/work/WorkTogether";
 import CtaRowInline from "@/components/cta-row-lab/CtaRowInline";
 import CtaDecisionCard from "@/components/cta-decision/CtaDecisionCard";
-import CtaDiscReveal from "@/components/cta-decision/CtaDiscReveal";
+import CtaDiscReveal from "./CtaDiscReveal";
 import { useCtaVariant } from "@/components/work/CtaVariant";
 import "@/components/work/work-together.css";
 
@@ -57,7 +56,9 @@ export default function ConsultingHeroStage({ isActive }: { isActive?: boolean }
           offerHref={cta.offerHref}
         />
       ) : (
-        <WorkTogether isActive={isActive} media={media} />
+        /* SHIPPED. The row is unchanged — CtaDiscReveal renders WorkTogether
+           itself and only adds the disc into the media plane behind it. */
+        <CtaDiscReveal isActive={isActive} media={media} />
       )}
     </section>
   );
