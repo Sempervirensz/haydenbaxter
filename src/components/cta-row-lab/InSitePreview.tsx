@@ -24,28 +24,48 @@ import "./cta-row-lab.css";
 
 const WorkSection = dynamic(() => import("@/components/work/WorkSectionResponsive"));
 
-/** `null` is the dossier that ships today — the honest baseline to compare against. */
-type ScreenChoice = OfferLayoutId | "dossier";
+/**
+ * `dossier` is what ships today — the honest baseline. `routed` is the
+ * structural alternative: the choices become links to real offer PAGES rather
+ * than panels opening inside the card.
+ */
+type ScreenChoice = OfferLayoutId | "dossier" | "routed";
 
 export default function InSitePreview() {
-  const [screen, setScreen] = useState<ScreenChoice>("editorial");
+  const [screen, setScreen] = useState<ScreenChoice>("routed");
   const [surface, setSurface] = useState<OfferSurfaceId>("dark");
+  /** Which layout the routed PAGES use — independent of the in-card choice. */
+  const [routedLayout, setRoutedLayout] = useState<OfferLayoutId>("editorial");
   const [open, setOpen] = useState(true);
 
   useEffect(() => {
     if (window.innerWidth < 1100) setOpen(false);
   }, []);
 
-  const offerLayout = screen === "dossier" ? null : screen;
+  const routed = screen === "routed";
+  const offerLayout: OfferLayoutId | null =
+    screen === "dossier" || routed ? null : screen;
+
+  // In routed mode the row navigates instead of disclosing. The layout the
+  // pages render rides in the query string so a treatment stays linkable.
+  const offerHref = routed
+    ? (id: string) => `/offer-lab/${id}?layout=${routedLayout}&surface=${surface}`
+    : null;
 
   return (
-    <CtaVariantProvider value={{ variant: "row", offerLayout, offerSurface: surface }}>
+    <CtaVariantProvider
+      value={{ variant: "row", offerLayout, offerSurface: surface, offerHref }}
+    >
       <aside className={`ctarl ctarl--insite ${open ? "is-open" : ""}`} aria-label="Preview controls">
         <button type="button" className="ctarl__toggle" onClick={() => setOpen((o) => !o)} aria-expanded={open}>
           <span className="ctarl__dot" aria-hidden />
           In site
           <span className="ctarl__state">
-            {screen === "dossier" ? "Dossier (live)" : OFFER_LAYOUTS.find((l) => l.id === screen)?.name}
+            {screen === "routed"
+              ? "Routed pages"
+              : screen === "dossier"
+                ? "Dossier (live)"
+                : OFFER_LAYOUTS.find((l) => l.id === screen)?.name}
           </span>
         </button>
 
@@ -54,6 +74,18 @@ export default function InSitePreview() {
             <div className="ctarl__group">
               <h2 className="ctarl__groupTitle">Choices open into</h2>
               <div className="ctarl__col">
+                <button
+                  type="button"
+                  className={`ctarl__row ${screen === "routed" ? "is-active" : ""}`}
+                  aria-pressed={screen === "routed"}
+                  onClick={() => setScreen("routed")}
+                >
+                  <span className="ctarl__rowName">Routed pages</span>
+                  <span className="ctarl__rowNote">
+                    Each offer is its own URL. One scroll, real back button,
+                    shareable. The choices become links.
+                  </span>
+                </button>
                 <button
                   type="button"
                   className={`ctarl__row ${screen === "dossier" ? "is-active" : ""}`}
@@ -78,6 +110,25 @@ export default function InSitePreview() {
               </div>
             </div>
 
+            {routed && (
+              <div className="ctarl__group">
+                <h2 className="ctarl__groupTitle">Routed page layout</h2>
+                <div className="ctarl__seg" role="group" aria-label="Routed page layout">
+                  {OFFER_LAYOUTS.filter((l) => l.id !== "dossier").map((l) => (
+                    <button
+                      key={l.id}
+                      type="button"
+                      className={`ctarl__segBtn ${routedLayout === l.id ? "is-active" : ""}`}
+                      aria-pressed={routedLayout === l.id}
+                      onClick={() => setRoutedLayout(l.id)}
+                    >
+                      {l.name.split("·")[1]?.trim() ?? l.name}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
             <div className="ctarl__group">
               <h2 className="ctarl__groupTitle">Offer surface</h2>
               <div className="ctarl__seg" role="group" aria-label="Offer surface">
@@ -95,6 +146,7 @@ export default function InSitePreview() {
               </div>
               <p className="ctarl__readout">
                 Scroll to chapter 04 — Consulting, then press a choice.
+                {routed ? " Each opens its own page." : " Each opens in place."}
               </p>
             </div>
           </div>

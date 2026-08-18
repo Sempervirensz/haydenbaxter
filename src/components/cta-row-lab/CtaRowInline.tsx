@@ -23,10 +23,12 @@ export default function CtaRowInline({
   media,
   offerLayout = null,
   offerSurface = "dark",
+  offerHref = null,
 }: {
   media: React.ReactNode;
   offerLayout?: OfferLayoutId | null;
   offerSurface?: OfferSurfaceId;
+  offerHref?: ((id: string) => string) | null;
 }) {
   const [openId, setOpenId] = useState<PathId | null>(null);
   const reducedMotion = usePrefersReducedMotion();
@@ -44,6 +46,7 @@ export default function CtaRowInline({
       frame={false}
       offerLayout={offerLayout}
       offerSurface={offerSurface}
+      offerHref={offerHref}
     />
   );
 }

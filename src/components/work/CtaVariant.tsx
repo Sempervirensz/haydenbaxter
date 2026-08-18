@@ -23,12 +23,19 @@ export interface CtaVariantConfig {
    */
   offerLayout: OfferLayoutId | null;
   offerSurface: OfferSurfaceId;
+  /**
+   * When set, the three choices become links to real offer routes instead of
+   * disclosure buttons. This is the structural fork: panel-in-a-card versus
+   * page-with-an-address.
+   */
+  offerHref: ((id: string) => string) | null;
 }
 
 const DEFAULT: CtaVariantConfig = {
   variant: "live",
   offerLayout: null,
   offerSurface: "dark",
+  offerHref: null,
 };
 
 const Ctx = createContext<CtaVariantConfig>(DEFAULT);

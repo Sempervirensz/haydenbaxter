@@ -796,3 +796,171 @@
   line-height: 1.55;
   color: rgba(255, 255, 255, 0.5);
 }
+
+/* ===========================================================================
+   OFFER AS A PAGE
+   ===========================================================================
+
+   The structural alternative to the in-card panel. Everything here exists
+   because a page can do things a panel inside a card cannot:
+
+     · ONE scroll. The panel version scrolls inside a page that is already
+       scrolling, and nested scroll is disorienting on a trackpad and close to
+       unusable on a phone.
+     · No blur. The panel needs the photo pushed back 22px so it can be read;
+       a page has its own ground and the image is never fighting the copy.
+     · A real back. `.ofrp__back` is a link to a destination, not a state reset,
+       so browser back, middle-click and "open in new tab" all behave.
+     · Sideways movement. A visitor who picked wrong can go straight to another
+       offer instead of reversing out to the row first.
+   ======================================================================== */
+
+.ofrp {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+
+.ofrp[data-surface="dark"] {
+  background: #06070a;
+  --ofrp-ink: rgba(255, 255, 255, 0.86);
+  --ofrp-faint: rgba(255, 255, 255, 0.42);
+  --ofrp-rule: rgba(255, 255, 255, 0.12);
+  --ofrp-hover: #fff;
+}
+
+.ofrp[data-surface="paper"] {
+  background: #edece8;
+  --ofrp-ink: rgba(17, 17, 22, 0.78);
+  --ofrp-faint: rgba(17, 17, 22, 0.45);
+  --ofrp-rule: rgba(17, 17, 22, 0.14);
+  --ofrp-hover: #111116;
+}
+
+/* ---- Top bar ---- */
+
+.ofrp__bar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px clamp(20px, 4vw, 56px);
+  border-bottom: 1px solid var(--ofrp-rule);
+  background: inherit;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.ofrp__back,
+.ofrp__crumb {
+  font-family: var(--font-mono);
+  font-size: var(--text-control);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.ofrp__back {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  color: var(--ofrp-ink);
+  text-decoration: none;
+  transition: color 160ms ease;
+}
+
+.ofrp__back:hover,
+.ofrp__back:focus-visible {
+  color: var(--ofrp-hover);
+}
+
+.ofrp__back:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 4px;
+  border-radius: 3px;
+}
+
+.ofrp__crumb {
+  color: var(--ofrp-faint);
+}
+
+/* ---- The offer itself ---- */
+
+.ofrp__main {
+  flex: 1 1 auto;
+  width: 100%;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: clamp(24px, 5vw, 72px) clamp(16px, 3vw, 32px);
+}
+
+/* On a page the offer is the ground, not a card sitting on one. */
+.ofrp__main .ofr {
+  border-radius: 0;
+  outline: none;
+  box-shadow: none;
+  background: transparent;
+  padding-inline: 0;
+}
+
+/* ---- Sideways ---- */
+
+.ofrp__siblings {
+  border-top: 1px solid var(--ofrp-rule);
+  padding: clamp(24px, 4vw, 44px) clamp(20px, 4vw, 56px) clamp(40px, 6vw, 72px);
+}
+
+.ofrp__siblingsTitle {
+  margin: 0 0 14px;
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--ofrp-faint);
+}
+
+.ofrp__siblingsRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.ofrp__sibling {
+  flex: 1 1 260px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 16px 18px;
+  border: 1px solid var(--ofrp-rule);
+  border-radius: 10px;
+  font-family: var(--font-mono);
+  font-size: var(--text-control);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ofrp-ink);
+  text-decoration: none;
+  transition: border-color 160ms ease, color 160ms ease, transform 160ms ease;
+}
+
+.ofrp__sibling:hover,
+.ofrp__sibling:focus-visible {
+  border-color: currentColor;
+  color: var(--ofrp-hover);
+  transform: translateY(-1px);
+}
+
+.ofrp__sibling:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ofrp *,
+  .ofrp *::before,
+  .ofrp *::after {
+    transition: none !important;
+  }
+}

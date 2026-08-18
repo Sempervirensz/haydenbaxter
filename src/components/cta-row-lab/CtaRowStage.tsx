@@ -73,6 +73,17 @@ interface Props {
   offerLayout?: OfferLayoutId | null;
   offerSurface?: OfferSurfaceId;
   /**
+   * When supplied, the choices become LINKS to real offer routes instead of
+   * disclosure buttons that open a panel in place.
+   *
+   * This is the structural fork the lab exists to settle. As buttons, the
+   * offer is a panel inside a fixed-height card: nested scroll, no URL, a
+   * bespoke back control, and a photo that has to be blurred out of the way.
+   * As links, each offer is a page with its own scroll and its own address —
+   * shareable, indexable, and reachable with the browser's back button.
+   */
+  offerHref?: ((id: PathId) => string) | null;
+  /**
    * false drops the lab's card chrome — the rounded frame, the filmic edge,
    * the fixed height and the caption — so the composition can fill a host
    * card that already provides them. Defaults to the lab's framed stage.
@@ -92,6 +103,7 @@ export default function CtaRowStage({
   frame = true,
   offerLayout = null,
   offerSurface = "dark",
+  offerHref = null,
 }: Props) {
   const rootRef = useRef<HTMLElement | null>(null);
 
@@ -217,17 +229,18 @@ export default function CtaRowStage({
             {CTA_ROW_BUTTONS.map((btn, i) => {
               const current = openId === btn.id;
               return (
-                <button
+                <Choice
                   key={btn.id}
-                  type="button"
+                  href={offerHref ? offerHref(btn.id) : null}
                   data-ctar-btn={btn.id}
                   className={`ctar-btn ${btn.primary ? "is-primary" : "is-secondary"} ${
                     current ? "is-current" : ""
                   }`}
                   style={{ ["--btn-index" as string]: i }}
                   tabIndex={primary ? 0 : -1}
-                  aria-expanded={current}
-                  onClick={() => onOpenChange(current ? null : btn.id)}
+                  // A link navigates; only a disclosure button owns expanded state.
+                  ariaExpanded={offerHref ? undefined : current}
+                  onActivate={() => onOpenChange(current ? null : btn.id)}
                 >
                   {/* Only ETB paints this — the diagonal wipe its bars run on
                       hover. Inert everywhere else. */}
@@ -242,14 +255,14 @@ export default function CtaRowStage({
                     <span className="ctar-btn__lede">{btn.lede}</span>
                   </span>
                   <span className="ctar-btn__arrow" aria-hidden="true">
-                    {current ? "↑" : variant === "etb" ? "›" : "→"}
+                    {offerHref ? "→" : current ? "↑" : variant === "etb" ? "›" : "→"}
                   </span>
-                </button>
+                </Choice>
               );
             })}
           </nav>
 
-          {path && (
+          {path && !offerHref && (
             <div className="ctar__unfurl" data-screen={offerLayout ? "offer" : "dossier"}>
               {offerLayout ? (
                 <div className="ctar__offer">
@@ -289,5 +302,52 @@ export default function CtaRowStage({
     <div className={`ctar-frame ctar-frame--${width}`}>{stage}</div>
   ) : (
     stage
+  );
+}
+
+/**
+ * A choice is a LINK when the row navigates to real offer pages, and a BUTTON
+ * when it discloses a panel in place. Getting this right is not cosmetic: a
+ * link gives middle-click, open-in-new-tab, copy-address and the browser's own
+ * back button for free, and `aria-expanded` on something that navigates is a
+ * lie to a screen reader.
+ */
+function Choice({
+  href,
+  className,
+  style,
+  tabIndex,
+  ariaExpanded,
+  onActivate,
+  children,
+  ...rest
+}: {
+  href: string | null;
+  className: string;
+  style: React.CSSProperties;
+  tabIndex: number;
+  ariaExpanded: boolean | undefined;
+  onActivate: () => void;
+  children: React.ReactNode;
+} & Record<string, unknown>) {
+  if (href) {
+    return (
+      <a href={href} className={className} style={style} tabIndex={tabIndex} {...rest}>
+        {children}
+      </a>
+    );
+  }
+  return (
+    <button
+      type="button"
+      className={className}
+      style={style}
+      tabIndex={tabIndex}
+      aria-expanded={ariaExpanded}
+      onClick={onActivate}
+      {...rest}
+    >
+      {children}
+    </button>
   );
 }

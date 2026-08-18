@@ -45,6 +45,7 @@ export default function ConsultingHeroStage({ isActive }: { isActive?: boolean }
           media={media}
           offerLayout={cta.offerLayout}
           offerSurface={cta.offerSurface}
+          offerHref={cta.offerHref}
         />
       ) : (
         <WorkTogether isActive={isActive} media={media} />

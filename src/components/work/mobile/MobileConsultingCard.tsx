@@ -53,6 +53,7 @@ export default function MobileConsultingCard() {
           media={media}
           offerLayout={cta.offerLayout}
           offerSurface={cta.offerSurface}
+          offerHref={cta.offerHref}
         />
       ) : (
         <WorkTogether media={media} />
