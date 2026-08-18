@@ -18,6 +18,7 @@ import { useRef } from "react";
 import WorkTogether from "@/components/work/WorkTogether";
 import CtaRowInline from "@/components/cta-row-lab/CtaRowInline";
 import CtaDecisionCard from "@/components/cta-decision/CtaDecisionCard";
+import CtaDiscReveal from "@/components/cta-decision/CtaDiscReveal";
 import { useCtaVariant } from "@/components/work/CtaVariant";
 import { Rail } from "./shared";
 import { useCardDrift } from "./useCardDrift";
@@ -49,7 +50,9 @@ export default function MobileConsultingCard() {
 
   return (
     <article ref={rootRef as React.RefObject<HTMLElement>} className="wm-card wm-card--cns">
-      {cta.variant === "decision" ? (
+      {cta.variant === "disc" ? (
+        <CtaDiscReveal media={media} placement={cta.discPlacement ?? "right"} restPeek={cta.discRest ?? false} />
+      ) : cta.variant === "decision" ? (
         <CtaDecisionCard
           media={media}
           offerHref={(id) => cta.offerHref?.(id) ?? `/offer-lab/${id}`}

@@ -37,7 +37,14 @@ const WorkSection = dynamic(() => import("@/components/work/WorkSectionResponsiv
  * structural alternative: the choices become links to real offer PAGES rather
  * than panels opening inside the card.
  */
-type ScreenChoice = OfferLayoutId | "dossier" | "routed" | "decision";
+type ScreenChoice = OfferLayoutId | "dossier" | "routed" | "decision" | "disc";
+
+const DISC_PLACEMENTS = [
+  { id: "right", label: "Right", note: "Enters from the right edge, below the statue." },
+  { id: "corner", label: "Corner", note: "Rests in the bottom-right corner. Most restrained." },
+  { id: "left", label: "Left", note: "Behind the copy, so type sits over the disc." },
+  { id: "bottom", label: "Bottom", note: "Rises from the bottom edge." },
+] as const;
 
 export default function InSitePreview() {
   const [screen, setScreen] = useState<ScreenChoice>("routed");
@@ -54,11 +61,19 @@ export default function InSitePreview() {
   }, []);
 
   const decision = screen === "decision";
+  const disc = screen === "disc";
+  const [discPlacement, setDiscPlacement] =
+    useState<(typeof DISC_PLACEMENTS)[number]["id"]>("right");
+  const [discRest, setDiscRest] = useState(false);
   // The decision chooser navigates for the same reason the routed row does:
   // the offer content is a page, not a panel inside this card.
+  // The disc variant renders the SHIPPED row, which discloses in place; it is
+  // not a routed mode.
   const routed = screen === "routed" || decision;
+  // `disc` renders the shipped row untouched, so like `dossier` and the routed
+  // modes it has no offer-lab layout to hand down.
   const offerLayout: OfferLayoutId | null =
-    screen === "dossier" || routed ? null : screen;
+    screen === "dossier" || screen === "disc" || routed ? null : screen;
 
   // In routed mode the row navigates instead of disclosing. Every axis rides
   // in the query string, so what you press here is exactly what you land on —
@@ -76,10 +91,12 @@ export default function InSitePreview() {
   return (
     <CtaVariantProvider
       value={{
-        variant: decision ? "decision" : "row",
+        variant: disc ? "disc" : decision ? "decision" : "row",
         offerLayout,
         offerSurface: surface,
         offerHref,
+        discPlacement,
+        discRest,
       }}
     >
       <aside className={`ctarl ctarl--insite ${open ? "is-open" : ""}`} aria-label="Preview controls">
@@ -87,7 +104,9 @@ export default function InSitePreview() {
           <span className="ctarl__dot" aria-hidden />
           In site
           <span className="ctarl__state">
-            {screen === "decision"
+            {screen === "disc"
+              ? `Disc reveal · ${discPlacement}`
+              : screen === "decision"
               ? "Decision chooser"
               : screen === "routed"
               ? OFFER_DIRECTIONS.find((d) => d.id === direction)?.name ?? "Routed pages"
@@ -102,6 +121,19 @@ export default function InSitePreview() {
             <div className="ctarl__group">
               <h2 className="ctarl__groupTitle">Choices open into</h2>
               <div className="ctarl__col">
+                <button
+                  type="button"
+                  className={`ctarl__row ${screen === "disc" ? "is-active" : ""}`}
+                  aria-pressed={screen === "disc"}
+                  onClick={() => setScreen("disc")}
+                >
+                  <span className="ctarl__rowName">Disc reveal</span>
+                  <span className="ctarl__rowNote">
+                    The shipped row exactly as it is. Point at a bar and a
+                    quarter of the CD turns in behind it, showing that bar&rsquo;s
+                    own mark on the printed rim.
+                  </span>
+                </button>
                 <button
                   type="button"
                   className={`ctarl__row ${screen === "decision" ? "is-active" : ""}`}
@@ -149,6 +181,49 @@ export default function InSitePreview() {
                 ))}
               </div>
             </div>
+
+            {disc && (
+              <div className="ctarl__group">
+                <h2 className="ctarl__groupTitle">Disc placement</h2>
+                <div className="ctarl__col">
+                  {DISC_PLACEMENTS.map((o) => (
+                    <button
+                      key={o.id}
+                      type="button"
+                      className={`ctarl__row ${discPlacement === o.id ? "is-active" : ""}`}
+                      aria-pressed={discPlacement === o.id}
+                      onClick={() => setDiscPlacement(o.id)}
+                    >
+                      <span className="ctarl__rowName">{o.label}</span>
+                      <span className="ctarl__rowNote">{o.note}</span>
+                    </button>
+                  ))}
+                </div>
+                <div className="ctarl__seg" role="group" aria-label="Rest state">
+                  <button
+                    type="button"
+                    className={`ctarl__segBtn ${!discRest ? "is-active" : ""}`}
+                    aria-pressed={!discRest}
+                    onClick={() => setDiscRest(false)}
+                  >
+                    Hidden at rest
+                  </button>
+                  <button
+                    type="button"
+                    className={`ctarl__segBtn ${discRest ? "is-active" : ""}`}
+                    aria-pressed={discRest}
+                    onClick={() => setDiscRest(true)}
+                  >
+                    Peeking at rest
+                  </button>
+                </div>
+                <p className="ctarl__readout">
+                  Consulting turns to the word CONSULTING, WorldPulse to
+                  WORLDPULSE, Experience to the winged victory mark. Those
+                  angles are measured off the disc artwork.
+                </p>
+              </div>
+            )}
 
             {routed && (
               <div className="ctarl__group">

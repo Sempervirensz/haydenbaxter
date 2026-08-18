@@ -19,10 +19,14 @@ export interface CtaVariantConfig {
    * `live`     — what ships: the WorkTogether row.
    * `row`      — the pre-ship row prototype from /cta-lab.
    * `decision` — the CD + tracklist chooser from /cta-lab/decision, sized for
-   *              this card. Additive: the default below is still `live`, so a
-   *              tree with no provider (the homepage) is untouched.
+   *              this card.
+   * `disc`     — the shipped row EXACTLY as it is, with a quarter of the CD
+   *              turning in behind it as each bar is pointed at.
+   *
+   * Additive: the default below is still `live`, so a tree with no provider
+   * (the homepage) is untouched.
    */
-  variant: "live" | "row" | "decision";
+  variant: "live" | "row" | "decision" | "disc";
   /**
    * Which screen a choice opens into. `null` keeps the production dossier
    * panel that ships today; a layout id swaps in the offer-lab screen, so the
@@ -36,6 +40,10 @@ export interface CtaVariantConfig {
    * page-with-an-address.
    */
   offerHref: ((id: string) => string) | null;
+  /** `disc` variant only: which edge the quarter-disc enters from. */
+  discPlacement?: "right" | "corner" | "left" | "bottom";
+  /** `disc` variant only: leave a quarter in frame at rest. */
+  discRest?: boolean;
 }
 
 const DEFAULT: CtaVariantConfig = {
