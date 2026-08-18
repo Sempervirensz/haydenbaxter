@@ -1,0 +1,1133 @@
+/* ===========================================================================
+   Offer pages — art direction. Scoped under .ofd-.
+   ===========================================================================
+
+   Three attributes drive everything:
+
+     .ofd[data-direction]  baseline | cinematic | chaptered | alternating |
+                           furniture | broadsheet
+     .ofd[data-surface]    dark | paper
+     .ofd[data-kind]       service | venture | credential
+
+   The MARKUP IS IDENTICAL across directions. Movements are decided by the
+   template (which sections exist, in what order); the skin is decided here.
+   That is what makes six directions comparable rather than six pages.
+
+   `.ofd-shell` is the size container and `.ofd` is the styled element — never
+   the same element, because a container query does not match the element that
+   establishes the container, and it fails SILENTLY.
+
+   No new brand colour. Gold #d8b15a is the site's single accent; #2563eb is
+   what the destination screens use. On dark, blue lifts to #7aa2ff to clear
+   contrast on near-black; on paper, gold darkens to #8a6a1f. The paper pair
+   #f5f4f1 / #111116 is the surface the live screens already own.
+
+   NO `backdrop-filter` anywhere in this file. Declaring it promotes the
+   backdrop to a resampled texture and costs real sharpness on exactly the
+   high-frequency detail this page is trying to show — the statue's wing edges
+   and the pinpoint city lights. There is nothing here to blur for.
+   ======================================================================== */
+
+.ofd-shell {
+  container-type: inline-size;
+  container-name: ofd;
+}
+
+.ofd {
+  --ofd-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --ofd-ease-out: cubic-bezier(0.22, 0.61, 0.36, 1);
+
+  /* The measure. Every direction respects it; only the grid around it moves. */
+  --ofd-measure: 68ch;
+  --ofd-pad: clamp(22px, 5cqw, 96px);
+  --ofd-gap: clamp(52px, 9cqw, 132px);
+
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  background: var(--ofd-bg);
+  color: var(--ofd-body);
+}
+
+/* ---- Surfaces -------------------------------------------------------- */
+
+.ofd[data-surface="dark"],
+.ofd [data-band="dark"] {
+  --ofd-bg: #0a0b0f;
+  --ofd-ink: rgba(255, 255, 255, 0.94);
+  --ofd-body: rgba(255, 255, 255, 0.82);
+  --ofd-muted: rgba(255, 255, 255, 0.66);
+  --ofd-faint: rgba(255, 255, 255, 0.5);
+  --ofd-rule: rgba(255, 255, 255, 0.14);
+  --ofd-rule-strong: rgba(255, 255, 255, 0.3);
+  --ofd-gold: #d8b15a;
+  /* #2563eb fails as text on near-black; the site lifts it to this. */
+  --ofd-blue: #7aa2ff;
+  --ofd-blue-edge: #2563eb;
+  --ofd-focus: rgba(255, 255, 255, 0.85);
+}
+
+.ofd[data-surface="paper"],
+.ofd [data-band="paper"] {
+  --ofd-bg: #f5f4f1;
+  --ofd-ink: #111116;
+  --ofd-body: rgba(17, 17, 22, 0.82);
+  --ofd-muted: rgba(17, 17, 22, 0.64);
+  --ofd-faint: rgba(17, 17, 22, 0.46);
+  --ofd-rule: rgba(17, 17, 22, 0.14);
+  --ofd-rule-strong: rgba(17, 17, 22, 0.3);
+  /* Gold at #d8b15a on #f5f4f1 is ~1.9:1 — unreadable. Darkened, as the site
+     does elsewhere on paper. */
+  --ofd-gold: #8a6a1f;
+  --ofd-blue: #2563eb;
+  --ofd-blue-edge: #2563eb;
+  --ofd-focus: rgba(37, 99, 235, 0.75);
+}
+
+.ofd :focus-visible {
+  outline: 2px solid var(--ofd-focus);
+  outline-offset: 3px;
+  border-radius: 3px;
+}
+
+/* ===========================================================================
+   FLOW + SECTIONS — the shared skeleton every direction inherits
+   ======================================================================== */
+
+.ofd__flow {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+}
+
+.ofd-sec {
+  position: relative;
+  padding: var(--ofd-gap) var(--ofd-pad);
+  background: var(--ofd-bg);
+  color: var(--ofd-body);
+}
+
+.ofd-sec__head {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  margin-bottom: clamp(20px, 2.6cqw, 34px);
+}
+
+.ofd-sec__num {
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  font-weight: 500;
+  letter-spacing: var(--track-dymo);
+  color: var(--ofd-gold);
+}
+
+.ofd-sec__label {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  font-weight: 500;
+  letter-spacing: var(--track-dymo);
+  text-transform: uppercase;
+  color: var(--ofd-faint);
+}
+
+.ofd-sec__body {
+  min-width: 0;
+}
+
+/* ---- Hero ------------------------------------------------------------ */
+
+.ofd-hero__eyebrow {
+  margin: 0 0 clamp(14px, 1.8cqw, 22px);
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  font-weight: 500;
+  letter-spacing: var(--track-dymo);
+  text-transform: uppercase;
+  color: var(--ofd-gold);
+}
+
+.ofd-hero__title {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-size: clamp(38px, 7.4cqw, 104px);
+  line-height: 0.98;
+  letter-spacing: -0.022em;
+  color: var(--ofd-ink);
+  text-wrap: balance;
+}
+
+.ofd-hero__lede {
+  margin: clamp(20px, 2.6cqw, 34px) 0 0;
+  max-width: var(--ofd-measure);
+  font-family: var(--font-sans);
+  font-size: clamp(15px, 1.35cqw, 20px);
+  line-height: 1.6;
+  color: var(--ofd-body);
+}
+
+/* ---- Blocks ---------------------------------------------------------- */
+
+.ofd-blocks {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(28px, 4cqw, 64px);
+}
+
+.ofd-blocks--single {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.ofd-block {
+  min-width: 0;
+}
+
+.ofd-block__label {
+  margin: 0 0 10px;
+  font-family: var(--font-mono);
+  font-size: var(--text-control);
+  font-weight: 500;
+  letter-spacing: var(--track-dymo);
+  text-transform: uppercase;
+  color: var(--ofd-ink);
+}
+
+.ofd-block__desc {
+  margin: 0 0 clamp(16px, 2cqw, 24px);
+  max-width: 54ch;
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  line-height: 1.55;
+  color: var(--ofd-muted);
+}
+
+.ofd-block__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 2px;
+}
+
+.ofd-block__item {
+  position: relative;
+  padding: 9px 0 9px 20px;
+  border-top: 1px solid var(--ofd-rule);
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  line-height: 1.4;
+  color: var(--ofd-body);
+}
+
+.ofd-block__item:last-child {
+  border-bottom: 1px solid var(--ofd-rule);
+}
+
+.ofd-block__item::before {
+  content: "";
+  position: absolute;
+  left: 2px;
+  top: 1.05em;
+  width: 5px;
+  height: 5px;
+  border-radius: 999px;
+  background: var(--ofd-blue);
+}
+
+/* ---- Method (the note, promoted) ------------------------------------- */
+
+.ofd-method {
+  margin: 0;
+  max-width: 46ch;
+}
+
+.ofd-method__text {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-size: clamp(21px, 2.6cqw, 38px);
+  line-height: 1.24;
+  letter-spacing: -0.012em;
+  color: var(--ofd-ink);
+  text-wrap: pretty;
+}
+
+/* ---- Engagements (the signals, as things on offer) ------------------- */
+
+.ofd-engagements {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0;
+  max-width: 62ch;
+}
+
+.ofd-engagement {
+  display: flex;
+  align-items: baseline;
+  gap: clamp(14px, 2cqw, 28px);
+  padding: clamp(14px, 1.6cqw, 20px) 0;
+  border-top: 1px solid var(--ofd-rule);
+}
+
+.ofd-engagement:last-child {
+  border-bottom: 1px solid var(--ofd-rule);
+}
+
+.ofd-engagement__num {
+  flex: 0 0 auto;
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  letter-spacing: var(--track-dymo);
+  color: var(--ofd-gold);
+}
+
+.ofd-engagement__name {
+  font-family: var(--font-sans);
+  font-size: clamp(16px, 1.5cqw, 22px);
+  line-height: 1.3;
+  color: var(--ofd-ink);
+}
+
+/* ---- Proof (the signals, as credentials) ----------------------------- */
+
+.ofd-proof {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.ofd-proof__item {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ofd-muted);
+  padding: 7px 12px;
+  border: 1px solid var(--ofd-rule);
+  border-radius: 4px;
+}
+
+/* ---- Ask ------------------------------------------------------------- */
+
+.ofd-ask__note {
+  margin: 0 0 clamp(22px, 2.8cqw, 34px);
+  max-width: 58ch;
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  line-height: 1.55;
+  color: var(--ofd-muted);
+}
+
+.ofd-ask__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+/* The action inherits the ROW's candy bar rather than inventing a button:
+   near-white plate, mono uppercase at --track-dymo, a '›' chevron, and Cobalt
+   Select on hover and keyboard focus. This is the vocabulary the visitor
+   pressed to get here, and here it is genuinely a control again. */
+.ofd-action {
+  position: relative;
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 20px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  background: linear-gradient(180deg, #fefefe 0%, #f6f5f2 100%);
+  text-decoration: none;
+  cursor: pointer;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.85) inset,
+    0 -1px 0 rgba(0, 0, 0, 0.04) inset,
+    0 4px 16px rgba(0, 0, 0, 0.45),
+    0 1px 3px rgba(0, 0, 0, 0.3);
+  transition:
+    background 170ms ease,
+    border-color 170ms ease,
+    box-shadow 170ms ease,
+    transform 120ms ease;
+}
+
+.ofd-action__label {
+  font-family: var(--font-mono);
+  font-size: var(--text-control);
+  font-weight: 500;
+  letter-spacing: var(--track-dymo);
+  text-transform: uppercase;
+  line-height: 1;
+  color: #111116;
+}
+
+.ofd-action__chev {
+  font-family: var(--font-mono);
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1;
+  color: rgba(17, 17, 22, 0.42);
+  transition: color 200ms ease, transform 200ms ease;
+}
+
+.ofd-action--ghost {
+  background: transparent;
+  border-color: var(--ofd-rule-strong);
+  box-shadow: none;
+}
+
+.ofd-action--ghost .ofd-action__label {
+  color: var(--ofd-ink);
+}
+
+.ofd-action--ghost .ofd-action__chev {
+  color: var(--ofd-faint);
+}
+
+/* Cobalt Select — the row's hover state, unchanged. */
+.ofd-action:hover,
+.ofd-action:focus-visible {
+  background: linear-gradient(180deg, #2563eb 0%, #1d4ed8 100%);
+  border-color: rgba(37, 99, 235, 0.6);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.2) inset,
+    0 -1px 0 rgba(0, 0, 0, 0.15) inset,
+    0 6px 24px rgba(37, 99, 235, 0.25),
+    0 2px 6px rgba(0, 0, 0, 0.4);
+}
+
+.ofd-action:hover .ofd-action__label,
+.ofd-action:focus-visible .ofd-action__label {
+  color: #fff;
+}
+
+.ofd-action:hover .ofd-action__chev,
+.ofd-action:focus-visible .ofd-action__chev {
+  color: rgba(255, 255, 255, 0.75);
+  transform: translateX(2px);
+}
+
+.ofd-action:active {
+  transform: translateY(1px);
+  transition-duration: 60ms;
+}
+
+/* Inset and white: the plate clips its own overflow at 14px, and focus always
+   coincides with the cobalt fill, so white is guaranteed to contrast. */
+.ofd-action:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: -4px;
+}
+
+/* ===========================================================================
+   A · CINEMATIC — photograph-led
+   ===========================================================================
+
+   The page opens on the same plate the CTA row sits on, SHARP. The row taught
+   the visitor that this photograph means "work together"; landing on it is what
+   makes the offer page the next room rather than a different building.
+
+   Sharpness is the whole point, so the treatment is a gradient scrim and grain
+   — never a filter, and never `backdrop-filter`. The scrim ramps to fully
+   transparent by 55% because the statue sits around 64% up the frame.
+   ======================================================================== */
+
+.ofd[data-direction="cinematic"] .ofd__plate {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: clamp(460px, 64cqw, 880px);
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.ofd[data-direction="cinematic"] .ofd__plateImg {
+  width: 100%;
+  height: 100%;
+  /* `object-fit` does nothing to an element that has not been given a box to
+     fit into — the intrinsic 3440×1440 has to be overridden first. */
+  object-fit: cover;
+  /* `cover` crops horizontally here and the statue sits at x≈70%, so it is the
+     first thing off the right edge as the frame narrows. */
+  object-position: 56% 44%;
+  display: block;
+}
+
+.ofd[data-direction="cinematic"] .ofd__plateScrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    #0a0b0f 0%,
+    rgba(10, 11, 15, 0.92) 12%,
+    rgba(4, 5, 10, 0.62) 30%,
+    rgba(4, 5, 10, 0.22) 44%,
+    transparent 55%
+  );
+}
+
+/* Film grain, generated inline — no asset, no dependency. Same recipe the row
+   uses, so the two surfaces sit in the same film stock. */
+.ofd[data-direction="cinematic"] .ofd__plateGrain {
+  position: absolute;
+  inset: 0;
+  opacity: 0.34;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='0.3'/%3E%3C/svg%3E");
+  background-size: 180px 180px;
+}
+
+/* The hero movement occupies the plate: photo above, type below — the
+   cinematic read the Work chapter is built on. */
+.ofd[data-direction="cinematic"] .ofd-sec[data-sec="hero"] {
+  min-height: clamp(460px, 64cqw, 880px);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  background: transparent;
+  padding-bottom: clamp(36px, 5cqw, 76px);
+}
+
+/* The hero's own chapter header is redundant against a full-bleed photograph
+   and a display headline — the eyebrow already names the offer. */
+.ofd[data-direction="cinematic"] .ofd-sec[data-sec="hero"] .ofd-sec__head {
+  display: none;
+}
+
+.ofd[data-direction="cinematic"] .ofd-sec[data-sec="hero"] .ofd-hero__title {
+  text-shadow: 0 4px 28px rgba(0, 0, 0, 0.62);
+}
+
+.ofd[data-direction="cinematic"] .ofd-sec[data-sec="hero"] .ofd-hero__lede {
+  max-width: 56ch;
+  text-shadow: 0 2px 16px rgba(0, 0, 0, 0.6);
+}
+
+/* Below the plate the page is the site's own dark ground — the photograph is
+   the top of the page, not a texture running under the whole thing. */
+.ofd[data-direction="cinematic"] .ofd-sec:not([data-sec="hero"]) {
+  border-top: 1px solid var(--ofd-rule);
+}
+
+/* ===========================================================================
+   B · CHAPTERED — the page as its own scroll
+   ===========================================================================
+
+   Movements with a rail that tracks them. The rail is a list of real in-page
+   anchors, so it works with JavaScript disabled and is keyboard-operable for
+   free; the observer only decides which entry is marked current.
+   ======================================================================== */
+
+.ofd[data-direction="chaptered"] {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.ofd[data-direction="chaptered"] .ofd-rail {
+  padding: clamp(28px, 4cqw, 48px) var(--ofd-pad) 0;
+}
+
+.ofd-rail__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 18px;
+}
+
+.ofd-rail__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 7px 2px;
+  text-decoration: none;
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  letter-spacing: var(--track-dymo);
+  text-transform: uppercase;
+  color: var(--ofd-faint);
+  transition: color 200ms ease;
+}
+
+.ofd-rail__link:hover,
+.ofd-rail__link.is-current {
+  color: var(--ofd-ink);
+}
+
+.ofd-rail__tick {
+  width: 16px;
+  height: 1px;
+  background: var(--ofd-rule-strong);
+  transition: width 260ms var(--ofd-ease), background-color 200ms ease;
+}
+
+.ofd-rail__link.is-current .ofd-rail__tick {
+  width: 30px;
+  background: var(--ofd-gold);
+}
+
+.ofd-rail__num {
+  color: var(--ofd-gold);
+}
+
+/* Each movement is a real beat with a hairline between, and the numeral is
+   promoted from metadata to structure. */
+.ofd[data-direction="chaptered"] .ofd-sec + .ofd-sec {
+  border-top: 1px solid var(--ofd-rule);
+}
+
+.ofd[data-direction="chaptered"] .ofd-sec__head {
+  align-items: baseline;
+  gap: 18px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--ofd-rule);
+}
+
+.ofd[data-direction="chaptered"] .ofd-sec__num {
+  font-size: clamp(15px, 1.5cqw, 21px);
+}
+
+/* ===========================================================================
+   C · ALTERNATING — surface rhythm
+   ===========================================================================
+
+   Dark hero, paper proof slab, dark close. The band tokens are set on the
+   section itself (see the surface block at the top), so everything inside a
+   band — rules, accents, the ghost action's border — resolves against the
+   band it is standing on rather than against the page.
+
+   The accent inverts with the band, which is the real cost of this direction:
+   gold darkens to #8a6a1f on paper and blue drops back to #2563eb, and every
+   component has to be correct in both.
+   ======================================================================== */
+
+.ofd[data-direction="alternating"] .ofd-sec {
+  padding-block: clamp(60px, 10cqw, 148px);
+}
+
+/* A hairline seam so the band change reads as a deliberate edge rather than as
+   a rendering artefact where two large fills meet. */
+.ofd[data-direction="alternating"] .ofd-sec[data-band="paper"] {
+  box-shadow:
+    inset 0 1px 0 rgba(17, 17, 22, 0.18),
+    inset 0 -1px 0 rgba(17, 17, 22, 0.18);
+}
+
+/* On paper the near-white candy bar has nothing to sit against, so the primary
+   action inverts to ink — same geometry, same mono label, same chevron. */
+.ofd[data-direction="alternating"] [data-band="paper"] .ofd-action--primary {
+  background: linear-gradient(180deg, #23232b 0%, #111116 100%);
+  border-color: rgba(17, 17, 22, 0.5);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.12) inset,
+    0 4px 16px rgba(17, 17, 22, 0.22);
+}
+
+.ofd[data-direction="alternating"] [data-band="paper"] .ofd-action--primary .ofd-action__label {
+  color: #f5f4f1;
+}
+
+.ofd[data-direction="alternating"] [data-band="paper"] .ofd-action--primary .ofd-action__chev {
+  color: rgba(245, 244, 241, 0.55);
+}
+
+/* Cobalt Select still wins on hover, on either band. */
+.ofd[data-direction="alternating"] [data-band="paper"] .ofd-action--primary:hover,
+.ofd[data-direction="alternating"] [data-band="paper"] .ofd-action--primary:focus-visible {
+  background: linear-gradient(180deg, #2563eb 0%, #1d4ed8 100%);
+  border-color: rgba(37, 99, 235, 0.6);
+}
+
+.ofd[data-direction="alternating"] [data-band="paper"] .ofd-action--primary:hover .ofd-action__label,
+.ofd[data-direction="alternating"] [data-band="paper"] .ofd-action--primary:focus-visible .ofd-action__label {
+  color: #fff;
+}
+
+/* ===========================================================================
+   D · FURNITURE — the site's signature objects
+   ===========================================================================
+
+   DYMO plates for metadata, candy bars for capability lists.
+
+   THE TRAP THIS DIRECTION HAS TO AVOID: in the CTA row the candy bar is a
+   CONTROL. It is pressable, it fills Cobalt Select when you touch it, and it
+   carries a '›'. A capability list is not pressable. Reusing the object
+   unchanged teaches a false affordance and visitors will click it.
+
+   So the bar is deliberately DEMOTED here: no cobalt on hover, no chevron, no
+   sheen wipe, a flatter shadow, and no cursor change. It keeps the plate's
+   material — near-white gradient, 14px radius, white inset over a drop shadow,
+   mono label at --track-dymo — and gives up every cue that says "press me".
+   The only objects on the page that still fill cobalt are the two in the ask,
+   which are genuinely links.
+   ======================================================================== */
+
+/* The DYMO plate: mono, deep inset emboss, 1–2deg rotation, dark tape. */
+.ofd[data-direction="furniture"] .ofd-sec__head {
+  align-items: center;
+  gap: 12px;
+}
+
+.ofd[data-direction="furniture"] .ofd-sec__label {
+  display: inline-block;
+  padding: 8px 14px;
+  border-radius: 5px;
+  background: linear-gradient(180deg, #26262d 0%, #16161b 100%);
+  color: rgba(255, 255, 255, 0.9);
+  letter-spacing: var(--track-dymo);
+  transform: rotate(-1.2deg);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.14) inset,
+    0 -2px 4px rgba(0, 0, 0, 0.55) inset,
+    0 2px 6px rgba(0, 0, 0, 0.4);
+}
+
+/* On paper the tape is still dark — a DYMO label is embossed tape, and an
+   inverted one would read as a different object rather than the same one. */
+.ofd[data-direction="furniture"] [data-band="paper"] .ofd-sec__label {
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.14) inset,
+    0 -2px 4px rgba(0, 0, 0, 0.55) inset,
+    0 2px 8px rgba(17, 17, 22, 0.28);
+}
+
+.ofd[data-direction="furniture"] .ofd-sec__num {
+  font-size: clamp(14px, 1.4cqw, 19px);
+}
+
+/* The block label gets its own plate, rotated the other way so the page does
+   not look like it is sliding. */
+.ofd[data-direction="furniture"] .ofd-block__label {
+  display: inline-block;
+  padding: 7px 12px;
+  border-radius: 5px;
+  background: linear-gradient(180deg, #26262d 0%, #16161b 100%);
+  color: rgba(255, 255, 255, 0.9);
+  transform: rotate(0.9deg);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.14) inset,
+    0 -2px 4px rgba(0, 0, 0, 0.55) inset,
+    0 2px 6px rgba(0, 0, 0, 0.4);
+}
+
+/* ---- The demoted candy bar ---- */
+
+.ofd[data-direction="furniture"] .ofd-block__list {
+  gap: 10px;
+}
+
+.ofd[data-direction="furniture"] .ofd-block__item {
+  padding: 13px 18px;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 14px;
+  background: linear-gradient(180deg, #fefefe 0%, #f6f5f2 100%);
+  /* Flatter than the row's bar. The control lifts off the page; this sits on
+     it. That difference is the whole safeguard against a false affordance. */
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.85) inset,
+    0 -1px 0 rgba(0, 0, 0, 0.04) inset,
+    0 1px 3px rgba(0, 0, 0, 0.28);
+}
+
+.ofd[data-direction="furniture"] .ofd-block__item:last-child {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.22);
+}
+
+/* No chevron, no bullet — a bullet would re-introduce the row's leading mark
+   and the bar would start reading as a list item again. */
+.ofd[data-direction="furniture"] .ofd-block__item::before {
+  display: none;
+}
+
+.ofd[data-direction="furniture"] .ofd-block__itemText {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #111116;
+}
+
+/* Engagements become plates too, but numbered and full width — these are the
+   things actually on offer, so they get more presence than a capability. */
+.ofd[data-direction="furniture"] .ofd-engagement {
+  padding: 15px 18px;
+  margin-bottom: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 14px;
+  background: linear-gradient(180deg, #fefefe 0%, #f6f5f2 100%);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.85) inset,
+    0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+.ofd[data-direction="furniture"] .ofd-engagement:last-child {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.22);
+  margin-bottom: 0;
+}
+
+.ofd[data-direction="furniture"] .ofd-engagement__num,
+.ofd[data-direction="furniture"] .ofd-engagement__name {
+  color: #111116;
+}
+
+.ofd[data-direction="furniture"] .ofd-engagement__name {
+  font-family: var(--font-mono);
+  font-size: var(--text-control);
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* Proof chips become small embossed plates rather than outlined pills. */
+.ofd[data-direction="furniture"] .ofd-proof__item {
+  border: none;
+  border-radius: 5px;
+  background: linear-gradient(180deg, #26262d 0%, #16161b 100%);
+  color: rgba(255, 255, 255, 0.86);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.12) inset,
+    0 -2px 4px rgba(0, 0, 0, 0.5) inset,
+    0 2px 5px rgba(0, 0, 0, 0.35);
+}
+
+/* ===========================================================================
+   E · BROADSHEET — type-led magazine
+   ===========================================================================
+
+   Drop cap, pull quote, asymmetric grid, big numerals. No imagery, no motion
+   machinery, no new colour — the rhythm comes entirely from position and
+   scale, which is why this is the cheapest direction to ship and the one that
+   changes the most between desktop and phone.
+   ======================================================================== */
+
+/* The numeral leaves the header and becomes a margin figure at display scale. */
+.ofd[data-direction="broadsheet"] .ofd-sec {
+  display: grid;
+  grid-template-columns: minmax(88px, 0.16fr) minmax(0, 1fr);
+  column-gap: clamp(20px, 3cqw, 56px);
+  align-items: start;
+  border-top: 1px solid var(--ofd-rule);
+}
+
+.ofd[data-direction="broadsheet"] .ofd-sec__head {
+  grid-column: 1;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  margin: 0;
+  position: sticky;
+  top: clamp(20px, 4cqw, 48px);
+}
+
+.ofd[data-direction="broadsheet"] .ofd-sec__num {
+  font-family: var(--font-serif);
+  font-size: clamp(38px, 5cqw, 76px);
+  font-weight: 400;
+  line-height: 0.86;
+  letter-spacing: -0.03em;
+  color: var(--ofd-gold);
+}
+
+.ofd[data-direction="broadsheet"] .ofd-sec__body {
+  grid-column: 2;
+}
+
+/* The drop cap. `::first-letter` on the paragraph itself, so the text remains
+   one selectable run and a screen reader reads it as ordinary prose. */
+.ofd[data-direction="broadsheet"] .ofd-hero__lede::first-letter {
+  float: left;
+  font-family: var(--font-serif);
+  font-size: 3.4em;
+  line-height: 0.82;
+  padding: 0.06em 0.1em 0 0;
+  color: var(--ofd-ink);
+}
+
+.ofd[data-direction="broadsheet"] .ofd-hero__title {
+  font-size: clamp(42px, 8.6cqw, 128px);
+  letter-spacing: -0.03em;
+}
+
+/* Asymmetric — the first block leads, the second supports. */
+.ofd[data-direction="broadsheet"] .ofd-blocks {
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.85fr);
+  column-gap: clamp(28px, 4.5cqw, 76px);
+}
+
+.ofd[data-direction="broadsheet"] .ofd-blocks .ofd-block[data-block-index="1"] {
+  padding-top: clamp(20px, 3cqw, 48px);
+}
+
+/* The note as a genuine pull quote, with the mark set in the margin. */
+.ofd[data-direction="broadsheet"] .ofd-method {
+  position: relative;
+  max-width: 34ch;
+  padding-left: clamp(18px, 2cqw, 34px);
+  border-left: 2px solid var(--ofd-gold);
+}
+
+.ofd[data-direction="broadsheet"] .ofd-method__text {
+  font-size: clamp(23px, 3.1cqw, 46px);
+  line-height: 1.16;
+}
+
+.ofd[data-direction="broadsheet"] .ofd-engagement__name {
+  font-family: var(--font-serif);
+  font-size: clamp(19px, 2.2cqw, 34px);
+  letter-spacing: -0.012em;
+}
+
+/* ===========================================================================
+   0 · BASELINE — no art direction
+   ===========================================================================
+   The current page's flat treatment, kept so the comparison includes the real
+   thing. Everything above is switched off; only the skeleton remains.
+   ======================================================================== */
+
+.ofd[data-direction="baseline"] .ofd-sec + .ofd-sec {
+  border-top: 1px solid var(--ofd-rule);
+}
+
+.ofd[data-direction="baseline"] .ofd-sec {
+  padding-block: clamp(38px, 5cqw, 64px);
+}
+
+.ofd[data-direction="baseline"] .ofd-action {
+  border-radius: 8px;
+  background: transparent;
+  border-color: var(--ofd-rule-strong);
+  box-shadow: none;
+}
+
+.ofd[data-direction="baseline"] .ofd-action .ofd-action__label {
+  color: var(--ofd-ink);
+}
+
+.ofd[data-direction="baseline"] .ofd-action__chev {
+  display: none;
+}
+
+/* ===========================================================================
+   NARROW — container queries, so these fire from the composition's own width.
+
+   The lab renders a 390px frame beside a desktop one on the same viewport, so
+   viewport media queries would style both identically and the narrow frame
+   would be a lie. Container queries make the 390px column a REAL narrow
+   layout, and mean any of these could be dropped into a card unchanged.
+   ======================================================================== */
+
+@container ofd (max-width: 900px) {
+  /* Two columns of five-item lists stop working well before the layout
+     technically breaks — the descriptors wrap to four lines first. */
+  .ofd-blocks,
+  .ofd[data-direction="broadsheet"] .ofd-blocks {
+    grid-template-columns: minmax(0, 1fr);
+    gap: clamp(30px, 5cqw, 48px);
+  }
+
+  .ofd[data-direction="broadsheet"] .ofd-blocks .ofd-block[data-block-index="1"] {
+    padding-top: 0;
+  }
+}
+
+@container ofd (max-width: 760px) {
+  .ofd {
+    --ofd-gap: clamp(40px, 8cqw, 68px);
+    --ofd-pad: clamp(20px, 5cqw, 34px);
+  }
+
+  /* Broadsheet loses the margin figure and becomes one column. This is the
+     direction's stated cost, made literal: most of what distinguishes it is a
+     desktop-only property. */
+  .ofd[data-direction="broadsheet"] .ofd-sec {
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: 18px;
+  }
+
+  .ofd[data-direction="broadsheet"] .ofd-sec__head {
+    grid-column: 1;
+    /* Sticky inside a one-column flow would pin the numeral over the body. */
+    position: static;
+    flex-direction: row;
+    align-items: baseline;
+    gap: 12px;
+    margin-bottom: clamp(16px, 3cqw, 24px);
+  }
+
+  .ofd[data-direction="broadsheet"] .ofd-sec__num {
+    font-size: clamp(26px, 7cqw, 38px);
+  }
+
+  .ofd[data-direction="broadsheet"] .ofd-sec__body {
+    grid-column: 1;
+  }
+
+  .ofd[data-direction="broadsheet"] .ofd-hero__lede::first-letter {
+    font-size: 2.8em;
+  }
+
+  /* The plate is shot wide; at phone widths the portrait crop is served by the
+     <source>, and the frame shortens so the type is not pushed below the fold. */
+  .ofd[data-direction="cinematic"] .ofd__plate,
+  .ofd[data-direction="cinematic"] .ofd-sec[data-sec="hero"] {
+    height: auto;
+    min-height: clamp(420px, 118cqw, 620px);
+  }
+
+  .ofd[data-direction="cinematic"] .ofd__plate {
+    height: clamp(420px, 118cqw, 620px);
+  }
+
+  /* The scrim has a taller copy block to clear when the type stacks. */
+  .ofd[data-direction="cinematic"] .ofd__plateScrim {
+    background: linear-gradient(
+      to top,
+      #0a0b0f 0%,
+      rgba(10, 11, 15, 0.94) 18%,
+      rgba(4, 5, 10, 0.7) 38%,
+      rgba(4, 5, 10, 0.3) 52%,
+      transparent 64%
+    );
+  }
+
+  /* The actions become full-width plates rather than two half-width bars with
+     a wrap point in the middle of the row. */
+  .ofd-ask__actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .ofd-action {
+    justify-content: space-between;
+  }
+
+  /* The rail is a plain table of contents at this width. It is NOT made
+     sticky or horizontally scrollable — a second scroller inside a page that
+     already scrolls is the exact failure this whole redesign removed. */
+  .ofd[data-direction="chaptered"] .ofd-rail {
+    padding-bottom: 4px;
+  }
+
+  .ofd-rail__list {
+    gap: 2px 14px;
+  }
+
+  .ofd-rail__name {
+    font-size: var(--text-label);
+  }
+}
+
+/* ===========================================================================
+   WIDE — the rail earns a column of its own
+   ======================================================================== */
+
+@container ofd (min-width: 1100px) {
+  .ofd[data-direction="chaptered"] {
+    grid-template-columns: minmax(190px, 0.2fr) minmax(0, 1fr);
+    align-items: start;
+  }
+
+  .ofd[data-direction="chaptered"] .ofd-rail {
+    position: sticky;
+    top: 0;
+    padding: clamp(56px, 9cqw, 132px) 0 0 var(--ofd-pad);
+  }
+
+  .ofd[data-direction="chaptered"] .ofd-rail__list {
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .ofd[data-direction="chaptered"] .ofd__flow {
+    /* The flow already carries --ofd-pad on each section; without this the
+       rail column and the body would be double-padded against each other. */
+    padding-right: 0;
+  }
+}
+
+/* ===========================================================================
+   MOTION — grounded, scroll-driven, and entirely optional
+   ===========================================================================
+
+   Scroll-driven CSS animations rather than scroll handlers: no listener, no
+   rAF, no layout reads in a hot path. Where `animation-timeline` is not
+   supported the page simply renders in its final state, because every base
+   style below IS the final state and the keyframe only supplies the offset it
+   arrives FROM.
+
+   That is also why the fill mode is `backwards` and never `both`. `both` pins
+   the end-state transform for good and silently kills hover and press on
+   anything underneath it.
+   ======================================================================== */
+
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    /* Movements rise into place as they enter. Small — 14px and 320ms of
+       range — because the site's motion is grounded, not floaty. */
+    .ofd[data-direction="chaptered"] .ofd-sec__body,
+    .ofd[data-direction="cinematic"] .ofd-sec:not([data-sec="hero"]) .ofd-sec__body,
+    .ofd[data-direction="alternating"] .ofd-sec__body {
+      animation: ofd-rise linear backwards;
+      animation-timeline: view();
+      animation-range: entry 8% entry 46%;
+    }
+
+    /* The plate drifts against the scroll. 4% of its own height, which at a
+       880px plate is ~35px across the whole hero — enough to feel like depth,
+       not enough to read as parallax for its own sake. */
+    .ofd[data-direction="cinematic"] .ofd__plateImg {
+      animation: ofd-drift linear backwards;
+      animation-timeline: view();
+      animation-range: cover;
+    }
+  }
+}
+
+@keyframes ofd-rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+}
+
+@keyframes ofd-drift {
+  from {
+    transform: scale(1.06) translateY(-2%);
+  }
+  to {
+    transform: scale(1.06) translateY(2%);
+  }
+}
+
+/* ===========================================================================
+   REDUCED MOTION
+   Every state above is a static rule and every animation supplies only the
+   offset it arrives from, so switching motion off is just removing the
+   tweening — nothing is left mid-flight or half-transparent.
+   ======================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .ofd,
+  .ofd *,
+  .ofd *::before,
+  .ofd *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}
