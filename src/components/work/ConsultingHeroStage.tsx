@@ -14,6 +14,7 @@
 
 import WorkTogether from "@/components/work/WorkTogether";
 import CtaRowInline from "@/components/cta-row-lab/CtaRowInline";
+import CtaDecisionCard from "@/components/cta-decision/CtaDecisionCard";
 import { useCtaVariant } from "@/components/work/CtaVariant";
 import "@/components/work/work-together.css";
 
@@ -40,7 +41,12 @@ export default function ConsultingHeroStage({ isActive }: { isActive?: boolean }
 
   return (
     <section className="cns-photo cns-photo--hero cns-stage">
-      {cta.variant === "row" ? (
+      {cta.variant === "decision" ? (
+        <CtaDecisionCard
+          media={media}
+          offerHref={(id) => cta.offerHref?.(id) ?? `/offer-lab/${id}`}
+        />
+      ) : cta.variant === "row" ? (
         <CtaRowInline
           media={media}
           offerLayout={cta.offerLayout}

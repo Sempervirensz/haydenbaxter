@@ -37,7 +37,7 @@ const WorkSection = dynamic(() => import("@/components/work/WorkSectionResponsiv
  * structural alternative: the choices become links to real offer PAGES rather
  * than panels opening inside the card.
  */
-type ScreenChoice = OfferLayoutId | "dossier" | "routed";
+type ScreenChoice = OfferLayoutId | "dossier" | "routed" | "decision";
 
 export default function InSitePreview() {
   const [screen, setScreen] = useState<ScreenChoice>("routed");
@@ -53,7 +53,10 @@ export default function InSitePreview() {
     if (window.innerWidth < 1100) setOpen(false);
   }, []);
 
-  const routed = screen === "routed";
+  const decision = screen === "decision";
+  // The decision chooser navigates for the same reason the routed row does:
+  // the offer content is a page, not a panel inside this card.
+  const routed = screen === "routed" || decision;
   const offerLayout: OfferLayoutId | null =
     screen === "dossier" || routed ? null : screen;
 
@@ -72,14 +75,21 @@ export default function InSitePreview() {
 
   return (
     <CtaVariantProvider
-      value={{ variant: "row", offerLayout, offerSurface: surface, offerHref }}
+      value={{
+        variant: decision ? "decision" : "row",
+        offerLayout,
+        offerSurface: surface,
+        offerHref,
+      }}
     >
       <aside className={`ctarl ctarl--insite ${open ? "is-open" : ""}`} aria-label="Preview controls">
         <button type="button" className="ctarl__toggle" onClick={() => setOpen((o) => !o)} aria-expanded={open}>
           <span className="ctarl__dot" aria-hidden />
           In site
           <span className="ctarl__state">
-            {screen === "routed"
+            {screen === "decision"
+              ? "Decision chooser"
+              : screen === "routed"
               ? OFFER_DIRECTIONS.find((d) => d.id === direction)?.name ?? "Routed pages"
               : screen === "dossier"
                 ? "Dossier (live)"
@@ -92,6 +102,18 @@ export default function InSitePreview() {
             <div className="ctarl__group">
               <h2 className="ctarl__groupTitle">Choices open into</h2>
               <div className="ctarl__col">
+                <button
+                  type="button"
+                  className={`ctarl__row ${screen === "decision" ? "is-active" : ""}`}
+                  aria-pressed={screen === "decision"}
+                  onClick={() => setScreen("decision")}
+                >
+                  <span className="ctarl__rowName">Decision chooser</span>
+                  <span className="ctarl__rowNote">
+                    The CD and a tracklist instead of the candy-bar row. Chapter
+                    04 becomes the chooser; the offer pages carry the content.
+                  </span>
+                </button>
                 <button
                   type="button"
                   className={`ctarl__row ${screen === "routed" ? "is-active" : ""}`}

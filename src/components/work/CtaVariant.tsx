@@ -15,7 +15,14 @@ import { createContext, useContext } from "react";
 import type { OfferLayoutId, OfferSurfaceId } from "@/data/offerLab";
 
 export interface CtaVariantConfig {
-  variant: "live" | "row";
+  /**
+   * `live`     — what ships: the WorkTogether row.
+   * `row`      — the pre-ship row prototype from /cta-lab.
+   * `decision` — the CD + tracklist chooser from /cta-lab/decision, sized for
+   *              this card. Additive: the default below is still `live`, so a
+   *              tree with no provider (the homepage) is untouched.
+   */
+  variant: "live" | "row" | "decision";
   /**
    * Which screen a choice opens into. `null` keeps the production dossier
    * panel that ships today; a layout id swaps in the offer-lab screen, so the
