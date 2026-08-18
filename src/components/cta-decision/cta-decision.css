@@ -1,0 +1,664 @@
+/* ===========================================================================
+   CTA decision lab. Scoped under .cdx-.
+   ===========================================================================
+
+   A first-screen decision interface: one person, three tracks, one panel.
+
+   The selectors are TRACKS ON A DISC rather than tabs, which is a visual
+   argument as much as a metaphor — it is what makes three professional paths
+   read as one body of work instead of three unrelated careers. So they are
+   numbered, they sit beside the object rather than above a content well, and
+   choosing one rewrites the handwritten label across the disc.
+
+   Everything here uses tokens the site already owns: --font-serif /
+   --font-mono / --font-sans, the --text-* ramp, --track-dymo, and the gold
+   #d8b15a accent. No new brand colour, no new dependency, no gradients that
+   did not already exist in this language.
+
+   NO `backdrop-filter` anywhere. There is nothing behind these surfaces worth
+   resampling for, and declaring it costs sharpness on the disc's fine
+   concentric detail — which is the one thing on this page worth keeping sharp.
+   ======================================================================== */
+
+.cdx {
+  --cdx-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --cdx-ink: rgba(255, 255, 255, 0.95);
+  --cdx-body: rgba(255, 255, 255, 0.8);
+  --cdx-muted: rgba(255, 255, 255, 0.62);
+  --cdx-faint: rgba(255, 255, 255, 0.45);
+  --cdx-rule: rgba(255, 255, 255, 0.13);
+  --cdx-rule-strong: rgba(255, 255, 255, 0.3);
+  --cdx-gold: #d8b15a;
+
+  position: relative;
+  isolation: isolate;
+  min-height: 100dvh;
+  background: #08090d;
+  color: var(--cdx-body);
+  overflow-x: hidden;
+}
+
+/* Film grain, generated inline. Same recipe the Work chapter uses, so this
+   surface sits in the site's own film stock rather than looking cleaner than
+   everything around it. */
+.cdx__grain {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.32;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='0.3'/%3E%3C/svg%3E");
+  background-size: 180px 180px;
+}
+
+.cdx__inner {
+  position: relative;
+  z-index: 1;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: clamp(40px, 6vw, 96px) clamp(22px, 5vw, 88px) clamp(56px, 8vw, 120px);
+}
+
+.cdx :focus-visible {
+  outline: 2px solid var(--cdx-gold);
+  outline-offset: 4px;
+  border-radius: 4px;
+}
+
+.cdx__srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ===========================================================================
+   1 — ONE COHERENT PERSON
+   The identity resolves before any choice is offered, which is the whole
+   point: three ways in, one person.
+   ======================================================================== */
+
+.cdx__id {
+  max-width: 62ch;
+}
+
+.cdx__name {
+  margin: 0 0 clamp(16px, 2vw, 24px);
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  font-weight: 500;
+  letter-spacing: var(--track-dymo);
+  text-transform: uppercase;
+  color: var(--cdx-gold);
+}
+
+.cdx__statement {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-size: clamp(34px, 5.4vw, 76px);
+  line-height: 0.98;
+  letter-spacing: -0.025em;
+  color: var(--cdx-ink);
+  text-wrap: balance;
+}
+
+.cdx__supporting {
+  margin: clamp(18px, 2.2vw, 28px) 0 0;
+  max-width: 54ch;
+  font-family: var(--font-sans);
+  font-size: clamp(15px, 1.15vw, 19px);
+  line-height: 1.6;
+  color: var(--cdx-muted);
+}
+
+/* ===========================================================================
+   THE FIELD — tracklist and panel on the left, the object on the right
+   ======================================================================== */
+
+.cdx__field {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+  gap: clamp(32px, 5vw, 88px);
+  align-items: start;
+  margin-top: clamp(40px, 6vw, 88px);
+}
+
+.cdx__left {
+  min-width: 0;
+  /* A SIZE CONTAINER, so the two capability blocks respond to the width of the
+     column they are in rather than to the viewport. Between roughly 1040 and
+     1300 the field is still two columns, so this column is narrow while the
+     window is wide — a viewport breakpoint gets that case exactly backwards
+     and both plates wrapped.
+
+     The container is declared HERE and the queries below style DESCENDANTS. A
+     container query never matches the element that establishes it, so a rule
+     targeting `.cdx__left` itself would silently never apply. */
+  container-type: inline-size;
+  container-name: cdxleft;
+}
+
+
+/* ===========================================================================
+   2 — THREE WAYS TO ENGAGE
+   Always visible, so moving between professional paths never costs a
+   navigation. DYMO plates: mono, embossed, a degree or two of rotation.
+   ======================================================================== */
+
+.cdx__tracksLabel {
+  margin: 0 0 14px;
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  letter-spacing: var(--track-dymo);
+  text-transform: uppercase;
+  color: var(--cdx-faint);
+}
+
+.cdx__tracksLabel::after {
+  content: "";
+  display: block;
+  height: 1px;
+  margin-top: 12px;
+  background: var(--cdx-rule);
+}
+
+.cdx__tracks {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.cdx__track {
+  all: unset;
+  box-sizing: border-box;
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: clamp(14px, 1.6vw, 22px);
+  padding: clamp(14px, 1.5vw, 20px) clamp(16px, 1.8vw, 24px);
+  border-radius: 6px;
+  cursor: pointer;
+  /* The DYMO plate: dark embossed tape, deep inset, a hair of rotation. */
+  background: linear-gradient(180deg, #23232a 0%, #15151a 100%);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.1) inset,
+    0 -2px 4px rgba(0, 0, 0, 0.5) inset,
+    0 2px 8px rgba(0, 0, 0, 0.45);
+  transform: rotate(-0.5deg);
+  transition:
+    transform 220ms var(--cdx-ease),
+    box-shadow 220ms var(--cdx-ease),
+    background 220ms var(--cdx-ease);
+}
+
+.cdx__track:nth-child(even) {
+  transform: rotate(0.6deg);
+}
+
+.cdx__track:hover {
+  transform: rotate(-0.5deg) translateX(4px);
+}
+
+.cdx__track:nth-child(even):hover {
+  transform: rotate(0.6deg) translateX(4px);
+}
+
+/* Tactile press, as a physical label should have. */
+.cdx__track:active {
+  transform: translateY(1px) rotate(-0.5deg);
+  transition-duration: 60ms;
+}
+
+.cdx__track.is-active {
+  background: linear-gradient(180deg, #2b2b33 0%, #1b1b21 100%);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.14) inset,
+    0 -2px 4px rgba(0, 0, 0, 0.5) inset,
+    0 6px 20px rgba(0, 0, 0, 0.5);
+}
+
+.cdx__trackNum {
+  flex: 0 0 auto;
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  letter-spacing: 0.1em;
+  color: var(--cdx-faint);
+  transition: color 220ms ease;
+}
+
+.cdx__track.is-active .cdx__trackNum {
+  color: var(--cdx-gold);
+}
+
+.cdx__trackMain {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  text-align: left;
+}
+
+.cdx__trackLabel {
+  font-family: var(--font-mono);
+  font-size: var(--text-control);
+  font-weight: 500;
+  letter-spacing: var(--track-dymo);
+  text-transform: uppercase;
+  line-height: 1;
+  color: rgba(255, 255, 255, 0.72);
+  transition: color 220ms ease;
+}
+
+.cdx__track.is-active .cdx__trackLabel,
+.cdx__track:hover .cdx__trackLabel {
+  color: #fff;
+}
+
+.cdx__trackHint {
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  line-height: 1.35;
+  color: var(--cdx-faint);
+}
+
+/* The active marker. A cue light on the plate, not a border — a border would
+   redraw the plate's edge and break the emboss. */
+.cdx__trackMark {
+  flex: 0 0 auto;
+  margin-left: auto;
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.14);
+  transition: background 220ms ease, box-shadow 220ms ease;
+}
+
+.cdx__track.is-active .cdx__trackMark {
+  background: var(--cdx-gold);
+  box-shadow: 0 0 0 4px rgba(216, 177, 90, 0.16);
+}
+
+/* ===========================================================================
+   3 + 4 — ONE SELECTED PATH, ONE OR TWO OBVIOUS ACTIONS
+   ======================================================================== */
+
+.cdx__panel {
+  margin-top: clamp(30px, 4vw, 52px);
+  padding-top: clamp(26px, 3vw, 40px);
+  border-top: 1px solid var(--cdx-rule);
+  /* `backwards`, never `both`: a filled-forwards animation pins its end-state
+     transform and would win the cascade over the plates' hover and press. */
+  animation: cdx-panel-in 420ms var(--cdx-ease) backwards;
+}
+
+@keyframes cdx-panel-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+}
+
+.cdx__panelTitle {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-size: clamp(26px, 2.8vw, 44px);
+  line-height: 1.06;
+  letter-spacing: -0.02em;
+  color: var(--cdx-ink);
+  text-wrap: balance;
+}
+
+.cdx__panelLede {
+  margin: clamp(14px, 1.6vw, 20px) 0 0;
+  max-width: 58ch;
+  font-family: var(--font-sans);
+  font-size: clamp(15px, 1.1vw, 18px);
+  line-height: 1.6;
+  color: var(--cdx-body);
+}
+
+/* Consulting's two capabilities. Side by side, because they are two practices
+   with different audiences rather than a list of services. */
+.cdx__blocks {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(22px, 2.6vw, 40px);
+  margin-top: clamp(26px, 3vw, 40px);
+}
+
+.cdx__block {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  padding-top: 16px;
+  border-top: 2px solid var(--cdx-gold);
+}
+
+.cdx__blockLabel {
+  margin: 0 0 10px;
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  font-weight: 500;
+  letter-spacing: var(--track-dymo);
+  text-transform: uppercase;
+  line-height: 1.3;
+  color: var(--cdx-ink);
+}
+
+.cdx__blockBody {
+  margin: 0 0 clamp(18px, 2vw, 26px);
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  line-height: 1.55;
+  color: var(--cdx-muted);
+}
+
+.cdx__blockActions {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  /* STRETCH, not flex-start. Shrink-to-fit sized each plate to its own label,
+     so "Discuss an AI Project" and "Discuss a Supply Chain Project" came out
+     different widths and the longer one wrapped to two lines inside a control.
+     Matching plates read as two equal front doors, which is what they are. */
+  align-items: stretch;
+  gap: 12px;
+}
+
+.cdx__blockActions .cdx__action--primary {
+  justify-content: space-between;
+  /* The long label needs the room: at 0.1em it overran a column-width plate.
+     Tracking and padding give it back rather than type size, so the control
+     stays on the site's own scale. */
+  letter-spacing: 0.04em;
+  padding-inline: 14px;
+}
+
+.cdx__blockActions .cdx__action--proof {
+  align-self: flex-start;
+}
+
+.cdx__actions {
+  margin-top: clamp(26px, 3vw, 40px);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+/* ---- Actions ---- */
+
+.cdx__action {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  font-family: var(--font-mono);
+  font-size: var(--text-control);
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  transition:
+    background 180ms ease,
+    border-color 180ms ease,
+    color 180ms ease,
+    transform 140ms ease;
+}
+
+/* The one obvious action. A near-white plate, the site's own control. */
+.cdx__action--primary {
+  padding: 14px 18px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.26);
+  background: linear-gradient(180deg, #fdfdfd 0%, #f4f3f0 100%);
+  color: #111116;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.85) inset,
+    0 4px 16px rgba(0, 0, 0, 0.42);
+}
+
+.cdx__action--primary:hover,
+.cdx__action--primary:focus-visible {
+  transform: translateY(-1px);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.85) inset,
+    0 8px 24px rgba(0, 0, 0, 0.5);
+}
+
+.cdx__action--primary:active {
+  transform: translateY(1px);
+  transition-duration: 60ms;
+}
+
+/* Proof, for the reader who wants evidence before booking anything. Quiet on
+   purpose: two plates of equal weight would leave no obvious next move. */
+.cdx__action--proof {
+  padding: 4px 0;
+  color: var(--cdx-faint);
+  border-bottom: 1px solid transparent;
+}
+
+.cdx__action--proof:hover,
+.cdx__action--proof:focus-visible {
+  color: var(--cdx-ink);
+  border-bottom-color: var(--cdx-rule-strong);
+}
+
+.cdx__chev {
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1;
+  transition: transform 200ms ease;
+}
+
+.cdx__action:hover .cdx__chev,
+.cdx__action:focus-visible .cdx__chev {
+  transform: translateX(3px);
+}
+
+/* ===========================================================================
+   5 — SUPPORTING CREDIBILITY
+   One line, never a wall. It sits last because it confirms a decision rather
+   than making one.
+   ======================================================================== */
+
+.cdx__credibility {
+  margin: clamp(28px, 3.4vw, 44px) 0 0;
+  padding-top: clamp(16px, 2vw, 22px);
+  border-top: 1px solid var(--cdx-rule);
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  line-height: 1.7;
+  letter-spacing: 0.06em;
+  color: var(--cdx-faint);
+}
+
+/* ===========================================================================
+   THE DISC — one object, every path a track on it
+   ======================================================================== */
+
+.cdx__discWrap {
+  position: sticky;
+  /* Sticky rather than fixed: it holds beside the panel while the page moves,
+     and stops at the end of the field instead of following the footer. */
+  top: clamp(28px, 5vh, 72px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(20px, 2.4vw, 32px);
+}
+
+.cdx__disc {
+  position: relative;
+  width: min(100%, 460px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  transform: rotate(var(--disc-angle, 0deg));
+  transition: transform 720ms var(--cdx-ease);
+  /* The disc sits ON the page rather than floating above it. */
+  box-shadow:
+    0 40px 90px rgba(0, 0, 0, 0.6),
+    0 8px 24px rgba(0, 0, 0, 0.45);
+}
+
+.cdx__discImg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+/* A single soft highlight raking across the disc, so it reads as a physical
+   object catching one light rather than a flat circle. */
+.cdx__discSheen {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  pointer-events: none;
+  background: linear-gradient(
+    118deg,
+    rgba(255, 255, 255, 0.16) 0%,
+    rgba(255, 255, 255, 0.03) 26%,
+    transparent 46%,
+    rgba(255, 255, 255, 0.05) 72%,
+    transparent 88%
+  );
+}
+
+.cdx__discHole {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 15.5%;
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: #08090d;
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.09),
+    inset 0 2px 6px rgba(0, 0, 0, 0.85);
+}
+
+/* The handwritten track label, rewritten on every change. This is what makes
+   the three paths read as tracks on one record. */
+.cdx__discLabel {
+  margin: 0;
+  font-family: var(--font-marker, var(--font-serif));
+  font-size: clamp(20px, 2vw, 30px);
+  line-height: 1.1;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.86);
+  transform: rotate(-1.6deg);
+  animation: cdx-label-in 420ms var(--cdx-ease) backwards;
+}
+
+@keyframes cdx-label-in {
+  from {
+    opacity: 0;
+    transform: rotate(-1.6deg) translateY(6px);
+  }
+}
+
+.cdx__discMeta {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  letter-spacing: var(--track-dymo);
+  color: var(--cdx-faint);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ===========================================================================
+   RESPONSIVE
+   The disc moves ABOVE the tracklist on narrow, not below it: it is the
+   anchor, and a decision interface that opens on a list of buttons with the
+   object somewhere off screen has lost the thing that unifies them.
+   ======================================================================== */
+
+/* Two practices side by side only while the column can actually hold two.
+
+   Declared AFTER `.cdx__blocks` on purpose: the base rule sets two columns and
+   these have the same specificity, so placed earlier this lost on source order
+   and silently never applied at any width.
+
+   A container query rather than a media query because the left column is
+   NARROW WHILE THE WINDOW IS WIDE between about 1040 and 1300, where the field
+   is two columns — a viewport breakpoint gets that case exactly backwards. */
+/* 660px, measured rather than guessed: at a 1280px viewport this column comes
+   out 626px, which held two columns of 295px and wrapped the longer label.
+   704px (a 1440px viewport) is the narrowest column that genuinely fits two. */
+@container cdxleft (max-width: 660px) {
+  .cdx__blocks {
+    grid-template-columns: minmax(0, 1fr);
+    gap: clamp(26px, 5cqw, 34px);
+  }
+}
+
+@media (max-width: 1040px) {
+  .cdx__field {
+    grid-template-columns: minmax(0, 1fr);
+    gap: clamp(30px, 5vw, 48px);
+  }
+
+  .cdx__discWrap {
+    position: static;
+    order: -1;
+  }
+
+  .cdx__disc {
+    width: min(100%, 320px);
+  }
+}
+
+@media (max-width: 720px) {
+  /* `.cdx__blocks` is handled by the container query above — repeating it here
+     would be a second source of truth for the same decision. */
+  .cdx__disc {
+    width: min(72vw, 280px);
+  }
+
+  .cdx__actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .cdx__action--primary {
+    justify-content: space-between;
+  }
+
+  /* --track-dymo is 0.2em, which is right for a two-word label and wrong for
+     "Discuss a Supply Chain Project" — thirty characters of it overruns the
+     plate. The tracking tightens rather than the type shrinking, so the
+     control stays on the site's own scale. */
+  .cdx__action {
+    letter-spacing: 0.04em;
+  }
+}
+
+/* ===========================================================================
+   REDUCED MOTION
+   Every state above is a static rule and each animation supplies only the
+   offset it arrives from, so removing the tweening leaves nothing mid-flight
+   and nothing invisible.
+   ======================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .cdx,
+  .cdx *,
+  .cdx *::before,
+  .cdx *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  /* The disc still takes each path's resting angle — that is information about
+     which track is playing, not decoration. It simply arrives without travel. */
+}

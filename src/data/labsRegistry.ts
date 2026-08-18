@@ -96,6 +96,11 @@ export const LAB_GROUPS: LabGroup[] = [
         note: "The photograph-led direction, as a real routed page",
       },
       {
+        label: "↳ Decision lab (one person, three ways in)",
+        path: "/cta-lab/decision",
+        note: "First-screen self-selection: CD anchor, DYMO tracklist, one focused panel",
+      },
+      {
         label: "↳ CTA row — in site",
         path: "/cta-lab/in-site",
         note: "The row rendered inside the real page, among its neighbours",
