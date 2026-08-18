@@ -1429,3 +1429,107 @@
   outline: none;
   box-shadow: none;
 }
+
+/* ===========================================================================
+   OFFER SCREEN INSIDE THE CARD
+   ===========================================================================
+
+   When a choice opens an offer-lab layout instead of the production dossier,
+   the panel is a full page shape being asked to live in a card. It therefore
+   scrolls within the unfurl rather than pushing the card taller, and carries
+   its own back control — `.wt-screen` ships one, `OfferScreen` does not.
+   ======================================================================== */
+
+.ctar__unfurl[data-screen="offer"] {
+  display: block;
+  overflow: hidden;
+}
+
+.ctar__offer {
+  position: relative;
+  height: 100%;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  border-radius: 14px;
+}
+
+/* Sits above the scrolling panel so it stays reachable at any scroll depth. */
+.ctar__offerBack {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  float: right;
+  margin: 12px 14px 0 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  background: rgba(12, 14, 18, 0.72);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  font-family: var(--font-mono);
+  font-size: var(--text-control);
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.86);
+  cursor: pointer;
+  transition: color 160ms ease, border-color 160ms ease, background 160ms ease;
+}
+
+.ctar__offerBack:hover,
+.ctar__offerBack:focus-visible {
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.5);
+  background: rgba(20, 24, 30, 0.85);
+}
+
+.ctar__offerBack:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.85);
+  outline-offset: 3px;
+}
+
+/* On paper the glass pill would vanish into the sheet. */
+.ctar__offer:has([data-surface="paper"]) .ctar__offerBack {
+  border-color: rgba(17, 17, 22, 0.2);
+  background: rgba(245, 244, 241, 0.86);
+  color: rgba(17, 17, 22, 0.7);
+}
+
+.ctar__offer:has([data-surface="paper"]) .ctar__offerBack:hover,
+.ctar__offer:has([data-surface="paper"]) .ctar__offerBack:focus-visible {
+  color: rgba(17, 17, 22, 0.95);
+  border-color: rgba(17, 17, 22, 0.42);
+  background: #f5f4f1;
+}
+
+/* The offer screen is the panel here, so it fills the unfurl rather than
+   sitting as a card inside a card. */
+.ctar__offer .ofr-shell,
+.ctar__offer .ofr {
+  height: auto;
+}
+
+.ctar__offer .ofr {
+  border-radius: 14px;
+  min-height: 100%;
+}
+
+/* ===========================================================================
+   INLINE HEADER CLEARANCE
+   ===========================================================================
+
+   The host card paints its own chapter label — "04 — Consulting" — across the
+   top. At rest the copy block is bottom-anchored and never reaches it, but
+   opening a screen moves the block to the top of the frame, where the eyebrow
+   landed directly on that label. Both were legible on their own and illegible
+   together. Only the inline mount has a chapter rail, so only it pays the
+   clearance.
+   ======================================================================== */
+
+.ctar--inline[data-open="true"] .ctar__copy {
+  top: clamp(52px, 8cqh, 84px);
+}

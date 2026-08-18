@@ -35,6 +35,8 @@ import {
   type PathId,
 } from "@/data/ctaRowLab";
 import WorkTogetherScreen from "@/components/work/WorkTogetherScreen";
+import OfferScreen from "@/components/offer-lab/OfferScreen";
+import type { OfferLayoutId, OfferSurfaceId } from "@/data/offerLab";
 
 interface Props {
   variant: CtaRowVariantId;
@@ -63,6 +65,14 @@ interface Props {
    */
   media?: React.ReactNode;
   /**
+   * Which screen a choice opens into. `null` keeps the production
+   * `WorkTogetherScreen` — the paper dossier that ships today. Any layout id
+   * swaps in the offer-lab screen instead, so the CTA row and the offer page
+   * can be judged as ONE flow rather than as two separate experiments.
+   */
+  offerLayout?: OfferLayoutId | null;
+  offerSurface?: OfferSurfaceId;
+  /**
    * false drops the lab's card chrome — the rounded frame, the filmic edge,
    * the fixed height and the caption — so the composition can fill a host
    * card that already provides them. Defaults to the lab's framed stage.
@@ -80,6 +90,8 @@ export default function CtaRowStage({
   primary,
   media,
   frame = true,
+  offerLayout = null,
+  offerSurface = "dark",
 }: Props) {
   const rootRef = useRef<HTMLElement | null>(null);
 
@@ -238,8 +250,26 @@ export default function CtaRowStage({
           </nav>
 
           {path && (
-            <div className="ctar__unfurl">
-              <WorkTogetherScreen path={path} onBack={close} />
+            <div className="ctar__unfurl" data-screen={offerLayout ? "offer" : "dossier"}>
+              {offerLayout ? (
+                <div className="ctar__offer">
+                  {/* WorkTogetherScreen carries its own "Back to options";
+                      OfferScreen does not, so the stage supplies one. It keeps
+                      the same data-wt-focus hook, which is what the focus
+                      effect above targets when a screen opens. */}
+                  <button
+                    type="button"
+                    className="ctar__offerBack"
+                    onClick={close}
+                    data-wt-focus="destination"
+                  >
+                    <span aria-hidden="true">←</span> Back to options
+                  </button>
+                  <OfferScreen path={path} layout={offerLayout} surface={offerSurface} />
+                </div>
+              ) : (
+                <WorkTogetherScreen path={path} onBack={close} />
+              )}
             </div>
           )}
         </div>

@@ -10,6 +10,10 @@
 // Split needs its own two-pane wrapper. Everything else is CSS.
 
 import type { OfferLayoutId, OfferSurfaceId, PathDef } from "@/data/offerLab";
+// Imported HERE, not only in the lab shell. This component is also mounted
+// from the CTA row in /cta-lab/in-site, which never loads the shell — and a
+// missing stylesheet does not error, it just renders the markup naked.
+import "./offer-lab.css";
 
 interface Props {
   path: PathDef;

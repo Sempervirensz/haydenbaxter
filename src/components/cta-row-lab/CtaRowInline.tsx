@@ -13,12 +13,21 @@
 
 import { useState } from "react";
 import { DEFAULT_ACCENT, DEFAULT_VARIANT, type PathId } from "@/data/ctaRowLab";
+import type { OfferLayoutId, OfferSurfaceId } from "@/data/offerLab";
 import { usePrefersReducedMotion } from "@/components/cta-lab/usePrefersReducedMotion";
 import CtaRowStage from "./CtaRowStage";
 import "@/components/work/work-together.css";
 import "./cta-row-lab.css";
 
-export default function CtaRowInline({ media }: { media: React.ReactNode }) {
+export default function CtaRowInline({
+  media,
+  offerLayout = null,
+  offerSurface = "dark",
+}: {
+  media: React.ReactNode;
+  offerLayout?: OfferLayoutId | null;
+  offerSurface?: OfferSurfaceId;
+}) {
   const [openId, setOpenId] = useState<PathId | null>(null);
   const reducedMotion = usePrefersReducedMotion();
 
@@ -33,6 +42,8 @@ export default function CtaRowInline({ media }: { media: React.ReactNode }) {
       primary
       media={media}
       frame={false}
+      offerLayout={offerLayout}
+      offerSurface={offerSurface}
     />
   );
 }

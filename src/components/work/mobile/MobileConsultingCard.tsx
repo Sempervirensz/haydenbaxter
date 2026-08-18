@@ -35,7 +35,7 @@ export default function MobileConsultingCard() {
   useCardDrift(rootRef);
 
   // "live" unless a route explicitly opts in, so the homepage is unaffected.
-  const variant = useCtaVariant();
+  const cta = useCtaVariant();
 
   const media = (
     <>
@@ -48,7 +48,15 @@ export default function MobileConsultingCard() {
 
   return (
     <article ref={rootRef as React.RefObject<HTMLElement>} className="wm-card wm-card--cns">
-      {variant === "row" ? <CtaRowInline media={media} /> : <WorkTogether media={media} />}
+      {cta.variant === "row" ? (
+        <CtaRowInline
+          media={media}
+          offerLayout={cta.offerLayout}
+          offerSurface={cta.offerSurface}
+        />
+      ) : (
+        <WorkTogether media={media} />
+      )}
 
       {/* Outside .wt so it keeps resolving its cq units against .wmob-screen,
           exactly like the other three chapters. */}

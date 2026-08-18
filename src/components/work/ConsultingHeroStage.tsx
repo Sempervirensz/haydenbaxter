@@ -26,7 +26,7 @@ const ALT =
 
 export default function ConsultingHeroStage({ isActive }: { isActive?: boolean }) {
   // "live" unless a route explicitly opts in, so the homepage is unaffected.
-  const variant = useCtaVariant();
+  const cta = useCtaVariant();
 
   const media = (
     <>
@@ -40,8 +40,12 @@ export default function ConsultingHeroStage({ isActive }: { isActive?: boolean }
 
   return (
     <section className="cns-photo cns-photo--hero cns-stage">
-      {variant === "row" ? (
-        <CtaRowInline media={media} />
+      {cta.variant === "row" ? (
+        <CtaRowInline
+          media={media}
+          offerLayout={cta.offerLayout}
+          offerSurface={cta.offerSurface}
+        />
       ) : (
         <WorkTogether isActive={isActive} media={media} />
       )}
