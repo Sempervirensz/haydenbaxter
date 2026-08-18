@@ -94,7 +94,10 @@ export default function DirectionsCompare() {
       </header>
 
       {OFFER_DIRECTIONS.map((dir) => (
-        <section key={dir.id} className="ofdc__item">
+        // The id makes each direction linkable — /offer-lab/directions#cinematic
+        // drops you at the one being argued about, which is the point of a page
+        // you scroll to compare.
+        <section key={dir.id} id={dir.id} className="ofdc__item">
           <div className="ofdc__meta">
             <h2 className="ofdc__name">{dir.name}</h2>
             <p className="ofdc__note">{dir.note}</p>
