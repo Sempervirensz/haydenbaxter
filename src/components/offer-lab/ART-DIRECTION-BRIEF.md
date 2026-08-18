@@ -1,7 +1,11 @@
-# Handoff — offer page visual design
+# Art direction brief — the three offer pages
 
-Paste the block below into a new thread. Everything it references is on branch
-`fix/cta-lab-sharp-background`, HEAD `f21eb44`, working tree clean.
+**The job:** the offer pages are structurally solved and visually inert. Give
+them a look that belongs to this site, and stop one template pretending three
+different offers are the same thing.
+
+Paste the block below into a new thread. Everything it references is on `main`
+and live — the CTA row that leads into these pages already ships.
 
 ---
 
@@ -14,8 +18,8 @@ brainstorming, so give me real options, not one safe answer.
 
 ### Where things stand
 
-Repo: Next.js portfolio, dark-only, design-forward. Branch
-`fix/cta-lab-sharp-background`.
+Repo: Next.js portfolio, dark-only, design-forward. Work from `main`; the CTA
+row that leads into these pages is already live on haydenbaxter.com.
 
 Three offers — **Consulting**, **WorldPulse**, **Experience** — each now a real
 route at `/offer-lab/[offer]`, entered from a CTA row at the end of the Work
