@@ -808,16 +808,65 @@
    reads as a laptop layout parked in the corner of a large card.
    ======================================================================== */
 
+/* ===========================================================================
+   THE HEADLINE IN THE SKY — desktop only
+   ===========================================================================
+
+   "Let's work together" used to sit bottom-anchored in the dark band under the
+   city, at a size that saturated at 72px by roughly a 1030px container. On any
+   real desktop it had already stopped growing, and the top third of the card
+   was empty — the first thing the eye met was nothing.
+
+   It now sits above the rooflines at roughly 2.3x the old size, and the copy
+   block stretches to the full height of the card so the hint and the three
+   bars stay exactly where they shipped. That order — statement, then the
+   photograph as evidence, then the ask — is what the chapter is for.
+
+   `.wt__copy` is one flex column holding all three, so this cannot be a simple
+   reposition: moving the block up would carry the near-white bars onto the lit
+   windows. `margin-top: auto` on the hint returns everything below the
+   headline to the bottom.
+
+   GUARDED AT 701px. The narrow block above owns the phone layout, where the
+   card is tall, the bars stack to fill the lower half, and there is no sky to
+   put a headline in.
+   ======================================================================== */
+
+@container wt (min-width: 701px) {
+  .wt__copy {
+    top: clamp(72px, 15cqh, 150px);
+  }
+
+  .wt__title {
+    font-size: clamp(72px, 11.5cqw, 164px);
+    letter-spacing: -0.032em;
+    line-height: 0.93;
+    /* The scrim ramps to fully transparent above about 52% of the frame — it
+       was built to protect type in the bottom band. Up here the headline is on
+       bare photograph, so it carries its own shadow. */
+    text-shadow:
+      0 4px 30px rgba(4, 5, 10, 0.7),
+      0 2px 10px rgba(4, 5, 10, 0.5);
+  }
+
+  .wt__hint {
+    margin-top: auto;
+  }
+}
+
 @container wt (min-width: 1600px) {
   .wt__copy {
     right: auto;
     width: min(100% - 2 * clamp(22px, 4cqw, 52px), var(--wt-shell));
   }
 
-  /* 7cqw saturates at 72px by a ~1030px container, so the headline had stopped
-     growing three tiers below the displays this is aimed at. */
+  /* The ceiling rises with the frame; the rate does not fall. Lowering `cqw`
+     here would pin the headline at its floor and make it shrink relative to
+     the card on exactly the displays this step exists for. The cap is set by
+     `--wt-shell` below (1696px): at roughly 8x the font size, anything past
+     ~205px cannot hold one line inside that column. */
   .wt__title {
-    font-size: clamp(72px, 4.6cqw, 92px);
+    font-size: clamp(164px, 11.5cqw, 186px);
   }
 
   .wt-screen__title {
@@ -843,7 +892,7 @@
 
 @container wt (min-width: 2400px) {
   .wt__title {
-    font-size: clamp(92px, 3.6cqw, 118px);
+    font-size: clamp(186px, 11.5cqw, 200px);
   }
 
   .wt__row {
