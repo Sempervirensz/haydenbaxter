@@ -74,3 +74,53 @@
     font-size: clamp(186px, 14cqw, 204px);
   }
 }
+
+/* ===========================================================================
+   POSITION — street (shipped) vs sky
+   ===========================================================================
+
+   `.wt__copy` is one bottom-anchored flex column holding the headline, the
+   hint rule and the three bars. So "move the headline into the sky" cannot be
+   a simple reposition of that block: shifting it up drags the bars onto the
+   brightest part of the photograph, where near-white plates sit on lit windows.
+
+   Sky mode instead STRETCHES the block to the full height of the card and
+   pushes everything below the headline back down with `margin-top: auto` on
+   the hint. The headline goes to the top, the controls stay where they were,
+   and the photograph keeps the band between them.
+
+   STREET IS THE SHIPPED POSITION AND IS NOT DECLARED HERE AT ALL. With no
+   attribute the production geometry applies untouched, so the comparison is
+   against the real thing rather than against a reconstruction of it.
+
+   Desktop only, same as the scale ramp — production's own
+   `max-width: 700px` block owns the phone layout and the brief is to leave it
+   alone. On a phone the card is tall and narrow, the bars stack to fill the
+   lower half, and there is no sky to put a headline in.
+   ======================================================================== */
+
+@container wt (min-width: 701px) {
+  [data-position="sky"] .wt__copy {
+    /* Clears the chapter rail at the top of the card, and keeps the shipped
+       bottom inset so the bars do not move at all. */
+    top: clamp(72px, 15cqh, 150px);
+    bottom: clamp(34px, 7cqh, 76px);
+  }
+
+  /* Everything from the hint down returns to the bottom of the card. Without
+     this the whole stack sits at the top and the bars land on the city. */
+  [data-position="sky"] .wt__hint {
+    margin-top: auto;
+  }
+
+  /* Above roughly 52% of the frame the production scrim has ramped out to
+     fully transparent — it was built to protect type in the bottom band. A
+     headline in the sky is therefore unprotected, so it carries its own
+     shadow rather than relying on the photograph happening to be dark there.
+     This is the one real cost of the sky position. */
+  [data-position="sky"] .wt__title {
+    text-shadow:
+      0 4px 30px rgba(4, 5, 10, 0.7),
+      0 2px 10px rgba(4, 5, 10, 0.5);
+  }
+}

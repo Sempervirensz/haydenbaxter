@@ -63,6 +63,8 @@ const ROUTES: Route[] = [
   { label: "Headline · large", src: "/cta-lab/in-site?screen=disc&headline=large" },
   { label: "Headline · huge", src: "/cta-lab/in-site?screen=disc&headline=huge" },
   { label: "Headline · display", src: "/cta-lab/in-site?screen=disc&headline=display" },
+  { label: "Sky · huge", src: "/cta-lab/in-site?screen=disc&headline=huge&position=sky" },
+  { label: "Sky · large", src: "/cta-lab/in-site?screen=disc&headline=large&position=sky" },
 ];
 
 interface Preset {

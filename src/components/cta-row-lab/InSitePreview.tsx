@@ -47,6 +47,11 @@ const HEADLINES = [
   { id: "display", label: "Display", note: "The upper bound. Past this the ascenders crowd the chapter rail." },
 ] as const;
 
+const POSITIONS = [
+  { id: "street", label: "Street", note: "Shipped. Bottom-anchored, in the dark band under the city." },
+  { id: "sky", label: "Sky", note: "Headline above the rooflines; hint and bars stay at the bottom." },
+] as const;
+
 const DISC_PLACEMENTS = [
   { id: "right", label: "Right", note: "Enters from the right edge, below the statue." },
   { id: "corner", label: "Corner", note: "Rests in the bottom-right corner. Most restrained." },
@@ -95,6 +100,10 @@ export default function InSitePreview() {
     if (HEADLINES.some((o) => o.id === headlineParam)) {
       setHeadline(headlineParam as (typeof HEADLINES)[number]["id"]);
     }
+    const positionParam = sp.get("position");
+    if (POSITIONS.some((o) => o.id === positionParam)) {
+      setPosition(positionParam as (typeof POSITIONS)[number]["id"]);
+    }
     const surfaceParam = sp.get("surface");
     if (OFFER_SURFACES.some((o) => o.id === surfaceParam)) {
       setSurface(surfaceParam as OfferSurfaceId);
@@ -108,6 +117,8 @@ export default function InSitePreview() {
   const [discRest, setDiscRest] = useState(false);
   const [headline, setHeadline] =
     useState<(typeof HEADLINES)[number]["id"]>("shipped");
+  const [position, setPosition] =
+    useState<(typeof POSITIONS)[number]["id"]>("street");
   // The decision chooser navigates for the same reason the routed row does:
   // the offer content is a page, not a panel inside this card.
   // The disc variant renders the SHIPPED row, which discloses in place; it is
@@ -148,7 +159,7 @@ export default function InSitePreview() {
           In site
           <span className="ctarl__state">
             {screen === "disc"
-              ? `Disc reveal · ${discPlacement}${headline !== "shipped" ? ` · ${headline}` : ""}`
+              ? `Disc reveal · ${discPlacement}${headline !== "shipped" ? ` · ${headline}` : ""}${position !== "street" ? ` · ${position}` : ""}`
               : screen === "decision"
               ? "Decision chooser"
               : screen === "routed"
@@ -245,6 +256,24 @@ export default function InSitePreview() {
                 Desktop only. Below 701px the shipped sizing and the phone copy
                 placement are left exactly as they are.
               </p>
+            </div>
+
+            <div className="ctarl__group">
+              <h2 className="ctarl__groupTitle">Headline position</h2>
+              <div className="ctarl__col">
+                {POSITIONS.map((o) => (
+                  <button
+                    key={o.id}
+                    type="button"
+                    className={`ctarl__row ${position === o.id ? "is-active" : ""}`}
+                    aria-pressed={position === o.id}
+                    onClick={() => setPosition(o.id)}
+                  >
+                    <span className="ctarl__rowName">{o.label}</span>
+                    <span className="ctarl__rowNote">{o.note}</span>
+                  </button>
+                ))}
+              </div>
             </div>
 
             {disc && (
@@ -378,7 +407,12 @@ export default function InSitePreview() {
         )}
       </aside>
 
-      <main data-headline={headline === "shipped" ? undefined : headline}>
+      <main
+        data-headline={headline === "shipped" ? undefined : headline}
+        /* `street` sets no attribute, so the shipped geometry applies
+           untouched and the comparison is against the real thing. */
+        data-position={position === "street" ? undefined : position}
+      >
         <HeroSection />
         <BrandsCarousel />
         <WorkSection />
