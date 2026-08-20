@@ -2,6 +2,16 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "headers": [
     {
+      "source": "/opengraph-image",
+      "headers": [
+        { "key": "Content-Type", "value": "image/png" },
+        {
+          "key": "Content-Disposition",
+          "value": "inline; filename=\"hayden-baxter-opengraph.png\""
+        }
+      ]
+    },
+    {
       "source": "/(.*)",
       "headers": [
         {
