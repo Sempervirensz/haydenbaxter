@@ -8,6 +8,10 @@ const PROJECT = findEtbProject("cortex");
 const VARIANTS = ["seal", "split", "giant"] as const;
 type Variant = (typeof VARIANTS)[number];
 
+export function generateStaticParams() {
+  return VARIANTS.map((variant) => ({ variant }));
+}
+
 function isVariant(value: string): value is Variant {
   return VARIANTS.includes(value as Variant);
 }
