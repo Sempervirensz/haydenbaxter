@@ -8,7 +8,7 @@
 export const ABOUT_DATA = {
   heading: "About",
   intro:
-    "I'm Hayden — a product builder, supply chain operator, and emerging-tech generalist based between the U.S. and Asia. I've spent 8+ years navigating international sourcing, building design-driven products, and translating complex workflows into systems that actually ship. I'm fluent in Mandarin, grounded in operations, and obsessed with the space where data, design, and the real world collide.",
+    "I'm Hayden, a global business leader, AI strategy partner, and founder of WorldPulse. Over the past 8+ years, I've worked across international sourcing, procurement, and supply chain operations with companies including Nike and Disney, while building practical AI products and Digital Product Passport experiences. I'm fluent in Mandarin and work at the intersection of emerging technology, cross-cultural business, and real-world operations, helping organizations turn complex opportunities into clear strategies, stronger systems, and practical next steps.",
   photos: [
     { src: "/about/pano.webp", alt: "On location — panorama", w: 2600, h: 922 },
     { src: "/about/landscape-1.webp", alt: "In the field", w: 1350, h: 1800 },
