@@ -500,6 +500,31 @@
   display: none;
 }
 
+/* The chapter rail steps aside once a panel is open.
+
+   `.cstack__head` is pinned to the top of the card and the consulting panel's
+   own eyebrow — "LET'S WORK TOGETHER", which only exists in the `destination`
+   step — sits in the same band, so "04 — Consulting" and the eyebrow printed
+   over each other the moment a visitor opened a screen.
+
+   Hiding the rail is the right way round rather than moving the eyebrow: the
+   chapter number's job is to say where you are while you are travelling, and by
+   the time the panel is open the sheet names itself ("CONSULTING", top-left,
+   inside the paper). Faded rather than `display: none` so it does not pop, and
+   `:has()` scopes it to the card that actually has a screen open — the same
+   read-the-state-from-an-ancestor trick `cta-disc-reveal.css` uses on the row.
+   Card 3 above is the precedent for a card suppressing its own rail. */
+.cstack__card:has(.wt[data-step="destination"]) .cstack__head {
+  opacity: 0;
+  transition: opacity 240ms ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cstack__card:has(.wt[data-step="destination"]) .cstack__head {
+    transition: none;
+  }
+}
+
 /* Neutralize the homepage glass shell so the cinematic card is the only frame,
    while keeping the padding/layout context ETBDetail expects. */
 /* The 1000px cap held the whole Emerging Tech Builds panel to ~37% of a 2560px
