@@ -1,21 +1,21 @@
 // Central site identity. SITE_URL is the canonical production origin used by
-// metadata, canonical tags, sitemap, robots, and OpenGraph. Override per
-// environment with NEXT_PUBLIC_SITE_URL (no trailing slash).
+// metadata, canonical tags, sitemap, robots, JSON-LD, and OpenGraph. Override
+// per environment with NEXT_PUBLIC_SITE_URL (no trailing slash).
 
 export const SITE_URL = (
-  process.env.NEXT_PUBLIC_SITE_URL ?? "https://haydenbaxter.com"
+  process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.haydenbaxter.com"
 ).replace(/\/$/, "");
 
 export const SITE_NAME = "Hayden Baxter";
 
-export const SITE_TITLE = "Hayden Baxter — Designer & Builder";
+export const SITE_TITLE =
+  "Hayden Baxter | AI Product Builder & Global Supply Chain Strategist";
 
 export const SITE_DESCRIPTION =
-  "Hayden Baxter — designer and builder of brand systems, product interfaces, and emerging-tech tools. I create designs that appeal, engage, and sell.";
+  "Hayden Baxter builds AI products, global supply chain systems, and Digital Product Passport experiences that connect data, design, and real-world operations.";
 
-// Public, indexable routes (used to generate the sitemap). Everything not
-// listed here — labs, sandboxes, previews, the private birthday page — is
-// kept out of the sitemap and disallowed in robots.
+// Public, indexable routes (used to generate the sitemap). Dynamic journal
+// routes are added from BLOG_POSTS in sitemap.ts.
 export const PUBLIC_ROUTES = [
   "/",
   "/emerging-tech-builds",
