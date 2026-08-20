@@ -1,15 +1,18 @@
 import type { MetadataRoute } from "next";
+import { BLOG_POSTS } from "@/data/journal";
 import { SITE_URL, PUBLIC_ROUTES } from "@/data/site";
 
 // Generated as a static /sitemap.xml at build time (output: export compatible).
 export const dynamic = "force-static";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const lastModified = new Date();
-  return PUBLIC_ROUTES.map((route) => ({
+  const journalRoutes = BLOG_POSTS.map((post) => `/blog/${post.slug}`);
+  const routes = [...PUBLIC_ROUTES, ...journalRoutes];
+
+  return routes.map((route) => ({
     url: `${SITE_URL}${route === "/" ? "" : route}`,
-    lastModified,
-    changeFrequency: route === "/" ? "monthly" : "yearly",
-    priority: route === "/" ? 1 : 0.7,
+    changeFrequency:
+      route === "/" ? "monthly" : route.startsWith("/blog") ? "monthly" : "yearly",
+    priority: route === "/" ? 1 : route.startsWith("/blog/") ? 0.8 : 0.7,
   }));
 }

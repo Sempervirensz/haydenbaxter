@@ -4,8 +4,18 @@ import ETBDetail from "@/components/work/ETBDetail";
 import { WORK_SCREENS } from "@/data/work";
 import { notFound } from "next/navigation";
 
+const DESCRIPTION =
+  "AI and emerging technology products built by Hayden Baxter, including Cortex, AtomicOS, and CaseBrief.";
+
 export const metadata: Metadata = {
   title: "Emerging Tech Builds",
+  description: DESCRIPTION,
+  alternates: { canonical: "/emerging-tech-builds" },
+  openGraph: {
+    title: "Emerging Tech Builds | Hayden Baxter",
+    description: DESCRIPTION,
+    url: "/emerging-tech-builds",
+  },
 };
 
 export default function EmergingTechBuildsPage() {

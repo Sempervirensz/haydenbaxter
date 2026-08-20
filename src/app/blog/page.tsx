@@ -3,8 +3,14 @@ import Link from "next/link";
 import { JOURNAL_COPY, BLOG_POSTS } from "@/data/journal";
 
 export const metadata: Metadata = {
-  title: "Journal — Hayden Baxter",
+  title: "Journal",
   description: JOURNAL_COPY.subline,
+  alternates: { canonical: "/blog" },
+  openGraph: {
+    title: "Journal | Hayden Baxter",
+    description: JOURNAL_COPY.subline,
+    url: "/blog",
+  },
 };
 
 export default function BlogIndexPage() {

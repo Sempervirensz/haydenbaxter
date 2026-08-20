@@ -4,10 +4,17 @@ import SiteFooter from "@/components/SiteFooter";
 import { SITE_NAME } from "@/data/site";
 import "./privacy.css";
 
+const DESCRIPTION = `How ${SITE_NAME}'s portfolio site handles your information.`;
+
 export const metadata: Metadata = {
   title: "Privacy Policy",
-  description: `How ${SITE_NAME}'s portfolio site handles your information.`,
+  description: DESCRIPTION,
   alternates: { canonical: "/privacy" },
+  openGraph: {
+    title: `Privacy Policy | ${SITE_NAME}`,
+    description: DESCRIPTION,
+    url: "/privacy",
+  },
 };
 
 const CONTACT_EMAIL = "haydenjbaxter@gmail.com";

@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import dynamic from "next/dynamic";
 import HeroSection from "@/components/HeroSection";
 import BrandsCarousel from "@/components/BrandsCarousel";
@@ -8,8 +9,18 @@ import JournalSection from "@/components/JournalSection";
 import SiteFooter from "@/components/SiteFooter";
 import StructuredData from "@/components/StructuredData";
 import SoftLockGate from "@/components/design-lab/SoftLockGate";
+import { SITE_TITLE, SITE_DESCRIPTION } from "@/data/site";
 
 const WorkSection = dynamic(() => import("@/components/work/WorkSectionResponsive"));
+
+export const metadata: Metadata = {
+  alternates: { canonical: "/" },
+  openGraph: {
+    title: SITE_TITLE,
+    description: SITE_DESCRIPTION,
+    url: "/",
+  },
+};
 
 export default function Home() {
   return (
