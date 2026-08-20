@@ -1,0 +1,4741 @@
+/* ===========================================================================
+   Consulting paths — lab chrome (.cpl-) + the two-path answer (.cpp-)
+   ===========================================================================
+
+   Loaded only by /consulting-paths-lab. `work-together.css` is imported first
+   and owns the composition; everything here either frames it (.cpl-) or
+   replaces the consulting panel inside it (.cpp-).
+
+   HOW THIS FILE IS ORGANISED
+
+     1. Lab shell            the frames, the gallery, the control panel
+     2. Screen skeleton      structure + the token contract every direction uses
+     3. Surfaces             paper | ink | glass      — what the sheet is made of
+     4. Palettes             four accent pairs        — what colour each path is
+     5. Type schemes         house | editorial | technical | press
+     6. Directions           dossier | ledger | plate | marquee | blueprint
+     7. Narrow / wide        container queries against `wt`
+
+   Sections 3–5 only ever set custom properties. Section 6 only ever consumes
+   them. That separation is what makes 5 × 4 × 3 × 4 combinations viewable
+   without 240 hand-drawn panels — and it is also the constraint that keeps
+   every direction honest: a direction that needs a hard-coded hex has stopped
+   being a skin and become a fork.
+   ======================================================================== */
+
+/* ===========================================================================
+   1. LAB SHELL
+   ======================================================================== */
+
+.cpl-root {
+  min-height: 100vh;
+  background: #08090d;
+  padding: clamp(20px, 3vw, 44px);
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+@media (min-width: 1360px) {
+  .cpl-root:has(.cpl-panel[data-open="true"]) {
+    padding-right: 500px;
+  }
+}
+
+.cpl-stages {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: center;
+  gap: clamp(18px, 2.4vw, 36px);
+  width: 100%;
+}
+
+/* The contact sheet: every direction at once, same state, same width. Judging
+   five skins by clicking a radio button five times compares each one against
+   your memory of the last; side by side it is one look. */
+.cpl-root[data-viewport="gallery"] .cpl-stages {
+  display: grid;
+  /* 620px is the floor at which the pair still renders side by side: below
+     701px of container the panel stacks, and a contact sheet of stacked phone
+     layouts is not what any of these directions is arguing about. */
+  grid-template-columns: repeat(auto-fit, minmax(620px, 1fr));
+  align-items: start;
+}
+
+.cpl-frame {
+  position: relative;
+  flex: 0 1 auto;
+  /* Room for the caption, which is positioned below the frame rather than
+     flowed after it. */
+  margin-bottom: 38px;
+}
+
+/* Wide enough that a large display actually crosses the 1600px container step
+   the sheet's own rules key off — capped at 1440 the lab could never exercise
+   its own large-display branch. */
+.cpl-frame--desktop {
+  width: min(1920px, 100%);
+  /* Closer to the real Consulting card, which is a full-height cinematic
+     panel. A tighter ceiling made the lab cramped in a way production is not. */
+  height: clamp(560px, 82vh, 980px);
+}
+
+.cpl-frame--narrow {
+  width: 390px;
+  height: 780px;
+}
+
+/* Tall enough to hold the composition AND an expanded path. The first pass
+   used a 660px ceiling and every card in the contact sheet showed detail text
+   with its names and CTAs cut off below the frame — a gallery of the one part
+   of the panel that is identical in all five. */
+.cpl-frame--gallery {
+  width: 100%;
+  height: clamp(780px, 68vh, 980px);
+}
+
+/* `.wt` is `position: absolute; inset: 0`, so it needs a positioned box with a
+   real height — that box is this. The rounded frame and filmic edge are lab
+   chrome only; in production the host card supplies them. */
+.cpl-stage {
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 30px 90px rgba(0, 0, 0, 0.6);
+  background: #05060a;
+}
+
+/* `.wt` is absolutely positioned, so the caption was the frame's only in-flow
+   child and rendered UNDERNEATH the stage at y=0 — invisible in every shot
+   taken of this lab so far. Positioning it below the frame is what makes the
+   gallery's direction names actually appear. */
+.cpl-frame__tag {
+  position: absolute;
+  top: calc(100% + 10px);
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.34);
+}
+
+.cpl-frame__note {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  letter-spacing: 0;
+  text-transform: none;
+  color: rgba(255, 255, 255, 0.32);
+}
+
+/* ---- Control panel ---- */
+
+.cpl-panel {
+  position: fixed;
+  top: 12px;
+  right: 12px;
+  z-index: 40;
+  width: 470px;
+  max-height: calc(100vh - 24px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 12px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(10, 11, 16, 0.92);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+.cpl-panel[data-open="false"] {
+  width: auto;
+  padding: 8px;
+}
+
+.cpl-panel__toggle {
+  all: unset;
+  box-sizing: border-box;
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.6);
+  padding: 8px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  text-align: center;
+}
+
+.cpl-panel__toggle:hover {
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+/* Two columns. One column of nine axes came to 1096px of controls in a 1024px
+   panel, which put Buttons — and Width, and Open screen — below a fold the
+   panel gives no sign of having. Everything now fits on a 900px-tall window
+   without scrolling at all, which is the only way an axis gets used. */
+.cpl-panel__body {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: start;
+  gap: 12px 14px;
+}
+
+.cpl-panel__title,
+.cpl-panel__note,
+.cpl-group--wide {
+  grid-column: 1 / -1;
+}
+
+.cpl-panel__title {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-size: 19px;
+  color: rgba(246, 245, 240, 0.95);
+}
+
+.cpl-panel__note {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  line-height: 1.4;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.cpl-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.cpl-group__label {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.34);
+}
+
+.cpl-group__items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+/* One line under the group label, describing whatever is selected. Printing a
+   note inside every chip is what pushed this panel to 1735px of controls in a
+   1012px window and hid four of its nine axes below a fold. */
+.cpl-group__hint {
+  margin: -2px 0 1px;
+  font-family: var(--font-sans);
+  font-size: 11px;
+  line-height: 1.4;
+  color: rgba(255, 255, 255, 0.42);
+}
+
+.cpl-toggle {
+  all: unset;
+  box-sizing: border-box;
+  cursor: pointer;
+  flex: 0 1 auto;
+  padding: 5px 9px;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.03);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: rgba(255, 255, 255, 0.78);
+  transition: border-color 160ms ease, background 160ms ease, color 160ms ease;
+}
+
+.cpl-toggle:hover {
+  border-color: rgba(255, 255, 255, 0.34);
+  color: #fff;
+}
+
+.cpl-toggle[data-on="true"] {
+  border-color: rgba(37, 99, 235, 0.75);
+  background: rgba(37, 99, 235, 0.2);
+  color: #fff;
+}
+
+.cpl-panel :focus-visible,
+.cpl-toggle:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.7);
+  outline-offset: 2px;
+}
+
+/* The lab's own reduced-motion switch, so the state can be reviewed on a
+   machine without the OS setting on. Mirrors the block at the end of
+   work-together.css rather than replacing it. */
+.cpl-root[data-motion="reduced"] *,
+.cpl-root[data-motion="reduced"] *::before,
+.cpl-root[data-motion="reduced"] *::after {
+  animation: none !important;
+  transition: none !important;
+}
+
+/* ===========================================================================
+   2. SCREEN SKELETON + THE TOKEN CONTRACT
+   ===========================================================================
+
+   Structure only, plus the defaults every direction inherits. The sheet must
+   stretch to the floor of the card: the upward reveal only reads as upward if
+   the pair is anchored to the BOTTOM with empty space above it to grow into.
+   ======================================================================== */
+
+/* The sheet hugs the FLOOR of the card and is sized by its own content.
+   Production's `.wt__unfurl` aligns the panel to the top and reveals it with a
+   downward clip-path wipe, which is right for a panel that grows downward and
+   wrong for one that grows up: stretched to full height it left a hand's width
+   of empty paper above the pair at rest, which reads as a bug rather than as
+   room to grow. */
+.wt__unfurl:has(.cpp-screen) {
+  align-items: flex-end;
+  animation: none;
+}
+
+.cpp-screen {
+  /* ---- surface tokens (section 3 sets them) ---- */
+  --sheet-bg: #f5f4f1;
+  --sheet-border: rgba(17, 17, 22, 0.08);
+  --sheet-shadow: 0 1px 0 rgba(255, 255, 255, 0.55) inset,
+    0 28px 72px rgba(0, 0, 0, 0.45), 0 6px 18px rgba(0, 0, 0, 0.28);
+  --sheet-blur: none;
+  --ink-1: #111116;
+  --ink-2: rgba(17, 17, 22, 0.74);
+  --ink-3: rgba(17, 17, 22, 0.56);
+  --ink-4: rgba(17, 17, 22, 0.4);
+  --hair: rgba(17, 17, 22, 0.09);
+  --hair-2: rgba(17, 17, 22, 0.18);
+  --chip-bg: rgba(255, 255, 255, 0.5);
+  --chip-neutral-bg: rgba(17, 17, 22, 0.04);
+  --chip-neutral-border: rgba(17, 17, 22, 0.07);
+  --plate-bg: #1c1c1c;
+  --plate-ink: rgba(255, 255, 255, 0.92);
+  --plate-edge: #0b0b0b;
+
+  /* ---- type tokens (section 5 sets them) ---- */
+  --face-display: var(--font-serif);
+  --face-body: var(--font-sans);
+  --face-label: var(--font-mono);
+  --name-size: clamp(19px, 2.1cqw, 25px);
+  --name-weight: 400;
+  --name-style: normal;
+  --name-tracking: -0.015em;
+  --name-lh: 1.05;
+  --title-size: clamp(21px, 2.7cqw, 30px);
+  --label-tracking: 0.2em;
+  --body-lh: 1.45;
+
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+  align-self: flex-end;
+  animation: cpp-sheet-in 420ms var(--ease) both;
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+  width: 100%;
+  max-height: 100%;
+  padding: 17px clamp(18px, 2.2cqw, 28px) 16px;
+  border-radius: 14px;
+  background: var(--sheet-bg);
+  backdrop-filter: var(--sheet-blur);
+  -webkit-backdrop-filter: var(--sheet-blur);
+  border: 1px solid var(--sheet-border);
+  color: var(--ink-1);
+  box-shadow: var(--sheet-shadow);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+@keyframes cpp-sheet-in {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.cpp-screen__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--hair);
+}
+
+.cpp-screen__eyebrow {
+  font-family: var(--face-label);
+  font-size: var(--text-label);
+  font-weight: 500;
+  letter-spacing: var(--label-tracking);
+  text-transform: uppercase;
+  color: var(--ink-4);
+}
+
+.cpp-screen__back {
+  all: unset;
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-family: var(--face-label);
+  font-size: var(--text-control);
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  padding: 6px 11px;
+  border-radius: 999px;
+  border: 1px solid var(--hair-2);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: color 160ms ease, border-color 160ms ease, background 160ms ease;
+}
+
+.cpp-screen__back:hover,
+.cpp-screen__back:focus-visible {
+  color: var(--ink-1);
+  border-color: var(--ink-3);
+  background: var(--chip-neutral-bg);
+  outline: none;
+}
+
+.cpp-screen__back:focus-visible {
+  outline: 2px solid var(--ink-3);
+  outline-offset: 2px;
+}
+
+.cpp-screen__body {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  animation: cpp-screen-in 340ms var(--ease) 60ms both;
+}
+
+@keyframes cpp-screen-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.cpp-screen__masthead {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.cpp-screen__title {
+  margin: 0;
+  font-family: var(--face-display);
+  font-size: var(--title-size);
+  font-weight: var(--name-weight);
+  font-style: var(--name-style);
+  letter-spacing: var(--name-tracking);
+  line-height: 1.03;
+  color: var(--ink-1);
+}
+
+/* The subhead is the part of the masthead that yields, and only that part.
+   Collapsing the whole masthead returned ~75px to the detail but cost the
+   sheet its editorial anchor, and the room it freed mostly became more white
+   paper above the collapsed path anyway — the void beside an expanded panel is
+   structural, not a spacing bug. Dropping the instruction line once a path is
+   open is the honest half: it has been obeyed by then. */
+.cpp-screen:not([data-open="none"]) .cpp-screen__lede {
+  max-height: 0;
+  opacity: 0;
+  margin-top: -6px;
+}
+
+.cpp-screen__lede {
+  overflow: hidden;
+  max-height: 60px;
+  opacity: 1;
+  transition:
+    max-height 320ms var(--ease),
+    opacity 200ms ease,
+    margin-top 320ms var(--ease);
+  margin: 0;
+  font-family: var(--face-body);
+  font-size: var(--text-sm);
+  line-height: 1.5;
+  color: var(--ink-3);
+  max-width: 62ch;
+}
+
+/* ---- The pair ----------------------------------------------------------
+
+   `align-items: end` plus `margin-top: auto` is the whole upward-growth
+   mechanism: the row sits on the floor of the sheet, and an expanding panel
+   consumes the space above it. Neither panel's name, summary, or CTA moves. */
+
+.cpp-paths {
+  margin-top: auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: end;
+  gap: clamp(12px, 1.6cqw, 22px);
+  padding-top: 12px;
+  border-top: 1px solid var(--hair);
+}
+
+/* ---- Side-by-side only ----
+
+   The height budget below belongs to the two-column layout, where the sheet is
+   pinned to the card and cannot scroll. Applying it to the stacked layout,
+   where the sheet IS a scrolling column, asks each panel to be a fraction of a
+   height that is itself defined by the panels — the browser oscillates and
+   never settles on one. */
+@container wt (min-width: 701px) {
+  /* One row, capped at the space the sheet actually has. This is what stops an
+     expanded path from pushing its own name and CTA off the bottom of the
+     card: the row can never exceed the grid, the panel can never exceed the
+     row, and the only thing left that can give is the detail block, which
+     scrolls inside itself. Everything is derived from the frame — no magic
+     pixel budget to re-tune when the copy or the card height changes. */
+  .cpp-paths {
+    grid-auto-rows: minmax(0, 1fr);
+    min-height: 0;
+  }
+
+  .cpp-path {
+    max-height: 100%;
+  }
+
+  /* At rest the sheet is exactly as tall as what is on it and sits on the floor
+     of the card. Opening a path claims the rest of the frame — animated as
+     `min-height` rather than switched with `align-self`, which cannot tween and
+     would snap the header to the top of the card in one frame. Without it the
+     sheet stays content-sized, and because its own content is what defines the
+     space the detail is allowed to use, a taller card produced LESS visible
+     detail rather than more. */
+  .cpp-screen {
+    min-height: 0;
+    transition: min-height 420ms var(--ease);
+  }
+
+  .cpp-screen:not([data-open="none"]) {
+    min-height: 100%;
+  }
+
+  /* At rest the two are equals and should look it — one summary wrapping to a
+     second line shouldn't leave the pair sitting at two different heights.
+     They only diverge once one is chosen, which is exactly when the difference
+     means something. */
+  .cpp-screen[data-open="none"] .cpp-paths {
+    align-items: stretch;
+  }
+}
+
+/* ---- One path ---------------------------------------------------------- */
+
+.cpp-path {
+  /* Identity is one hue expressed five ways: --tint behind the panel, --line
+     on its edges and rules, --ink for type (lifted or darkened per surface so
+     it always clears 4.5:1), --solid where a direction fills with it, and
+     --glow for the lifted shadow when it is the chosen one. */
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  min-width: 0;
+  min-height: 0;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  background: var(--tint);
+  overflow: hidden;
+  transition:
+    background 260ms ease,
+    border-color 260ms ease,
+    box-shadow 300ms ease,
+    opacity 260ms ease;
+}
+
+.cpp-path[data-state="open"] {
+  background: var(--tint-open);
+  border-color: var(--line-open);
+  box-shadow: 0 10px 30px var(--glow);
+}
+
+/* The unchosen path recedes but stays fully legible and one click away — this
+   is a pair, not a replacement. 0.72 rather than the top row's 0.45 for exactly
+   that reason. */
+.cpp-path[data-dimmed="true"] {
+  opacity: 0.72;
+}
+
+.cpp-path[data-dimmed="true"]:hover,
+.cpp-path[data-dimmed="true"]:focus-within {
+  opacity: 1;
+}
+
+/* Poster-scale index. Only Ledger and Marquee draw it; it is in the markup for
+   every direction because a decorative numeral is not worth a second DOM. */
+.cpp-path__ghost {
+  display: none;
+  position: absolute;
+  z-index: 0;
+  pointer-events: none;
+  font-family: var(--face-display);
+  line-height: 0.8;
+  user-select: none;
+}
+
+/* ---- The reveal, above the base block ---- */
+
+.cpp-path__reveal {
+  /* Shrinks before the base block does — `min-height: 0` is what allows it to,
+     and the base block's `flex: 0 0 auto` is what keeps it from. */
+  flex: 0 1 auto;
+  min-height: 0;
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  /* Animating the fr unit gets the content's real height with no measurement,
+     no ResizeObserver, and nothing to keep in sync on resize. */
+  transition:
+    grid-template-rows 420ms var(--ease),
+    opacity 220ms ease;
+}
+
+.cpp-path[data-state="open"] .cpp-path__revealInner {
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+/* Only while there is something below the fold — see the measurement in
+   ConsultingPathsScreen. A permanent fade would dim the last line of a panel
+   that has nothing more to show. */
+.cpp-path[data-more="true"] .cpp-path__revealInner {
+  mask-image: linear-gradient(to bottom, #000 calc(100% - 34px), transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 34px), transparent 100%);
+}
+
+.cpp-path[data-state="open"] .cpp-path__reveal {
+  grid-template-rows: 1fr;
+  opacity: 1;
+  transition:
+    grid-template-rows 420ms var(--ease),
+    opacity 300ms ease 120ms;
+}
+
+.cpp-path__revealInner {
+  min-height: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 14px clamp(14px, 1.6cqw, 20px) 4px;
+}
+
+.cpp-path__detailLede {
+  margin: 0;
+  font-family: var(--face-body);
+  font-size: var(--text-sm);
+  line-height: 1.5;
+  color: var(--ink-2);
+}
+
+.cpp-path__engagements {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.cpp-path__engagement {
+  padding-left: 12px;
+  border-left: 2px solid var(--line-open);
+}
+
+.cpp-path__engagementMeta {
+  display: block;
+  font-family: var(--face-label);
+  font-size: var(--text-label);
+  letter-spacing: var(--label-tracking);
+  text-transform: uppercase;
+  color: var(--accent-ink);
+  opacity: 0.78;
+}
+
+.cpp-path__engagementTitle {
+  margin: 3px 0 4px;
+  font-family: var(--face-display);
+  font-size: 17px;
+  font-weight: var(--name-weight);
+  font-style: var(--name-style);
+  letter-spacing: -0.01em;
+  line-height: 1.1;
+  color: var(--ink-1);
+}
+
+.cpp-path__engagementBody {
+  margin: 0;
+  font-family: var(--face-body);
+  font-size: var(--text-sm);
+  line-height: var(--body-lh);
+  color: var(--ink-3);
+}
+
+.cpp-path__signals {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.cpp-path__signals li {
+  font-family: var(--face-label);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  padding: 4px 8px;
+  border-radius: 4px;
+  background: var(--chip-neutral-bg);
+  border: 1px solid var(--chip-neutral-border);
+}
+
+.cpp-path__note {
+  margin: 0;
+  font-family: var(--face-body);
+  font-size: var(--text-sm);
+  line-height: var(--body-lh);
+  color: var(--ink-4);
+}
+
+/* ---- The base block: always visible, never moves ---- */
+
+.cpp-path__base {
+  position: relative;
+  z-index: 1;
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px clamp(14px, 1.6cqw, 20px) 13px;
+}
+
+.cpp-path__head {
+  all: unset;
+  box-sizing: border-box;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 5px;
+  border-radius: 8px;
+}
+
+.cpp-path__rule {
+  /* The colour identity's loudest element in the quiet directions, and it is
+     2px of hairline. The panel tint alone is nearly invisible at a glance; this
+     is what makes the two sides legible as two things from across the room. */
+  display: block;
+  width: 34px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--accent-ink);
+  opacity: 0.85;
+  transition: width 300ms var(--ease);
+}
+
+.cpp-path[data-state="open"] .cpp-path__rule,
+.cpp-path__head:hover .cpp-path__rule {
+  width: 56px;
+}
+
+.cpp-path__kicker {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+  font-family: var(--face-label);
+  font-size: var(--text-label);
+  font-weight: 500;
+  letter-spacing: var(--label-tracking);
+  text-transform: uppercase;
+  color: var(--accent-ink);
+}
+
+.cpp-path__index {
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-4);
+}
+
+.cpp-path__name {
+  font-family: var(--face-display);
+  font-size: var(--name-size);
+  font-weight: var(--name-weight);
+  font-style: var(--name-style);
+  letter-spacing: var(--name-tracking);
+  line-height: var(--name-lh);
+  color: var(--ink-1);
+}
+
+.cpp-path__summary {
+  font-family: var(--face-body);
+  font-size: var(--text-sm);
+  line-height: var(--body-lh);
+  color: var(--ink-3);
+}
+
+.cpp-path__caps {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 3px;
+}
+
+.cpp-path__cap {
+  font-family: var(--face-label);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+  padding: 3px 7px;
+  border-radius: 4px;
+  border: 1px solid var(--line);
+  background: var(--chip-bg);
+}
+
+.cpp-path__more {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 4px;
+  font-family: var(--face-label);
+  font-size: var(--text-label);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent-ink);
+}
+
+.cpp-path__chev {
+  transition: transform 240ms var(--ease);
+}
+
+.cpp-path__head:hover .cpp-path__chev {
+  transform: translateY(-2px);
+}
+
+.cpp-path[data-state="open"] .cpp-path__head:hover .cpp-path__chev {
+  transform: translateY(2px);
+}
+
+.cpp-path__head:focus-visible {
+  outline: 2px solid var(--accent-ink);
+  outline-offset: 3px;
+}
+
+/* ---- Each path's own ask ---- */
+
+.cpp-path__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding-top: 10px;
+  border-top: 1px solid var(--hair);
+}
+
+.cpp-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--face-label);
+  font-size: var(--text-control);
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 10px 15px;
+  border-radius: 8px;
+  text-decoration: none;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: transform 160ms ease, border-color 160ms ease, background 160ms ease,
+    color 160ms ease, box-shadow 160ms ease;
+}
+
+/* Each path's CTA carries that path's hue, which is the point of giving them
+   colours at all: the button proves which conversation you are starting. */
+.cpp-action--primary {
+  flex: 1 1 auto;
+  border: 1px solid var(--line-open);
+  background: var(--tint-open);
+  color: var(--accent-ink);
+}
+
+.cpp-action--primary:hover,
+.cpp-action--primary:focus-visible {
+  background: var(--solid);
+  border-color: var(--solid);
+  color: var(--on-accent);
+  transform: translateY(-1px);
+}
+
+.cpp-action--ghost {
+  border: 1px solid var(--hair-2);
+  background: transparent;
+  color: var(--ink-3);
+}
+
+.cpp-action--ghost:hover,
+.cpp-action--ghost:focus-visible {
+  border-color: var(--ink-3);
+  color: var(--ink-1);
+  transform: translateY(-1px);
+}
+
+.cpp-action:focus-visible {
+  outline: 2px solid var(--accent-ink);
+  outline-offset: 2px;
+}
+
+/* ===========================================================================
+   3. SURFACES — what the sheet is made of
+   ===========================================================================
+
+   Paper is what ships. Ink and Glass exist because this is a dark-only site
+   and a white sheet cuts a hole in a cinematic photograph; both keep the
+   composition intact and let the accents do the separating.
+   ======================================================================== */
+
+.cpp-screen[data-surface="ink"] {
+  --sheet-bg: #0c0e13;
+  --sheet-border: rgba(255, 255, 255, 0.1);
+  --sheet-shadow: 0 1px 0 rgba(255, 255, 255, 0.06) inset,
+    0 28px 72px rgba(0, 0, 0, 0.6), 0 6px 18px rgba(0, 0, 0, 0.4);
+  --ink-1: rgba(246, 245, 240, 0.96);
+  --ink-2: rgba(246, 245, 240, 0.74);
+  --ink-3: rgba(246, 245, 240, 0.56);
+  --ink-4: rgba(246, 245, 240, 0.4);
+  --hair: rgba(255, 255, 255, 0.1);
+  --hair-2: rgba(255, 255, 255, 0.2);
+  --chip-bg: rgba(255, 255, 255, 0.04);
+  --chip-neutral-bg: rgba(255, 255, 255, 0.05);
+  --chip-neutral-border: rgba(255, 255, 255, 0.09);
+  --plate-bg: rgba(255, 255, 255, 0.07);
+  --plate-ink: rgba(255, 255, 255, 0.92);
+  --plate-edge: rgba(0, 0, 0, 0.6);
+}
+
+/* True black, and the panels are drawn in light alone. On a photograph this
+   is the most confident of the four: the sheet stops being an object on top of
+   the picture and becomes a hole cut out of it, which makes the accents and
+   the hairlines the only things in the panel with any material. It is also the
+   least forgiving — every value has to be deliberate, because there is no
+   surface tone left to hide a lazy one in. */
+.cpp-screen[data-surface="black"] {
+  --sheet-bg: #000000;
+  --sheet-border: rgba(255, 255, 255, 0.16);
+  --sheet-shadow: 0 1px 0 rgba(255, 255, 255, 0.08) inset,
+    0 30px 80px rgba(0, 0, 0, 0.8);
+  --ink-1: #ffffff;
+  --ink-2: rgba(255, 255, 255, 0.76);
+  --ink-3: rgba(255, 255, 255, 0.58);
+  --ink-4: rgba(255, 255, 255, 0.42);
+  --hair: rgba(255, 255, 255, 0.12);
+  --hair-2: rgba(255, 255, 255, 0.24);
+  --chip-bg: rgba(255, 255, 255, 0.05);
+  --chip-neutral-bg: rgba(255, 255, 255, 0.06);
+  --chip-neutral-border: rgba(255, 255, 255, 0.1);
+  --plate-bg: rgba(255, 255, 255, 0.08);
+  --plate-ink: rgba(255, 255, 255, 0.94);
+  --plate-edge: rgba(255, 255, 255, 0.14);
+}
+
+/* No sheet at all — a frosted plane. `.wt__focus` has already blurred and
+   dimmed the photograph by the time a screen is open, so this second blur is
+   working on an image that is halfway there; the saturate is what keeps the
+   city lights from going grey. */
+.cpp-screen[data-surface="glass"] {
+  --sheet-bg: rgba(10, 12, 18, 0.5);
+  --sheet-blur: blur(26px) saturate(1.3);
+  --sheet-border: rgba(255, 255, 255, 0.14);
+  --sheet-shadow: 0 1px 0 rgba(255, 255, 255, 0.1) inset,
+    0 30px 80px rgba(0, 0, 0, 0.5);
+  --ink-1: rgba(255, 255, 255, 0.97);
+  --ink-2: rgba(255, 255, 255, 0.78);
+  --ink-3: rgba(255, 255, 255, 0.6);
+  --ink-4: rgba(255, 255, 255, 0.44);
+  --hair: rgba(255, 255, 255, 0.12);
+  --hair-2: rgba(255, 255, 255, 0.22);
+  --chip-bg: rgba(255, 255, 255, 0.06);
+  --chip-neutral-bg: rgba(255, 255, 255, 0.06);
+  --chip-neutral-border: rgba(255, 255, 255, 0.1);
+  --plate-bg: rgba(255, 255, 255, 0.1);
+  --plate-ink: rgba(255, 255, 255, 0.94);
+  --plate-edge: rgba(0, 0, 0, 0.5);
+}
+
+/* ===========================================================================
+   4. PALETTES — what colour each path is
+   ===========================================================================
+
+   Each palette declares, per path: the hue as an rgb triplet (so every tint
+   below can be mixed from one value), a text-safe ink for LIGHT surfaces, a
+   lifted ink for DARK ones, and the colour type takes when a direction fills
+   with the hue. Two inks per hue is not belt-and-braces: #2563eb clears 4.5:1
+   on #f5f4f1 and fails badly on #0c0e13, and gold does the reverse. This is
+   the same split `--ctar-accent-ink` / `--ctar-accent-pap` makes in the CTA
+   row lab.
+   ======================================================================== */
+
+/* The site's own two accents. Nothing new enters the system. */
+.cpp-screen[data-palette="cobalt-brass"],
+.cpl-stage[data-palette="cobalt-brass"] {
+  --ai-rgb: 37, 99, 235;
+  --ai-ink-light: #1e4ebe;
+  --ai-ink-dark: #93b4ff;
+  --ai-on: #ffffff;
+  --sup-rgb: 184, 146, 74;
+  --sup-ink-light: #8a6a1f;
+  --sup-ink-dark: #e3c47f;
+  --sup-on: #17150e;
+}
+
+/* One accent, not two. AI recedes to graphite and supply chain keeps the gold,
+   which is the most restrained way to say "these are different" — and the
+   closest to how the rest of the site already behaves, where blue is an
+   interaction state rather than an identity. */
+.cpp-screen[data-palette="graphite-gold"],
+.cpl-stage[data-palette="graphite-gold"] {
+  --ai-rgb: 63, 71, 88;
+  --ai-ink-light: #2b3242;
+  --ai-ink-dark: #c3ccdd;
+  --ai-on: #ffffff;
+  --sup-rgb: 184, 146, 74;
+  --sup-ink-light: #8a6a1f;
+  --sup-ink-dark: #e3c47f;
+  --sup-on: #17150e;
+}
+
+/* Same relationship, more voltage. Indigo runs hotter than cobalt and amber
+   hotter than brass; the pair reads younger and louder without leaving the
+   blue/gold axis the site is built on. */
+.cpp-screen[data-palette="signal"],
+.cpl-stage[data-palette="signal"] {
+  --ai-rgb: 79, 70, 229;
+  --ai-ink-light: #3f37c9;
+  --ai-ink-dark: #a9a2ff;
+  --ai-on: #ffffff;
+  --sup-rgb: 217, 119, 6;
+  --sup-ink-light: #9a5406;
+  --sup-ink-dark: #f5b153;
+  --sup-on: #1a1206;
+}
+
+/* A departure, and flagged as one: verdigris and rust appear nowhere else on
+   the site. Included because the pair has a material logic the blue/gold one
+   doesn't — oxidised copper against oxidised iron, which is the right
+   metaphor for systems and supply. */
+.cpp-screen[data-palette="patina"],
+.cpl-stage[data-palette="patina"] {
+  --ai-rgb: 15, 118, 110;
+  --ai-ink-light: #0c5f59;
+  --ai-ink-dark: #6fd8cb;
+  --ai-on: #ffffff;
+  --sup-rgb: 180, 83, 9;
+  --sup-ink-light: #97450a;
+  --sup-ink-dark: #efab6a;
+  --sup-on: #1b0f04;
+}
+
+/* ---- Palette → path ---- */
+
+.cpp-path[data-path="ai"] {
+  --rgb: var(--ai-rgb);
+  --accent-ink: var(--ai-ink-light);
+  --on-accent: var(--ai-on);
+  /* A DYMO plate is a dark ground on every surface, so type on one always
+     needs the lifted ink — it does not follow the sheet. */
+  --accent-plate-ink: var(--ai-ink-dark);
+}
+
+.cpp-path[data-path="supply"] {
+  --rgb: var(--sup-rgb);
+  --accent-ink: var(--sup-ink-light);
+  --on-accent: var(--sup-on);
+  --accent-plate-ink: var(--sup-ink-dark);
+}
+
+.cpp-screen[data-surface="ink"] .cpp-path[data-path="ai"],
+.cpp-screen[data-surface="black"] .cpp-path[data-path="ai"],
+.cpp-screen[data-surface="glass"] .cpp-path[data-path="ai"] {
+  --accent-ink: var(--ai-ink-dark);
+}
+
+.cpp-screen[data-surface="ink"] .cpp-path[data-path="supply"],
+.cpp-screen[data-surface="black"] .cpp-path[data-path="supply"],
+.cpp-screen[data-surface="glass"] .cpp-path[data-path="supply"] {
+  --accent-ink: var(--sup-ink-dark);
+}
+
+/* Every tint in the file is mixed from the one triplet, so a new palette is
+   four numbers and two inks rather than a new set of surfaces. */
+.cpp-path {
+  --solid: rgb(var(--rgb));
+  --tint: rgba(var(--rgb), 0.05);
+  --tint-open: rgba(var(--rgb), 0.1);
+  --line: rgba(var(--rgb), 0.22);
+  --line-open: rgba(var(--rgb), 0.45);
+  --glow: rgba(var(--rgb), 0.18);
+}
+
+.cpp-screen[data-surface="ink"] .cpp-path,
+.cpp-screen[data-surface="black"] .cpp-path,
+.cpp-screen[data-surface="glass"] .cpp-path {
+  /* The same alphas read half as strong over a dark ground: a 5% wash that is
+     clearly tinted on paper is invisible on #0c0e13. */
+  --tint: rgba(var(--rgb), 0.09);
+  --tint-open: rgba(var(--rgb), 0.16);
+  --line: rgba(var(--rgb), 0.3);
+  --line-open: rgba(var(--rgb), 0.55);
+  --glow: rgba(var(--rgb), 0.24);
+}
+
+/* ===========================================================================
+   5. TYPE SCHEMES
+   ===========================================================================
+
+   House is what the site ships. The other three are lab-only families loaded
+   in app/consulting-paths-lab/page.tsx — promoting one of them is a decision
+   about the whole site, not about this panel.
+   ======================================================================== */
+
+.cpp-screen[data-type="house"],
+.cpl-stage[data-type="house"] {
+  --face-display: var(--font-serif);
+  --face-body: var(--font-sans);
+  --face-label: var(--font-mono);
+}
+
+/* Instrument Serif is a higher-contrast, narrower face than DM Serif Display,
+   so it can be set larger at the same measure and reads more like a masthead
+   than a card title. */
+.cpp-screen[data-type="editorial"],
+.cpl-stage[data-type="editorial"] {
+  --face-display: var(--cpp-instrument), var(--font-serif);
+  --face-body: var(--font-sans);
+  --face-label: var(--font-mono);
+  --name-size: clamp(22px, 2.7cqw, 34px);
+  --name-tracking: -0.02em;
+  --name-lh: 0.98;
+  --title-size: clamp(24px, 3.1cqw, 36px);
+  --label-tracking: 0.26em;
+}
+
+/* No serif anywhere. Space Grotesk carries the names and DM Mono carries
+   everything that labels or measures — the voice of a spec, not an essay. */
+.cpp-screen[data-type="technical"],
+.cpl-stage[data-type="technical"] {
+  --face-display: var(--cpp-grotesk), var(--font-sans);
+  --face-body: var(--font-mono);
+  --face-label: var(--font-mono);
+  --name-size: clamp(18px, 2cqw, 24px);
+  --name-weight: 500;
+  --name-tracking: -0.025em;
+  --name-lh: 1.08;
+  --title-size: clamp(20px, 2.4cqw, 28px);
+  --label-tracking: 0.16em;
+  --body-lh: 1.55;
+}
+
+/* Fraunces is an optical-size serif with a soft, slightly wonky voice; its
+   italic carries the detail lede, which is the one place in the panel where a
+   sentence is being spoken rather than listed. */
+.cpp-screen[data-type="press"],
+.cpl-stage[data-type="press"] {
+  --face-display: var(--cpp-fraunces), var(--font-serif);
+  --face-body: var(--font-sans);
+  --face-label: var(--font-mono);
+  --name-size: clamp(21px, 2.5cqw, 32px);
+  --name-weight: 600;
+  --name-tracking: -0.012em;
+  --name-lh: 1;
+  --title-size: clamp(22px, 2.8cqw, 33px);
+  --label-tracking: 0.2em;
+}
+
+.cpp-screen[data-type="press"] .cpp-path__detailLede {
+  font-family: var(--cpp-fraunces), var(--font-serif);
+  font-style: italic;
+  font-size: calc(var(--text-sm) * 1.12);
+  line-height: 1.4;
+  color: var(--ink-2);
+}
+
+/* The technical scheme sets mono as the BODY face, which runs about 8% wider
+   per character — the summary and the detail need a touch more room to breathe
+   at the same measure. */
+.cpp-screen[data-type="technical"] .cpp-path__summary,
+.cpp-screen[data-type="technical"] .cpp-path__engagementBody,
+.cpp-screen[data-type="technical"] .cpp-screen__lede {
+  font-size: calc(var(--text-sm) * 0.94);
+}
+
+/* ===========================================================================
+   6. DIRECTIONS
+   ===========================================================================
+
+   Five ways to draw the same pair and the same interaction. Each one gets the
+   whole panel — the sheet's own padding and radius, the panel chrome, the way
+   capabilities are listed, and what the CTA is made of — because a direction
+   that only changes the border radius is a preference, not a direction.
+
+   DOSSIER is the skeleton above: it is what the shipped sheet would look like
+   if it grew a second column, so it is the control the other four are argued
+   against.
+   ======================================================================== */
+
+/* ---------------------------------------------------------------------------
+   LEDGER — no cards at all
+   ---------------------------------------------------------------------------
+   The quietest direction and the most typographic. Nothing is boxed: the two
+   paths are two columns of an index page, separated by one hairline spine and
+   headed by an outlined numeral. Colour appears four times per column — the
+   numeral's outline, the kicker, the capability bullets, and the rule under
+   the CTA — and nowhere else.
+
+   It is the direction that trusts the copy. It is also the one that suffers
+   most on a busy photograph, which is exactly what the Surface axis is for.
+   ------------------------------------------------------------------------ */
+
+.cpp-screen[data-layout="ledger"] {
+  padding: 20px clamp(20px, 2.6cqw, 36px) 20px;
+}
+
+.cpp-screen[data-layout="ledger"] .cpp-paths {
+  gap: clamp(24px, 4cqw, 68px);
+}
+
+.cpp-screen[data-layout="ledger"] .cpp-path,
+.cpp-screen[data-layout="ledger"] .cpp-path[data-state="open"] {
+  border: 0;
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+  overflow: visible;
+}
+
+/* The spine. One hairline between the columns, drawn by the right-hand path so
+   it never appears beside a single stacked column. */
+.cpp-screen[data-layout="ledger"] .cpp-path[data-path="supply"]::before {
+  content: "";
+  position: absolute;
+  top: 2px;
+  bottom: 2px;
+  left: calc(-1 * clamp(12px, 2cqw, 34px));
+  width: 1px;
+  background: var(--hair);
+}
+
+.cpp-screen[data-layout="ledger"] .cpp-path__base {
+  padding: 0;
+  gap: 12px;
+}
+
+.cpp-screen[data-layout="ledger"] .cpp-path__revealInner {
+  padding: 0 0 18px;
+  gap: 12px;
+}
+
+/* Nothing is boxed in this direction, so the detail has no edge of its own —
+   and a faded bottom against the name directly below it read as one column of
+   text running under another. One hairline is the whole fix. */
+.cpp-screen[data-layout="ledger"] .cpp-path__reveal {
+  margin-bottom: 16px;
+  border-bottom: 1px solid var(--hair-2);
+}
+
+.cpp-screen[data-layout="ledger"] .cpp-path[data-state="closed"] .cpp-path__reveal {
+  margin-bottom: 0;
+  border-bottom-color: transparent;
+}
+
+.cpp-screen[data-layout="ledger"] .cpp-path__ghost {
+  display: block;
+  top: -14px;
+  right: 0;
+  font-size: clamp(56px, 8cqw, 116px);
+  color: transparent;
+  -webkit-text-stroke: 1px var(--line-open);
+  opacity: 0.85;
+}
+
+.cpp-screen[data-layout="ledger"] .cpp-path__rule,
+.cpp-screen[data-layout="ledger"] .cpp-path__index {
+  display: none;
+}
+
+.cpp-screen[data-layout="ledger"] .cpp-path__kicker {
+  letter-spacing: 0.3em;
+}
+
+.cpp-screen[data-layout="ledger"] .cpp-path__summary {
+  max-width: 46ch;
+}
+
+/* Capabilities become the index they are: one ruled row each, an accent bullet,
+   nothing boxed. */
+.cpp-screen[data-layout="ledger"] .cpp-path__caps {
+  align-self: stretch;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  gap: 0;
+  margin-top: 8px;
+}
+
+.cpp-screen[data-layout="ledger"] .cpp-path__cap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 0;
+  border: 0;
+  border-bottom: 1px solid var(--hair);
+  border-radius: 0;
+  background: none;
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  color: var(--ink-2);
+}
+
+.cpp-screen[data-layout="ledger"] .cpp-path__cap::before {
+  content: "";
+  flex: 0 0 auto;
+  width: 5px;
+  height: 5px;
+  border-radius: 999px;
+  background: var(--accent-ink);
+  opacity: 0.75;
+}
+
+.cpp-screen[data-layout="ledger"] .cpp-path__more {
+  margin-top: 10px;
+  letter-spacing: 0.22em;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 5px;
+  text-decoration-color: var(--line-open);
+}
+
+.cpp-screen[data-layout="ledger"] .cpp-path__actions {
+  gap: 20px;
+  align-items: center;
+  padding-top: 14px;
+  border-top: 1px solid var(--hair-2);
+}
+
+.cpp-screen[data-layout="ledger"] .cpp-path__engagement {
+  padding: 0 0 0 14px;
+  border-left: 1px solid var(--line-open);
+}
+
+/* ---------------------------------------------------------------------------
+   PLATE — the DYMO system, pushed forward
+   ---------------------------------------------------------------------------
+   The site's label vocabulary is its most tactile idea and the destination
+   screens barely use it. Here the kicker is a real embossed plate on a 1.2°
+   rotation, the capabilities are keycaps, and the CTA is a button with a hard
+   coloured edge that collapses when pressed — the accent is the thing you
+   physically push down.
+   ------------------------------------------------------------------------ */
+
+.cpp-screen[data-layout="plate"] .cpp-path {
+  border-radius: 10px;
+  border-color: var(--hair-2);
+  box-shadow: inset 0 1px 0 var(--chip-bg);
+}
+
+.cpp-screen[data-layout="plate"] .cpp-path__rule {
+  display: none;
+}
+
+.cpp-screen[data-layout="plate"] .cpp-path__base {
+  gap: 12px;
+  padding-top: 16px;
+}
+
+.cpp-screen[data-layout="plate"] .cpp-path__kicker {
+  margin-bottom: 2px;
+  padding: 7px 11px 6px;
+  border-radius: 5px;
+  border-left: 3px solid var(--solid);
+  background: var(--plate-bg);
+  color: var(--plate-ink);
+  letter-spacing: var(--track-dymo);
+  transform: rotate(-1.2deg);
+  box-shadow:
+    0 3px 0 var(--plate-edge),
+    inset 0 1px 0 rgba(255, 255, 255, 0.14);
+  transition: transform 200ms var(--ease);
+}
+
+.cpp-screen[data-layout="plate"] .cpp-path__index {
+  color: var(--accent-plate-ink);
+  opacity: 0.85;
+}
+
+.cpp-screen[data-layout="plate"] .cpp-path[data-state="open"] .cpp-path__kicker,
+.cpp-screen[data-layout="plate"] .cpp-path__head:hover .cpp-path__kicker {
+  transform: rotate(0deg);
+}
+
+/* Keycaps, not plates: five dark DYMO labels in a row would out-shout the name
+   they belong to. The emboss is the same recipe at a tenth of the volume. */
+.cpp-screen[data-layout="plate"] .cpp-path__cap {
+  border-color: var(--hair-2);
+  background: var(--chip-bg);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.5),
+    0 1px 0 var(--hair-2);
+  padding: 4px 8px;
+  letter-spacing: 0.1em;
+}
+
+/* ---------------------------------------------------------------------------
+   MARQUEE — poster scale
+   ---------------------------------------------------------------------------
+   The loudest direction. Each path opens with a solid accent band carrying the
+   discipline, then the name at roughly twice the Dossier size, then one mono
+   line of capabilities. The detail opens as two columns, because at this scale
+   a single column of prose runs to a paragraph nobody finishes.
+   ------------------------------------------------------------------------ */
+
+.cpp-screen[data-layout="marquee"] .cpp-path {
+  border-radius: 14px;
+}
+
+.cpp-screen[data-layout="marquee"] .cpp-path__rule {
+  display: none;
+}
+
+.cpp-screen[data-layout="marquee"] .cpp-path__base {
+  gap: 0;
+  padding: 0 0 14px;
+}
+
+.cpp-screen[data-layout="marquee"] .cpp-path__head {
+  align-self: stretch;
+  gap: 0;
+}
+
+.cpp-screen[data-layout="marquee"] .cpp-path__kicker {
+  align-self: stretch;
+  justify-content: space-between;
+  padding: 9px clamp(14px, 1.6cqw, 22px);
+  background: var(--solid);
+  color: var(--on-accent);
+  letter-spacing: 0.26em;
+}
+
+.cpp-screen[data-layout="marquee"] .cpp-path__index {
+  color: var(--on-accent);
+  opacity: 0.62;
+}
+
+.cpp-screen[data-layout="marquee"] .cpp-path__name {
+  padding: 14px clamp(14px, 1.6cqw, 22px) 0;
+  font-size: clamp(26px, 3.6cqw, 52px);
+}
+
+.cpp-screen[data-layout="marquee"] .cpp-path__summary,
+.cpp-screen[data-layout="marquee"] .cpp-path__caps,
+.cpp-screen[data-layout="marquee"] .cpp-path__more,
+.cpp-screen[data-layout="marquee"] .cpp-path__actions {
+  padding-left: clamp(14px, 1.6cqw, 22px);
+  padding-right: clamp(14px, 1.6cqw, 22px);
+}
+
+.cpp-screen[data-layout="marquee"] .cpp-path__summary {
+  padding-top: 7px;
+  max-width: 48ch;
+}
+
+/* One line, one voice: the capabilities stop being a list of chips and become
+   a strapline. Anything past the panel's width is genuinely secondary and
+   lives in the detail. */
+.cpp-screen[data-layout="marquee"] .cpp-path__caps {
+  flex-wrap: nowrap;
+  overflow: hidden;
+  gap: 0;
+  margin-top: 0;
+  padding-top: 11px;
+  /* A hard clip through the middle of a word reads as a bug; a fade reads as
+     "there is more, and it is in the detail" — which is exactly true. */
+  mask-image: linear-gradient(to right, #000 calc(100% - 48px), transparent 100%);
+  -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 48px), transparent 100%);
+}
+
+.cpp-screen[data-layout="marquee"] .cpp-path__cap {
+  flex: 0 0 auto;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  white-space: nowrap;
+  color: var(--ink-4);
+}
+
+.cpp-screen[data-layout="marquee"] .cpp-path__cap + .cpp-path__cap::before {
+  content: "·";
+  margin: 0 7px;
+  opacity: 0.55;
+}
+
+.cpp-screen[data-layout="marquee"] .cpp-path__more {
+  padding-top: 12px;
+  margin-top: 0;
+}
+
+.cpp-screen[data-layout="marquee"] .cpp-path__actions {
+  padding-top: 13px;
+  margin-top: 3px;
+}
+
+/* Sits under the name's right shoulder, not under the buttons: a numeral
+   behind a CTA makes the label look like a printing error. */
+.cpp-screen[data-layout="marquee"] .cpp-path__ghost {
+  display: block;
+  right: 12px;
+  top: 40px;
+  font-size: clamp(80px, 11cqw, 170px);
+  color: rgba(var(--rgb), 0.09);
+}
+
+.cpp-screen[data-layout="marquee"] .cpp-path__revealInner {
+  padding: 16px clamp(14px, 1.6cqw, 22px) 4px;
+}
+
+/* ---------------------------------------------------------------------------
+   BLUEPRINT — spec sheet
+   ---------------------------------------------------------------------------
+   The most technical direction, and the one that argues consulting is
+   engineering rather than editorial. Hairline grid, corner ticks, numbered
+   capability rows, mono throughout, and the accent reduced to rules and
+   numerals — no fills anywhere until you hover the CTA.
+   ------------------------------------------------------------------------ */
+
+.cpp-screen[data-layout="blueprint"] {
+  border-radius: 6px;
+}
+
+.cpp-screen[data-layout="blueprint"] .cpp-path {
+  border-radius: 4px;
+  background-color: var(--tint);
+  background-image:
+    repeating-linear-gradient(0deg, var(--hair) 0 1px, transparent 1px 26px),
+    repeating-linear-gradient(90deg, var(--hair) 0 1px, transparent 1px 26px);
+  background-position: center bottom;
+}
+
+/* Corner ticks — the registration marks of a drawing, and the only ornament
+   in the direction. */
+.cpp-screen[data-layout="blueprint"] .cpp-path::before,
+.cpp-screen[data-layout="blueprint"] .cpp-path::after {
+  content: "";
+  position: absolute;
+  z-index: 2;
+  width: 11px;
+  height: 11px;
+  border: 1px solid var(--accent-ink);
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.cpp-screen[data-layout="blueprint"] .cpp-path::before {
+  top: 6px;
+  left: 6px;
+  border-right: 0;
+  border-bottom: 0;
+}
+
+.cpp-screen[data-layout="blueprint"] .cpp-path::after {
+  right: 6px;
+  bottom: 6px;
+  border-left: 0;
+  border-top: 0;
+}
+
+.cpp-screen[data-layout="blueprint"] .cpp-path__base {
+  padding: 14px clamp(16px, 1.8cqw, 22px) 15px;
+  gap: 11px;
+}
+
+.cpp-screen[data-layout="blueprint"] .cpp-path__name {
+  font-family: var(--font-mono);
+  font-size: clamp(14px, 1.5cqw, 18px);
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.cpp-screen[data-layout="blueprint"] .cpp-path__kicker::before {
+  content: "[";
+  opacity: 0.45;
+}
+
+.cpp-screen[data-layout="blueprint"] .cpp-path__kicker::after {
+  content: "]";
+  opacity: 0.45;
+}
+
+/* The rule stops being a mark and becomes the drawing's top border. */
+.cpp-screen[data-layout="blueprint"] .cpp-path__rule,
+.cpp-screen[data-layout="blueprint"] .cpp-path[data-state="open"] .cpp-path__rule,
+.cpp-screen[data-layout="blueprint"] .cpp-path__head:hover .cpp-path__rule {
+  width: 100%;
+  height: 1px;
+  border-radius: 0;
+  background: var(--line-open);
+  opacity: 1;
+}
+
+.cpp-screen[data-layout="blueprint"] .cpp-path__head {
+  align-self: stretch;
+}
+
+.cpp-screen[data-layout="blueprint"] .cpp-path__caps {
+  counter-reset: cap;
+  align-self: stretch;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  gap: 0;
+  margin-top: 6px;
+}
+
+.cpp-screen[data-layout="blueprint"] .cpp-path__cap {
+  counter-increment: cap;
+  display: grid;
+  grid-template-columns: 32px 1fr;
+  gap: 8px;
+  padding: 5px 0;
+  border: 0;
+  border-bottom: 1px dashed var(--hair-2);
+  border-radius: 0;
+  background: none;
+  letter-spacing: 0.06em;
+  text-transform: none;
+  color: var(--ink-2);
+}
+
+.cpp-screen[data-layout="blueprint"] .cpp-path__cap::before {
+  content: counter(cap, decimal-leading-zero) ".";
+  color: var(--accent-ink);
+  font-variant-numeric: tabular-nums;
+  opacity: 0.9;
+}
+
+.cpp-screen[data-layout="blueprint"] .cpp-path__engagement {
+  padding-left: 12px;
+  border-left: 1px dashed var(--line-open);
+}
+
+.cpp-screen[data-layout="blueprint"] .cpp-path__signals li {
+  border-radius: 2px;
+  letter-spacing: 0.06em;
+}
+
+
+
+
+/* ---------------------------------------------------------------------------
+   SOLO — the WorldPulse and Experience screens
+   ---------------------------------------------------------------------------
+   One panel instead of two, holding production's own two titled blocks. It
+   reuses `.cpp-path` and its children deliberately: every direction's chrome
+   then reaches these screens without a line being written for them, which is
+   also the test of whether a direction is a system or a one-off.
+   ------------------------------------------------------------------------ */
+
+/* One panel, so the pair's two columns collapse to one. Without this the solo
+   screen sat in the left half of the sheet with the right half empty — the
+   grid was still holding a column for a second path that does not exist. */
+.cpp-paths[data-solo="true"] {
+  grid-template-columns: 1fr;
+}
+
+.cpp-solo__blocks {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px clamp(20px, 3cqw, 44px);
+  align-items: start;
+}
+
+.cpp-solo__block {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 5px;
+}
+
+/* The chip row is a max-content flex box inside a flex column, so it ignores
+   its grid cell and runs into the next block. Stretching it is what keeps the
+   two block's capabilities in their own columns. */
+.cpp-path[data-solo="true"] .cpp-path__caps {
+  align-self: stretch;
+  min-width: 0;
+}
+
+/* Marquee sets its capabilities on one clipped line, which is right for a
+   full-width panel and wrong for a half-width block: it clipped after two
+   items and faded the rest. In a block they wrap. */
+.cpp-screen[data-layout="marquee"] .cpp-path[data-solo="true"] .cpp-path__caps {
+  flex-wrap: wrap;
+  overflow: visible;
+  mask-image: none;
+  -webkit-mask-image: none;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.cpp-screen[data-layout="marquee"] .cpp-path[data-solo="true"] .cpp-path__summary,
+.cpp-screen[data-layout="marquee"] .cpp-path[data-solo="true"] .cpp-path__actions {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+/* The base block is a stack of sections here rather than one identity block,
+   so it needs its own rhythm. */
+.cpp-path[data-solo="true"] .cpp-path__base {
+  gap: 14px;
+}
+
+.cpp-path[data-solo="true"] .cpp-path__note {
+  margin-top: -2px;
+}
+
+/* Marquee pulls its base padding to zero so the accent band can run edge to
+   edge. With two blocks side by side there is no band to run, so the padding
+   comes back — otherwise the type sits on the panel's border. */
+.cpp-screen[data-layout="marquee"] .cpp-path[data-solo="true"] .cpp-path__base {
+  padding: 16px clamp(14px, 1.6cqw, 22px) 16px;
+}
+
+.cpp-screen[data-layout="marquee"] .cpp-path[data-solo="true"] .cpp-path__kicker {
+  align-self: flex-start;
+  justify-content: flex-start;
+  gap: 10px;
+  padding: 6px 12px;
+  border-radius: 3px;
+}
+
+/* Ledger has no panel at all, so the solo screen keeps its own hairline frame
+   rather than floating in the sheet. */
+.cpp-screen[data-layout="ledger"] .cpp-path[data-solo="true"] {
+  padding-top: 4px;
+}
+
+.cpp-screen[data-layout="ledger"] .cpp-solo__blocks {
+  gap: 10px clamp(24px, 4cqw, 68px);
+}
+
+/* The ghost numeral belongs to a pair — one panel does not need to be told
+   which of two it is. */
+.cpp-path[data-solo="true"] .cpp-path__ghost {
+  display: none;
+}
+
+@container wt (max-width: 700px) {
+  .cpp-solo__blocks {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+
+  /* Nothing collapses on these screens, so the reversal the pair needs would
+     only put the actions above the content. */
+  .cpp-path[data-solo="true"] {
+    flex-direction: column;
+  }
+
+  .cpp-path[data-solo="true"] .cpp-path__cap:nth-child(n + 4) {
+    display: revert;
+  }
+}
+
+
+/* ---------------------------------------------------------------------------
+   TRACKLIST — the CD track listing the site already owns
+   ---------------------------------------------------------------------------
+   The Work landing card puts a real track listing beside the spinning disc
+   (`.wl-c2__*` in globals.css): a mono numeral column, DM Serif Display titles
+   on a hairline, inactive rows dropped to a third opacity, and the active one
+   coming up to full and stepping 4px right. That is the site's signature
+   element, and this direction says the consulting answer should be read the
+   same way — two tracks on the same record, with the capabilities as the index
+   points inside each one.
+
+   Everything here is the existing recipe, ported to the panel's tokens:
+
+     .wl-c2__item   grid [num | content], baseline aligned, 1px bottom hairline,
+                    opacity 0.32 at rest and 1 + translateX(4px) when active
+     .wl-c2__num    mono, --text-label, --track-dymo, warm accent when active
+     .wl-c2__name   var(--font-serif), clamp'd large, -0.02em
+
+   Type is House and stays House: this is the direction that argues the panel
+   should sound like the rest of the site, so borrowing anyone else's face
+   would be arguing the opposite.
+
+   The numeral is `.cpp-path__ghost` — already in the markup, already absolutely
+   positioned, and unused by three of the six directions. Nothing new is added
+   to the DOM to get the gutter.
+   ------------------------------------------------------------------------ */
+
+.cpp-screen[data-layout="tracklist"] {
+  --track-gutter: clamp(2.4rem, 3.2cqw, 4rem);
+}
+
+.cpp-screen[data-layout="tracklist"] .cpp-paths {
+  gap: 0 clamp(24px, 3.4cqw, 56px);
+}
+
+/* No cards: a listing is rows on hairlines. */
+.cpp-screen[data-layout="tracklist"] .cpp-path,
+.cpp-screen[data-layout="tracklist"] .cpp-path[data-state="open"] {
+  border: 0;
+  border-top: 1px solid var(--hair-2);
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+  overflow: visible;
+  transition: opacity 320ms ease, transform 320ms cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+/* The grooves. A CD read from the outside in — concentric rings anchored off
+   the panel's right edge, at an alpha you notice only once you look for it.
+   Drawn from the path's own hue, so the two tracks are pressed on different
+   coloured discs. */
+.cpp-screen[data-layout="tracklist"] .cpp-path__base::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image: repeating-radial-gradient(
+    circle at 104% 44%,
+    rgba(var(--rgb), 0.14) 0 1px,
+    transparent 1px 11px
+  );
+  mask-image: linear-gradient(to left, #000 0%, transparent 62%);
+  -webkit-mask-image: linear-gradient(to left, #000 0%, transparent 62%);
+  opacity: 0.5;
+  transition: opacity 320ms ease;
+}
+
+.cpp-screen[data-layout="tracklist"] .cpp-path[data-state="open"] .cpp-path__base::before {
+  opacity: 1;
+}
+
+/* `.wl-c2__item`'s recede, at the pair's own scale — 0.55 rather than 0.32,
+   because these two rows are a choice being made, not a contents list being
+   scrolled past. */
+.cpp-screen[data-layout="tracklist"] .cpp-path[data-dimmed="true"] {
+  opacity: 0.55;
+}
+
+.cpp-screen[data-layout="tracklist"] .cpp-path[data-state="open"] {
+  transform: translateX(4px);
+}
+
+.cpp-screen[data-layout="tracklist"] .cpp-path__base {
+  padding: 11px 0 12px var(--track-gutter);
+  gap: 10px;
+}
+
+.cpp-screen[data-layout="tracklist"] .cpp-path__revealInner {
+  padding: 14px 0 16px var(--track-gutter);
+}
+
+/* The track number, in the gutter. */
+.cpp-screen[data-layout="tracklist"] .cpp-path__ghost {
+  display: block;
+  top: 15px;
+  left: 0;
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  font-weight: 500;
+  letter-spacing: var(--track-dymo);
+  color: var(--ink-4);
+  transition: color 320ms ease;
+}
+
+.cpp-screen[data-layout="tracklist"] .cpp-path[data-state="open"] .cpp-path__ghost,
+.cpp-screen[data-layout="tracklist"] .cpp-path__head:hover ~ * .cpp-path__ghost {
+  color: var(--accent-ink);
+}
+
+.cpp-screen[data-layout="tracklist"] .cpp-path__rule,
+.cpp-screen[data-layout="tracklist"] .cpp-path__index {
+  display: none;
+}
+
+.cpp-screen[data-layout="tracklist"] .cpp-path__kicker {
+  color: var(--ink-4);
+  letter-spacing: var(--track-dymo);
+}
+
+.cpp-screen[data-layout="tracklist"] .cpp-path[data-state="open"] .cpp-path__kicker {
+  color: var(--accent-ink);
+}
+
+/* `.wl-c2__name`: the serif, large, tight, and dimmed until it is the one being
+   played. */
+.cpp-screen[data-layout="tracklist"] .cpp-path__name {
+  font-size: clamp(21px, 2.6cqw, 34px);
+  letter-spacing: -0.02em;
+  line-height: 1.04;
+  opacity: 0.78;
+  transition: opacity 320ms ease;
+}
+
+.cpp-screen[data-layout="tracklist"] .cpp-path[data-state="open"] .cpp-path__name,
+.cpp-screen[data-layout="tracklist"] .cpp-path__head:hover .cpp-path__name {
+  opacity: 1;
+}
+
+.cpp-screen[data-layout="tracklist"] .cpp-path__summary {
+  max-width: 46ch;
+}
+
+/* Credits, not sub-tracks.
+   The first pass numbered these `01.1, 01.2 …` and ran a dotted leader out to
+   the margin. Two things wrong with it: five capabilities are not five tracks
+   inside a track — they are the credits block on the back of the sleeve — and a
+   leader that leads to nothing reads as a rendering fault rather than as
+   restraint. (It led nowhere on purpose: the only thing a sleeve prints there
+   is a runtime, and there is no true runtime to print.)
+
+   They set as a run-on credits line in mono, middot separated, the way a sleeve
+   sets personnel. It also costs about a hundred pixels less than five ruled
+   rows — which is what retired the sleeve-flip that used to hide them when a
+   track opened. That behaviour existed only to buy the liner notes room; the
+   credits line hands the room over without taking anything off the page. */
+.cpp-screen[data-layout="tracklist"] .cpp-path__caps {
+  align-self: stretch;
+  flex-wrap: wrap;
+  gap: 0 6px;
+  margin-top: 7px;
+}
+
+.cpp-screen[data-layout="tracklist"] .cpp-path__cap {
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  font-size: 11.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  /* --ink-2, not the --ink-4 a credits line wants to be: at 40% over #f5f4f1
+     this measured 2.9:1, and it is 11.5px of uppercase mono. The recession has
+     to come from size and tracking, which it can, rather than from alpha. */
+  color: var(--ink-2);
+}
+
+/* The separator belongs to the item BEFORE it, tied on with a non-breaking
+   space. As a `::before` on the following item it wrapped with that item, so
+   every continuation line of the credits opened with a stray middot. */
+.cpp-screen[data-layout="tracklist"] .cpp-path__cap:not(:last-child)::after {
+  content: "\00a0·";
+  opacity: 0.5;
+}
+
+.cpp-screen[data-layout="tracklist"] .cpp-path__more {
+  margin-top: 8px;
+  letter-spacing: 0.2em;
+}
+
+.cpp-screen[data-layout="tracklist"] .cpp-path__actions {
+  border-top: 1px solid var(--hair);
+  padding-top: 12px;
+}
+
+/* Liner notes: the detail reads as the sleeve's reverse. */
+.cpp-screen[data-layout="tracklist"] .cpp-path__engagement {
+  border-left: 0;
+  padding-left: 0;
+  border-top: 1px solid var(--hair);
+  padding-top: 9px;
+}
+
+.cpp-screen[data-layout="tracklist"] .cpp-path__reveal {
+  border-bottom: 1px solid var(--hair);
+}
+
+.cpp-screen[data-layout="tracklist"] .cpp-path[data-state="closed"] .cpp-path__reveal {
+  border-bottom-color: transparent;
+}
+
+/* Solo screens (WorldPulse, Experience) keep the gutter and the hairline, with
+   the two blocks as the two sides of a sleeve. */
+.cpp-screen[data-layout="tracklist"] .cpp-path[data-solo="true"] .cpp-path__base {
+  padding-left: var(--track-gutter);
+}
+
+@container wt (max-width: 700px) {
+  .cpp-screen[data-layout="tracklist"] {
+    --track-gutter: 2.1rem;
+  }
+
+  .cpp-screen[data-layout="tracklist"] .cpp-path__name {
+    font-size: clamp(19px, 6.4cqw, 26px);
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   CUE — the transport control
+   ---------------------------------------------------------------------------
+   A play glyph in its own ring, the way a CD player labels the one button that
+   starts something. Only the primary carries it: a triangle on "Send an email"
+   would be a lie about what the control does.
+   ------------------------------------------------------------------------ */
+
+.cpp-screen[data-button="cue"] .cpp-action {
+  border-radius: 999px;
+  padding: 8px 20px 8px 9px;
+}
+
+.cpp-screen[data-button="cue"] .cpp-action--primary {
+  border: 1px solid var(--line-open);
+  background: transparent;
+  color: var(--accent-ink);
+}
+
+.cpp-screen[data-button="cue"] .cpp-action--primary::before {
+  content: "▶";
+  flex: 0 0 auto;
+  width: 24px;
+  height: 24px;
+  margin-right: 11px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 8px;
+  /* The glyph sits a hair right of centre inside its ring — a triangle's
+     optical centre is not its bounding box's. */
+  padding-left: 2px;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  transition: background 160ms ease, color 160ms ease;
+}
+
+.cpp-screen[data-button="cue"] .cpp-action--primary:hover,
+.cpp-screen[data-button="cue"] .cpp-action--primary:focus-visible {
+  background: rgba(var(--rgb), 0.1);
+  border-color: var(--accent-ink);
+  color: var(--accent-ink);
+  transform: none;
+}
+
+.cpp-screen[data-button="cue"] .cpp-action--primary:hover::before,
+.cpp-screen[data-button="cue"] .cpp-action--primary:focus-visible::before {
+  background: var(--accent-ink);
+  color: var(--sheet-bg);
+}
+
+.cpp-screen[data-button="cue"] .cpp-action--ghost {
+  padding: 8px 20px;
+  border: 1px solid var(--hair-2);
+  color: var(--ink-3);
+}
+
+.cpp-screen[data-button="cue"] .cpp-action--ghost:hover,
+.cpp-screen[data-button="cue"] .cpp-action--ghost:focus-visible {
+  border-color: var(--ink-3);
+  color: var(--ink-1);
+  transform: none;
+}
+
+/* ===========================================================================
+   6b. CTA RECIPES — `[data-button]`
+   ===========================================================================
+
+   Eight ways to draw the two buttons at the bottom of every path, six of them
+   ported from styles the site already owns:
+
+     tint     the destination screen's own accent button (the skeleton above)
+     candy    the Emerging Tech Builds bar — work-details.css / .wt__row
+     dymo     globals.css `.tag` — the label plate with the collapsing edge
+     rule     type on a hairline, as the CTA row lab's Rule variant
+     frosted  the personas pill — frosted, hairline, 999px
+     slab     the CTA row lab's Editorial fill, made surface-aware
+     solid    filled with the path's own hue
+     outline  one accent hairline, filling only on hover
+
+   Each direction names the one it was drawn for and the lab can force any
+   other, because "which button" and "which layout" are genuinely separate
+   questions — a Ledger with DYMO plates is a real proposal, not a mistake.
+
+   Every recipe styles the PRIMARY and the GHOST as a pair. A recipe that only
+   dresses the primary leaves the second button reading as a leftover from
+   whatever was there before.
+   ======================================================================== */
+
+/* Position for the sheen; harmless everywhere else. */
+.cpp-action {
+  position: relative;
+  overflow: hidden;
+}
+
+.cpp-action__label {
+  position: relative;
+  z-index: 1;
+  display: inline-block;
+  transition: transform 200ms var(--ease);
+}
+
+/* ---- Candy — the ETB bar ------------------------------------------------
+   A near-white slab over a deep drop shadow with a 105° sheen that wipes
+   across on hover, and the accent taking the whole plate on select. This is
+   the same recipe as the three choices above the sheet, which is either the
+   point (one system, top to bottom) or the objection (the row and the panel
+   stop being distinguishable). Worth seeing before deciding.               */
+
+.cpp-screen[data-button="candy"] .cpp-action--primary {
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  background: linear-gradient(180deg, #fefefe 0%, #f6f5f2 100%);
+  color: #111116;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.85) inset,
+    0 -1px 0 rgba(0, 0, 0, 0.04) inset,
+    0 4px 16px rgba(0, 0, 0, 0.35),
+    0 1px 3px rgba(0, 0, 0, 0.25);
+}
+
+.cpp-screen[data-button="candy"] .cpp-action--primary::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    105deg,
+    transparent 32%,
+    rgba(255, 255, 255, 0.7) 46%,
+    rgba(255, 255, 255, 0.15) 54%,
+    transparent 66%
+  );
+  opacity: 0;
+  transform: translateX(-160%);
+  transition:
+    transform 1s cubic-bezier(0.16, 0.84, 0.44, 1),
+    opacity 300ms ease;
+}
+
+.cpp-screen[data-button="candy"] .cpp-action--primary:hover,
+.cpp-screen[data-button="candy"] .cpp-action--primary:focus-visible {
+  background: linear-gradient(
+    180deg,
+    rgb(var(--rgb)) 0%,
+    rgba(var(--rgb), 0.86) 100%
+  );
+  border-color: rgba(var(--rgb), 0.6);
+  color: var(--on-accent);
+  transform: none;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.2) inset,
+    0 -1px 0 rgba(0, 0, 0, 0.15) inset,
+    0 6px 24px rgba(var(--rgb), 0.28),
+    0 2px 6px rgba(0, 0, 0, 0.35);
+}
+
+.cpp-screen[data-button="candy"] .cpp-action--primary:hover::before,
+.cpp-screen[data-button="candy"] .cpp-action--primary:focus-visible::before {
+  opacity: 0.5;
+  transform: translateX(160%);
+  background: linear-gradient(
+    105deg,
+    transparent 32%,
+    rgba(255, 255, 255, 0.18) 46%,
+    rgba(255, 255, 255, 0.04) 54%,
+    transparent 66%
+  );
+}
+
+.cpp-screen[data-button="candy"] .cpp-action--primary:active {
+  transform: translateY(1px);
+  transition-duration: 60ms;
+}
+
+/* The secondary is the same plate a hair recessed — `.wt__row.is-secondary`. */
+.cpp-screen[data-button="candy"] .cpp-action--ghost {
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  background: linear-gradient(180deg, #f7f6f3 0%, #eeece7 100%);
+  color: rgba(17, 17, 22, 0.72);
+  filter: brightness(0.985);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.7) inset,
+    0 3px 12px rgba(0, 0, 0, 0.3);
+}
+
+.cpp-screen[data-button="candy"] .cpp-action--ghost:hover,
+.cpp-screen[data-button="candy"] .cpp-action--ghost:focus-visible {
+  filter: brightness(1);
+  color: #111116;
+  transform: none;
+}
+
+/* ---- DYMO — globals.css `.tag` ------------------------------------------ */
+
+.cpp-screen[data-button="dymo"] .cpp-action {
+  border-radius: 4px;
+  letter-spacing: var(--track-dymo);
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.55);
+}
+
+.cpp-screen[data-button="dymo"] .cpp-action--primary {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: var(--plate-bg);
+  /* Type on a plate is type on a dark ground whatever the sheet is made of,
+     so it takes the lifted ink rather than the paper one. Without it both
+     CTAs are the same black slab and only a 3px edge separates them. */
+  color: var(--accent-plate-ink);
+  box-shadow:
+    0 3px 0 var(--solid),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12);
+}
+
+.cpp-screen[data-button="dymo"] .cpp-action--primary:hover,
+.cpp-screen[data-button="dymo"] .cpp-action--primary:focus-visible {
+  background: var(--plate-bg);
+  color: var(--accent-plate-ink);
+  /* The plate does not lift. A label that rises off its own hard edge reads
+     as a sticker peeling — the nav and connect rows dropped this too. */
+  transform: none;
+  box-shadow:
+    0 3px 0 var(--solid),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  filter: brightness(1.18);
+}
+
+/* The whole point of a plate: the edge collapses and the label sinks into it. */
+.cpp-screen[data-button="dymo"] .cpp-action--primary:active {
+  transform: translateY(3px);
+  box-shadow: 0 0 0 var(--solid);
+  transition-duration: 60ms;
+}
+
+.cpp-screen[data-button="dymo"] .cpp-action--ghost {
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: var(--plate-bg);
+  color: var(--plate-ink);
+  opacity: 0.82;
+  box-shadow:
+    0 3px 0 var(--plate-edge),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.cpp-screen[data-button="dymo"] .cpp-action--ghost:hover,
+.cpp-screen[data-button="dymo"] .cpp-action--ghost:focus-visible {
+  opacity: 1;
+  color: var(--plate-ink);
+  transform: none;
+}
+
+.cpp-screen[data-button="dymo"] .cpp-action--ghost:active {
+  transform: translateY(3px);
+  box-shadow: 0 0 0 var(--plate-edge);
+  transition-duration: 60ms;
+}
+
+/* ---- Rule — type on a hairline ------------------------------------------ */
+
+.cpp-screen[data-button="rule"] .cpp-action {
+  flex: 0 0 auto;
+  overflow: visible;
+  padding: 5px 0;
+  border: 0;
+  border-radius: 0;
+  background: none;
+}
+
+.cpp-screen[data-button="rule"] .cpp-action--primary {
+  color: var(--accent-ink);
+  border-bottom: 2px solid var(--accent-ink);
+}
+
+.cpp-screen[data-button="rule"] .cpp-action--primary .cpp-action__label::after {
+  content: " →";
+}
+
+.cpp-screen[data-button="rule"] .cpp-action--primary:hover,
+.cpp-screen[data-button="rule"] .cpp-action--primary:focus-visible {
+  background: none;
+  color: var(--accent-ink);
+  transform: none;
+}
+
+/* The arrow moves, not the button — a text link that jumps a pixel on hover
+   reflows the line it sits on. */
+.cpp-screen[data-button="rule"] .cpp-action--primary:hover .cpp-action__label,
+.cpp-screen[data-button="rule"] .cpp-action--primary:focus-visible .cpp-action__label {
+  transform: translateX(4px);
+}
+
+.cpp-screen[data-button="rule"] .cpp-action--ghost {
+  color: var(--ink-3);
+  border-bottom: 1px solid var(--hair-2);
+}
+
+.cpp-screen[data-button="rule"] .cpp-action--ghost:hover,
+.cpp-screen[data-button="rule"] .cpp-action--ghost:focus-visible {
+  color: var(--ink-1);
+  border-color: var(--ink-3);
+  transform: none;
+}
+
+.cpp-screen[data-button="rule"] .cpp-path__actions {
+  gap: 24px;
+}
+
+/* ---- Frosted — the personas pill ------------------------------------------ */
+
+.cpp-screen[data-button="frosted"] .cpp-action {
+  border-radius: 999px;
+  padding: 10px 20px;
+  letter-spacing: 0.14em;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.cpp-screen[data-button="frosted"] .cpp-action--primary {
+  border: 1px solid var(--line-open);
+  background: rgba(var(--rgb), 0.14);
+  color: var(--accent-ink);
+}
+
+.cpp-screen[data-button="frosted"] .cpp-action--primary:hover,
+.cpp-screen[data-button="frosted"] .cpp-action--primary:focus-visible {
+  border-color: var(--solid);
+  background: rgba(var(--rgb), 0.24);
+  color: var(--accent-ink);
+  transform: none;
+}
+
+.cpp-screen[data-button="frosted"] .cpp-action--ghost {
+  border: 1px solid var(--hair-2);
+  background: var(--chip-bg);
+  color: var(--ink-3);
+}
+
+.cpp-screen[data-button="frosted"] .cpp-action--ghost:hover,
+.cpp-screen[data-button="frosted"] .cpp-action--ghost:focus-visible {
+  border-color: var(--ink-3);
+  color: var(--ink-1);
+  transform: none;
+}
+
+.cpp-screen[data-button="frosted"] .cpp-action:active {
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35) inset;
+}
+
+/* ---- Slab — the loudest neutral ------------------------------------------
+   Built out of the sheet's own two extremes, so it inverts for free: a black
+   slab with paper type on Paper, a paper slab with black type on Ink, Black
+   and Glass. No accent at all — the identity is carried by the panel around
+   it, which is the argument this recipe is making.                          */
+
+.cpp-screen[data-button="slab"] .cpp-action--primary {
+  border: 1px solid var(--ink-1);
+  background: var(--ink-1);
+  color: var(--sheet-bg);
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.32);
+}
+
+.cpp-screen[data-button="slab"] .cpp-action--primary:hover,
+.cpp-screen[data-button="slab"] .cpp-action--primary:focus-visible {
+  background: var(--accent-ink);
+  border-color: var(--accent-ink);
+  color: var(--sheet-bg);
+  transform: translateY(-1px);
+}
+
+.cpp-screen[data-button="slab"] .cpp-action--ghost {
+  border: 1px solid var(--hair-2);
+  color: var(--ink-2);
+}
+
+/* ---- Solid — filled with the path's own hue ----------------------------- */
+
+.cpp-screen[data-button="solid"] .cpp-action--primary {
+  border-color: var(--solid);
+  background: var(--solid);
+  color: var(--on-accent);
+  box-shadow: 0 8px 22px rgba(var(--rgb), 0.28);
+}
+
+.cpp-screen[data-button="solid"] .cpp-action--primary:hover,
+.cpp-screen[data-button="solid"] .cpp-action--primary:focus-visible {
+  background: var(--solid);
+  color: var(--on-accent);
+  filter: brightness(1.1);
+  transform: translateY(-1px);
+}
+
+.cpp-screen[data-button="solid"] .cpp-action--ghost {
+  border: 1px solid var(--line-open);
+  color: var(--accent-ink);
+}
+
+.cpp-screen[data-button="solid"] .cpp-action--ghost:hover,
+.cpp-screen[data-button="solid"] .cpp-action--ghost:focus-visible {
+  border-color: var(--solid);
+  background: rgba(var(--rgb), 0.1);
+  color: var(--accent-ink);
+}
+
+/* ---- Outline — one hairline, no fill ------------------------------------ */
+
+.cpp-screen[data-button="outline"] .cpp-action {
+  border-radius: 2px;
+  letter-spacing: 0.14em;
+}
+
+.cpp-screen[data-button="outline"] .cpp-action--primary {
+  border: 1px solid var(--accent-ink);
+  background: transparent;
+  color: var(--accent-ink);
+}
+
+.cpp-screen[data-button="outline"] .cpp-action--primary:hover,
+.cpp-screen[data-button="outline"] .cpp-action--primary:focus-visible {
+  background: var(--accent-ink);
+  color: var(--sheet-bg);
+  transform: none;
+}
+
+.cpp-screen[data-button="outline"] .cpp-action--ghost {
+  border: 1px solid var(--hair-2);
+  color: var(--ink-3);
+}
+
+.cpp-screen[data-button="outline"] .cpp-action--ghost:hover,
+.cpp-screen[data-button="outline"] .cpp-action--ghost:focus-visible {
+  border-color: var(--ink-2);
+  color: var(--ink-1);
+  transform: none;
+}
+
+
+/* ---- Pill — the softest in the set -------------------------------------- */
+
+.cpp-screen[data-button="pill"] .cpp-action {
+  border-radius: 999px;
+  padding: 10px 22px;
+  box-shadow: none;
+}
+
+.cpp-screen[data-button="pill"] .cpp-action--primary {
+  border: 1px solid transparent;
+  background: rgba(var(--rgb), 0.16);
+  color: var(--accent-ink);
+}
+
+.cpp-screen[data-button="pill"] .cpp-action--primary:hover,
+.cpp-screen[data-button="pill"] .cpp-action--primary:focus-visible {
+  background: rgba(var(--rgb), 0.26);
+  color: var(--accent-ink);
+  transform: none;
+}
+
+.cpp-screen[data-button="pill"] .cpp-action--ghost {
+  border: 1px solid transparent;
+  background: var(--chip-neutral-bg);
+  color: var(--ink-3);
+}
+
+.cpp-screen[data-button="pill"] .cpp-action--ghost:hover,
+.cpp-screen[data-button="pill"] .cpp-action--ghost:focus-visible {
+  background: var(--chip-neutral-bg);
+  color: var(--ink-1);
+  transform: none;
+}
+
+/* ---- Offset — a hard shadow in the path's own hue ------------------------
+   The only recipe here where the accent is a shape rather than a fill or a
+   line: the button sits 4px up and left of its own coloured shadow, and the
+   press knocks it down into it.                                            */
+
+.cpp-screen[data-button="offset"] .cpp-action {
+  overflow: visible;
+  border-radius: 2px;
+}
+
+.cpp-screen[data-button="offset"] .cpp-action--primary {
+  border: 1px solid var(--ink-1);
+  background: var(--sheet-bg);
+  color: var(--ink-1);
+  box-shadow: 4px 4px 0 var(--solid);
+}
+
+.cpp-screen[data-button="offset"] .cpp-action--primary:hover,
+.cpp-screen[data-button="offset"] .cpp-action--primary:focus-visible {
+  background: var(--sheet-bg);
+  color: var(--ink-1);
+  transform: translate(-1px, -1px);
+  box-shadow: 5px 5px 0 var(--solid);
+}
+
+.cpp-screen[data-button="offset"] .cpp-action--primary:active {
+  transform: translate(4px, 4px);
+  box-shadow: 0 0 0 var(--solid);
+  transition-duration: 60ms;
+}
+
+.cpp-screen[data-button="offset"] .cpp-action--ghost {
+  border: 1px solid var(--hair-2);
+  box-shadow: 4px 4px 0 var(--chip-neutral-bg);
+  color: var(--ink-2);
+}
+
+.cpp-screen[data-button="offset"] .cpp-action--ghost:active {
+  transform: translate(4px, 4px);
+  box-shadow: 0 0 0 var(--chip-neutral-bg);
+  transition-duration: 60ms;
+}
+
+/* ---- Gradient — lit ------------------------------------------------------ */
+
+.cpp-screen[data-button="gradient"] .cpp-action--primary {
+  border: 1px solid rgba(var(--rgb), 0.7);
+  background: linear-gradient(
+    180deg,
+    rgba(var(--rgb), 0.95) 0%,
+    rgb(var(--rgb)) 55%,
+    rgba(var(--rgb), 0.82) 100%
+  );
+  color: var(--on-accent);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.35),
+    0 10px 26px rgba(var(--rgb), 0.35);
+}
+
+.cpp-screen[data-button="gradient"] .cpp-action--primary:hover,
+.cpp-screen[data-button="gradient"] .cpp-action--primary:focus-visible {
+  color: var(--on-accent);
+  transform: translateY(-1px);
+  filter: brightness(1.08);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.45),
+    0 14px 32px rgba(var(--rgb), 0.42);
+}
+
+.cpp-screen[data-button="gradient"] .cpp-action--ghost {
+  border: 1px solid var(--hair-2);
+  background: linear-gradient(180deg, var(--chip-bg) 0%, transparent 100%);
+  color: var(--ink-2);
+}
+
+/* ---- Etched — cut into the sheet ----------------------------------------
+   No border and no fill: the button is a depression in the paper with the
+   label sitting in it. The most physical recipe and the quietest at rest,
+   which makes it the one to try when the panel already has a lot to say.   */
+
+.cpp-screen[data-button="etched"] .cpp-action {
+  border: 0;
+  border-radius: 7px;
+}
+
+.cpp-screen[data-button="etched"] .cpp-action--primary {
+  background: rgba(var(--rgb), 0.08);
+  color: var(--accent-ink);
+  box-shadow:
+    inset 0 2px 4px rgba(0, 0, 0, 0.18),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.28);
+}
+
+.cpp-screen[data-button="etched"] .cpp-action--primary:hover,
+.cpp-screen[data-button="etched"] .cpp-action--primary:focus-visible {
+  background: rgba(var(--rgb), 0.16);
+  color: var(--accent-ink);
+  transform: none;
+}
+
+.cpp-screen[data-button="etched"] .cpp-action--primary:active {
+  box-shadow:
+    inset 0 3px 6px rgba(0, 0, 0, 0.3),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.2);
+  transition-duration: 60ms;
+}
+
+.cpp-screen[data-button="etched"] .cpp-action--ghost {
+  background: var(--chip-neutral-bg);
+  color: var(--ink-3);
+  box-shadow:
+    inset 0 2px 4px rgba(0, 0, 0, 0.14),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.22);
+}
+
+.cpp-screen[data-button="etched"] .cpp-action--ghost:hover,
+.cpp-screen[data-button="etched"] .cpp-action--ghost:focus-visible {
+  color: var(--ink-1);
+  transform: none;
+}
+
+/* ---- Split — label and arrow in two cells ------------------------------- */
+
+.cpp-screen[data-button="split"] .cpp-action {
+  border-radius: 6px;
+  padding-right: 0;
+}
+
+.cpp-screen[data-button="split"] .cpp-action--primary {
+  border: 1px solid var(--line-open);
+  background: var(--tint-open);
+  color: var(--accent-ink);
+}
+
+.cpp-screen[data-button="split"] .cpp-action::after {
+  content: "→";
+  margin-left: 14px;
+  padding: 0 14px;
+  align-self: stretch;
+  display: inline-flex;
+  align-items: center;
+  border-left: 1px solid currentColor;
+  opacity: 0.55;
+  transition: opacity 160ms ease, transform 200ms var(--ease);
+}
+
+.cpp-screen[data-button="split"] .cpp-action:hover::after,
+.cpp-screen[data-button="split"] .cpp-action:focus-visible::after {
+  opacity: 1;
+  transform: translateX(2px);
+}
+
+.cpp-screen[data-button="split"] .cpp-action--primary:hover,
+.cpp-screen[data-button="split"] .cpp-action--primary:focus-visible {
+  background: rgba(var(--rgb), 0.2);
+  color: var(--accent-ink);
+  border-color: var(--solid);
+  transform: none;
+}
+
+.cpp-screen[data-button="split"] .cpp-action--ghost {
+  border: 1px solid var(--hair-2);
+  color: var(--ink-3);
+}
+
+.cpp-screen[data-button="split"] .cpp-action--ghost:hover,
+.cpp-screen[data-button="split"] .cpp-action--ghost:focus-visible {
+  transform: none;
+}
+
+/* ---- Stamp — applied by hand -------------------------------------------
+   The DYMO idea without the plate: a dashed accent border on a rotation,
+   straightening when you reach for it. 1.5° is the ceiling the design rules
+   set for tilted labels.                                                    */
+
+.cpp-screen[data-button="stamp"] .cpp-action {
+  overflow: visible;
+  border-radius: 3px;
+  transform: rotate(var(--stamp-rot, -1.5deg));
+  transition: transform 220ms var(--ease), background 160ms ease,
+    border-color 160ms ease, color 160ms ease;
+}
+
+.cpp-screen[data-button="stamp"] .cpp-action--ghost {
+  --stamp-rot: 1.2deg;
+}
+
+.cpp-screen[data-button="stamp"] .cpp-action--primary {
+  border: 1.5px dashed var(--accent-ink);
+  background: transparent;
+  color: var(--accent-ink);
+}
+
+.cpp-screen[data-button="stamp"] .cpp-action--primary:hover,
+.cpp-screen[data-button="stamp"] .cpp-action--primary:focus-visible {
+  background: rgba(var(--rgb), 0.12);
+  color: var(--accent-ink);
+  transform: rotate(0deg);
+}
+
+.cpp-screen[data-button="stamp"] .cpp-action--ghost {
+  border: 1.5px dashed var(--hair-2);
+  background: transparent;
+  color: var(--ink-3);
+}
+
+.cpp-screen[data-button="stamp"] .cpp-action--ghost:hover,
+.cpp-screen[data-button="stamp"] .cpp-action--ghost:focus-visible {
+  color: var(--ink-1);
+  border-color: var(--ink-3);
+  transform: rotate(0deg);
+}
+
+/* ===========================================================================
+   7. NARROW — container queries against `wt`, the same container the shipped
+   screen uses, so the phone layout follows the composition's width rather than
+   the viewport's.
+   ======================================================================== */
+
+@container wt (max-width: 700px) {
+  .cpp-screen {
+    gap: 12px;
+    padding: 18px 18px 16px;
+  }
+
+  .cpp-screen__back span[aria-hidden] {
+    display: none;
+  }
+
+  .cpp-paths {
+    grid-template-columns: 1fr;
+    grid-auto-rows: auto;
+    gap: 10px;
+  }
+
+  /* The whole masthead goes at this width: the sheet is a scrolling column and
+     both paths have to stay reachable above the fold. */
+  .cpp-screen:not([data-open="none"]) .cpp-screen__masthead {
+    display: none;
+  }
+
+  /* Stacked, the detail opens DOWNWARD, below the name and the CTA rather than
+     above them. "Upward" is a property of a pair anchored to the floor of a
+     fixed card; here the sheet is a scrolling column, and expanding upward
+     pushed the panel's own name and buttons off the top of the frame — the
+     visitor was left reading detail with no visible sign of which path it
+     belonged to or how to act on it. Reversing the two blocks keeps the
+     identity and the ask on screen and lets the detail flow into the scroll,
+     which is what a phone is for. Only two children, and none of them
+     focusable inside the reveal, so nothing about the tab order changes. */
+  .cpp-path {
+    flex-direction: column-reverse;
+  }
+
+  .cpp-path__revealInner {
+    max-height: none;
+    padding: 2px clamp(14px, 1.6cqw, 20px) 14px;
+  }
+
+  .cpp-path[data-state="open"] .cpp-path__revealInner {
+    overflow-y: visible;
+  }
+
+  /* The chevron points the way the panel actually opens. */
+  .cpp-path__chev,
+  .cpp-path__head:hover .cpp-path__chev,
+  .cpp-path[data-state="open"] .cpp-path__head:hover .cpp-path__chev {
+    transform: scaleY(-1);
+  }
+
+  /* Five chips run to three lines, which is most of a phone panel — so a
+     collapsed path shows three and the rest arrive with the detail. Dropping
+     the extras rather than clipping the row: a fixed max-height cut the third
+     line through the middle of the chips, which reads as a rendering fault
+     rather than as a summary. */
+  .cpp-path[data-state="closed"] .cpp-path__cap:nth-child(n + 4) {
+    display: none;
+  }
+
+  /* Tracklist hangs its separator off the end of each credit, so trimming the
+     list to three left a middot pointing at nothing. */
+  .cpp-screen[data-layout="tracklist"]
+    .cpp-path[data-state="closed"]
+    .cpp-path__cap:nth-child(3)::after {
+    content: none;
+  }
+
+  .cpp-path__actions .cpp-action {
+    flex: 1 1 auto;
+  }
+
+  /* ---- Direction fixes at phone width ---- */
+
+  /* The spine is a two-column device; stacked there is nothing to separate. */
+  .cpp-screen[data-layout="ledger"] .cpp-path[data-path="supply"]::before {
+    display: none;
+  }
+
+  .cpp-screen[data-layout="ledger"] .cpp-paths {
+    gap: 22px;
+  }
+
+  .cpp-screen[data-layout="ledger"] .cpp-path[data-path="supply"] {
+    padding-top: 20px;
+    border-top: 1px solid var(--hair);
+  }
+
+  .cpp-screen[data-layout="ledger"] .cpp-path__ghost {
+    top: -10px;
+    font-size: 64px;
+  }
+
+  /* A 52px name is a poster at 1440 and a wall at 390. */
+  .cpp-screen[data-layout="marquee"] .cpp-path__name {
+    font-size: clamp(24px, 8cqw, 32px);
+  }
+
+  .cpp-screen[data-layout="marquee"] .cpp-path__ghost {
+    display: none;
+  }
+
+  .cpp-screen[data-layout="blueprint"] .cpp-path__cap {
+    grid-template-columns: 26px 1fr;
+  }
+
+  /* Column-reverse puts the reveal after the base, so directions that padded
+     the base's edges have to pad the reveal to match. */
+  .cpp-screen[data-layout="marquee"] .cpp-path__revealInner {
+    padding: 2px clamp(14px, 1.6cqw, 22px) 16px;
+  }
+}
+
+/* ===========================================================================
+   WIDE — the interior scales with the sheet, matching what work-together.css
+   does to `.wt-screen` past 1600px. Without this the pair stays authored at
+   laptop density inside a 4K card.
+   ======================================================================== */
+
+@container wt (min-width: 1600px) {
+  .cpp-screen {
+    gap: clamp(14px, 1cqh, 22px);
+    padding: clamp(24px, 1.6cqh, 40px) clamp(28px, 2.2cqw, 56px)
+      clamp(22px, 1.5cqh, 36px);
+    border-radius: clamp(14px, 1cqw, 22px);
+  }
+
+  .cpp-paths {
+    gap: clamp(20px, 2cqw, 40px);
+    padding-top: clamp(16px, 1.1cqh, 26px);
+  }
+
+  .cpp-path__base {
+    padding: clamp(16px, 1.1cqh, 26px) clamp(20px, 1.6cqw, 32px)
+      clamp(16px, 1.1cqh, 24px);
+  }
+
+  .cpp-path__revealInner {
+    padding: clamp(18px, 1.2cqh, 28px) clamp(20px, 1.6cqw, 32px) 4px;
+  }
+
+  .cpp-screen[data-layout="ledger"] .cpp-path__base,
+  .cpp-screen[data-layout="marquee"] .cpp-path__base {
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .cpp-screen[data-layout="marquee"] .cpp-path__base {
+    padding-top: 0;
+  }
+}
+
+/* At this width the detail can afford two columns, which is the reason Marquee
+   sets its capabilities on one line: the panel is wide enough that a single
+   column of prose would run past a comfortable measure. */
+@container wt (min-width: 1000px) {
+  .cpp-screen[data-layout="marquee"] .cpp-path__revealInner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas:
+      "lede eng"
+      "sig  eng"
+      "note eng";
+    grid-template-rows: auto auto 1fr;
+    align-content: start;
+    column-gap: clamp(16px, 1.6cqw, 28px);
+    row-gap: 10px;
+  }
+
+  .cpp-screen[data-layout="marquee"] .cpp-path__detailLede {
+    grid-area: lede;
+  }
+
+  .cpp-screen[data-layout="marquee"] .cpp-path__engagements {
+    grid-area: eng;
+  }
+
+  .cpp-screen[data-layout="marquee"] .cpp-path__signals {
+    grid-area: sig;
+    align-content: start;
+  }
+
+  .cpp-screen[data-layout="marquee"] .cpp-path__note {
+    grid-area: note;
+  }
+}
+
+/* ===========================================================================
+   REDUCED MOTION
+   Every state above is a static rule, so switching motion off is just removing
+   the tweening — nothing is left mid-flight. Production's `.wt *` block already
+   covers everything here; this is for the lab's own forced toggle.
+   ======================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .cpp-screen,
+  .cpp-screen *,
+  .cpp-screen *::before,
+  .cpp-screen *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+
+/* ===========================================================================
+   9. THE OFFER, MADE OBVIOUS
+   ===========================================================================
+
+   Three problems the pair had at rest, all of them the same problem — the
+   panels read as editorial, not as things you can buy:
+
+     1. The two engagements inside each path only appeared once it was
+        expanded. A visitor scanning the section saw two disciplines and no
+        products: nothing to want, and no reason to press.
+     2. Nothing said the panel opened. The one hint was a line of mono at
+        --text-label that read as a caption.
+     3. Hovering a panel did almost nothing, so the pointer never found an edge.
+
+   Everything below is skeleton-level and token-driven, so all six directions
+   get it and each one's own block can still overrule it.
+   ======================================================================== */
+
+/* ---- What's in the offer ------------------------------------------------ */
+
+.cpp-path__offers {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.cpp-path__offer {
+  position: relative;
+  font-family: var(--face-label);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent-ink);
+  padding: 5px 10px 5px 9px;
+  border-radius: 6px;
+  border: 1px solid var(--line-open);
+  background: rgba(var(--rgb), 0.09);
+  transition: background 200ms ease, border-color 200ms ease, transform 200ms var(--ease);
+}
+
+/* The offers lift with the panel, one after the other — the only stagger in
+   the panel, and it exists to make the pointer notice it found something. */
+.cpp-path__head:hover .cpp-path__offer,
+.cpp-path[data-state="open"] .cpp-path__offer {
+  background: rgba(var(--rgb), 0.16);
+  border-color: var(--solid);
+}
+
+.cpp-path__head:hover .cpp-path__offer:nth-child(1) { transform: translateY(-1px); }
+.cpp-path__head:hover .cpp-path__offer:nth-child(2) { transform: translateY(-1px); transition-delay: 40ms; }
+
+/* ---- The offer strip, in each direction's own language ------------------ */
+
+/* Ledger boxes nothing, and two boxed chips in a column of ruled type is the
+   one thing that would give the direction away. The offers become what
+   everything else in it is: type on a rule, in the accent. */
+.cpp-screen[data-layout="ledger"] .cpp-path__offers {
+  gap: 0;
+  padding-top: 9px;
+  border-top: 1px solid var(--hair-2);
+}
+
+.cpp-screen[data-layout="ledger"] .cpp-path__offer {
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  font-size: 12px;
+  letter-spacing: 0.14em;
+}
+
+.cpp-screen[data-layout="ledger"] .cpp-path__offer:not(:last-child)::after {
+  content: "\00a0\00a0·\00a0";
+  opacity: 0.5;
+}
+
+.cpp-screen[data-layout="ledger"] .cpp-path__head:hover .cpp-path__offer {
+  background: none;
+  transform: none;
+}
+
+/* Ledger's hover is its numeral coming up, not a wash across type that has no
+   panel to be washed. */
+.cpp-screen[data-layout="ledger"] .cpp-path:has(.cpp-path__head:hover) {
+  background: none;
+  box-shadow: none;
+  transform: none;
+}
+
+.cpp-screen[data-layout="ledger"] .cpp-path__head:hover ~ * .cpp-path__ghost,
+.cpp-screen[data-layout="ledger"] .cpp-path__ghost {
+  transition: -webkit-text-stroke-color 240ms ease, opacity 240ms ease;
+}
+
+.cpp-screen[data-layout="ledger"] .cpp-path:has(.cpp-path__head:hover) .cpp-path__ghost {
+  -webkit-text-stroke-color: var(--accent-ink);
+  opacity: 1;
+}
+
+/* Blueprint sets everything in dashes and right angles. */
+.cpp-screen[data-layout="blueprint"] .cpp-path__offer {
+  border-radius: 2px;
+  border-style: dashed;
+  letter-spacing: 0.08em;
+}
+
+/* Plate presses its labels. The offers are the one thing on the panel worth
+   the full emboss besides the kicker. */
+.cpp-screen[data-layout="plate"] .cpp-path__offer {
+  border-color: var(--hair-2);
+  background: var(--chip-bg);
+  color: var(--ink-1);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.5),
+    0 2px 0 var(--hair-2);
+}
+
+.cpp-screen[data-layout="plate"] .cpp-path__head:hover .cpp-path__offer,
+.cpp-screen[data-layout="plate"] .cpp-path[data-state="open"] .cpp-path__offer {
+  background: var(--plate-bg);
+  color: var(--accent-plate-ink);
+  border-color: transparent;
+  box-shadow: 0 2px 0 var(--solid);
+}
+
+/* Tracklist: the offers are the two pieces of music on this side of the
+   record, so they carry the title's weight rather than a tag's. */
+.cpp-screen[data-layout="tracklist"] .cpp-path__offers {
+  margin-top: 10px;
+}
+
+.cpp-screen[data-layout="tracklist"] .cpp-path__offer {
+  border-radius: 3px;
+  font-size: 11.5px;
+  letter-spacing: 0.12em;
+}
+
+/* ---- The disclosure, as a control --------------------------------------- */
+
+.cpp-path__more {
+  align-self: flex-start;
+  gap: 9px;
+  margin-top: 9px;
+  padding: 7px 8px 7px 13px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: transparent;
+  font-size: var(--text-label);
+  letter-spacing: 0.14em;
+  transition: background 200ms ease, border-color 200ms ease, color 200ms ease;
+}
+
+.cpp-path__chev {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 1px solid var(--line-open);
+  font-size: 11px;
+  line-height: 1;
+}
+
+.cpp-path__head:hover .cpp-path__more,
+.cpp-path__head:focus-visible .cpp-path__more,
+.cpp-path[data-state="open"] .cpp-path__more {
+  background: rgba(var(--rgb), 0.12);
+  border-color: var(--line-open);
+}
+
+.cpp-path__head:hover .cpp-path__chev,
+.cpp-path[data-state="open"] .cpp-path__chev {
+  background: var(--accent-ink);
+  border-color: var(--accent-ink);
+  color: var(--sheet-bg);
+}
+
+/* The ring already carries the state; moving it as well made two things happen
+   on one hover and the transform fought the flip the stacked layout applies. */
+.cpp-path__head:hover .cpp-path__chev,
+.cpp-path[data-state="open"] .cpp-path__head:hover .cpp-path__chev {
+  transform: none;
+}
+
+/* ---- The panel invites the pointer -------------------------------------- */
+
+.cpp-path__head {
+  align-self: stretch;
+  width: 100%;
+}
+
+.cpp-path:has(.cpp-path__head:hover) {
+  background: var(--tint-open);
+  border-color: var(--line-open);
+}
+
+.cpp-path[data-state="closed"]:has(.cpp-path__head:hover) {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px var(--glow);
+}
+
+.cpp-path__head:hover .cpp-path__name {
+  color: var(--accent-ink);
+}
+
+/* ===========================================================================
+   8. THE THREE CHOICES — the top-level bars, in the same system
+   ===========================================================================
+
+   The original brief was to leave these exactly as they are, and the first
+   passes did. That produced a section which was internally consistent below the
+   fold and inconsistent above it: a Blueprint sheet under three Emerging Tech
+   Builds candy bars is two design systems stacked on top of each other, and the
+   bars — being the first thing on screen — win the argument about what the
+   section is.
+
+   So the bars now read from the same five axes. What does NOT change, at all:
+   the three labels, their order, their ledes, their behaviour, the
+   `aria-expanded` disclosure semantics, and the fact that Consulting leads. The
+   `Rows` control puts them back to production in one click, which is what makes
+   the comparison arguable rather than assumed.
+
+   Everything here is scoped under `.cpl-stage[data-rows="skin"]`, so
+   `work-together.css` is untouched and production keeps rendering exactly what
+   it renders today.
+
+   Accent per bar follows the screen it opens, so the section's colour changes
+   with the chapter: Consulting and WorldPulse take the systems hue, Experience
+   takes the supply-chain one — the same mapping the solo screens use.
+   ======================================================================== */
+
+.cpl-stage[data-rows="skin"] {
+  --row-radius: 14px;
+  --row-pad-y: 14px;
+  --row-pad-x: clamp(16px, 2cqw, 24px);
+  --row-rot: 0deg;
+  --row-face: linear-gradient(180deg, #fefefe 0%, #f6f5f2 100%);
+  --row-border: rgba(255, 255, 255, 0.28);
+  --row-ink: #111116;
+  --row-ink-2: rgba(17, 17, 22, 0.62);
+  --row-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.85) inset,
+    0 -1px 0 rgba(0, 0, 0, 0.04) inset,
+    0 4px 16px rgba(0, 0, 0, 0.45),
+    0 1px 3px rgba(0, 0, 0, 0.3);
+  --row-label-track: var(--track-dymo);
+  --row-label-size: var(--text-control);
+  --row-lede-display: -webkit-box;
+}
+
+.cpl-stage[data-rows="skin"] [data-wt-row="consulting"],
+.cpl-stage[data-rows="skin"] [data-wt-row="worldpulse"] {
+  --rgb: var(--ai-rgb);
+  --accent-lift: var(--ai-ink-dark);
+  --accent-deep: var(--ai-ink-light);
+  --on-accent: var(--ai-on);
+}
+
+.cpl-stage[data-rows="skin"] [data-wt-row="experience"] {
+  --rgb: var(--sup-rgb);
+  --accent-lift: var(--sup-ink-dark);
+  --accent-deep: var(--sup-ink-light);
+  --on-accent: var(--sup-on);
+}
+
+/* ---- Base: every bar is drawn from the tokens above ---- */
+
+.cpl-stage[data-rows="skin"] .wt__row {
+  padding: var(--row-pad-y) var(--row-pad-x);
+  border-radius: var(--row-radius);
+  border: 1px solid var(--row-border);
+  background: var(--row-face);
+  box-shadow: var(--row-shadow);
+  transform: rotate(var(--row-rot));
+}
+
+.cpl-stage[data-rows="skin"] .wt__label {
+  font-family: var(--face-label);
+  font-size: var(--row-label-size);
+  letter-spacing: var(--row-label-track);
+  color: var(--row-ink);
+}
+
+.cpl-stage[data-rows="skin"] .wt__lede {
+  display: var(--row-lede-display);
+  font-family: var(--face-label);
+  color: var(--row-ink-2);
+}
+
+.cpl-stage[data-rows="skin"] .wt__chev {
+  color: var(--row-ink-2);
+}
+
+/* Production ranks Consulting with a deeper shadow and recesses the other two.
+   Both of those are written against the candy plate and read as damage on a
+   hairline or a dashed stamp, so the skinned row states its hierarchy through
+   whatever the current treatment is instead. */
+.cpl-stage[data-rows="skin"] .wt__row.is-primary:not(:hover):not(:focus-visible):not(.is-current),
+.cpl-stage[data-rows="skin"] .wt__row.is-secondary:not(:hover):not(:focus-visible):not(.is-current) {
+  box-shadow: var(--row-shadow);
+  filter: none;
+}
+
+.cpl-stage[data-rows="skin"] .wt__rowSheen {
+  display: none;
+}
+
+/* ---- Selected ---- */
+
+.cpl-stage[data-rows="skin"] .wt__row.is-current,
+.cpl-stage[data-rows="skin"] .wt__row:hover,
+.cpl-stage[data-rows="skin"] .wt__row:focus-visible {
+  background: linear-gradient(180deg, rgb(var(--rgb)) 0%, rgba(var(--rgb), 0.86) 100%);
+  border-color: rgba(var(--rgb), 0.6);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.2) inset,
+    0 -1px 0 rgba(0, 0, 0, 0.15) inset,
+    0 6px 24px rgba(var(--rgb), 0.28),
+    0 2px 6px rgba(0, 0, 0, 0.4);
+}
+
+.cpl-stage[data-rows="skin"] .wt__row.is-current .wt__label,
+.cpl-stage[data-rows="skin"] .wt__row:hover .wt__label,
+.cpl-stage[data-rows="skin"] .wt__row:focus-visible .wt__label {
+  color: var(--on-accent);
+}
+
+.cpl-stage[data-rows="skin"] .wt__row.is-current .wt__lede,
+.cpl-stage[data-rows="skin"] .wt__row:hover .wt__lede,
+.cpl-stage[data-rows="skin"] .wt__row:focus-visible .wt__lede,
+.cpl-stage[data-rows="skin"] .wt__row.is-current .wt__chev,
+.cpl-stage[data-rows="skin"] .wt__row:hover .wt__chev,
+.cpl-stage[data-rows="skin"] .wt__row:focus-visible .wt__chev {
+  color: var(--on-accent);
+  opacity: 0.72;
+}
+
+/* ===========================================================================
+   8a. SURFACE — what the bars are made of
+   ======================================================================== */
+
+.cpl-stage[data-rows="skin"][data-surface="ink"] {
+  --row-face: linear-gradient(180deg, #14171e 0%, #0c0e13 100%);
+  --row-border: rgba(255, 255, 255, 0.14);
+  --row-ink: rgba(246, 245, 240, 0.94);
+  --row-ink-2: rgba(246, 245, 240, 0.56);
+  --row-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.07) inset,
+    0 6px 20px rgba(0, 0, 0, 0.55);
+}
+
+.cpl-stage[data-rows="skin"][data-surface="black"] {
+  --row-face: #000000;
+  --row-border: rgba(255, 255, 255, 0.18);
+  --row-ink: #ffffff;
+  --row-ink-2: rgba(255, 255, 255, 0.58);
+  --row-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.08) inset,
+    0 8px 24px rgba(0, 0, 0, 0.7);
+}
+
+.cpl-stage[data-rows="skin"][data-surface="glass"] {
+  --row-face: rgba(12, 14, 20, 0.42);
+  --row-border: rgba(255, 255, 255, 0.18);
+  --row-ink: rgba(255, 255, 255, 0.96);
+  --row-ink-2: rgba(255, 255, 255, 0.62);
+  --row-shadow: 0 1px 0 rgba(255, 255, 255, 0.1) inset, 0 10px 30px rgba(0, 0, 0, 0.45);
+}
+
+.cpl-stage[data-rows="skin"][data-surface="glass"] .wt__row {
+  backdrop-filter: blur(14px) saturate(1.2);
+  -webkit-backdrop-filter: blur(14px) saturate(1.2);
+}
+
+/* ===========================================================================
+   8b. DIRECTION — the bar's own layout, one per direction
+   ======================================================================== */
+
+/* Ledger — the row stops being three objects and becomes three lines of an
+   index. Type on a hairline, numbered, with the accent as a 2px rule. */
+.cpl-stage[data-rows="skin"][data-layout="ledger"] {
+  --row-radius: 0px;
+  --row-pad-x: 2px;
+  --row-pad-y: 11px;
+}
+
+.cpl-stage[data-rows="skin"][data-layout="ledger"] .wt__rows {
+  gap: 0 clamp(20px, 3cqw, 44px);
+}
+
+.cpl-stage[data-rows="skin"][data-layout="ledger"] .wt__row,
+.cpl-stage[data-rows="skin"][data-layout="ledger"] .wt__row.is-current,
+.cpl-stage[data-rows="skin"][data-layout="ledger"] .wt__row:hover,
+.cpl-stage[data-rows="skin"][data-layout="ledger"] .wt__row:focus-visible {
+  background: none;
+  border: 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.24);
+  box-shadow: none;
+}
+
+.cpl-stage[data-rows="skin"][data-layout="ledger"] .wt__row.is-current,
+.cpl-stage[data-rows="skin"][data-layout="ledger"] .wt__row:hover,
+.cpl-stage[data-rows="skin"][data-layout="ledger"] .wt__row:focus-visible {
+  border-bottom: 2px solid var(--accent-lift);
+}
+
+.cpl-stage[data-rows="skin"][data-layout="ledger"] .wt__label {
+  color: rgba(255, 255, 255, 0.92);
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.7);
+}
+
+.cpl-stage[data-rows="skin"][data-layout="ledger"] .wt__lede {
+  color: rgba(255, 255, 255, 0.55);
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.7);
+}
+
+.cpl-stage[data-rows="skin"][data-layout="ledger"] .wt__row.is-current .wt__label,
+.cpl-stage[data-rows="skin"][data-layout="ledger"] .wt__row:hover .wt__label,
+.cpl-stage[data-rows="skin"][data-layout="ledger"] .wt__row:focus-visible .wt__label {
+  color: var(--accent-lift);
+}
+
+.cpl-stage[data-rows="skin"][data-layout="ledger"] .wt__row.is-current .wt__lede,
+.cpl-stage[data-rows="skin"][data-layout="ledger"] .wt__row:hover .wt__lede,
+.cpl-stage[data-rows="skin"][data-layout="ledger"] .wt__row.is-current .wt__chev,
+.cpl-stage[data-rows="skin"][data-layout="ledger"] .wt__row:hover .wt__chev {
+  color: rgba(255, 255, 255, 0.7);
+  opacity: 1;
+}
+
+/* Plate — DYMO labels applied by hand: three plates, alternating rotation
+   inside the 1–2° the design rules allow, on a hard edge that collapses when
+   pressed. Rotation is carried on a token so the press keeps it. */
+.cpl-stage[data-rows="skin"][data-layout="plate"] {
+  --row-radius: 3px;
+  --row-face: #1c1c1c;
+  --row-border: rgba(255, 255, 255, 0.08);
+  --row-ink: rgba(255, 255, 255, 0.9);
+  --row-ink-2: rgba(255, 255, 255, 0.5);
+  --row-shadow: 0 3px 0 #0b0b0b, inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  --row-label-track: var(--track-dymo);
+}
+
+.cpl-stage[data-rows="skin"][data-layout="plate"] .wt__row:nth-child(1) { --row-rot: -1.2deg; }
+.cpl-stage[data-rows="skin"][data-layout="plate"] .wt__row:nth-child(2) { --row-rot: 0.9deg; }
+.cpl-stage[data-rows="skin"][data-layout="plate"] .wt__row:nth-child(3) { --row-rot: -0.5deg; }
+
+.cpl-stage[data-rows="skin"][data-layout="plate"] .wt__row.is-current,
+.cpl-stage[data-rows="skin"][data-layout="plate"] .wt__row:hover,
+.cpl-stage[data-rows="skin"][data-layout="plate"] .wt__row:focus-visible {
+  background: #262626;
+  border-color: rgba(var(--rgb), 0.5);
+  box-shadow: 0 3px 0 rgb(var(--rgb)), inset 0 1px 0 rgba(255, 255, 255, 0.14);
+  /* The plate does not lift — a label that rises off its own hard edge reads
+     as a sticker peeling. It only ever straightens or presses. */
+  transform: rotate(var(--row-rot));
+}
+
+.cpl-stage[data-rows="skin"][data-layout="plate"] .wt__row.is-current .wt__label,
+.cpl-stage[data-rows="skin"][data-layout="plate"] .wt__row:hover .wt__label,
+.cpl-stage[data-rows="skin"][data-layout="plate"] .wt__row:focus-visible .wt__label {
+  color: var(--accent-lift);
+}
+
+.cpl-stage[data-rows="skin"][data-layout="plate"] .wt__row.is-current .wt__lede,
+.cpl-stage[data-rows="skin"][data-layout="plate"] .wt__row:hover .wt__lede,
+.cpl-stage[data-rows="skin"][data-layout="plate"] .wt__row.is-current .wt__chev,
+.cpl-stage[data-rows="skin"][data-layout="plate"] .wt__row:hover .wt__chev {
+  color: rgba(255, 255, 255, 0.6);
+  opacity: 1;
+}
+
+.cpl-stage[data-rows="skin"][data-layout="plate"] .wt__row:active {
+  transform: translateY(3px) rotate(var(--row-rot));
+  box-shadow: 0 0 0 rgb(var(--rgb)), inset 0 1px 0 rgba(255, 255, 255, 0.14);
+}
+
+/* Marquee — poster bars. Bigger type, more air, and the selected one takes the
+   accent as a full fill rather than as a border. */
+.cpl-stage[data-rows="skin"][data-layout="marquee"] {
+  --row-pad-y: 18px;
+  --row-radius: 12px;
+  --row-label-size: clamp(14px, 1.3cqw, 18px);
+  --row-label-track: 0.14em;
+}
+
+.cpl-stage[data-rows="skin"][data-layout="marquee"] .wt__label {
+  font-family: var(--face-display);
+  font-weight: var(--name-weight);
+  font-style: var(--name-style);
+  letter-spacing: -0.01em;
+  text-transform: none;
+  font-size: clamp(17px, 1.7cqw, 24px);
+}
+
+/* Blueprint — the row as a legend: sharp corners, dashed hairlines, mono
+   labels, and a numeral in front of each choice. */
+.cpl-stage[data-rows="skin"][data-layout="blueprint"] {
+  --row-radius: 2px;
+  --row-face: rgba(8, 10, 14, 0.55);
+  --row-border: rgba(255, 255, 255, 0.22);
+  --row-ink: rgba(255, 255, 255, 0.92);
+  --row-ink-2: rgba(255, 255, 255, 0.5);
+  --row-shadow: none;
+  --row-label-track: 0.1em;
+}
+
+.cpl-stage[data-rows="skin"][data-layout="blueprint"] .wt__rows {
+  counter-reset: choice;
+}
+
+.cpl-stage[data-rows="skin"][data-layout="blueprint"] .wt__row {
+  counter-increment: choice;
+  border-style: dashed;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+.cpl-stage[data-rows="skin"][data-layout="blueprint"] .wt__label::before {
+  content: counter(choice, decimal-leading-zero) " / ";
+  color: var(--accent-lift);
+  opacity: 0.85;
+}
+
+.cpl-stage[data-rows="skin"][data-layout="blueprint"] .wt__row.is-current,
+.cpl-stage[data-rows="skin"][data-layout="blueprint"] .wt__row:hover,
+.cpl-stage[data-rows="skin"][data-layout="blueprint"] .wt__row:focus-visible {
+  background: rgba(var(--rgb), 0.16);
+  border-color: var(--accent-lift);
+  border-style: solid;
+  box-shadow: none;
+}
+
+.cpl-stage[data-rows="skin"][data-layout="blueprint"] .wt__row.is-current .wt__label,
+.cpl-stage[data-rows="skin"][data-layout="blueprint"] .wt__row:hover .wt__label,
+.cpl-stage[data-rows="skin"][data-layout="blueprint"] .wt__row:focus-visible .wt__label {
+  color: #fff;
+}
+
+/* The numeral is drawn in the accent, which is exactly the colour the selected
+   bar fills with under the Outline recipe — it vanished into its own
+   background. It takes the label's colour once the bar is lit. */
+.cpl-stage[data-rows="skin"][data-layout="blueprint"] .wt__row.is-current .wt__label::before,
+.cpl-stage[data-rows="skin"][data-layout="blueprint"] .wt__row:hover .wt__label::before,
+.cpl-stage[data-rows="skin"][data-layout="blueprint"] .wt__row:focus-visible .wt__label::before {
+  color: currentColor;
+  opacity: 0.6;
+}
+
+.cpl-stage[data-rows="skin"][data-layout="blueprint"] .wt__row.is-current .wt__lede,
+.cpl-stage[data-rows="skin"][data-layout="blueprint"] .wt__row:hover .wt__lede,
+.cpl-stage[data-rows="skin"][data-layout="blueprint"] .wt__row.is-current .wt__chev,
+.cpl-stage[data-rows="skin"][data-layout="blueprint"] .wt__row:hover .wt__chev {
+  color: rgba(255, 255, 255, 0.66);
+  opacity: 1;
+}
+
+/* ===========================================================================
+   8c. BUTTONS — the bars take a recipe too
+   ===========================================================================
+
+   A bar IS a button: it is the biggest one in the section and the first one
+   anybody presses. Letting the Buttons axis stop at the CTAs meant the loudest
+   control on screen was the one control the axis could not reach.
+
+   Only the chrome follows the recipe. The metrics, the type and the numerals
+   stay with the direction, because a DYMO plate at Marquee scale is still a
+   Marquee row — that is the point of having two axes rather than one.
+
+   On Auto a direction picks its own row chrome (`rowButton`), which is not
+   always the one its CTA takes: Dossier's CTA is the shipped screen's quiet
+   accent wash, while its bars are the candy plate the site ships above the
+   sheet. An explicit choice in the panel governs both.
+   ======================================================================== */
+
+/* Candy — the plate this row already is. Named rather than assumed, so the
+   production look is reachable from any direction. */
+.cpl-stage[data-rows="skin"][data-row-button="candy"] .wt__row {
+  background: linear-gradient(180deg, #fefefe 0%, #f6f5f2 100%);
+  border-color: rgba(255, 255, 255, 0.28);
+  color: #111116;
+}
+
+.cpl-stage[data-rows="skin"][data-row-button="candy"] .wt__label {
+  color: #111116;
+}
+
+.cpl-stage[data-rows="skin"][data-row-button="candy"] .wt__lede,
+.cpl-stage[data-rows="skin"][data-row-button="candy"] .wt__chev {
+  color: rgba(17, 17, 22, 0.62);
+}
+
+/* Cobalt Select, spelled out.
+   Without it the recipe's REST fill ties on specificity with the base rule's
+   SELECTED fill and wins on source order, so the chosen bar kept its near-white
+   plate while its label had already gone white — an unreadable current state,
+   and the default view at that. Every recipe that repaints `.wt__row` has to
+   repaint the selected state too. */
+.cpl-stage[data-rows="skin"][data-row-button="candy"] .wt__row.is-current,
+.cpl-stage[data-rows="skin"][data-row-button="candy"] .wt__row:hover,
+.cpl-stage[data-rows="skin"][data-row-button="candy"] .wt__row:focus-visible {
+  background: linear-gradient(180deg, rgb(var(--rgb)) 0%, rgba(var(--rgb), 0.86) 100%);
+  border-color: rgba(var(--rgb), 0.6);
+}
+
+.cpl-stage[data-rows="skin"][data-row-button="candy"] .wt__row.is-current .wt__label,
+.cpl-stage[data-rows="skin"][data-row-button="candy"] .wt__row:hover .wt__label,
+.cpl-stage[data-rows="skin"][data-row-button="candy"] .wt__row:focus-visible .wt__label {
+  color: var(--on-accent);
+}
+
+.cpl-stage[data-rows="skin"][data-row-button="candy"] .wt__row.is-current .wt__lede,
+.cpl-stage[data-rows="skin"][data-row-button="candy"] .wt__row:hover .wt__lede,
+.cpl-stage[data-rows="skin"][data-row-button="candy"] .wt__row.is-current .wt__chev,
+.cpl-stage[data-rows="skin"][data-row-button="candy"] .wt__row:hover .wt__chev {
+  color: var(--on-accent);
+  opacity: 0.72;
+}
+
+/* Tint — an accent wash on the sheet's own tone, never a fill. */
+.cpl-stage[data-rows="skin"][data-row-button="tint"] .wt__row {
+  background: rgba(var(--rgb), 0.14);
+  border-color: rgba(var(--rgb), 0.34);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.cpl-stage[data-rows="skin"][data-row-button="tint"] .wt__label {
+  color: rgba(255, 255, 255, 0.94);
+}
+
+.cpl-stage[data-rows="skin"][data-row-button="tint"] .wt__lede,
+.cpl-stage[data-rows="skin"][data-row-button="tint"] .wt__chev {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.cpl-stage[data-rows="skin"][data-row-button="tint"] .wt__row.is-current,
+.cpl-stage[data-rows="skin"][data-row-button="tint"] .wt__row:hover,
+.cpl-stage[data-rows="skin"][data-row-button="tint"] .wt__row:focus-visible {
+  background: rgba(var(--rgb), 0.3);
+  border-color: rgba(var(--rgb), 0.7);
+}
+
+.cpl-stage[data-rows="skin"][data-row-button="tint"] .wt__row.is-current .wt__label,
+.cpl-stage[data-rows="skin"][data-row-button="tint"] .wt__row:hover .wt__label {
+  color: #fff;
+}
+
+/* Rule — type on a hairline, whatever the direction. */
+.cpl-stage[data-rows="skin"][data-row-button="rule"] .wt__row,
+.cpl-stage[data-rows="skin"][data-row-button="rule"] .wt__row.is-current,
+.cpl-stage[data-rows="skin"][data-row-button="rule"] .wt__row:hover,
+.cpl-stage[data-rows="skin"][data-row-button="rule"] .wt__row:focus-visible {
+  background: none;
+  border: 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.24);
+  border-radius: 0;
+  box-shadow: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+.cpl-stage[data-rows="skin"][data-row-button="rule"] .wt__row.is-current,
+.cpl-stage[data-rows="skin"][data-row-button="rule"] .wt__row:hover,
+.cpl-stage[data-rows="skin"][data-row-button="rule"] .wt__row:focus-visible {
+  border-bottom: 2px solid var(--accent-lift);
+}
+
+.cpl-stage[data-rows="skin"][data-row-button="rule"] .wt__label {
+  color: rgba(255, 255, 255, 0.92);
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.7);
+}
+
+.cpl-stage[data-rows="skin"][data-row-button="rule"] .wt__lede,
+.cpl-stage[data-rows="skin"][data-row-button="rule"] .wt__chev {
+  color: rgba(255, 255, 255, 0.52);
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.7);
+}
+
+.cpl-stage[data-rows="skin"][data-row-button="rule"] .wt__row.is-current .wt__label,
+.cpl-stage[data-rows="skin"][data-row-button="rule"] .wt__row:hover .wt__label {
+  color: var(--accent-lift);
+}
+
+/* DYMO — the label plate, available from any direction. */
+.cpl-stage[data-rows="skin"][data-row-button="dymo"] .wt__row {
+  background: #1c1c1c;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 3px;
+  box-shadow: 0 3px 0 #0b0b0b, inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.7);
+}
+
+.cpl-stage[data-rows="skin"][data-row-button="dymo"] .wt__label {
+  color: rgba(255, 255, 255, 0.9);
+  letter-spacing: var(--track-dymo);
+}
+
+.cpl-stage[data-rows="skin"][data-row-button="dymo"] .wt__lede,
+.cpl-stage[data-rows="skin"][data-row-button="dymo"] .wt__chev {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.cpl-stage[data-rows="skin"][data-row-button="dymo"] .wt__row.is-current,
+.cpl-stage[data-rows="skin"][data-row-button="dymo"] .wt__row:hover,
+.cpl-stage[data-rows="skin"][data-row-button="dymo"] .wt__row:focus-visible {
+  background: #262626;
+  border-color: rgba(var(--rgb), 0.5);
+  box-shadow: 0 3px 0 rgb(var(--rgb)), inset 0 1px 0 rgba(255, 255, 255, 0.14);
+  transform: rotate(var(--row-rot));
+}
+
+.cpl-stage[data-rows="skin"][data-row-button="dymo"] .wt__row.is-current .wt__label,
+.cpl-stage[data-rows="skin"][data-row-button="dymo"] .wt__row:hover .wt__label {
+  color: var(--accent-lift);
+}
+
+.cpl-stage[data-rows="skin"][data-row-button="dymo"] .wt__row.is-current .wt__lede,
+.cpl-stage[data-rows="skin"][data-row-button="dymo"] .wt__row:hover .wt__lede,
+.cpl-stage[data-rows="skin"][data-row-button="dymo"] .wt__row.is-current .wt__chev,
+.cpl-stage[data-rows="skin"][data-row-button="dymo"] .wt__row:hover .wt__chev {
+  color: rgba(255, 255, 255, 0.6);
+  opacity: 1;
+}
+
+.cpl-stage[data-rows="skin"][data-row-button="dymo"] .wt__row:active {
+  transform: translateY(3px) rotate(var(--row-rot));
+  box-shadow: 0 0 0 rgb(var(--rgb)), inset 0 1px 0 rgba(255, 255, 255, 0.14);
+}
+
+/* Frosted — the personas pill at row scale. */
+.cpl-stage[data-rows="skin"][data-row-button="frosted"] .wt__row {
+  background: rgba(16, 18, 22, 0.4);
+  border-color: rgba(255, 255, 255, 0.16);
+  border-radius: 999px;
+  box-shadow: none;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.cpl-stage[data-rows="skin"][data-row-button="frosted"] .wt__label {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.cpl-stage[data-rows="skin"][data-row-button="frosted"] .wt__lede,
+.cpl-stage[data-rows="skin"][data-row-button="frosted"] .wt__chev {
+  color: rgba(255, 255, 255, 0.56);
+}
+
+.cpl-stage[data-rows="skin"][data-row-button="frosted"] .wt__row.is-current,
+.cpl-stage[data-rows="skin"][data-row-button="frosted"] .wt__row:hover,
+.cpl-stage[data-rows="skin"][data-row-button="frosted"] .wt__row:focus-visible {
+  background: rgba(var(--rgb), 0.22);
+  border-color: rgba(var(--rgb), 0.7);
+  box-shadow: none;
+}
+
+.cpl-stage[data-rows="skin"][data-row-button="frosted"] .wt__row.is-current .wt__label,
+.cpl-stage[data-rows="skin"][data-row-button="frosted"] .wt__row:hover .wt__label {
+  color: #fff;
+}
+
+/* Slab — the sheet's two extremes, inverting with the surface. */
+.cpl-stage[data-rows="skin"][data-row-button="slab"] .wt__row {
+  background: var(--row-face);
+  border-color: var(--row-border);
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.45);
+}
+
+.cpl-stage[data-rows="skin"][data-row-button="slab"] .wt__row.is-current,
+.cpl-stage[data-rows="skin"][data-row-button="slab"] .wt__row:hover,
+.cpl-stage[data-rows="skin"][data-row-button="slab"] .wt__row:focus-visible {
+  background: var(--accent-deep);
+  border-color: var(--accent-deep);
+  box-shadow: 0 10px 30px rgba(var(--rgb), 0.3);
+}
+
+.cpl-stage[data-rows="skin"][data-row-button="slab"] .wt__row.is-current .wt__label,
+.cpl-stage[data-rows="skin"][data-row-button="slab"] .wt__row:hover .wt__label {
+  color: #fff;
+}
+
+/* Solid — the accent as a fill, and the only thing that is filled. */
+.cpl-stage[data-rows="skin"][data-row-button="solid"] .wt__row.is-current,
+.cpl-stage[data-rows="skin"][data-row-button="solid"] .wt__row:hover,
+.cpl-stage[data-rows="skin"][data-row-button="solid"] .wt__row:focus-visible {
+  background: rgb(var(--rgb));
+  border-color: rgb(var(--rgb));
+  box-shadow: 0 10px 28px rgba(var(--rgb), 0.34);
+}
+
+/* Outline — one hairline, no fill until it is the current one. */
+.cpl-stage[data-rows="skin"][data-row-button="outline"] .wt__row {
+  background: rgba(8, 10, 14, 0.42);
+  border: 1px solid rgba(255, 255, 255, 0.26);
+  border-radius: 2px;
+  box-shadow: none;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.cpl-stage[data-rows="skin"][data-row-button="outline"] .wt__label {
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.cpl-stage[data-rows="skin"][data-row-button="outline"] .wt__lede,
+.cpl-stage[data-rows="skin"][data-row-button="outline"] .wt__chev {
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.cpl-stage[data-rows="skin"][data-row-button="outline"] .wt__row.is-current,
+.cpl-stage[data-rows="skin"][data-row-button="outline"] .wt__row:hover,
+.cpl-stage[data-rows="skin"][data-row-button="outline"] .wt__row:focus-visible {
+  background: var(--accent-lift);
+  border-color: var(--accent-lift);
+  box-shadow: none;
+}
+
+.cpl-stage[data-rows="skin"][data-row-button="outline"] .wt__row.is-current .wt__label,
+.cpl-stage[data-rows="skin"][data-row-button="outline"] .wt__row:hover .wt__label {
+  color: #05060a;
+}
+
+.cpl-stage[data-rows="skin"][data-row-button="outline"] .wt__row.is-current .wt__lede,
+.cpl-stage[data-rows="skin"][data-row-button="outline"] .wt__row:hover .wt__lede,
+.cpl-stage[data-rows="skin"][data-row-button="outline"] .wt__row.is-current .wt__chev,
+.cpl-stage[data-rows="skin"][data-row-button="outline"] .wt__row:hover .wt__chev {
+  color: rgba(5, 6, 10, 0.7);
+  opacity: 1;
+}
+
+/* Pill */
+.cpl-stage[data-rows="skin"][data-row-button="pill"] .wt__row {
+  border-radius: 999px;
+  border-color: transparent;
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow: none;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.cpl-stage[data-rows="skin"][data-row-button="pill"] .wt__label {
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.cpl-stage[data-rows="skin"][data-row-button="pill"] .wt__lede,
+.cpl-stage[data-rows="skin"][data-row-button="pill"] .wt__chev {
+  color: rgba(255, 255, 255, 0.56);
+}
+
+.cpl-stage[data-rows="skin"][data-row-button="pill"] .wt__row.is-current,
+.cpl-stage[data-rows="skin"][data-row-button="pill"] .wt__row:hover,
+.cpl-stage[data-rows="skin"][data-row-button="pill"] .wt__row:focus-visible {
+  background: rgba(var(--rgb), 0.3);
+  border-color: transparent;
+  box-shadow: none;
+}
+
+/* Offset — the row sits above a hard shadow in its own hue. */
+.cpl-stage[data-rows="skin"][data-row-button="offset"] .wt__row {
+  border-radius: 2px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  background: rgba(10, 12, 16, 0.6);
+  box-shadow: 5px 5px 0 rgba(var(--rgb), 0.75);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.cpl-stage[data-rows="skin"][data-row-button="offset"] .wt__label {
+  color: rgba(255, 255, 255, 0.94);
+}
+
+.cpl-stage[data-rows="skin"][data-row-button="offset"] .wt__lede,
+.cpl-stage[data-rows="skin"][data-row-button="offset"] .wt__chev {
+  color: rgba(255, 255, 255, 0.58);
+}
+
+.cpl-stage[data-rows="skin"][data-row-button="offset"] .wt__row.is-current,
+.cpl-stage[data-rows="skin"][data-row-button="offset"] .wt__row:hover,
+.cpl-stage[data-rows="skin"][data-row-button="offset"] .wt__row:focus-visible {
+  background: rgba(10, 12, 16, 0.75);
+  border-color: #fff;
+  box-shadow: 7px 7px 0 rgb(var(--rgb));
+}
+
+.cpl-stage[data-rows="skin"][data-row-button="offset"] .wt__row.is-current .wt__label,
+.cpl-stage[data-rows="skin"][data-row-button="offset"] .wt__row:hover .wt__label {
+  color: #fff;
+}
+
+.cpl-stage[data-rows="skin"][data-row-button="offset"] .wt__row:active {
+  transform: translate(5px, 5px);
+  box-shadow: 0 0 0 rgb(var(--rgb));
+}
+
+/* Gradient */
+.cpl-stage[data-rows="skin"][data-row-button="gradient"] .wt__row.is-current,
+.cpl-stage[data-rows="skin"][data-row-button="gradient"] .wt__row:hover,
+.cpl-stage[data-rows="skin"][data-row-button="gradient"] .wt__row:focus-visible {
+  background: linear-gradient(
+    180deg,
+    rgba(var(--rgb), 0.95) 0%,
+    rgb(var(--rgb)) 55%,
+    rgba(var(--rgb), 0.8) 100%
+  );
+  border-color: rgba(var(--rgb), 0.7);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.35),
+    0 12px 30px rgba(var(--rgb), 0.4);
+}
+
+/* Etched — the row cut into the composition rather than laid on it. */
+.cpl-stage[data-rows="skin"][data-row-button="etched"] .wt__row {
+  border: 0;
+  border-radius: 8px;
+  background: rgba(6, 8, 12, 0.5);
+  box-shadow:
+    inset 0 2px 6px rgba(0, 0, 0, 0.6),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.12);
+}
+
+.cpl-stage[data-rows="skin"][data-row-button="etched"] .wt__label {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.cpl-stage[data-rows="skin"][data-row-button="etched"] .wt__lede,
+.cpl-stage[data-rows="skin"][data-row-button="etched"] .wt__chev {
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.cpl-stage[data-rows="skin"][data-row-button="etched"] .wt__row.is-current,
+.cpl-stage[data-rows="skin"][data-row-button="etched"] .wt__row:hover,
+.cpl-stage[data-rows="skin"][data-row-button="etched"] .wt__row:focus-visible {
+  background: rgba(var(--rgb), 0.2);
+  box-shadow:
+    inset 0 2px 6px rgba(0, 0, 0, 0.5),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.16);
+}
+
+.cpl-stage[data-rows="skin"][data-row-button="etched"] .wt__row.is-current .wt__label,
+.cpl-stage[data-rows="skin"][data-row-button="etched"] .wt__row:hover .wt__label {
+  color: #fff;
+}
+
+/* Split — the chevron gets a cell of its own. */
+.cpl-stage[data-rows="skin"][data-row-button="split"] .wt__chev {
+  align-self: stretch;
+  display: inline-flex;
+  align-items: center;
+  margin-left: 6px;
+  padding-left: 14px;
+  border-left: 1px solid currentColor;
+  opacity: 0.5;
+}
+
+.cpl-stage[data-rows="skin"][data-row-button="split"] .wt__row.is-current .wt__chev,
+.cpl-stage[data-rows="skin"][data-row-button="split"] .wt__row:hover .wt__chev {
+  opacity: 0.9;
+}
+
+/* Stamp — dashed, rotated, straightening as you reach for it. */
+.cpl-stage[data-rows="skin"][data-row-button="stamp"] .wt__row {
+  background: rgba(8, 10, 14, 0.4);
+  border: 1.5px dashed rgba(255, 255, 255, 0.36);
+  border-radius: 3px;
+  box-shadow: none;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.cpl-stage[data-rows="skin"][data-row-button="stamp"] .wt__row:nth-child(1) { --row-rot: -1.5deg; }
+.cpl-stage[data-rows="skin"][data-row-button="stamp"] .wt__row:nth-child(2) { --row-rot: 1.1deg; }
+.cpl-stage[data-rows="skin"][data-row-button="stamp"] .wt__row:nth-child(3) { --row-rot: -0.6deg; }
+
+.cpl-stage[data-rows="skin"][data-row-button="stamp"] .wt__label {
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.cpl-stage[data-rows="skin"][data-row-button="stamp"] .wt__lede,
+.cpl-stage[data-rows="skin"][data-row-button="stamp"] .wt__chev {
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.cpl-stage[data-rows="skin"][data-row-button="stamp"] .wt__row.is-current,
+.cpl-stage[data-rows="skin"][data-row-button="stamp"] .wt__row:hover,
+.cpl-stage[data-rows="skin"][data-row-button="stamp"] .wt__row:focus-visible {
+  background: rgba(var(--rgb), 0.16);
+  border-color: var(--accent-lift);
+  box-shadow: none;
+  transform: rotate(0deg);
+}
+
+/* White, not the accent: Stamp deliberately keeps its fill down to a 16% wash,
+   and the lifted accent ink measured 2.51:1 against it — the only selected
+   state in the set that failed. The hue stays where this recipe actually
+   carries it, in the dashed border. */
+.cpl-stage[data-rows="skin"][data-row-button="stamp"] .wt__row.is-current .wt__label,
+.cpl-stage[data-rows="skin"][data-row-button="stamp"] .wt__row:hover .wt__label,
+.cpl-stage[data-rows="skin"][data-row-button="stamp"] .wt__row:focus-visible .wt__label {
+  color: #fff;
+}
+
+/* ===========================================================================
+   8d. Reduced motion — the rows live outside `.cpp-screen`, so production's
+   block and the sheet's block both miss them.
+   ======================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .cpl-stage[data-rows="skin"] .wt__row,
+  .cpl-stage[data-rows="skin"] .wt__row * {
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
+/* ===========================================================================
+   8e. TRACKLIST ROWS — the three choices as the record's three tracks
+   ===========================================================================
+
+   Placed after 8c on purpose: the row CHROME recipes above and a direction's
+   row rules tie on specificity, so the later block wins. Tracklist needs the
+   last word on its own labels, and putting it here is cheaper than inflating
+   every selector in it to out-specify Rule.
+
+   This is `.wl-c2__item` — the same numeral, the same serif title, the same
+   hairline, the same recede — arranged as a SPREAD on a desktop and as a
+   COLUMN on a phone. The first pass stacked it at every width: on a desktop
+   that read as a phone layout parked in the corner, and it cost the sheet
+   about 150px that the liner notes and the two path panels both needed.
+
+   Order matters in here. The base rules come first and the two container
+   blocks come last, because they share specificity with the base and win only
+   on source order — a container block written above the rules it overrides
+   silently does nothing, which is exactly how the numeral stayed inline
+   through one round of "fixing" it.
+   ======================================================================== */
+
+.cpl-stage[data-rows="skin"][data-layout="tracklist"] {
+  /* Squoval, from the token, so every rule that reads `--row-radius` agrees.
+     It was 0 here and 14px only in the desktop block, which is half the reason
+     the shape appeared to change under the pointer. */
+  --row-radius: 14px;
+  /* No plate shadow. The token defaults to the candy bar's deep drop shadow,
+     and the rows at rest were still casting it under a listing made of
+     hairlines — visible as a soft edge below each track. */
+  --row-shadow: none;
+  --row-pad-x: 2px;
+  --row-pad-y: 8px;
+}
+
+.cpl-stage[data-rows="skin"][data-layout="tracklist"] .wt__rows {
+  counter-reset: choice;
+}
+
+.cpl-stage[data-rows="skin"][data-layout="tracklist"] .wt__row {
+  counter-increment: choice;
+  background: none;
+  border: 0;
+  border-bottom: 1px solid rgba(243, 243, 243, 0.1);
+  box-shadow: none;
+  /* `.wl-c2__item` at rest. Not 0.32: these are the section's only navigation,
+     and a contents list you can't read isn't a contents list — the comment
+     globals.css leaves on that number applies twice as hard here. */
+  opacity: 0.62;
+  transition:
+    opacity 320ms ease,
+    transform 320ms cubic-bezier(0.22, 0.61, 0.36, 1),
+    border-color 320ms ease,
+    box-shadow 320ms ease;
+}
+
+.cpl-stage[data-rows="skin"][data-layout="tracklist"] .wt__row.is-current,
+.cpl-stage[data-rows="skin"][data-layout="tracklist"] .wt__row:hover,
+.cpl-stage[data-rows="skin"][data-layout="tracklist"] .wt__row:focus-visible {
+  background: none;
+  box-shadow: none;
+  opacity: 1;
+}
+
+/* Sized for a desktop, not for a contents list. The first pass inherited
+   `.wl-c2__item`'s restraint wholesale — 17→26px titles at 78% white — and on a
+   1600px card that reads as fine print on a photograph. These three are the
+   section's only navigation: they get display scale and near-full brightness,
+   and the recede is carried by the wash and the ring instead. */
+.cpl-stage[data-rows="skin"][data-layout="tracklist"] .wt__label {
+  font-family: var(--font-serif);
+  /* `cqw` is measured against the stage, and the lab's control panel takes
+     ~500px of it — the same clamp that renders 22px here renders 31px on a
+     production card with no panel beside it. The floor is what the lab shows
+     you; the rate is what ships. */
+  font-size: clamp(21px, 2.15cqw, 36px);
+  font-weight: 400;
+  letter-spacing: -0.022em;
+  line-height: 1.04;
+  text-transform: none;
+  color: rgba(247, 247, 247, 0.98);
+  text-shadow: 0 2px 16px rgba(0, 0, 0, 0.75);
+}
+
+/* The numeral, drawn from a counter so the markup stays production's. */
+.cpl-stage[data-rows="skin"][data-layout="tracklist"] .wt__label::before {
+  content: counter(choice, decimal-leading-zero);
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  font-weight: 500;
+  letter-spacing: var(--track-dymo);
+  color: rgba(243, 243, 243, 0.45);
+  transition: color 320ms ease;
+}
+
+.cpl-stage[data-rows="skin"][data-layout="tracklist"] .wt__row.is-current .wt__label,
+.cpl-stage[data-rows="skin"][data-layout="tracklist"] .wt__row:hover .wt__label {
+  color: #f3f3f3;
+}
+
+/* The active numeral takes the accent — globals.css uses #cba86a here, which is
+   the same warm brass this palette's supply hue already is. Reading it from the
+   path means the Palette axis reaches the tracklist too. */
+.cpl-stage[data-rows="skin"][data-layout="tracklist"] .wt__row.is-current .wt__label::before,
+.cpl-stage[data-rows="skin"][data-layout="tracklist"] .wt__row:hover .wt__label::before {
+  color: var(--accent-lift);
+}
+
+.cpl-stage[data-rows="skin"][data-layout="tracklist"] .wt__lede {
+  font-family: var(--font-sans);
+  font-size: clamp(14px, 0.98cqw, 18px);
+  line-height: 1.42;
+  color: rgba(243, 243, 243, 0.74);
+  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.7);
+}
+
+.cpl-stage[data-rows="skin"][data-layout="tracklist"] .wt__chev {
+  color: rgba(243, 243, 243, 0.4);
+}
+
+.cpl-stage[data-rows="skin"][data-layout="tracklist"] .wt__row.is-current .wt__lede,
+.cpl-stage[data-rows="skin"][data-layout="tracklist"] .wt__row:hover .wt__lede,
+.cpl-stage[data-rows="skin"][data-layout="tracklist"] .wt__row.is-current .wt__chev,
+.cpl-stage[data-rows="skin"][data-layout="tracklist"] .wt__row:hover .wt__chev {
+  color: rgba(243, 243, 243, 0.72);
+  opacity: 1;
+}
+
+/* ---- Desktop and up: the listing SPANS ----------------------------------
+
+   Three tracks across the frame, hanging off one rule that runs the width of
+   the composition — which is how a gatefold sets a listing anyway, and what
+   keeps the sheet the height it needs. `flex-wrap: nowrap` is load-bearing:
+   production's row wraps, and with three serif titles at this size the third
+   track dropped to a second line and took the sheet's height back with it. */
+@container wt (min-width: 701px) {
+  .cpl-stage[data-rows="skin"][data-layout="tracklist"] .wt__rows {
+    flex-wrap: nowrap;
+    align-items: stretch;
+    gap: clamp(18px, 2.4cqw, 52px);
+  }
+
+  .cpl-stage[data-rows="skin"][data-layout="tracklist"] .wt__row {
+    flex: 1 1 0;
+    min-width: 0;
+    align-items: flex-start;
+    padding: 13px 0 4px;
+    border-top: 1px solid rgba(243, 243, 243, 0.18);
+    border-bottom: 0;
+  }
+
+  /* The numeral heads its column rather than indenting the title — three
+     titles hanging off a shared rule, each with its own track number above. */
+  .cpl-stage[data-rows="skin"][data-layout="tracklist"] .wt__label::before {
+    display: block;
+    margin-bottom: 8px;
+    font-size: clamp(12px, 0.78cqw, 15px);
+  }
+
+  /* NOTHING MOVES AND NOTHING GLOWS.
+     The selected track used to carry an accent rule inset along its top edge
+     and step 3px up. Both are gone: a control that jumps when you point at it
+     asks to be chased, and a coloured rule on a hairline is the loudest thing
+     in a listing that is otherwise made of type.
+
+     The two border declarations stay, and they are not redundant. Tracklist's
+     row chrome is the Rule recipe, whose selected state is `border-bottom: 2px
+     solid accent` at the same specificity as this block — without restating
+     both borders the spread grows a second rule under the selected track's
+     lede. */
+  .cpl-stage[data-rows="skin"][data-layout="tracklist"] .wt__row.is-current,
+  .cpl-stage[data-rows="skin"][data-layout="tracklist"] .wt__row:hover,
+  .cpl-stage[data-rows="skin"][data-layout="tracklist"] .wt__row:focus-visible {
+    border-top: 1px solid rgba(243, 243, 243, 0.18);
+    border-bottom: 0;
+    box-shadow: none;
+    transform: none;
+    /* Restated because the Rule recipe sets `border-radius: 0` for these three
+       states at the same specificity — without this the wash arrives with
+       square corners and the track appears to change shape when you point at
+       it, which is the whole complaint. */
+    border-radius: 14px;
+  }
+
+  /* The selected track is the one whose rule is lit, in white rather than in a
+     hue — the only state marker left on the row above its own brightness. */
+  .cpl-stage[data-rows="skin"][data-layout="tracklist"] .wt__row.is-current {
+    border-top-color: rgba(247, 247, 247, 0.62);
+  }
+
+  .cpl-stage[data-rows="skin"][data-layout="tracklist"] .wt__lede {
+    -webkit-line-clamp: 2;
+  }
+
+  .cpl-stage[data-rows="skin"][data-layout="tracklist"] .wt__chev {
+    align-self: flex-start;
+    margin-top: 4px;
+  }
+}
+
+/* ---- Phone: the column listing, numeral in a gutter beside the title ----- */
+@container wt (max-width: 700px) {
+  .cpl-stage[data-rows="skin"][data-layout="tracklist"] .wt__rows {
+    gap: 0;
+  }
+
+  .cpl-stage[data-rows="skin"][data-layout="tracklist"] .wt__row {
+    flex: 0 0 auto;
+    transform: translateX(0);
+  }
+
+  .cpl-stage[data-rows="skin"][data-layout="tracklist"] .wt__row.is-current,
+  .cpl-stage[data-rows="skin"][data-layout="tracklist"] .wt__row:hover,
+  .cpl-stage[data-rows="skin"][data-layout="tracklist"] .wt__row:focus-visible {
+    border-bottom-color: rgba(243, 243, 243, 0.28);
+    transform: translateX(4px);
+  }
+
+  .cpl-stage[data-rows="skin"][data-layout="tracklist"] .wt__label::before {
+    display: inline-block;
+    width: 2.4rem;
+  }
+
+  .cpl-stage[data-rows="skin"][data-layout="tracklist"] .wt__lede {
+    padding-left: 2.4rem;
+  }
+}
+
+/* ===========================================================================
+   8f. THE THREE CHOICES MUST READ AS CONTROLS
+   ===========================================================================
+
+   The quiet directions took the listing idea too literally. Ledger, Blueprint
+   and especially Tracklist drew the three top-level choices as type on a
+   hairline at two-thirds opacity — faithful to `.wl-c2__item`, and wrong for
+   this job. That element is a passive contents list driven by scroll position;
+   these three are the only navigation in the section, and the first thing
+   anyone has to press. A visitor who does not press one of them never sees the
+   consulting answer at all, however good it is.
+
+   So every skinned row gets a real affordance:
+
+     · the chevron becomes a ring — a control, not a punctuation mark
+     · it fills with the path's hue on hover, focus, and while open
+     · rest contrast comes up, because 0.62 is a table of contents and these
+       are buttons
+
+   The directions that FILL their rows (Candy, Solid, Gradient, DYMO…) keep the
+   ring as an outline: an accent fill on an accent plate is a hole. Only the
+   directions that draw nothing behind the row fill it.
+   ======================================================================== */
+
+/* Production drops the unchosen rows to 0.45 the moment one opens — correct for
+   three candy plates where the open one is the subject, and wrong for a row of
+   controls: at 45% over a photograph the other two stop looking pressable, which
+   is the whole complaint. The selected state is carried by the wash and the
+   filled ring instead, so the other two can stay legible.
+
+   It takes seven classes to say so: `.wt__rows:has(.wt__row.is-current)
+   .wt__row:not(.is-current)` scores (0,5,0) because `:has()` and `:not()` take
+   their argument's specificity, and a four-class override loses to it silently. */
+.cpl-stage[data-rows="skin"] .wt__rows:has(.wt__row.is-current) .wt__row:not(.is-current) {
+  opacity: 0.82;
+  filter: none;
+}
+
+.cpl-stage[data-rows="skin"][data-layout="tracklist"]
+  .wt__rows:has(.wt__row.is-current)
+  .wt__row:not(.is-current),
+.cpl-stage[data-rows="skin"][data-layout="ledger"]
+  .wt__rows:has(.wt__row.is-current)
+  .wt__row:not(.is-current) {
+  opacity: 0.94;
+}
+
+.cpl-stage[data-rows="skin"] .wt__chev {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 1px solid currentColor;
+  font-size: 13px;
+  line-height: 1;
+  opacity: 0.6;
+  transition:
+    opacity 200ms ease,
+    background 200ms ease,
+    color 200ms ease,
+    border-color 200ms ease,
+    transform 240ms var(--ease);
+}
+
+/* Brighter, and that is all. The 3px step was the same "movement on approach"
+   idea as the row lifting, and it read the same way. */
+.cpl-stage[data-rows="skin"] .wt__row:hover .wt__chev,
+.cpl-stage[data-rows="skin"] .wt__row:focus-visible .wt__chev,
+.cpl-stage[data-rows="skin"] .wt__row.is-current .wt__chev {
+  opacity: 1;
+}
+
+/* The unfilled directions: the ring takes the hue, which is the loudest thing
+   that can happen on a row made of hairlines. */
+.cpl-stage[data-rows="skin"][data-layout="tracklist"] .wt__row:hover .wt__chev,
+.cpl-stage[data-rows="skin"][data-layout="tracklist"] .wt__row:focus-visible .wt__chev,
+.cpl-stage[data-rows="skin"][data-layout="tracklist"] .wt__row.is-current .wt__chev,
+.cpl-stage[data-rows="skin"][data-layout="ledger"] .wt__row:hover .wt__chev,
+.cpl-stage[data-rows="skin"][data-layout="ledger"] .wt__row:focus-visible .wt__chev,
+.cpl-stage[data-rows="skin"][data-layout="ledger"] .wt__row.is-current .wt__chev,
+.cpl-stage[data-rows="skin"][data-layout="blueprint"] .wt__row:hover .wt__chev,
+.cpl-stage[data-rows="skin"][data-layout="blueprint"] .wt__row:focus-visible .wt__chev,
+.cpl-stage[data-rows="skin"][data-layout="blueprint"] .wt__row.is-current .wt__chev {
+  background: rgb(var(--rgb));
+  border-color: rgb(var(--rgb));
+  color: var(--on-accent);
+}
+
+/* ---- Tracklist: the tracks become pressable ----------------------------- */
+
+/* 0.86 at rest, not 0.62. `.wl-c2__item` recedes to a third because the disc
+   is driving it and only one row is ever live; nothing is driving these except
+   the visitor, and a control they have to squint at is a control they skip. */
+.cpl-stage[data-rows="skin"][data-layout="tracklist"] .wt__row {
+  opacity: 0.94;
+}
+
+@container wt (min-width: 701px) {
+  /* A wash the width of the whole track, with the rule capping it — the row
+     stops being three words on a line and becomes an object with edges. The
+     padding is what gives the wash somewhere to be; the rule spans the padded
+     box, so the spread's shared line is unchanged. */
+  .cpl-stage[data-rows="skin"][data-layout="tracklist"] .wt__row {
+    padding: 18px 18px 17px;
+    /* Squoval, and the SAME shape in every state. The wash used to arrive in a
+       9px-top / 0-bottom tab, so pointing at a track appeared to square it off
+       along the bottom — the shape changing was reading as the interaction. */
+    border-radius: 14px;
+    transition:
+      opacity 320ms ease,
+      background 240ms ease,
+      border-color 320ms ease;
+  }
+
+  /* Neutral, not cobalt. The wash is there to say "this one is under the
+     pointer", and it was saying "this one is blue" — the hue belongs to the
+     panel below, where it distinguishes the two paths from each other. Up here
+     there is nothing to distinguish, only something to acknowledge. */
+  .cpl-stage[data-rows="skin"][data-layout="tracklist"] .wt__row:hover,
+  .cpl-stage[data-rows="skin"][data-layout="tracklist"] .wt__row:focus-visible {
+    background: rgba(247, 247, 247, 0.07);
+  }
+
+  .cpl-stage[data-rows="skin"][data-layout="tracklist"] .wt__row.is-current {
+    background: rgba(247, 247, 247, 0.1);
+  }
+
+  .cpl-stage[data-rows="skin"][data-layout="tracklist"] .wt__chev {
+    margin-top: 0;
+  }
+}
+
+@container wt (max-width: 700px) {
+  .cpl-stage[data-rows="skin"][data-layout="tracklist"] .wt__row {
+    padding: 11px 12px;
+    border-radius: 12px;
+  }
+
+  .cpl-stage[data-rows="skin"][data-layout="tracklist"] .wt__row:hover,
+  .cpl-stage[data-rows="skin"][data-layout="tracklist"] .wt__row.is-current {
+    background: rgba(247, 247, 247, 0.09);
+    border-radius: 12px;
+  }
+}
+
+/* ---- Ledger and Blueprint get the same rest-contrast lift --------------- */
+
+.cpl-stage[data-rows="skin"][data-layout="ledger"] .wt__label {
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.cpl-stage[data-rows="skin"][data-layout="ledger"] .wt__row:hover,
+.cpl-stage[data-rows="skin"][data-layout="ledger"] .wt__row:focus-visible {
+  background: rgba(var(--rgb), 0.1);
+}
+
+/* ===========================================================================
+   8g. TRACKLIST — four drawings of the three choices, and a disc that spins up
+   ===========================================================================
+
+   `[data-track]` on the stage. Tracklist only: the other five directions draw
+   their rows once and that is the direction's whole argument.
+
+   All four share one transport control. The chevron the markup already carries
+   becomes a play button — the glyph is zeroed and redrawn in CSS, which keeps
+   the DOM production's and keeps the control decorative (it is `aria-hidden`;
+   the button's own label is what a screen reader reads).
+   ======================================================================== */
+
+/* ---- The transport control --------------------------------------------- */
+
+.cpl-stage[data-rows="skin"][data-layout="tracklist"] .wt__chev {
+  position: relative;
+  /* The markup's "›" / "↑" is zeroed rather than removed: the element is the
+     hook, and what it draws belongs to the direction. */
+  font-size: 0;
+  overflow: visible;
+  width: 38px;
+  height: 38px;
+  /* Bare key at rest, ring on approach. A permanent ring around a permanent
+     wedge is a web button; a wedge that a ring closes around when you reach for
+     it is a transport control. */
+  border-color: transparent;
+  opacity: 0.8;
+}
+
+.cpl-stage[data-rows="skin"][data-layout="tracklist"] .wt__row:hover .wt__chev,
+.cpl-stage[data-rows="skin"][data-layout="tracklist"] .wt__row:focus-visible .wt__chev,
+.cpl-stage[data-rows="skin"][data-layout="tracklist"] .wt__row.is-current .wt__chev {
+  opacity: 1;
+}
+
+/* The wedge is DRAWN, not typed. `▶` is a squat, near-equilateral glyph whose
+   proportions vary by font — the transport key on a tape deck is a long shallow
+   wedge, roughly 2.3 : 1, and no character in DM Mono is that shape. Borders
+   give the exact triangle and it scales with the ring rather than with a font
+   size that isn't there. */
+.cpl-stage[data-rows="skin"][data-layout="tracklist"] .wt__chev::before {
+  content: "";
+  width: 0;
+  height: 0;
+  border-style: solid;
+  /* 20 × 11 — a long shallow key, close to the 2 : 1 of a tape-deck transport
+     button. The first pass at 16 × 14 was near-equilateral, which is the
+     proportion of the `▶` glyph this replaced and the reason it still read as
+     a media-player triangle rather than as a key you press. */
+  border-width: 5.5px 0 5.5px 20px;
+  border-color: transparent transparent transparent currentColor;
+  /* A triangle's optical centre sits left of its bounding box's centre. */
+  transform: translateX(2px);
+  opacity: 0.85;
+  transition: transform 260ms var(--ease), opacity 200ms ease;
+}
+
+.cpl-stage[data-rows="skin"][data-layout="tracklist"] .wt__row:hover .wt__chev::before,
+.cpl-stage[data-rows="skin"][data-layout="tracklist"] .wt__row:focus-visible .wt__chev::before {
+  transform: translateX(3px);
+  opacity: 1;
+}
+
+/* Playing: the wedge becomes a pause, because the section below it is already
+   open and pressing again closes it. Two bars cut out of one box — same
+   drawn-not-typed reasoning. */
+.cpl-stage[data-rows="skin"][data-layout="tracklist"] .wt__row.is-current .wt__chev::before {
+  box-sizing: border-box;
+  width: 13px;
+  height: 15px;
+  border-width: 0 4px;
+  border-color: currentColor;
+  transform: none;
+  opacity: 1;
+}
+
+/* ---- The offset key ------------------------------------------------------
+   A cream wedge with the accent printed a hair off register down its flat
+   edge — the way an old sleeve's second plate lands a fraction left of the
+   first. Drawn with a clip-path over a two-stop gradient rather than with
+   borders: a border triangle is one solid colour by construction, and this key
+   needs two.
+
+   The edge switches to the sheet's own black once the ring fills, because an
+   accent edge on an accent ring is an edge you cannot see.
+   ------------------------------------------------------------------------ */
+
+.cpl-stage[data-rows="skin"][data-layout="tracklist"][data-key="offset"] .wt__chev::before {
+  width: 20px;
+  height: 13px;
+  border: 0;
+  background: linear-gradient(90deg, rgb(var(--rgb)) 0 3px, #f4f1e8 3px);
+  clip-path: polygon(0 0, 100% 50%, 0 100%);
+  opacity: 0.95;
+}
+
+.cpl-stage[data-rows="skin"][data-layout="tracklist"][data-key="offset"]
+  .wt__row:hover
+  .wt__chev::before,
+.cpl-stage[data-rows="skin"][data-layout="tracklist"][data-key="offset"]
+  .wt__row:focus-visible
+  .wt__chev::before {
+  background: linear-gradient(90deg, rgba(6, 7, 10, 0.85) 0 3px, #f7f4ec 3px);
+  opacity: 1;
+}
+
+/* Pause keeps the pair of bars, in the same cream, with the offset edge on the
+   leading bar only — the second bar has no flat edge facing the same way. */
+.cpl-stage[data-rows="skin"][data-layout="tracklist"][data-key="offset"]
+  .wt__row.is-current
+  .wt__chev::before {
+  width: 13px;
+  height: 15px;
+  border: 0;
+  clip-path: polygon(0 0, 4px 0, 4px 100%, 0 100%, 0 0, 9px 0, 13px 0, 13px 100%, 9px 100%, 9px 0);
+  background: linear-gradient(90deg, rgba(6, 7, 10, 0.85) 0 1.5px, #f7f4ec 1.5px);
+}
+
+/* ---- The short key -------------------------------------------------------
+   The same offset printing on a stubby wedge — 15 × 17, slightly taller than
+   wide, where Solid and Offset are a long 20 × 11 transport key.
+
+   And nothing around it. No ring, no fill, no glow, in any state: the key is
+   the whole control. That makes hover a matter of the key itself getting
+   brighter and stepping forward, which is all the feedback a mark this size
+   needs, and it leaves the row's own wash to say "this one".
+   ------------------------------------------------------------------------ */
+
+.cpl-stage[data-rows="skin"][data-layout="tracklist"][data-key="short"] .wt__chev,
+.cpl-stage[data-rows="skin"][data-layout="tracklist"][data-key="short"] .wt__row:hover .wt__chev,
+.cpl-stage[data-rows="skin"][data-layout="tracklist"][data-key="short"] .wt__row:focus-visible .wt__chev,
+.cpl-stage[data-rows="skin"][data-layout="tracklist"][data-key="short"] .wt__row.is-current .wt__chev,
+.cpl-stage[data-rows="skin"][data-layout="tracklist"][data-key="plain"] .wt__chev,
+.cpl-stage[data-rows="skin"][data-layout="tracklist"][data-key="plain"] .wt__row:hover .wt__chev,
+.cpl-stage[data-rows="skin"][data-layout="tracklist"][data-key="plain"] .wt__row:focus-visible .wt__chev,
+.cpl-stage[data-rows="skin"][data-layout="tracklist"][data-key="plain"] .wt__row.is-current .wt__chev {
+  width: 30px;
+  height: 30px;
+  border: 0;
+  background: none;
+  box-shadow: none;
+  transform: none;
+}
+
+.cpl-stage[data-rows="skin"][data-layout="tracklist"][data-key="short"] .wt__chev::before,
+.cpl-stage[data-rows="skin"][data-layout="tracklist"][data-key="plain"] .wt__chev::before {
+  width: 15px;
+  height: 17px;
+  border: 0;
+  background: linear-gradient(90deg, rgb(var(--rgb)) 0 3px, #efeadf 3px);
+  clip-path: polygon(0 0, 100% 50%, 0 100%);
+  opacity: 0.88;
+  transform: none;
+  transition: opacity 200ms ease, transform 260ms var(--ease), background 200ms ease;
+}
+
+.cpl-stage[data-rows="skin"][data-layout="tracklist"][data-key="short"]
+  .wt__row:hover
+  .wt__chev::before,
+.cpl-stage[data-rows="skin"][data-layout="tracklist"][data-key="short"]
+  .wt__row:focus-visible
+  .wt__chev::before,
+.cpl-stage[data-rows="skin"][data-layout="tracklist"][data-key="plain"]
+  .wt__row:hover
+  .wt__chev::before,
+.cpl-stage[data-rows="skin"][data-layout="tracklist"][data-key="plain"]
+  .wt__row:focus-visible
+  .wt__chev::before {
+  background: linear-gradient(90deg, rgb(var(--rgb)) 0 3px, #ffffff 3px);
+  opacity: 1;
+}
+
+/* Playing: two bars at the same weight as the wedge, with the offset edge on
+   the leading one. Still nothing around them. */
+.cpl-stage[data-rows="skin"][data-layout="tracklist"][data-key="short"]
+  .wt__row.is-current
+  .wt__chev::before,
+.cpl-stage[data-rows="skin"][data-layout="tracklist"][data-key="plain"]
+  .wt__row.is-current
+  .wt__chev::before {
+  width: 13px;
+  height: 17px;
+  clip-path: polygon(0 0, 5px 0, 5px 100%, 0 100%, 0 0, 8px 0, 13px 0, 13px 100%, 8px 100%, 8px 0);
+  background: linear-gradient(90deg, rgb(var(--rgb)) 0 2px, #efeadf 2px);
+  opacity: 1;
+  transform: none;
+}
+
+/* ---- Plain ---------------------------------------------------------------
+   Short with the offset edge dropped. One flat fill on the wedge and on both
+   pause bars — no accent anywhere in the mark, so the only colour left in the
+   row is the wash behind it. The gradients are restated as single stops rather
+   than removed: `background` still has to win against the rule above it, and a
+   one-stop gradient is the shortest way to say "the same shape, one ink".
+   ------------------------------------------------------------------------ */
+
+.cpl-stage[data-rows="skin"][data-layout="tracklist"][data-key="plain"] .wt__chev::before {
+  background: #efeadf;
+}
+
+.cpl-stage[data-rows="skin"][data-layout="tracklist"][data-key="plain"]
+  .wt__row:hover
+  .wt__chev::before,
+.cpl-stage[data-rows="skin"][data-layout="tracklist"][data-key="plain"]
+  .wt__row:focus-visible
+  .wt__chev::before {
+  background: #ffffff;
+}
+
+.cpl-stage[data-rows="skin"][data-layout="tracklist"][data-key="plain"]
+  .wt__row.is-current
+  .wt__chev::before {
+  background: #efeadf;
+}
+
+/* ---- 2 · CARD — the whole choice is the button -------------------------
+   The CTA row lab's argument, at track scale: a bordered, filled tile reads as
+   pressable from across the room in a way type on a rule never does. Every
+   edge of it is the target, and the hover does what a card does — lifts.    */
+
+.cpl-stage[data-rows="skin"][data-layout="tracklist"][data-track="card"] .wt__row {
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.cpl-stage[data-rows="skin"][data-layout="tracklist"][data-track="card"] .wt__row:hover,
+.cpl-stage[data-rows="skin"][data-layout="tracklist"][data-track="card"] .wt__row:focus-visible {
+  background: rgba(var(--rgb), 0.2);
+  border-color: rgba(var(--rgb), 0.75);
+  box-shadow: 0 16px 36px rgba(var(--rgb), 0.3), 0 4px 12px rgba(0, 0, 0, 0.5);
+  transform: translateY(-4px);
+}
+
+.cpl-stage[data-rows="skin"][data-layout="tracklist"][data-track="card"] .wt__row.is-current {
+  background: rgba(var(--rgb), 0.24);
+  border-color: rgb(var(--rgb));
+  box-shadow: 0 14px 34px rgba(var(--rgb), 0.32);
+}
+
+/* ---- 3 · RAIL — a leading edge that grows ------------------------------
+   The quietest of the pressable ones. Nothing is boxed and nothing fills; the
+   accent arrives as a rail on the leading edge, thickening as the pointer
+   approaches, which is enough to say "this is a control" without touching the
+   type. `box-shadow: inset` rather than a border so the growth costs no
+   layout.                                                                   */
+
+.cpl-stage[data-rows="skin"][data-layout="tracklist"][data-track="rail"] .wt__row {
+  border-radius: 4px;
+  box-shadow: inset 3px 0 0 rgba(255, 255, 255, 0.22);
+  transition:
+    opacity 320ms ease,
+    transform 320ms cubic-bezier(0.22, 0.61, 0.36, 1),
+    background 240ms ease,
+    box-shadow 260ms var(--ease);
+}
+
+.cpl-stage[data-rows="skin"][data-layout="tracklist"][data-track="rail"] .wt__row:hover,
+.cpl-stage[data-rows="skin"][data-layout="tracklist"][data-track="rail"] .wt__row:focus-visible {
+  background: rgba(var(--rgb), 0.12);
+  box-shadow: inset 6px 0 0 rgb(var(--rgb));
+  transform: translateX(3px);
+}
+
+.cpl-stage[data-rows="skin"][data-layout="tracklist"][data-track="rail"] .wt__row.is-current {
+  background: rgba(var(--rgb), 0.14);
+  box-shadow: inset 6px 0 0 rgb(var(--rgb));
+}
+
+/* ---- 4 · CASE — the jewel case -----------------------------------------
+   A double hairline with the index sitting in the corner of the frame, the way
+   a case prints its catalogue number. The outer frame is the button; the inner
+   one is 4px in, and both light up together.                                */
+
+.cpl-stage[data-rows="skin"][data-layout="tracklist"][data-track="case"] .wt__row {
+  position: relative;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 3px;
+  background: rgba(8, 10, 14, 0.4);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.cpl-stage[data-rows="skin"][data-layout="tracklist"][data-track="case"] .wt__row::before {
+  content: "";
+  position: absolute;
+  inset: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 1px;
+  pointer-events: none;
+  transition: border-color 240ms ease;
+}
+
+.cpl-stage[data-rows="skin"][data-layout="tracklist"][data-track="case"] .wt__row:hover,
+.cpl-stage[data-rows="skin"][data-layout="tracklist"][data-track="case"] .wt__row:focus-visible,
+.cpl-stage[data-rows="skin"][data-layout="tracklist"][data-track="case"] .wt__row.is-current {
+  border-color: rgb(var(--rgb));
+  background: rgba(var(--rgb), 0.12);
+}
+
+.cpl-stage[data-rows="skin"][data-layout="tracklist"][data-track="case"] .wt__row:hover::before,
+.cpl-stage[data-rows="skin"][data-layout="tracklist"][data-track="case"] .wt__row:focus-visible::before,
+.cpl-stage[data-rows="skin"][data-layout="tracklist"][data-track="case"] .wt__row.is-current::before {
+  border-color: rgba(var(--rgb), 0.55);
+}
+
+/* The index climbs into the frame's corner. */
+.cpl-stage[data-rows="skin"][data-layout="tracklist"][data-track="case"] .wt__label::before {
+  color: var(--accent-lift);
+  opacity: 0.9;
+}
+
+/* ---- 5 · PLAYER — transport first, then a scrub line -------------------- */
+
+/* The play button leads the row rather than trailing it, so the control is the
+   first thing under the pointer instead of the last. */
+.cpl-stage[data-rows="skin"][data-layout="tracklist"][data-track="player"] .wt__row {
+  gap: 14px;
+}
+
+.cpl-stage[data-rows="skin"][data-layout="tracklist"][data-track="player"] .wt__chev {
+  order: -1;
+  align-self: center;
+  margin-top: 0;
+  width: 34px;
+  height: 34px;
+}
+
+.cpl-stage[data-rows="skin"][data-layout="tracklist"][data-track="player"] .wt__rowMain {
+  position: relative;
+  padding-bottom: 11px;
+}
+
+/* The scrub line. `background-size` animates where a width would reflow the
+   row, and it reads as the track filling rather than as a bar appearing. */
+.cpl-stage[data-rows="skin"][data-layout="tracklist"][data-track="player"] .wt__rowMain::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  border-radius: 2px;
+  /* White, not the path's hue — same reasoning as the wash. A full-width
+     cobalt line under the selected title was the loudest colour in the
+     listing. */
+  background-image: linear-gradient(
+    90deg,
+    rgba(247, 247, 247, 0.85),
+    rgba(247, 247, 247, 0.32)
+  );
+  background-repeat: no-repeat;
+  background-size: 0% 100%;
+  box-shadow: inset 0 0 0 40px rgba(255, 255, 255, 0.09);
+  transition: background-size 640ms var(--ease);
+}
+
+.cpl-stage[data-rows="skin"][data-layout="tracklist"][data-track="player"] .wt__row:hover .wt__rowMain::after,
+.cpl-stage[data-rows="skin"][data-layout="tracklist"][data-track="player"] .wt__row:focus-visible .wt__rowMain::after {
+  background-size: 38% 100%;
+}
+
+.cpl-stage[data-rows="skin"][data-layout="tracklist"][data-track="player"] .wt__row.is-current .wt__rowMain::after {
+  background-size: 100% 100%;
+}
+
+/* ---- 6 · LINER — type alone --------------------------------------------- */
+
+.cpl-stage[data-rows="skin"][data-layout="tracklist"][data-track="liner"] .wt__row {
+  background: none;
+  border-radius: 0;
+}
+
+.cpl-stage[data-rows="skin"][data-layout="tracklist"][data-track="liner"] .wt__row:hover,
+.cpl-stage[data-rows="skin"][data-layout="tracklist"][data-track="liner"] .wt__row:focus-visible,
+.cpl-stage[data-rows="skin"][data-layout="tracklist"][data-track="liner"] .wt__row.is-current {
+  background: none;
+}
+
+/* The numeral at sleeve scale, in the serif, sitting behind the title's
+   shoulder rather than labelling it. */
+.cpl-stage[data-rows="skin"][data-layout="tracklist"][data-track="liner"] .wt__label::before {
+  font-family: var(--font-serif);
+  font-size: clamp(26px, 2.4cqw, 40px);
+  letter-spacing: -0.02em;
+  opacity: 0.55;
+  margin-bottom: 2px;
+}
+
+/* One accent rule, swept in under the title. */
+.cpl-stage[data-rows="skin"][data-layout="tracklist"][data-track="liner"] .wt__label {
+  background-image: linear-gradient(90deg, var(--accent-lift), var(--accent-lift));
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+  background-size: 0% 2px;
+  padding-bottom: 5px;
+  transition: background-size 420ms var(--ease), color 320ms ease;
+}
+
+.cpl-stage[data-rows="skin"][data-layout="tracklist"][data-track="liner"] .wt__row:hover .wt__label,
+.cpl-stage[data-rows="skin"][data-layout="tracklist"][data-track="liner"] .wt__row:focus-visible .wt__label,
+.cpl-stage[data-rows="skin"][data-layout="tracklist"][data-track="liner"] .wt__row.is-current .wt__label {
+  background-size: 100% 2px;
+}
+
+.cpl-stage[data-rows="skin"][data-layout="tracklist"][data-track="liner"] .wt__chev {
+  opacity: 0;
+  transform: translateX(-6px);
+}
+
+.cpl-stage[data-rows="skin"][data-layout="tracklist"][data-track="liner"] .wt__row:hover .wt__chev,
+.cpl-stage[data-rows="skin"][data-layout="tracklist"][data-track="liner"] .wt__row:focus-visible .wt__chev,
+.cpl-stage[data-rows="skin"][data-layout="tracklist"][data-track="liner"] .wt__row.is-current .wt__chev {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* ---- Reduced motion ----------------------------------------------------
+   The rows sit outside `.cpp-screen`, and these two animations live on
+   pseudo-elements of `.wt__row` itself — neither of the existing blocks
+   reaches them. The states all remain, they just arrive at once. */
+@media (prefers-reduced-motion: reduce) {
+  .cpl-stage[data-rows="skin"] .wt__row::before,
+  .cpl-stage[data-rows="skin"] .wt__row::after,
+  .cpl-stage[data-rows="skin"] .wt__chev::before,
+  .cpl-stage[data-rows="skin"] .wt__rowMain::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}

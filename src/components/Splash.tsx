@@ -16,6 +16,7 @@ const NO_SPLASH_ROUTES = [
   "/atomicos-preview",
   "/lab/scroll",
   "/cta-lab",
+  "/consulting-paths-lab",
   "/offer-lab",
 ];
 

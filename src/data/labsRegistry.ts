@@ -81,6 +81,11 @@ export const LAB_GROUPS: LabGroup[] = [
         note: "Choices always visible, wired to the screens · 5 iterations (incl. ETB bars) × blue/gold",
       },
       {
+        label: "Consulting paths lab",
+        path: "/consulting-paths-lab",
+        note: "Two paths inside Start a Consulting Project — Fractional AI Partner / Supply Chain Advisor, expanding upward",
+      },
+      {
         label: "Offer page lab",
         path: "/offer-lab",
         note: "5 layouts × dark/paper for the three offers — dossier, editorial, index, stack, split",
