@@ -27,6 +27,11 @@
 //   intro        the headline and the three choices
 //   destination  one complete screen, opened beneath the row
 //
+// The three choices are drawn as a CD track listing and the consulting screen
+// answers with two named paths — both out of the lab at /consulting-paths-lab.
+// See `consulting-paths.css` for the scheme and why its attributes are on the
+// element below rather than compiled away.
+//
 // The choices are `<button>` with `aria-expanded`, because they disclose a
 // panel in place rather than navigating. If they ever become links to real
 // offer pages, `aria-expanded` must go with them — it is a lie to a screen
@@ -34,8 +39,13 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { CTA_HINT, CTA_LABEL, PATHS, getPath, type PathId } from "@/data/workTogether";
-import WorkTogetherScreen from "@/components/work/WorkTogetherScreen";
+import ConsultingPathsScreen from "@/components/work/ConsultingPathsScreen";
+import WorkTogetherSolo from "@/components/work/WorkTogetherSolo";
 import "@/components/work/work-together.css";
+// The three bars are styled by the shipped scheme too, and they exist before
+// any screen is opened — so the section depends on this stylesheet directly
+// rather than only through the screens it opens.
+import "@/components/work/consulting-paths.css";
 
 interface Props {
   /**
@@ -109,6 +119,21 @@ export default function WorkTogether({ media, isActive, className = "" }: Props)
       ref={rootRef}
       className={`wt ${className}`.trim()}
       data-step={openId ? "destination" : "intro"}
+      /* The shipped scheme, out of the lab at /consulting-paths-lab. These name
+         the combination `consulting-paths.css` was filtered to, and they live
+         on the element the three bars are inside because that stylesheet styles
+         the bars as well as the panel. Removing one does not "simplify" the
+         markup — it drops a point of specificity out of every selector that
+         matched on it. */
+      data-rows="skin"
+      data-layout="tracklist"
+      data-palette="cobalt-brass"
+      data-surface="paper"
+      data-type="house"
+      data-button="cue"
+      data-row-button="rule"
+      data-track="player"
+      data-key="plain"
     >
       <div className="wt__media" aria-hidden="true">
         {media}
@@ -161,7 +186,15 @@ export default function WorkTogether({ media, isActive, className = "" }: Props)
 
         {path && (
           <div className="wt__unfurl">
-            <WorkTogetherScreen path={path} onBack={close} />
+            {/* Consulting is the one being answered differently: two named
+                paths, each with its own detail and its own ask. The other two
+                keep production's information architecture exactly and only
+                take the same skin, so the three tabs read as one section. */}
+            {openId === "consulting" ? (
+              <ConsultingPathsScreen onBack={close} />
+            ) : (
+              <WorkTogetherSolo path={path} onBack={close} />
+            )}
           </div>
         )}
       </div>
