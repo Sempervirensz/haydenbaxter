@@ -27,7 +27,8 @@ export default function StructuredData() {
       "@id": personId,
       name: SITE_NAME,
       url: SITE_URL,
-      jobTitle: "AI Product Builder & Global Supply Chain Strategist",
+      jobTitle:
+        "Global Business Leader, AI Strategy Partner, and WorldPulse Founder",
       description: SITE_DESCRIPTION,
       image: `${SITE_URL}/about/portrait.webp`,
       sameAs: linkedIn ? [linkedIn] : undefined,

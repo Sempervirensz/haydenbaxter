@@ -9,10 +9,10 @@ export const SITE_URL = (
 export const SITE_NAME = "Hayden Baxter";
 
 export const SITE_TITLE =
-  "Hayden Baxter | AI Product Builder & Global Supply Chain Strategist";
+  "Hayden Baxter | Global Business Leader, AI Strategy Partner, and WorldPulse Founder";
 
 export const SITE_DESCRIPTION =
-  "Hayden Baxter builds AI products, global supply chain systems, and Digital Product Passport experiences that connect data, design, and real-world operations.";
+  "Hayden Baxter is a global business leader, AI strategy partner, and founder of WorldPulse, helping organizations turn emerging technology into practical products, smarter operations, and more transparent supply chains.";
 
 // Public, indexable routes (used to generate the sitemap). Dynamic journal
 // routes are added from BLOG_POSTS in sitemap.ts.
