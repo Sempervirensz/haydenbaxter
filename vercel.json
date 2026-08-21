@@ -1,5 +1,87 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
+  "redirects": [
+    {
+      "source": "/cd-disc-final.png",
+      "destination": "/images/portfolio/hayden-baxter-work-portfolio-cd.png",
+      "permanent": true
+    },
+    {
+      "source": "/cd-disc-final.webp",
+      "destination": "/images/portfolio/hayden-baxter-work-portfolio-cd.webp",
+      "permanent": true
+    },
+    {
+      "source": "/WorldPulseLogo.png",
+      "destination": "/images/worldpulse/worldpulse-digital-product-passport-logo.png",
+      "permanent": true
+    },
+    {
+      "source": "/cards/clubs_jack.svg",
+      "destination": "/images/cards/jack-of-clubs.svg",
+      "permanent": true
+    },
+    {
+      "source": "/cards/hearts_queen.svg",
+      "destination": "/images/cards/queen-of-hearts.svg",
+      "permanent": true
+    },
+    {
+      "source": "/cards/diamonds_king.svg",
+      "destination": "/images/cards/king-of-diamonds.svg",
+      "permanent": true
+    },
+    {
+      "source": "/cards/hf_20260210_001825_ff0bfcdc-a15d-4636-94e5-ef8ffc7cf4aa.jpeg",
+      "destination": "/images/cards/ace-of-spades-mountain-card.jpeg",
+      "permanent": true
+    },
+    {
+      "source": "/cards/back-blue-custom.png",
+      "destination": "/images/cards/playing-card-back-blue.png",
+      "permanent": true
+    },
+    {
+      "source": "/cards/back-blue-custom.webp",
+      "destination": "/images/cards/playing-card-back-blue.webp",
+      "permanent": true
+    },
+    {
+      "source": "/cards/back-red-custom.png",
+      "destination": "/images/cards/playing-card-back-red.png",
+      "permanent": true
+    },
+    {
+      "source": "/cards/back-red-custom.webp",
+      "destination": "/images/cards/playing-card-back-red.webp",
+      "permanent": true
+    },
+    {
+      "source": "/assets/mapmaster.jpeg",
+      "destination": "/images/supply-chain/asia-north-america-supply-chain-network-map.jpeg",
+      "permanent": true
+    },
+    {
+      "source": "/assets/mapmaster.webp",
+      "destination": "/images/supply-chain/asia-north-america-supply-chain-network-map.webp",
+      "permanent": true
+    },
+    {
+      "source": "/assets/east-asia.png",
+      "destination": "/images/supply-chain/east-asia-supply-chain-map.png",
+      "permanent": true
+    },
+    {
+      "source": "/assets/north-america-west.png",
+      "destination": "/images/supply-chain/western-north-america-supply-chain-map.png",
+      "permanent": true
+    },
+    {
+      "source": "/assets/pacific-map.png",
+      "destination": "/images/supply-chain/pacific-supply-chain-network-map.png",
+      "permanent": true
+    }
+  ],
   "headers": [
     {
       "source": "/(.*)",
@@ -8,9 +90,18 @@
           "key": "Content-Security-Policy",
           "value": "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; script-src 'self' 'unsafe-inline' https://assets.calendly.com; style-src 'self' 'unsafe-inline' https://assets.calendly.com; img-src 'self' data: blob: https:; font-src 'self' data:; connect-src 'self' https://raw.githubusercontent.com https://*.calendly.com; frame-src https://calendly.com https://*.calendly.com; worker-src 'self' blob:; form-action 'self' https://calendly.com; upgrade-insecure-requests"
         },
-        { "key": "X-Content-Type-Options", "value": "nosniff" },
-        { "key": "X-Frame-Options", "value": "DENY" },
-        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "DENY"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        },
         {
           "key": "Permissions-Policy",
           "value": "camera=(), microphone=(), geolocation=(), payment=(), usb=(), browsing-topics=()"
