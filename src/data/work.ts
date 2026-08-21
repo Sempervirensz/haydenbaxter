@@ -318,7 +318,7 @@ export const WORK_SCREENS: WorkScreen[] = [
     id: 1,
     name: "WorldPulse",
     number: "01 / 04",
-    logo: { src: "/WorldPulseLogo.png", alt: "WorldPulse" },
+    logo: { src: "/images/worldpulse/worldpulse-digital-product-passport-logo.png", alt: "WorldPulse" },
     type: "full",
     full: {
       image: { src: "", alt: "" },
@@ -586,7 +586,7 @@ export const WORK_SCREENS: WorkScreen[] = [
       description: "A look at my work in global supply chains, sourcing, and traceability. Ideas, systems, and lessons from the world behind the products we use every day.",
       viewMode: "minimal-supply-chain-landing",
       heroArt: {
-        mapAsset: "/assets/mapmaster.webp",
+        mapAsset: "/images/supply-chain/asia-north-america-supply-chain-network-map.webp",
         layout: "pacific-master",
         mapScale: "232%",
         masterPacificX: "62%",

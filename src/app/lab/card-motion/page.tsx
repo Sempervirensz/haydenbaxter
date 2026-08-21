@@ -108,7 +108,7 @@ export default function CardMotionLab() {
                 }}
               >
                 <Image
-                  src="/cards/back-red-custom.webp"
+                  src="/images/cards/playing-card-back-red.webp"
                   alt="Card back"
                   fill
                   sizes="200px"
@@ -128,7 +128,7 @@ export default function CardMotionLab() {
                 }}
               >
                 <Image
-                  src="/cards/hearts_queen.svg"
+                  src="/images/cards/queen-of-hearts.svg"
                   alt="Queen of Hearts"
                   fill
                   sizes="200px"

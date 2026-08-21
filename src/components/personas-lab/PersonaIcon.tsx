@@ -3,7 +3,7 @@
 // Three different kinds of mark, on purpose:
 //
 //   worldpulse  the real WorldPulse logo mark, cropped out of the lockup in
-//               public/WorldPulseLogo.png. A brand mark, so it keeps its own
+//               public/images/worldpulse/worldpulse-digital-product-passport-logo.png. A brand mark, so it keeps its own
 //               gold and does NOT follow the colour scheme. Recolouring a logo
 //               to match a theme is the one thing you do not do to a logo.
 //   supply      a real globe, built from public/textures/earth-blue-marble.jpg
@@ -12,7 +12,7 @@
 //               spherical in CSS with limb darkening rather than left as a
 //               flat disc.
 //   ai          the winged-victory emblem from the CD label, cropped out of
-//               public/cd-disc-final.png. Its own navy starfield comes with
+//               public/images/portfolio/hayden-baxter-work-portfolio-cd.png. Its own navy starfield comes with
 //               it, so like the globe it is rendered as a disc rather than
 //               keyed out: that navy IS the CD, and the mark reads as a track
 //               lifted off the disc the whole Work section is built around.

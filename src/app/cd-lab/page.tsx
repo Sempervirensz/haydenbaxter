@@ -189,7 +189,7 @@ export default function CdLabPage() {
                 position: "absolute",
                 inset: 0,
                 borderRadius: "50%",
-                background: `url("/cd-disc-final.png") center / cover no-repeat`,
+                background: `url("/images/portfolio/hayden-baxter-work-portfolio-cd.png") center / cover no-repeat`,
                 transform: `rotate(${v.rotation}deg)`,
               }}
             />

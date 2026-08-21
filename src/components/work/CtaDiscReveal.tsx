@@ -14,7 +14,7 @@
 //     WORLDPULSE   -> the word WORLDPULSE, at 53 degrees
 //     EXPERIENCE   -> the winged victory mark at the top of the disc, 355
 //
-// Those angles are measured off `public/cd-disc-final.png`, not guessed. The
+// Those angles are measured off `public/images/portfolio/hayden-baxter-work-portfolio-cd.png`, not guessed. The
 // disc already carries this vocabulary printed on it, so the reveal is showing
 // something that was always there rather than decorating the card.
 //
@@ -76,7 +76,7 @@ export default function CtaDiscReveal({
             <div className="cdr__stage" aria-hidden="true">
               <div className="cdr__disc">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img className="cdr__discImg" src="/cd-disc-final.png" alt="" />
+                <img className="cdr__discImg" src="/images/portfolio/hayden-baxter-work-portfolio-cd.png" alt="" />
                 <span className="cdr__discSheen" />
               </div>
             </div>

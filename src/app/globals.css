@@ -930,7 +930,7 @@ html {
   position: absolute;
   inset: 0;
   border-radius: 50%;
-  background: url("/cd-disc-final.png") center / cover no-repeat;
+  background: url("/images/portfolio/hayden-baxter-work-portfolio-cd.png") center / cover no-repeat;
   --cd-deg: 0deg;
   transform: translateZ(0) rotate(var(--cd-deg));
   /* Disc rotation driven exclusively by JS lerp on --cd-deg.

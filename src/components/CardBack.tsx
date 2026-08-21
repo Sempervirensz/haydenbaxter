@@ -7,8 +7,8 @@ interface CardBackProps {
 export default function CardBack({ variant }: CardBackProps) {
   const src =
     variant === "red"
-      ? "/cards/back-red-custom.webp"
-      : "/cards/back-blue-custom.webp";
+      ? "/images/cards/playing-card-back-red.webp"
+      : "/images/cards/playing-card-back-blue.webp";
 
   return (
     <div className="w-full h-full bg-white relative">
