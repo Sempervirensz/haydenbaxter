@@ -44,6 +44,10 @@ export const metadata: Metadata = {
   applicationName: SITE_NAME,
   authors: [{ name: SITE_NAME, url: SITE_URL }],
   creator: SITE_NAME,
+  publisher: SITE_NAME,
+  // Applies to "/" only. `alternates` is inherited by child segments, so every
+  // public route MUST declare its own canonical or it silently inherits this
+  // one and tells search engines it is a duplicate of the homepage.
   alternates: {
     canonical: "/",
   },

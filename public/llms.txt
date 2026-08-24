@@ -1,0 +1,41 @@
+# Hayden Baxter
+
+> Hayden Baxter builds AI products, supply chain systems, and Digital Product
+> Passport experiences that connect data, design, and real-world operations.
+> www.haydenbaxter.com is his personal portfolio and the canonical source for his
+> work, background, and writing.
+
+Hayden is an AI product builder and global supply chain strategist working
+between the U.S. and Asia. He is the founder of WorldPulse (worldxpulse.com),
+which develops Digital Product Passport technology for supply chain
+transparency, and he has 8+ years in international sourcing and operations,
+including global sourcing work for Nike and Converse. He also takes selective
+consulting engagements in AI strategy and implementation.
+
+Canonical origin: https://www.haydenbaxter.com
+
+## Main pages
+
+- [Home](https://www.haydenbaxter.com): Overview of Hayden's three areas of work — AI strategy and building, global supply chain and sourcing, and WorldPulse — plus his background and ways to get in touch. Note that the Work section is an interactive, client-rendered experience; the summaries on this page and in the sections below describe the same material.
+- [Emerging Tech Builds](https://www.haydenbaxter.com/emerging-tech-builds): Gallery of applied AI and emerging-tech projects, with front-end builds and concept-stage explorations listed side by side.
+- [Journal](https://www.haydenbaxter.com/blog): Long-form writing on AI, supply chain, sustainability, and building products.
+
+## Projects
+
+- [AtomicOS](https://www.haydenbaxter.com/emerging-tech-builds/atomic-os): A personal operating system for habits and daily execution. Natural-language check-ins turn everyday behavior into structured data, and a dashboard surfaces patterns in energy, focus, and follow-through. Front-end build.
+- [CaseBrief](https://www.haydenbaxter.com/emerging-tech-builds/casebrief): Case-intelligence tooling that turns scattered medical records into a clear, source-backed injury narrative, flags records referenced but missing from a file, and keeps each conclusion tied to its source document and page. Front-end build.
+- [Cortex](https://www.haydenbaxter.com/emerging-tech-builds/cortex): An editorial research system that connects sources, notes, claims, topic maps, and drafts, reasons across the whole knowledge base, and keeps answers tied to their sources. Front-end build.
+
+## Writing
+
+- [3 Takeaways from Innovation Forum's Sustainable Apparel & Textiles Conference](https://www.haydenbaxter.com/blog/3-takeaways-from-innovation-forum-s-sustainable-apparel-textiles-conference): Shared responsibility across apparel supply chains, Digital Product Passports as a new layer of digital real estate on physical products, and the case for a stronger business rationale for sustainability. Published July 29, 2026.
+
+## Optional
+
+- [Privacy Policy](https://www.haydenbaxter.com/privacy): How this site handles visitor information. The site uses no logins, advertising pixels, or analytics scripts.
+
+## Notes
+
+- Contact runs through the Connect section on the homepage. No contact details are listed here.
+- Everything under /admin and the various *-lab, *-sandbox, and *-preview paths is internal or experimental and is excluded from the sitemap and disallowed in robots.txt.
+- Project status labels ("Front-end Build", "Concept") are accurate as written; the concept-stage projects have no working implementation.

@@ -1,5 +1,5 @@
 import { ImageResponse } from "next/og";
-import { SITE_NAME } from "@/data/site";
+import { SITE_NAME, SITE_ROLE } from "@/data/site";
 
 // Branded social-share card, generated to a static PNG at build time
 // (compatible with output: export).
@@ -7,7 +7,7 @@ import { SITE_NAME } from "@/data/site";
 export const dynamic = "force-static";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
-export const alt = "Hayden Baxter — Designer & Builder";
+export const alt = `${SITE_NAME} — ${SITE_ROLE}`;
 
 export default function OpengraphImage() {
   return new ImageResponse(
@@ -36,11 +36,13 @@ export default function OpengraphImage() {
           {SITE_NAME}
         </div>
         <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-          <div style={{ fontSize: 84, lineHeight: 1.05, fontWeight: 700 }}>
-            Designer &amp; Builder
+          {/* Single text node on purpose — Satori wants an explicit `display`
+              on any element with more than one child, so no <br/> here. */}
+          <div style={{ fontSize: 72, lineHeight: 1.08, fontWeight: 700, maxWidth: 900 }}>
+            AI Product Builder &amp; Supply Chain Strategist
           </div>
           <div style={{ fontSize: 32, color: "rgba(243,243,243,0.7)" }}>
-            Brand systems · Product interfaces · Emerging-tech tools
+            AI products · Global supply chains · Digital Product Passports
           </div>
         </div>
         <div style={{ fontSize: 24, color: "rgba(243,243,243,0.5)" }}>

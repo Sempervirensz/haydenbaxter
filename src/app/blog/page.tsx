@@ -1,15 +1,40 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { JOURNAL_COPY, BLOG_POSTS } from "@/data/journal";
+import JsonLd from "@/components/JsonLd";
+import { blogIndexGraph, toIsoDate } from "@/data/schema";
 
 export const metadata: Metadata = {
-  title: "Journal — Hayden Baxter",
+  // Bare "Journal" — the root layout's title template appends "— Hayden
+  // Baxter". Spelling the name out here too rendered "Journal — Hayden Baxter
+  // — Hayden Baxter".
+  title: "Journal",
   description: JOURNAL_COPY.subline,
+  alternates: { canonical: "/blog" },
+  openGraph: {
+    title: "Journal — Hayden Baxter",
+    description: JOURNAL_COPY.subline,
+    url: "/blog",
+    type: "website",
+  },
 };
 
 export default function BlogIndexPage() {
   return (
     <main className="blog-index">
+      <JsonLd
+        data={blogIndexGraph({
+          path: "/blog",
+          name: JOURNAL_COPY.heading,
+          description: JOURNAL_COPY.subline,
+          posts: BLOG_POSTS.map((post) => ({
+            path: `/blog/${post.slug}`,
+            title: post.title,
+            datePublished: toIsoDate(post.date),
+            image: post.thumbnail,
+          })),
+        })}
+      />
       <Link href="/" className="etb-gallery__back">
         <span aria-hidden="true">&larr;</span>
         <span>Back to home</span>

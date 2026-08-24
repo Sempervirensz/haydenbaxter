@@ -3,9 +3,29 @@ import Link from "next/link";
 import ETBDetail from "@/components/work/ETBDetail";
 import { WORK_SCREENS } from "@/data/work";
 import { notFound } from "next/navigation";
+import JsonLd from "@/components/JsonLd";
+import { collectionPageGraph } from "@/data/schema";
+
+const DESCRIPTION =
+  "Applied AI and emerging-tech builds by Hayden Baxter — usable systems and interfaces, from front-end builds to concept-stage explorations.";
+
+// Only the projects that have their own detail route are listed as parts.
+const PROJECT_PAGES = [
+  { path: "/emerging-tech-builds/atomic-os", name: "AtomicOS" },
+  { path: "/emerging-tech-builds/casebrief", name: "CaseBrief" },
+  { path: "/emerging-tech-builds/cortex", name: "Cortex" },
+];
 
 export const metadata: Metadata = {
   title: "Emerging Tech Builds",
+  description: DESCRIPTION,
+  alternates: { canonical: "/emerging-tech-builds" },
+  openGraph: {
+    title: "Emerging Tech Builds",
+    description: DESCRIPTION,
+    url: "/emerging-tech-builds",
+    type: "website",
+  },
 };
 
 export default function EmergingTechBuildsPage() {
@@ -14,6 +34,14 @@ export default function EmergingTechBuildsPage() {
 
   return (
     <main className="etb-gallery">
+      <JsonLd
+        data={collectionPageGraph({
+          path: "/emerging-tech-builds",
+          name: "Emerging Tech Builds",
+          description: DESCRIPTION,
+          parts: PROJECT_PAGES,
+        })}
+      />
       {/* Rail carries the shell's measure so the back link stays flush with the
           accordion's left edge once the shell stops filling the viewport. */}
       <div className="etb-gallery__rail">

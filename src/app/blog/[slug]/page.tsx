@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { BLOG_POSTS, getBlogPostBySlug } from "@/data/journal";
+import JsonLd from "@/components/JsonLd";
+import { blogPostingGraph, toIsoDate } from "@/data/schema";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -16,9 +18,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: `${post.title} — Journal`,
     description: post.excerpt,
+    alternates: { canonical: `/blog/${post.slug}` },
     openGraph: {
+      type: "article",
       title: post.title,
       description: post.excerpt,
+      url: `/blog/${post.slug}`,
+      publishedTime: toIsoDate(post.date),
+      authors: [post.author],
       images: post.hero ? [{ url: post.hero }] : undefined,
     },
   };
@@ -58,6 +65,16 @@ export default async function BlogPostPage({ params }: Props) {
 
   return (
     <main className="blog-post">
+      <JsonLd
+        data={blogPostingGraph({
+          path: `/blog/${post.slug}`,
+          headline: post.title,
+          description: post.excerpt,
+          datePublished: toIsoDate(post.date),
+          image: post.hero,
+          keywords: post.tags,
+        })}
+      />
       <Link href="/blog" className="etb-gallery__back">
         <span aria-hidden="true">&larr;</span>
         <span>Back to journal</span>
