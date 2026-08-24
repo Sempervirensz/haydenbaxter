@@ -2,18 +2,40 @@
 
 > Global business leader, AI strategy partner, and WorldPulse founder working across AI systems, Digital Product Passports, global supply chains, traceability, and cross-cultural operations.
 
+Hayden Baxter helps organizations turn emerging technology into practical
+products, smarter operations, and more transparent supply chains. He is the
+founder of WorldPulse (worldxpulse.com), which develops Digital Product Passport
+technology for supply chain transparency.
+
+Canonical origin: https://www.haydenbaxter.com
+
 ## Primary pages
 
-- [Home](https://www.haydenbaxter.com/): Overview of Hayden Baxter's work, experience, and capabilities.
-- [Emerging Tech Builds](https://www.haydenbaxter.com/emerging-tech-builds): AI and emerging technology product portfolio.
-- [Cortex](https://www.haydenbaxter.com/emerging-tech-builds/cortex): A source-connected editorial intelligence system.
-- [AtomicOS](https://www.haydenbaxter.com/emerging-tech-builds/atomic-os): A personal operating system for habits, energy, and execution.
-- [CaseBrief](https://www.haydenbaxter.com/emerging-tech-builds/casebrief): Source-backed case intelligence for legal teams.
+- [Home](https://www.haydenbaxter.com/): Overview of Hayden Baxter's work, experience, and capabilities. Note that the Work section is an interactive, client-rendered experience; the summaries on this page describe the same material.
+- [Emerging Tech Builds](https://www.haydenbaxter.com/emerging-tech-builds): AI and emerging technology product portfolio, with front-end builds and concept-stage explorations listed side by side.
 - [Journal](https://www.haydenbaxter.com/blog): Writing on AI, supply chains, sustainability, and product building.
-- [Sustainable Apparel Conference Takeaways](https://www.haydenbaxter.com/blog/3-takeaways-from-innovation-forum-s-sustainable-apparel-textiles-conference): An article about shared responsibility, Digital Product Passports, and sustainability in apparel.
-- [Privacy Policy](https://www.haydenbaxter.com/privacy): How the site handles visitor information.
+
+## Projects
+
+- [Cortex](https://www.haydenbaxter.com/emerging-tech-builds/cortex): An editorial research system that connects sources, notes, claims, topic maps, and drafts, reasons across the whole knowledge base, and keeps answers tied to their sources. Front-end build.
+- [AtomicOS](https://www.haydenbaxter.com/emerging-tech-builds/atomic-os): A personal operating system for habits and daily execution. Natural-language check-ins turn everyday behavior into structured data, and a dashboard surfaces patterns in energy, focus, and follow-through. Front-end build.
+- [CaseBrief](https://www.haydenbaxter.com/emerging-tech-builds/casebrief): Case-intelligence tooling that turns scattered medical records into a clear, source-backed injury narrative, flags records referenced but missing from a file, and keeps each conclusion tied to its source document and page. Front-end build.
+
+## Writing
+
+- [3 Takeaways from Innovation Forum's Sustainable Apparel & Textiles Conference](https://www.haydenbaxter.com/blog/3-takeaways-from-innovation-forum-s-sustainable-apparel-textiles-conference): Shared responsibility across apparel supply chains, Digital Product Passports as a new layer of digital real estate on physical products, and the case for a stronger business rationale for sustainability. Published July 29, 2026.
 
 ## Related profiles
 
 - [LinkedIn](https://www.linkedin.com/in/haydenjbaxter/)
 - [WorldPulse](https://worldxpulse.com/): Digital Product Passport and supply chain transparency work.
+
+## Optional
+
+- [Privacy Policy](https://www.haydenbaxter.com/privacy): How this site handles visitor information. The site uses no logins, advertising pixels, or analytics scripts.
+
+## Notes
+
+- Contact runs through the Connect section on the homepage. No contact details are listed here.
+- The various *-lab, *-sandbox, and *-preview paths are internal or experimental. They are excluded from the sitemap and disallowed in robots.txt.
+- Project status labels ("Front-end Build", "Concept") are accurate as written; the concept-stage projects have no working implementation.

@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import JsonLd from "@/components/JsonLd";
 import { BLOG_POSTS, getBlogPostBySlug } from "@/data/journal";
+import { blogPostingGraph, toIsoDate } from "@/data/schema";
 import { SITE_URL } from "@/data/site";
 
 type Props = { params: Promise<{ slug: string }> };
@@ -28,7 +29,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       title: post.title,
       description: post.excerpt,
       url: path,
-      publishedTime: new Date(post.date).toISOString(),
+      publishedTime: toIsoDate(post.date),
       authors: [post.author],
       images: post.hero ? [{ url: post.hero, alt: post.title }] : undefined,
     },
@@ -73,31 +74,15 @@ export default async function BlogPostPage({ params }: Props) {
   const post = getBlogPostBySlug(slug);
   if (!post) notFound();
 
-  const url = `${SITE_URL}/blog/${post.slug}`;
-  const image = post.hero.startsWith("http")
-    ? post.hero
-    : `${SITE_URL}${post.hero}`;
-  const articleSchema = {
-    "@context": "https://schema.org",
-    "@type": "BlogPosting",
-    "@id": `${url}#article`,
-    mainEntityOfPage: url,
-    url,
+  const articleSchema = blogPostingGraph({
+    path: `/blog/${post.slug}`,
     headline: post.title,
     description: post.excerpt,
-    image,
-    datePublished: new Date(post.date).toISOString(),
-    author: {
-      "@type": "Person",
-      "@id": `${SITE_URL}/#person`,
-      name: post.author,
-      url: SITE_URL,
-    },
-    publisher: { "@id": `${SITE_URL}/#person` },
-    isPartOf: { "@id": `${SITE_URL}/#website` },
+    author: post.author,
+    datePublished: toIsoDate(post.date),
+    image: post.hero,
     keywords: post.tags,
-    inLanguage: "en-US",
-  };
+  });
 
   return (
     <main className="blog-post">

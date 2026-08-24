@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import ProjectDetailPage from "@/components/etb-page/ProjectDetailPage";
+import JsonLd from "@/components/JsonLd";
 import { findEtbProject } from "@/data/etbProjects";
+import { projectPageGraph } from "@/data/schema";
 import { notFound } from "next/navigation";
 
 const PROJECT = findEtbProject("atomicos");
@@ -21,5 +23,20 @@ export const metadata: Metadata = {
 
 export default function AtomicOSPage() {
   if (!PROJECT) notFound();
-  return <ProjectDetailPage project={PROJECT} />;
+  return (
+    <>
+      <JsonLd
+        data={projectPageGraph({
+          path: "/emerging-tech-builds/atomic-os",
+          name: PROJECT.name,
+          description: DESCRIPTION,
+          keywords: PROJECT.tags,
+          image: PROJECT.screenshot,
+          parentName: "Emerging Tech Builds",
+          parentPath: "/emerging-tech-builds",
+        })}
+      />
+      <ProjectDetailPage project={PROJECT} />
+    </>
+  );
 }

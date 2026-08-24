@@ -38,11 +38,16 @@ export const NON_PUBLIC_PREFIXES = [
   "/supply-chain-mobile-lab",
   "/mobile-lab",
   "/consulting-lab",
+  "/consulting-paths-lab",
   "/consulting-hero-lab",
   "/consulting-parallax-lab",
   "/cta-lab",
+  "/entry-cta-lab",
+  "/hero-type-lab",
+  "/personas-lab",
   "/offer-lab",
   "/etb-lab",
+  "/lab",
   "/etb-overlay-sandbox",
   "/globe-sandbox",
   "/globe-card-lab",
@@ -60,3 +65,8 @@ export const NON_PUBLIC_PREFIXES = [
   "/atomicos-preview",
   "/happybirthdaykemmerlee",
 ] as const;
+
+/** Absolute canonical URL for a site-relative path ("/" -> the bare origin). */
+export function absoluteUrl(path: string): string {
+  return path === "/" ? SITE_URL : `${SITE_URL}${path}`;
+}

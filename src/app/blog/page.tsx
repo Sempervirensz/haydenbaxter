@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { JOURNAL_COPY, BLOG_POSTS } from "@/data/journal";
+import JsonLd from "@/components/JsonLd";
+import { blogIndexGraph, toIsoDate } from "@/data/schema";
 
 export const metadata: Metadata = {
   title: "Journal",
@@ -16,6 +18,18 @@ export const metadata: Metadata = {
 export default function BlogIndexPage() {
   return (
     <main className="blog-index">
+      <JsonLd
+        data={blogIndexGraph({
+          path: "/blog",
+          name: JOURNAL_COPY.heading,
+          description: JOURNAL_COPY.subline,
+          posts: BLOG_POSTS.map((post) => ({
+            path: `/blog/${post.slug}`,
+            title: post.title,
+            datePublished: toIsoDate(post.date),
+          })),
+        })}
+      />
       <Link href="/" className="etb-gallery__back">
         <span aria-hidden="true">&larr;</span>
         <span>Back to home</span>
