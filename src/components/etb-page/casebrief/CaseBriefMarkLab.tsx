@@ -17,7 +17,10 @@ import CaseBriefMarkHero, {
   CASEBRIEF_HERO_DIRECTIONS,
   type CaseBriefHeroVariant,
 } from "./CaseBriefMarkHero";
+// The shipped treatment...
 import "./casebrief-mark.css";
+// ...plus the ones it beat, which only this lab renders.
+import "./casebrief-directions.css";
 
 interface Props {
   project: ETBProject;

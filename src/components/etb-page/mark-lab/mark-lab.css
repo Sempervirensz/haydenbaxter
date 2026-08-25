@@ -107,6 +107,9 @@
 /* Shortcut legend. */
 .cxlab-rail__keys {
   margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 12px;
   font-family: var(--font-mono);
   font-size: 10px;
   letter-spacing: 0.08em;

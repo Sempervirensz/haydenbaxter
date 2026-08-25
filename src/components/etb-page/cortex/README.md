@@ -1,6 +1,6 @@
 # Cortex mark — art direction
 
-**Lab:** `/cortex-mark-lab` · **Production page:** `/emerging-tech-builds/cortex` (unchanged)
+**Lab:** `/cortex-mark-lab` · **Production page:** `/emerging-tech-builds/cortex` — ships **D · Disc seal**
 
 ## The question
 
@@ -25,6 +25,25 @@ or use the rail.
 | 6 | **E · Macro band** | A full-bleed strip of the thread itself — loops, not a logo — with the complete mark kept small and sharp beside the title. The craft argument rather than the scale argument. |
 | 7 | **F · Sleeve** | Album-sleeve composition: one big square mark centred, everything under it centred with it. The only centred measure on the site, which is what makes it read as a cover. |
 | 8 | **G · Persistent badge** | The one direction whose argument is not size. A modest circular mark in the hero, then a corner badge that pins once the hero scrolls past and holds for the whole page. |
+
+## Shipped
+
+**D · Disc seal is live on `/emerging-tech-builds/cortex`.** The page wraps `ProjectDetailPage` in
+`<div className="cortex-skin" data-cortex-variant="seal">` and passes
+`hero={<CortexMarkHero … variant="seal" />}`. Everything else on the site is
+untouched: the shared template still draws the default 96px seal for anything
+that does not opt in.
+
+The stylesheet is split so production does not carry the exploration:
+
+| file | holds | imported by |
+| --- | --- | --- |
+| `cortex-mark.css` | tokens + D · Disc seal | the production page **and** the lab |
+| `cortex-directions.css` | every rejected direction | the lab only |
+
+If you revisit this and pick differently, move that direction's rules from
+`cortex-directions.css` into `cortex-mark.css` and change the `variant` in the page — do
+not import the directions file from production.
 
 ## Moving between labs
 
@@ -62,15 +81,6 @@ is every page today — it draws its own hero exactly as before. Note that an
 element which *renders* null still counts as a hero being passed, so the
 baseline has to pass `undefined`.
 
-## Shipping a direction
-
-1. Import `cortex-mark.css` and `CortexMarkHero` from
-   `src/app/emerging-tech-builds/cortex/page.tsx`.
-2. Wrap `<ProjectDetailPage>` in `<div className="cortex-skin"
-   data-cortex-variant="…">` and pass `hero={<CortexMarkHero … />}`.
-3. Delete the losing branches from `CortexMarkHero.tsx` and their CSS.
-4. Drop `/cortex-mark-lab` from `labsRegistry.ts` and `Splash.tsx`'s
-   `NO_SPLASH_ROUTES`, or keep it as the record of the decision.
 
 ## Notes for the next pass
 

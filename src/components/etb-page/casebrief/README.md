@@ -1,6 +1,6 @@
 # CaseBrief mark — art direction
 
-**Lab:** `/casebrief-mark-lab` · **Production page:** `/emerging-tech-builds/casebrief` (unchanged)
+**Lab:** `/casebrief-mark-lab` · **Production page:** `/emerging-tech-builds/casebrief` — ships **A · Navy plinth**
 
 ## The question
 
@@ -38,6 +38,25 @@ Sampled palette, all used as tokens on `.cb-skin`:
 | `--cb-green` | `#4e9a3f` | left face |
 | `--cb-blue` | `#2f6fb0` | right face |
 
+## Shipped
+
+**A · Navy plinth is live on `/emerging-tech-builds/casebrief`.** The page wraps `ProjectDetailPage` in
+`<div className="cb-skin" data-cb-variant="plinth">` and passes
+`hero={<CaseBriefMarkHero … variant="plinth" />}`. Everything else on the site is
+untouched: the shared template still draws the default 96px seal for anything
+that does not opt in.
+
+The stylesheet is split so production does not carry the exploration:
+
+| file | holds | imported by |
+| --- | --- | --- |
+| `casebrief-mark.css` | tokens + A · Navy plinth | the production page **and** the lab |
+| `casebrief-directions.css` | every rejected direction | the lab only |
+
+If you revisit this and pick differently, move that direction's rules from
+`casebrief-directions.css` into `casebrief-mark.css` and change the `variant` in the page — do
+not import the directions file from production.
+
 ## Moving between labs
 
 The rail's top row switches projects — `/cortex-mark-lab`,
@@ -53,15 +72,6 @@ stylesheets — everything here is scoped under `.cb-skin`. The three labs share
 `../mark-lab/MarkLabShell` and nothing else, and that is a switcher, not a
 design system.
 
-## Shipping a direction
-
-1. Import `casebrief-mark.css` and `CaseBriefMarkHero` from
-   `src/app/emerging-tech-builds/casebrief/page.tsx`.
-2. Wrap `<ProjectDetailPage>` in `<div className="cb-skin" data-cb-variant="…">`
-   and pass `hero={<CaseBriefMarkHero … />}`.
-3. Delete the losing branches and their CSS.
-4. Drop `/casebrief-mark-lab` from `labsRegistry.ts` and `Splash.tsx`'s
-   `NO_SPLASH_ROUTES`, or keep it as the record of the decision.
 
 ## Not yet covered
 

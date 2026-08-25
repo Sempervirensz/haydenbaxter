@@ -17,7 +17,10 @@ import AtomicOSMarkHero, {
   ATOMICOS_HERO_DIRECTIONS,
   type AtomicOSHeroVariant,
 } from "./AtomicOSMarkHero";
+// The shipped treatment...
 import "./atomicos-mark.css";
+// ...plus the ones it beat, which only this lab renders.
+import "./atomicos-directions.css";
 
 interface Props {
   project: ETBProject;

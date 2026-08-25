@@ -22,7 +22,10 @@ import CortexMarkHero, {
   CORTEX_HERO_DIRECTIONS,
   type CortexHeroVariant,
 } from "./CortexMarkHero";
+// The shipped treatment...
 import "./cortex-mark.css";
+// ...plus the ones it beat, which only this lab renders.
+import "./cortex-directions.css";
 
 interface Props {
   project: ETBProject;

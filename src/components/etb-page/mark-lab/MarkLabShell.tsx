@@ -169,10 +169,16 @@ export default function MarkLabShell<T extends string>({
             ))}
 
             <p className="cxlab-rail__note">{active.note}</p>
+            {/* Two spans, not one run of text: each legend wraps as a unit
+                instead of orphaning "projects" onto its own line. */}
             <p className="cxlab-rail__keys">
-              <kbd>1</kbd>–<kbd>{directions.length}</kbd> directions ·{" "}
-              <kbd>←</kbd>
-              <kbd>→</kbd> projects
+              <span>
+                <kbd>1</kbd>–<kbd>{directions.length}</kbd> directions
+              </span>
+              <span>
+                <kbd>←</kbd>
+                <kbd>→</kbd> projects
+              </span>
             </p>
           </div>
         ) : null}

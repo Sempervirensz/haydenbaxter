@@ -1,6 +1,6 @@
 # AtomicOS mark — art direction
 
-**Lab:** `/atomicos-mark-lab` · **Production page:** `/emerging-tech-builds/atomic-os` (unchanged)
+**Lab:** `/atomicos-mark-lab` · **Production page:** `/emerging-tech-builds/atomic-os` — ships **C · Ledger plate**
 
 ## The question
 
@@ -47,6 +47,25 @@ Two things that cost time and should not be rediscovered:
   frame. Hard-coded pulls either leave a gap or slide the kicker under the
   orbits, and both break the moment the clamp changes.
 
+## Shipped
+
+**C · Ledger plate is live on `/emerging-tech-builds/atomic-os`.** The page wraps `ProjectDetailPage` in
+`<div className="aos-skin" data-aos-variant="ledger">` and passes
+`hero={<AtomicOSMarkHero … variant="ledger" />}`. Everything else on the site is
+untouched: the shared template still draws the default 96px seal for anything
+that does not opt in.
+
+The stylesheet is split so production does not carry the exploration:
+
+| file | holds | imported by |
+| --- | --- | --- |
+| `atomicos-mark.css` | tokens + C · Ledger plate | the production page **and** the lab |
+| `atomicos-directions.css` | every rejected direction | the lab only |
+
+If you revisit this and pick differently, move that direction's rules from
+`atomicos-directions.css` into `atomicos-mark.css` and change the `variant` in the page — do
+not import the directions file from production.
+
 ## Moving between labs
 
 The rail's top row switches projects — `/cortex-mark-lab`,
@@ -62,12 +81,3 @@ stylesheets — everything here is scoped under `.aos-skin`. The three labs shar
 `../mark-lab/MarkLabShell` and nothing else, and that is a switcher, not a
 design system: it renders a rail and has no opinion about any mark.
 
-## Shipping a direction
-
-1. Import `atomicos-mark.css` and `AtomicOSMarkHero` from
-   `src/app/emerging-tech-builds/atomic-os/page.tsx`.
-2. Wrap `<ProjectDetailPage>` in `<div className="aos-skin" data-aos-variant="…">`
-   and pass `hero={<AtomicOSMarkHero … />}`.
-3. Delete the losing branches and their CSS.
-4. Drop `/atomicos-mark-lab` from `labsRegistry.ts` and `Splash.tsx`'s
-   `NO_SPLASH_ROUTES`, or keep it as the record of the decision.
