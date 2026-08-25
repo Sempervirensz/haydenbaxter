@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import ProjectDetailPage from "@/components/etb-page/ProjectDetailPage";
+import CortexMarkHero from "@/components/etb-page/cortex/CortexMarkHero";
+import "@/components/etb-page/cortex/cortex-mark.css";
 import JsonLd from "@/components/JsonLd";
 import { findEtbProject } from "@/data/etbProjects";
 import { projectPageGraph } from "@/data/schema";
@@ -21,6 +23,10 @@ export const metadata: Metadata = {
   },
 };
 
+// The mark leads this page as a disc seal — cut to a circle, vignetted
+// free of its knit, with a mono legend turning slowly around it. Cortex only:
+// the treatment lives in components/etb-page/cortex and reaches this page via
+// the `cortex-skin` wrapper. See that folder's README for why.
 export default function CortexPage() {
   if (!PROJECT) notFound();
   return (
@@ -36,7 +42,12 @@ export default function CortexPage() {
           parentPath: "/emerging-tech-builds",
         })}
       />
-      <ProjectDetailPage project={PROJECT} />
+      <div className="cortex-skin" data-cortex-variant="seal">
+        <ProjectDetailPage
+          project={PROJECT}
+          hero={<CortexMarkHero project={PROJECT} variant="seal" />}
+        />
+      </div>
     </>
   );
 }

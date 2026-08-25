@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import ProjectDetailPage from "@/components/etb-page/ProjectDetailPage";
+import CaseBriefMarkHero from "@/components/etb-page/casebrief/CaseBriefMarkHero";
+import "@/components/etb-page/casebrief/casebrief-mark.css";
 import JsonLd from "@/components/JsonLd";
 import { findEtbProject } from "@/data/etbProjects";
 import { projectPageGraph } from "@/data/schema";
@@ -21,6 +23,10 @@ export const metadata: Metadata = {
   },
 };
 
+// The mark leads this page as a navy plinth — the page adopts the cube's own
+// #00253c for one panel, so the render needs no frame. CaseBrief only: the
+// treatment lives in components/etb-page/casebrief and reaches this page via
+// the `cb-skin` wrapper. See that folder's README for why.
 export default function CaseBriefPage() {
   if (!PROJECT) notFound();
   return (
@@ -36,7 +42,12 @@ export default function CaseBriefPage() {
           parentPath: "/emerging-tech-builds",
         })}
       />
-      <ProjectDetailPage project={PROJECT} />
+      <div className="cb-skin" data-cb-variant="plinth">
+        <ProjectDetailPage
+          project={PROJECT}
+          hero={<CaseBriefMarkHero project={PROJECT} variant="plinth" />}
+        />
+      </div>
     </>
   );
 }

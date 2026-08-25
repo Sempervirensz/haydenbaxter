@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import ProjectDetailPage from "@/components/etb-page/ProjectDetailPage";
+import AtomicOSMarkHero from "@/components/etb-page/atomicos/AtomicOSMarkHero";
+import "@/components/etb-page/atomicos/atomicos-mark.css";
 import JsonLd from "@/components/JsonLd";
 import { findEtbProject } from "@/data/etbProjects";
 import { projectPageGraph } from "@/data/schema";
@@ -21,6 +23,10 @@ export const metadata: Metadata = {
   },
 };
 
+// The mark leads this page as a ledger plate — two hairlines with the atom
+// centred between them and mono metadata either side. AtomicOS only: the
+// treatment lives in components/etb-page/atomicos and reaches this page via
+// the `aos-skin` wrapper. See that folder's README for why.
 export default function AtomicOSPage() {
   if (!PROJECT) notFound();
   return (
@@ -36,7 +42,12 @@ export default function AtomicOSPage() {
           parentPath: "/emerging-tech-builds",
         })}
       />
-      <ProjectDetailPage project={PROJECT} />
+      <div className="aos-skin" data-aos-variant="ledger">
+        <ProjectDetailPage
+          project={PROJECT}
+          hero={<AtomicOSMarkHero project={PROJECT} variant="ledger" />}
+        />
+      </div>
     </>
   );
 }
