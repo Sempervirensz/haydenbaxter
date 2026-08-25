@@ -301,7 +301,7 @@ export const WORK_SCROLL_CONFIG = {
   zones: [
     { hold: [0.0, 0.15], deg: 0, label: "" },                         // Angel at 12 (rest)
     { hold: [0.18, 0.35], deg: -45, label: "WorldPulse" },            // ~1:30 → top
-    { hold: [0.38, 0.55], deg: -135, label: "Emerging Tech Builds" }, // ~4:30 → top
+    { hold: [0.38, 0.55], deg: -135, label: "Selected AI Work" },     // ~4:30 → top
     { hold: [0.58, 0.75], deg: -225, label: "Supply Chain" },         // ~7:30 → top
     { hold: [0.78, 0.92], deg: -315, label: "Consulting" },           // ~10:30 → top
     { hold: [0.96, 0.985], deg: -360, label: "" },                    // Return to angel
@@ -338,15 +338,15 @@ export const WORK_SCREENS: WorkScreen[] = [
   // ── Screen 2 — Emerging Tech Builds ────────────────────────────────────
   {
     id: 2,
-    name: "Emerging Tech Builds",
+    name: "Selected AI Work",
     number: "02 / 04",
     type: "emerging-tech-builds",
     etb: {
-      title: "Emerging Tech Builds",
-      credibilityLine: "M.S. in Artificial Intelligence in Business (ASU)",
-      intro: "Usable AI systems, not slideware.",
+      title: "Selected AI Work",
+      credibilityLine: "Built, not pitched",
+      intro: "I understand AI. I understand business. I can bridge the two by turning real problems into working solutions. Here’s the proof.",
       description:
-        "Applied emerging tech builds focused on clear workflows and useful interfaces. Case Brief and Atomic OS currently have active front-end implementations; Procurement and Open Claw are concept-stage.",
+        "I understand AI. I understand business. I can bridge the two by turning real problems into working solutions. Here’s the proof.",
       filters: [
         "All",
         "Personal OS",

@@ -598,6 +598,26 @@
   color: var(--ink-4);
 }
 
+.cpp-path__proof {
+  margin: 8px 0 0;
+  font-family: var(--face-body);
+  font-size: var(--text-sm);
+  line-height: var(--body-lh);
+  color: var(--ink-4);
+}
+
+.cpp-path__proofLink {
+  color: var(--ink-2, inherit);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  white-space: nowrap;
+}
+
+.cpp-path__proofLink:hover,
+.cpp-path__proofLink:focus-visible {
+  color: var(--ink-1, inherit);
+}
+
 /* ---- The base block: always visible, never moves ---- */
 
 .cpp-path__base {

@@ -11,11 +11,11 @@ const DESCRIPTION =
   "Source-backed case intelligence that turns medical records into a clear injury, treatment, and recovery narrative.";
 
 export const metadata: Metadata = {
-  title: "CaseBrief | Emerging Tech Builds",
+  title: "CaseBrief | Selected AI Work",
   description: DESCRIPTION,
   alternates: { canonical: "/emerging-tech-builds/casebrief" },
   openGraph: {
-    title: "CaseBrief | Emerging Tech Builds | Hayden Baxter",
+    title: "CaseBrief | Selected AI Work | Hayden Baxter",
     description: DESCRIPTION,
     url: "/emerging-tech-builds/casebrief",
   },
@@ -32,7 +32,7 @@ export default function CaseBriefPage() {
           description: DESCRIPTION,
           keywords: PROJECT.tags,
           image: PROJECT.screenshot,
-          parentName: "Emerging Tech Builds",
+          parentName: "Selected AI Work",
           parentPath: "/emerging-tech-builds",
         })}
       />

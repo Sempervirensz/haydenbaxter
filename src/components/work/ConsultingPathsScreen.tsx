@@ -37,6 +37,7 @@
 // specificity and start resolving ties by source order the other way. Change
 // the scheme in the lab, then in `scripts/extract-consulting-scheme.mjs`.
 
+import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 import {
   CONSULTING_PATHS,
@@ -193,7 +194,7 @@ function PathPanel({
     >
       {/* ABOVE the base block on purpose — this is what makes the growth read
           as upward rather than as a drawer pushing the CTA down the panel. */}
-      <div className="cpp-path__reveal" id={detailId} aria-hidden={!open}>
+      <div className="cpp-path__reveal" id={detailId} aria-hidden={!open} inert={!open}>
         <div className="cpp-path__revealInner" ref={innerRef} onScroll={measure}>
           <p className="cpp-path__detailLede">{d.lede}</p>
 
@@ -214,6 +215,18 @@ function PathPanel({
           </ul>
 
           <p className="cpp-path__note">{d.note}</p>
+
+          {/* Proof link. Lives inside the reveal, so `inert` is what keeps the
+              collapsed panel's link out of the tab order — aria-hidden alone
+              would strand focus on it. */}
+          {d.proof && (
+            <p className="cpp-path__proof">
+              {d.proof.body}{" "}
+              <Link className="cpp-path__proofLink" href={d.proof.action.href}>
+                {d.proof.action.label} →
+              </Link>
+            </p>
+          )}
         </div>
       </div>
 

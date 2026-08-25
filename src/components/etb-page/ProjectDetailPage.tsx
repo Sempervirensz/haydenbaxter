@@ -17,7 +17,7 @@ export default function ProjectDetailPage({ project }: Props) {
     <main className="etb-page">
       <Link href="/emerging-tech-builds" className="etb-page__back">
         <span aria-hidden="true">&larr;</span>
-        <span>Back to Emerging Tech Builds</span>
+        <span>Back to Selected AI Work</span>
       </Link>
 
       <header className="etb-page__hero">
@@ -49,7 +49,7 @@ export default function ProjectDetailPage({ project }: Props) {
 
       <Link href="/emerging-tech-builds" className="etb-page__backFooter">
         <span aria-hidden="true">&larr;</span>
-        <span>Back to Emerging Tech Builds</span>
+        <span>Back to Selected AI Work</span>
       </Link>
     </main>
   );

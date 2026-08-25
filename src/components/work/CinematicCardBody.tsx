@@ -5,7 +5,7 @@
 // section (WorkSectionCinematic) so the two never diverge.
 //
 //   - 01 WorldPulse   media  — full-bleed photo + hover-revealed frosted glass
-//   - 02 Emerging Tech panel — the deployed candy-bar gallery (ETBDetail)
+//   - 02 Selected AI Work panel — the deployed candy-bar gallery (ETBDetail)
 //   - 03 Supply Chain  panel — the deployed globe + journey (SupplyChainDetail)
 //   - 04 Consulting    media — cityscape + its built-in reveal (ConsultingHeroStage)
 //
@@ -30,7 +30,7 @@ export interface CardMeta {
 
 export const CINEMATIC_CARDS: CardMeta[] = [
   { id: 1, num: "01", name: "WorldPulse", tagline: "Digital product passports, made human.", kind: "media" },
-  { id: 2, num: "02", name: "Emerging Tech Builds", tagline: "Small tools, sharpened into systems.", kind: "panel" },
+  { id: 2, num: "02", name: "Selected AI Work", tagline: "Real problems, turned into working solutions.", kind: "panel" },
   { id: 3, num: "03", name: "Supply Chain", tagline: "Eight years across Asia, systemized.", kind: "panel" },
   { id: 4, num: "04", name: "Consulting", tagline: "Strategy that ships.", kind: "media" },
 ];

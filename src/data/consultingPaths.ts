@@ -58,6 +58,8 @@ export interface ConsultingPath {
     signals: string[];
     /** One supporting line above the actions. */
     note: string;
+    /** Optional pointer to the work that proves the claim. */
+    proof?: { body: string; action: DestinationAction };
   };
   primary: DestinationAction;
   secondary: DestinationAction;
@@ -116,6 +118,12 @@ const AI: ConsultingPath = {
     ],
     // work.ts → consulting.identityLine
     note: "Design × Domain knowledge × AI × Systems thinking.",
+    // Proof, not claims — the same AI systems the homepage's Screen 2 shows.
+    proof: {
+      body:
+        "Every claim here is backed by something built. Selected AI Work is the proof: real problems turned into working solutions you can look at.",
+      action: { label: "See Selected AI Work", href: "/emerging-tech-builds" },
+    },
   },
   primary: { label: "Discuss a project", href: CALENDLY_URL, external: true },
   secondary: { label: "Send an email", href: EMAIL_HREF },

@@ -11,11 +11,11 @@ const DESCRIPTION =
   "A source-connected editorial intelligence system for defensible research and publishing.";
 
 export const metadata: Metadata = {
-  title: "Cortex | Emerging Tech Builds",
+  title: "Cortex | Selected AI Work",
   description: DESCRIPTION,
   alternates: { canonical: "/emerging-tech-builds/cortex" },
   openGraph: {
-    title: "Cortex | Emerging Tech Builds | Hayden Baxter",
+    title: "Cortex | Selected AI Work | Hayden Baxter",
     description: DESCRIPTION,
     url: "/emerging-tech-builds/cortex",
   },
@@ -32,7 +32,7 @@ export default function CortexPage() {
           description: DESCRIPTION,
           keywords: PROJECT.tags,
           image: PROJECT.screenshot,
-          parentName: "Emerging Tech Builds",
+          parentName: "Selected AI Work",
           parentPath: "/emerging-tech-builds",
         })}
       />

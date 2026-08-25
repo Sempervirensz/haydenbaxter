@@ -11,11 +11,11 @@ const DESCRIPTION =
   "A personal operating system that turns natural-language check-ins into useful patterns for habits, energy, and follow-through.";
 
 export const metadata: Metadata = {
-  title: "AtomicOS | Emerging Tech Builds",
+  title: "AtomicOS | Selected AI Work",
   description: DESCRIPTION,
   alternates: { canonical: "/emerging-tech-builds/atomic-os" },
   openGraph: {
-    title: "AtomicOS | Emerging Tech Builds | Hayden Baxter",
+    title: "AtomicOS | Selected AI Work | Hayden Baxter",
     description: DESCRIPTION,
     url: "/emerging-tech-builds/atomic-os",
   },
@@ -32,7 +32,7 @@ export default function AtomicOSPage() {
           description: DESCRIPTION,
           keywords: PROJECT.tags,
           image: PROJECT.screenshot,
-          parentName: "Emerging Tech Builds",
+          parentName: "Selected AI Work",
           parentPath: "/emerging-tech-builds",
         })}
       />

@@ -7,7 +7,7 @@ import { collectionPageGraph } from "@/data/schema";
 import { notFound } from "next/navigation";
 
 const DESCRIPTION =
-  "AI and emerging technology products built by Hayden Baxter, including Cortex, AtomicOS, and CaseBrief.";
+  "AI systems Hayden Baxter has designed and built to solve real business problems, including Cortex, AtomicOS, and CaseBrief.";
 
 // Only the projects that have their own detail route are listed as parts.
 const PROJECT_PAGES = [
@@ -17,11 +17,11 @@ const PROJECT_PAGES = [
 ];
 
 export const metadata: Metadata = {
-  title: "Emerging Tech Builds",
+  title: "Selected AI Work",
   description: DESCRIPTION,
   alternates: { canonical: "/emerging-tech-builds" },
   openGraph: {
-    title: "Emerging Tech Builds | Hayden Baxter",
+    title: "Selected AI Work | Hayden Baxter",
     description: DESCRIPTION,
     url: "/emerging-tech-builds",
   },
@@ -36,7 +36,7 @@ export default function EmergingTechBuildsPage() {
       <JsonLd
         data={collectionPageGraph({
           path: "/emerging-tech-builds",
-          name: "Emerging Tech Builds",
+          name: "Selected AI Work",
           description: DESCRIPTION,
           parts: PROJECT_PAGES,
         })}

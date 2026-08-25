@@ -12,7 +12,7 @@ Canonical origin: https://www.haydenbaxter.com
 ## Primary pages
 
 - [Home](https://www.haydenbaxter.com/): Overview of Hayden Baxter's work, experience, and capabilities. Note that the Work section is an interactive, client-rendered experience; the summaries on this page describe the same material.
-- [Emerging Tech Builds](https://www.haydenbaxter.com/emerging-tech-builds): AI and emerging technology product portfolio, with front-end builds and concept-stage explorations listed side by side.
+- [Selected AI Work](https://www.haydenbaxter.com/emerging-tech-builds): AI systems built to solve real business problems, from working front-end builds to concept-stage explorations.
 - [Journal](https://www.haydenbaxter.com/blog): Writing on AI, supply chains, sustainability, and product building.
 
 ## Projects
