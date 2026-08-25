@@ -120,6 +120,21 @@ export const LAB_GROUPS: LabGroup[] = [
     items: [
       { label: "ETB lab", path: "/etb-lab" },
       { label: "ETB overlay sandbox", path: "/etb-overlay-sandbox" },
+      {
+        label: "AtomicOS mark lab",
+        path: "/atomicos-mark-lab",
+        note: "AtomicOS only \u00b7 4 hero treatments for the embroidered atom \u2014 free float / orbit field / ledger plate / cadence row \u2014 over the real page",
+      },
+      {
+        label: "CaseBrief mark lab",
+        path: "/casebrief-mark-lab",
+        note: "CaseBrief only \u00b7 4 hero treatments for the cube \u2014 navy plinth / corner monolith / case stack / chip lockup \u2014 over the real page",
+      },
+      {
+        label: "Cortex mark lab",
+        path: "/cortex-mark-lab",
+        note: "Cortex only \u00b7 7 hero treatments for the embroidered brain \u2014 plate / lockup / field / disc seal / macro / sleeve / persistent badge \u2014 over the real page",
+      },
     ],
   },
   {

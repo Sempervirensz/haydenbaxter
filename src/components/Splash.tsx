@@ -13,6 +13,9 @@ const FADE_DURATION = 700; // ms for the overlay to fade out
 const NO_SPLASH_ROUTES = [
   "/procurebridge-preview",
   "/emerging-tech-builds",
+  "/cortex-mark-lab",
+  "/atomicos-mark-lab",
+  "/casebrief-mark-lab",
   "/atomicos-preview",
   "/lab/scroll",
   "/cta-lab",

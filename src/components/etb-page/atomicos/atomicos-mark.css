@@ -1,0 +1,286 @@
+/* ──────────────────────────────────────────────────────────────────────────
+   AtomicOS mark treatments — project-scoped art direction.
+
+   Scoped under `.aos-skin`, so it can only reach a page that opts in. Shares
+   nothing with Cortex or CaseBrief; the class prefix differs on purpose.
+
+   The governing fact about this mark: it is cream thread on near-black
+   fabric, photographed square. Its ground is already the page's ground, so —
+   unlike Cortex — it needs no plate, no crop and no frame. Crushing the
+   fabric's blacks is the whole technique, and everything below is built on it.
+   ────────────────────────────────────────────────────────────────────────── */
+
+.aos-skin {
+  /* Cream, read off the stitching, and the faint gold the thread catches. */
+  --aos-cream: #efe7d6;
+  --aos-thread: #d8cbb0;
+  --aos-gold: #c8a86a;
+}
+
+/* The technique, measured rather than guessed.
+ *
+ * The fabric reads at luminance 18/255; the page is #0a0a0a, which is 10. So
+ * the crush has to take 18 to zero without flattening the thread. Filters
+ * apply as v' = ((v x brightness) - 0.5) x contrast + 0.5, so:
+ *
+ *   fabric  0.071 x 0.88 = 0.063 -> (0.063 - 0.5) x 1.7 + 0.5 = -0.24 -> 0
+ *   cream   1.000 x 0.88 = 0.880 -> (0.880 - 0.5) x 1.7 + 0.5 =  1.15 -> 1
+ *   midtone 0.500 x 0.88 = 0.440 -> (0.440 - 0.5) x 1.7 + 0.5 =  0.40
+ *
+ * — fabric gone, cream held, and enough midtone left that the stitching keeps
+ * its modelling.
+ *
+ * The mask cleans up the falloff, and it MUST be `closest-side`: the default
+ * `farthest-corner` puts the circle's edge at the corner, which leaves the
+ * left and right edges of the frame ~67% opaque and the square plainly
+ * visible. That was the first version's bug. */
+.aos-float__img,
+.aos-orbit__img,
+.aos-ledger__img,
+.aos-cadence__img {
+  filter: brightness(0.88) contrast(1.7);
+  -webkit-mask-image: radial-gradient(
+    closest-side circle at 50% 50%,
+    #000 58%,
+    rgba(0, 0, 0, 0.4) 80%,
+    transparent 100%
+  );
+  mask-image: radial-gradient(
+    closest-side circle at 50% 50%,
+    #000 58%,
+    rgba(0, 0, 0, 0.4) 80%,
+    transparent 100%
+  );
+}
+
+/* ── A · Free float ───────────────────────────────────────────────────────
+   No container, no border, no shadow. The atom sits in the type as though it
+   were set with it — only possible because the fabric is now page black. */
+
+.aos-hero--float {
+  gap: 16px;
+  /* The atom fills only the middle ~53% of its frame, so every offset below
+     is expressed against the rendered size rather than hard-coded. */
+  --aos-float-size: clamp(210px, 26vw, 340px);
+}
+
+.aos-float {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 0;
+  /* Pull the frame's dead left margin back off the page edge. */
+  margin-left: calc(var(--aos-float-size) * -0.22);
+}
+
+.aos-float__img {
+  display: block;
+  width: var(--aos-float-size);
+  height: auto;
+}
+
+.aos-float__text {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  /* Closes the frame's dead right margin. Held at -0.06 rather than tighter:
+     the mark's mask leaves a soft glow past the outermost orbit, and at -0.13
+     the title's first letter sat inside it and rendered visibly greyed. */
+  margin-left: calc(var(--aos-float-size) * -0.06);
+}
+
+/* ── B · Orbit field ──────────────────────────────────────────────────────
+   The atom bigger than the hero, bled off the left edge and dropped to a
+   structural whisper. The title sets into the space the orbits leave. */
+
+.aos-hero--orbit {
+  gap: 0;
+  padding-bottom: clamp(24px, 3.5vw, 40px);
+}
+
+.aos-orbit {
+  position: relative;
+  min-height: clamp(300px, 34vw, 440px);
+  display: flex;
+  align-items: center;
+}
+
+.aos-orbit__img {
+  position: absolute;
+  z-index: 0;
+  top: 50%;
+  left: clamp(-300px, -20vw, -140px);
+  width: clamp(360px, 46vw, 620px);
+  height: auto;
+  transform: translateY(-50%);
+  pointer-events: none;
+  /* Held well below the type: this is a field, not a picture. */
+  opacity: 0.34;
+}
+
+.aos-orbit__text {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  /* Pushed right so the type sits outside the nucleus, in the open part of
+     the orbit rather than on top of it. */
+  padding-left: clamp(0px, 13vw, 200px);
+}
+
+/* ── C · Ledger plate ─────────────────────────────────────────────────────
+   The austere read, and the one closest to the mark's own character: two
+   hairlines, the mark centred small between them, mono metadata either side.
+   A specification sheet rather than a poster. */
+
+.aos-hero--ledger {
+  gap: 18px;
+}
+
+.aos-ledger {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.aos-ledger__rule {
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(239, 231, 214, 0.22) 12%,
+    rgba(239, 231, 214, 0.22) 88%,
+    transparent
+  );
+}
+
+.aos-ledger__row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(12px, 3vw, 32px);
+  /* The mark's own frame carries most of the padding, so the row is tight. */
+  padding: clamp(4px, 1vw, 12px) 0;
+}
+
+.aos-ledger__img {
+  width: clamp(150px, 19vw, 240px);
+  height: auto;
+  justify-self: center;
+}
+
+.aos-ledger__meta {
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(239, 231, 214, 0.42);
+}
+
+.aos-ledger__meta--end {
+  text-align: right;
+}
+
+/* ── D · Cadence row ──────────────────────────────────────────────────────
+   AtomicOS is a product about repetition, so the mark repeats: five atoms
+   fading out to the right. The logo stops being a stamp and becomes a rhythm
+   — an argument no other build here could borrow. */
+
+.aos-hero--cadence {
+  gap: 14px;
+  --aos-cadence-size: clamp(120px, 15vw, 200px);
+}
+
+.aos-cadence {
+  display: flex;
+  align-items: center;
+  /* Overlapped rather than spaced: the orbits interlock the way repeated days
+     do, instead of reading as five separate logos in a row. */
+  gap: calc(var(--aos-cadence-size) * -0.3);
+  margin-left: calc(var(--aos-cadence-size) * -0.22);
+  margin-bottom: calc(var(--aos-cadence-size) * -0.1);
+}
+
+.aos-cadence__img {
+  height: auto;
+  flex: none;
+}
+
+/* ── Narrow ───────────────────────────────────────────────────────────────
+   Nothing sits beside anything below 700px, and the bleeds that give the wide
+   compositions their scale just clip the mark on a phone. */
+
+@media (max-width: 700px) {
+  .aos-hero--float {
+    --aos-float-size: clamp(230px, 66vw, 300px);
+  }
+  .aos-float {
+    grid-template-columns: 1fr;
+    margin-left: calc(var(--aos-float-size) * -0.2);
+  }
+  .aos-float__text {
+    margin-left: 0;
+    /* The frame's dead bottom margin already spaces these. */
+    margin-top: calc(var(--aos-float-size) * -0.14);
+  }
+
+  .aos-orbit {
+    min-height: clamp(360px, 96vw, 480px);
+  }
+  .aos-orbit__img {
+    top: 30%;
+    left: 50%;
+    width: clamp(300px, 88vw, 420px);
+    transform: translate(-50%, -30%);
+    opacity: 0.26;
+  }
+  .aos-orbit__text {
+    padding-left: 0;
+    padding-top: clamp(150px, 44vw, 220px);
+  }
+
+  .aos-ledger__row {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    gap: 8px;
+  }
+  .aos-ledger__meta,
+  .aos-ledger__meta--end {
+    text-align: center;
+  }
+
+  .aos-hero--cadence {
+    --aos-cadence-size: clamp(110px, 34vw, 150px);
+  }
+  /* Three atoms, not five — the tail is off the edge of a phone anyway. */
+  .aos-cadence__img:nth-child(n + 4) {
+    display: none;
+  }
+}
+
+/* ── Motion ───────────────────────────────────────────────────────────────
+   Static by default. The only motion is a slow settle on the free-floating
+   mark under a pointer, and it goes away under reduced-motion. */
+
+.aos-float__img {
+  transition: filter 300ms ease,
+    transform 300ms cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+@media (hover: hover) {
+  .aos-float:hover .aos-float__img {
+    transform: translateY(-2px);
+    filter: brightness(0.95) contrast(1.72);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .aos-float__img {
+    transition: none;
+  }
+  .aos-float:hover .aos-float__img {
+    transform: none;
+  }
+}

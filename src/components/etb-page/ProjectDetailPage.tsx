@@ -1,16 +1,21 @@
 import Link from "next/link";
+import type { ReactNode } from "react";
 import type { ETBDemoDetail, ETBProject } from "@/data/work";
 import DemoScreenshots from "@/components/etb-page/DemoScreenshots";
 import DemoStats from "@/components/etb-page/DemoStats";
 
 interface Props {
   project: ETBProject;
+  /** Opt-in replacement for the default hero, so a single project can be
+   *  art-directed without every other build inheriting the change. Omitted —
+   *  which is every page today — the hero below renders exactly as before. */
+  hero?: ReactNode;
 }
 
 /** Standalone project detail page layout. When a project has `demo` content
  *  it renders a real showcase (screenshots + write-up); otherwise it falls
  *  back to quiet placeholder sections that read as deliberate. */
-export default function ProjectDetailPage({ project }: Props) {
+export default function ProjectDetailPage({ project, hero }: Props) {
   const heroCategory = project.demo?.heroCategory ?? project.category;
 
   return (
@@ -20,26 +25,28 @@ export default function ProjectDetailPage({ project }: Props) {
         <span>Back to Selected AI Work</span>
       </Link>
 
-      <header className="etb-page__hero">
-        {project.mark ? (
-          /* eslint-disable-next-line @next/next/no-img-element */
-          <img
-            className="etb-page__mark"
-            src={project.mark.src}
-            alt={project.mark.alt}
-            width={project.mark.width}
-            height={project.mark.height}
-          />
-        ) : null}
-        <span className="etb-page__category">{heroCategory}</span>
-        <h1 className="etb-page__title">{project.name}</h1>
-        <p className="etb-page__oneLiner">{project.oneLiner}</p>
-        <div className="etb-page__tags">
-          {project.tags.map((tag) => (
-            <span key={tag} className="etb-page__tag">{tag}</span>
-          ))}
-        </div>
-      </header>
+      {hero ?? (
+        <header className="etb-page__hero">
+          {project.mark ? (
+            /* eslint-disable-next-line @next/next/no-img-element */
+            <img
+              className="etb-page__mark"
+              src={project.mark.src}
+              alt={project.mark.alt}
+              width={project.mark.width}
+              height={project.mark.height}
+            />
+          ) : null}
+          <span className="etb-page__category">{heroCategory}</span>
+          <h1 className="etb-page__title">{project.name}</h1>
+          <p className="etb-page__oneLiner">{project.oneLiner}</p>
+          <div className="etb-page__tags">
+            {project.tags.map((tag) => (
+              <span key={tag} className="etb-page__tag">{tag}</span>
+            ))}
+          </div>
+        </header>
+      )}
 
       {project.demo ? (
         <DemoShowcase demo={project.demo} projectName={project.name} />

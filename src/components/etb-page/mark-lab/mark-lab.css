@@ -1,0 +1,244 @@
+/* Lab chrome only — the switcher rail that sits over the real Cortex page.
+   None of this ships with a direction; it exists to make the four heroes
+   comparable in situ. */
+
+.cxlab {
+  position: relative;
+  min-height: 100vh;
+}
+
+.cxlab-rail {
+  position: fixed;
+  z-index: 60;
+  top: clamp(12px, 2vw, 20px);
+  right: clamp(12px, 2vw, 20px);
+  width: min(300px, calc(100vw - 24px));
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+.cxlab-rail__toggle {
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(16, 16, 16, 0.92);
+  color: rgba(255, 255, 255, 0.76);
+  cursor: pointer;
+  transition: border-color 160ms ease, color 160ms ease;
+}
+
+.cxlab-rail__toggle:hover,
+.cxlab-rail__toggle:focus-visible {
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.44);
+  outline: none;
+}
+
+.cxlab-rail__body {
+  width: 100%;
+  padding: 16px;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(12, 12, 12, 0.95);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.6);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.cxlab-rail__title {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.42);
+}
+
+/* Cross-lab switcher — three project pills, the current one filled. */
+.cxlab-rail__labs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  padding-bottom: 12px;
+  margin-bottom: 2px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.09);
+}
+
+.cxlab-lab {
+  flex: 1 1 auto;
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  padding: 7px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.03);
+  color: rgba(255, 255, 255, 0.6);
+  text-decoration: none;
+  transition: background 150ms ease, color 150ms ease, border-color 150ms ease;
+}
+
+.cxlab-lab:hover {
+  color: rgba(255, 255, 255, 0.94);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.cxlab-lab:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.6);
+  outline-offset: 2px;
+}
+
+.cxlab-lab[data-active="true"] {
+  color: #0a0a0a;
+  background: rgba(255, 255, 255, 0.9);
+  border-color: transparent;
+}
+
+/* Shortcut legend. */
+.cxlab-rail__keys {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  color: rgba(255, 255, 255, 0.34);
+}
+
+.cxlab-rail__keys kbd {
+  font: inherit;
+  padding: 1px 4px;
+  margin: 0 1px;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.56);
+}
+
+.cxlab-rail__group {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.cxlab-rail__groupTitle {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.cxlab-rail__set {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* DYMO-flavoured: mono, inset, tactile press — matching the site's label
+   language rather than a generic segmented control. */
+.cxlab-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  text-align: left;
+  font-family: var(--font-mono);
+  font-size: var(--text-control);
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  padding: 9px 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.03);
+  color: rgba(255, 255, 255, 0.68);
+  cursor: pointer;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  transition: background 150ms ease, color 150ms ease, border-color 150ms ease,
+    transform 120ms ease;
+}
+
+.cxlab-btn:hover {
+  color: rgba(255, 255, 255, 0.92);
+  border-color: rgba(255, 255, 255, 0.26);
+}
+
+.cxlab-btn:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.6);
+  outline-offset: 2px;
+}
+
+.cxlab-btn:active {
+  transform: translateY(1px);
+}
+
+.cxlab-btn[data-active="true"] {
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.09);
+}
+
+.cxlab-btn__key {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 4px;
+  font-size: 11px;
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.cxlab-btn[data-active="true"] .cxlab-btn__key {
+  background: rgba(255, 255, 255, 0.18);
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.cxlab-rail__note {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: var(--text-meta);
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.52);
+}
+
+/* Narrow: the collapsed toggle sat on top of the page's own back link, so it
+   moves to the bottom corner where nothing else lives. */
+@media (max-width: 900px) {
+  .cxlab-rail {
+    top: auto;
+    bottom: clamp(12px, 3vw, 20px);
+    /* Left, so it does not sit on direction G's pinned badge. */
+    right: auto;
+    left: clamp(12px, 3vw, 20px);
+    align-items: flex-start;
+  }
+  .cxlab[data-rail="closed"] .cxlab-rail__toggle {
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.7);
+  }
+  .cxlab-rail__body {
+    max-height: 70vh;
+    overflow-y: auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cxlab-btn,
+  .cxlab-rail__toggle,
+  .cxlab-lab {
+    transition: none;
+  }
+  .cxlab-btn:active {
+    transform: none;
+  }
+}

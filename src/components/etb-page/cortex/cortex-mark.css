@@ -1,0 +1,752 @@
+/* ──────────────────────────────────────────────────────────────────────────
+   Cortex mark treatments — project-scoped art direction.
+
+   Everything here is nested under `.cortex-skin`, so it can only reach a page
+   that opts in. The shared ETB detail template (.etb-page__*) is untouched:
+   AtomicOS, CaseBrief and the rest render exactly as they did. When Cortex
+   picks a direction, this file ships with it and the others get their own.
+
+   The palette is read off the embroidery itself — nine threads, warm to cool,
+   against the charcoal knit the patch is stitched into.
+   ────────────────────────────────────────────────────────────────────────── */
+
+.cortex-skin {
+  --cx-red: #b8382f;
+  --cx-orange: #cf7a2c;
+  --cx-gold: #d2a32c;
+  --cx-green: #4e9a5b;
+  --cx-teal: #2f8b87;
+  --cx-blue: #2d6fb2;
+  --cx-indigo: #3a4a9a;
+  --cx-violet: #7f66b0;
+  --cx-mauve: #a87fb6;
+  --cx-fabric: #2b2f33;
+  --cx-spectrum: linear-gradient(
+    90deg,
+    var(--cx-red),
+    var(--cx-orange),
+    var(--cx-gold),
+    var(--cx-green),
+    var(--cx-teal),
+    var(--cx-blue),
+    var(--cx-indigo),
+    var(--cx-violet)
+  );
+}
+
+/* ── A · Specimen plate ───────────────────────────────────────────────────
+   The mark presented as a mounted plate the full width of the measure, with
+   a mono caption strip along its bottom edge. Reads like a figure in a
+   monograph: the photograph stays a photograph and the page annotates it. */
+
+.cortex-hero--plate {
+  gap: 16px;
+}
+
+.cortex-plate {
+  position: relative;
+  margin: 0 0 8px;
+  border-radius: 14px;
+  overflow: clip;
+  isolation: isolate;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: var(--cx-fabric);
+  box-shadow:
+    0 26px 64px rgba(0, 0, 0, 0.58),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+.cortex-plate__img {
+  display: block;
+  width: 100%;
+  height: clamp(220px, 30vw, 380px);
+  object-fit: cover;
+  /* The brain sits high in the 1024² frame; 42% keeps it centred in the crop
+     and leaves plain knit under it for the caption strip to sit on. */
+  object-position: 50% 42%;
+}
+
+/* Vignette + bottom fade so the plate settles into the page ground instead of
+   ending on a hard photographic edge. Sits under the caption. */
+.cortex-plate::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background:
+    radial-gradient(125% 95% at 50% 38%, transparent 42%, rgba(10, 10, 10, 0.6) 100%),
+    linear-gradient(to bottom, transparent 55%, rgba(10, 10, 10, 0.82) 100%);
+}
+
+.cortex-plate__caption {
+  position: absolute;
+  z-index: 2;
+  inset: auto 0 0 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px 20px;
+  padding: 13px clamp(14px, 2.5vw, 22px);
+  border-top: 1px solid rgba(255, 255, 255, 0.09);
+  background: linear-gradient(to top, rgba(10, 10, 10, 0.88), rgba(10, 10, 10, 0.32));
+}
+
+.cortex-plate__captionText {
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.66);
+}
+
+/* The palette, spelled out. Nine threads in the order they run across the
+   embroidery — the page's colour language stated once, up front. */
+.cortex-plate__threads {
+  display: flex;
+  gap: 5px;
+}
+
+.cortex-plate__threads i {
+  display: block;
+  width: 16px;
+  height: 5px;
+  border-radius: 2px;
+  opacity: 0.9;
+}
+
+/* ── B · Masthead lockup ──────────────────────────────────────────────────
+   Patch and title side by side. The mark goes from a 96px seal to a ~230px
+   object with a merrowed stitch edge, and the thread palette moves into the
+   page: a spectrum hairline under the hero, tags tinted in thread. */
+
+.cortex-hero--lockup {
+  position: relative;
+  gap: 0;
+  border-bottom-color: transparent;
+}
+
+.cortex-hero--lockup::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 -1px 0;
+  height: 1px;
+  background: var(--cx-spectrum);
+  opacity: 0.55;
+}
+
+.cortex-lockup {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(20px, 3.5vw, 40px);
+}
+
+.cortex-patch {
+  position: relative;
+  width: clamp(168px, 20vw, 232px);
+  aspect-ratio: 1;
+  border-radius: 22px;
+  overflow: clip;
+  isolation: isolate;
+  box-shadow:
+    0 20px 48px rgba(0, 0, 0, 0.62),
+    inset 0 1px 0 rgba(255, 255, 255, 0.07);
+}
+
+.cortex-patch__img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 44%;
+}
+
+/* Merrowed border — the stitched edge a real patch is finished with. */
+.cortex-patch__stitch {
+  position: absolute;
+  inset: 9px;
+  border-radius: 14px;
+  border: 1.5px dashed rgba(240, 235, 225, 0.32);
+  pointer-events: none;
+}
+
+.cortex-lockup__text {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Tags in thread rather than the shared cobalt. Cycles by three so it holds
+   whatever number of tags the record carries. */
+.cortex-skin[data-cortex-variant="lockup"] .etb-page__tag:nth-child(3n + 1) {
+  border-color: rgba(210, 163, 44, 0.38);
+  background: rgba(210, 163, 44, 0.09);
+  color: rgba(233, 206, 145, 0.94);
+}
+
+.cortex-skin[data-cortex-variant="lockup"] .etb-page__tag:nth-child(3n + 2) {
+  border-color: rgba(78, 154, 91, 0.38);
+  background: rgba(78, 154, 91, 0.09);
+  color: rgba(170, 215, 178, 0.94);
+}
+
+.cortex-skin[data-cortex-variant="lockup"] .etb-page__tag:nth-child(3n + 3) {
+  border-color: rgba(45, 111, 178, 0.42);
+  background: rgba(45, 111, 178, 0.1);
+  color: rgba(163, 194, 236, 0.94);
+}
+
+@media (max-width: 620px) {
+  .cortex-lockup {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  /* Stacked, the patch has the whole column to itself and the 20vw rule
+     leaves it looking like a thumbnail again. */
+  .cortex-patch {
+    width: clamp(200px, 58vw, 260px);
+  }
+}
+
+/* The plate's letterbox crop is the point on a wide measure, but at phone
+   width the same slice keeps only a band across the middle of the brain.
+   A 5:4 frame there shows the whole mark without changing the treatment. */
+@media (max-width: 620px) {
+  .cortex-plate__img {
+    height: auto;
+    aspect-ratio: 5 / 4;
+  }
+}
+
+/* ── C · Fabric field ─────────────────────────────────────────────────────
+   The mark stops being an object on the page and becomes the ground under
+   it. The photograph breaks the 82ch measure to a full-bleed textile band;
+   the title sits in the black the band fades into, so the page reads as
+   growing out of the fabric rather than sitting beside a picture of it. */
+
+.cortex-hero--field {
+  gap: 16px;
+  padding-bottom: clamp(16px, 2.5vw, 24px);
+}
+
+.cortex-field {
+  position: relative;
+  /* Bleed past the page's measure and gutters to the viewport edges. The root
+     already clips overflow-x, so the scrollbar gutter costs nothing visible. */
+  margin-inline: calc(50% - 50vw);
+  min-height: clamp(320px, 46vw, 520px);
+  display: flex;
+  align-items: flex-end;
+  overflow: clip;
+  isolation: isolate;
+  background: var(--cx-fabric);
+}
+
+/* The knit ground: the same photograph blurred out to pure texture, blown
+   past the frame so no edge of it is ever visible. */
+.cortex-field__ground {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 55%;
+  transform: scale(1.18);
+  /* Desaturated hard on purpose: blurred at full chroma the photograph reads
+     as a smeared rainbow, which competes with the sharp mark on top of it.
+     Pulled back to near-grey it reads as what it is — dark knit. */
+  filter: blur(46px) brightness(0.42) saturate(0.3);
+}
+
+/* Top edge darkened just enough to seat the band under the back link; the
+   middle left clear so the field carries some colour; the bottom taken to
+   solid page black so the type below has real contrast to sit on. */
+.cortex-field__veil {
+  position: absolute;
+  inset: 0;
+  /* Above the mark, not just the ground. Underneath it the sharp patch kept
+     full brightness while the knit around it fell away to black, and the band
+     ended on a hard rectangle of lit fabric. */
+  z-index: 2;
+  pointer-events: none;
+  background: linear-gradient(
+    to bottom,
+    rgba(10, 10, 10, 0.72) 0%,
+    rgba(10, 10, 10, 0.28) 24%,
+    rgba(10, 10, 10, 0.36) 58%,
+    rgba(10, 10, 10, 0.86) 88%,
+    #0a0a0a 100%
+  );
+}
+
+/* The mark itself, bigger than the measure and running off the right edge of
+   the viewport. The elliptical mask dissolves its own fabric into the ground
+   so there is no photographic seam — the two layers are the same knit. */
+.cortex-field__mark {
+  position: absolute;
+  z-index: 1;
+  /* Held in the upper three-quarters of the band: the last stretch of the
+     veil goes to solid page black to carry the title, and a mark hanging into
+     it just reads as mud. */
+  top: 4%;
+  /* Just enough bleed to read as bigger than the page. The mask has already
+     faded this edge to nothing, so what the viewport clips is invisible. */
+  right: -2vw;
+  width: clamp(260px, 32vw, 430px);
+  height: auto;
+  pointer-events: none;
+  /* Feather the four edges rather than vignette from the centre: the brain
+     fills ~85% of its frame, so any circular fade wide enough to hide the
+     seam also eats the outer lobes. Two crossed linear masks intersected
+     leave the middle untouched and dissolve only the border of knit. */
+  -webkit-mask-image:
+    linear-gradient(to right, transparent 0%, #000 13%, #000 87%, transparent 100%),
+    linear-gradient(to bottom, transparent 0%, #000 13%, #000 87%, transparent 100%);
+  -webkit-mask-composite: source-in;
+  mask-image:
+    linear-gradient(to right, transparent 0%, #000 13%, #000 87%, transparent 100%),
+    linear-gradient(to bottom, transparent 0%, #000 13%, #000 87%, transparent 100%);
+  mask-composite: intersect;
+}
+
+.cortex-field__text {
+  position: relative;
+  z-index: 3;
+  width: 100%;
+  max-width: min(100% - 2 * var(--page-gutter), 82ch);
+  margin: 0 auto;
+  padding: 0 clamp(16px, 4vw, 32px) clamp(18px, 3vw, 30px);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Narrow: there is no room beside anything, so the asymmetry goes away. The
+   mark centres in the upper band and the title takes the black below it —
+   bleeding it off the right edge here just clipped the blue lobe off. */
+@media (max-width: 760px) {
+  .cortex-field {
+    min-height: clamp(430px, 122vw, 580px);
+  }
+  .cortex-field__mark {
+    top: 2%;
+    right: auto;
+    left: 50%;
+    width: clamp(260px, 76vw, 400px);
+    transform: translateX(-50%);
+  }
+}
+
+.cortex-hero--field .etb-page__title {
+  text-shadow: 0 2px 24px rgba(0, 0, 0, 0.8);
+}
+
+/* ── D · Disc seal ────────────────────────────────────────────────────────
+   The mark cut free of its rectangle. A circular crop plus a vignette that
+   takes the knit to page black at the rim, so it reads as a die-cut emblem
+   floating on the page rather than a photograph of one. A mono legend turns
+   slowly around it — the site already speaks disc, and this is that language
+   applied to Cortex. The lockup is mirrored against B on purpose: type left,
+   emblem right. */
+
+.cortex-hero--seal {
+  gap: 0;
+}
+
+.cortex-seal {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: clamp(20px, 4vw, 48px);
+}
+
+.cortex-seal__text {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.cortex-seal__emblem {
+  position: relative;
+  width: clamp(212px, 28vw, 340px);
+  aspect-ratio: 1;
+  flex: none;
+}
+
+/* Inset from the emblem box so the type ring has a track of its own outside
+   it — the ring path sits at 92% of the half-box, the disc stops at 85%. */
+.cortex-seal__disc {
+  position: absolute;
+  inset: 15%;
+  border-radius: 50%;
+  overflow: clip;
+  isolation: isolate;
+}
+
+.cortex-seal__img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 44%;
+}
+
+/* Takes the cloth to black at the rim so there is no hard photographic circle
+   — the emblem dissolves into the page instead of being stamped onto it. */
+.cortex-seal__vignette {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    circle at 50% 47%,
+    transparent 52%,
+    rgba(10, 10, 10, 0.55) 78%,
+    rgba(10, 10, 10, 0.95) 94%,
+    #0a0a0a 100%
+  );
+}
+
+.cortex-seal__ring {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  animation: cortex-seal-turn 72s linear infinite;
+}
+
+.cortex-seal__ring text {
+  font-family: var(--font-mono);
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  fill: rgba(255, 255, 255, 0.42);
+}
+
+@keyframes cortex-seal-turn {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 700px) {
+  .cortex-seal {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+  /* Emblem first when it stacks — it is the thing being argued for. */
+  .cortex-seal__emblem {
+    order: -1;
+    width: clamp(230px, 66vw, 300px);
+  }
+}
+
+/* ── E · Macro band ───────────────────────────────────────────────────────
+   The opposite bet to C. Instead of showing the whole mark bigger, show the
+   craft: a full-bleed strip of thread at 3.4× where individual stitches are
+   the subject, with the complete mark kept small and sharp beside the title
+   so the logo still reads as a logo. */
+
+.cortex-hero--macro {
+  gap: clamp(18px, 2.5vw, 26px);
+}
+
+.cortex-macro {
+  position: relative;
+  margin-inline: calc(50% - 50vw);
+  height: clamp(170px, 22vw, 280px);
+  overflow: clip;
+  isolation: isolate;
+  background: var(--cx-fabric);
+}
+
+.cortex-macro__zoom {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* Sits on the warm lobes — red into gold — where the stitch direction is
+     clearest. The zoom is capped by the asset, not by taste: the mark is a
+     1024² render, a full-bleed band already upscales it ~1.4×, and anything
+     past ~1.6 on top of that stops being thread and becomes mush. A higher-res
+     master would let this go properly macro. */
+  object-position: 34% 32%;
+  transform: scale(1.6);
+  transform-origin: 34% 32%;
+}
+
+.cortex-macro__veil {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    to bottom,
+    #0a0a0a 0%,
+    rgba(10, 10, 10, 0.28) 20%,
+    rgba(10, 10, 10, 0.28) 74%,
+    #0a0a0a 100%
+  );
+}
+
+.cortex-macro__row {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(16px, 2.4vw, 26px);
+}
+
+.cortex-macro__chip {
+  width: clamp(88px, 9vw, 118px);
+  height: auto;
+  aspect-ratio: 1;
+  object-fit: cover;
+  object-position: 50% 44%;
+  border-radius: 12px;
+  flex: none;
+  box-shadow:
+    0 12px 30px rgba(0, 0, 0, 0.6),
+    inset 0 1px 0 rgba(255, 255, 255, 0.07);
+}
+
+.cortex-macro__head {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* ── F · Sleeve ───────────────────────────────────────────────────────────
+   The hero as a cover. One big square mark centred, and everything under it
+   centres with it — the only place on the site where the measure is centred,
+   which is exactly what makes it read as a sleeve rather than a page. */
+
+.cortex-hero--sleeve {
+  align-items: center;
+  text-align: center;
+  gap: 16px;
+}
+
+.cortex-sleeve {
+  position: relative;
+  width: clamp(240px, 34vw, 420px);
+  aspect-ratio: 1;
+  margin-bottom: 10px;
+  border-radius: 4px;
+  overflow: clip;
+  isolation: isolate;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow:
+    0 34px 80px rgba(0, 0, 0, 0.66),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.cortex-sleeve__img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 44%;
+}
+
+/* The raking highlight a printed sleeve catches under a light. */
+.cortex-sleeve__gloss {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    118deg,
+    rgba(255, 255, 255, 0.09) 0%,
+    transparent 38%,
+    transparent 62%,
+    rgba(0, 0, 0, 0.34) 100%
+  );
+}
+
+.cortex-hero--sleeve .etb-page__oneLiner {
+  max-width: 46ch;
+  text-wrap: balance;
+}
+
+.cortex-hero--sleeve .etb-page__tags {
+  justify-content: center;
+}
+
+/* ── G · Persistent badge ─────────────────────────────────────────────────
+   The one direction whose argument is not size. The hero mark is modest on
+   purpose; prominence comes from the mark never leaving — a corner badge pins
+   once the hero is past and holds for the whole page. */
+
+.cortex-hero--badge {
+  gap: 16px;
+}
+
+.cortex-badgeHero {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(16px, 2.6vw, 28px);
+}
+
+.cortex-badgeHero__disc {
+  position: relative;
+  width: clamp(104px, 11vw, 148px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  overflow: clip;
+  isolation: isolate;
+  flex: none;
+}
+
+.cortex-badgeHero__img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 44%;
+}
+
+.cortex-badgeHero__vignette {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    circle at 50% 47%,
+    transparent 54%,
+    rgba(10, 10, 10, 0.6) 82%,
+    #0a0a0a 100%
+  );
+}
+
+.cortex-badgeHero__text {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Zero-height marker dropped where the hero ends; the badge pins when it
+   passes the top of the viewport. */
+.cortex-badge__anchor {
+  height: 0;
+  margin: 0;
+  pointer-events: none;
+}
+
+.cortex-badge {
+  position: fixed;
+  z-index: 40;
+  /* Bottom-right: bottom-left is where Next parks its dev indicator, and a
+     badge that only looks wrong while you are building it is still wrong. */
+  right: clamp(14px, 2.2vw, 26px);
+  bottom: clamp(14px, 2.2vw, 26px);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 16px 7px 7px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(12, 12, 12, 0.92);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6);
+  opacity: 0;
+  transform: translateY(10px);
+  pointer-events: none;
+  transition: opacity 260ms ease, transform 260ms cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.cortex-badge[data-pinned="true"] {
+  opacity: 1;
+  transform: none;
+}
+
+.cortex-badge__img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: 50% 44%;
+  flex: none;
+}
+
+.cortex-badge__vignette {
+  position: absolute;
+  left: 7px;
+  top: 7px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  pointer-events: none;
+  background: radial-gradient(
+    circle at 50% 47%,
+    transparent 56%,
+    rgba(12, 12, 12, 0.72) 88%,
+    rgba(12, 12, 12, 0.95) 100%
+  );
+}
+
+.cortex-badge__name {
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.74);
+}
+
+@media (max-width: 620px) {
+  .cortex-badgeHero {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  .cortex-badgeHero__disc {
+    width: clamp(132px, 40vw, 168px);
+  }
+}
+
+/* ── Motion ───────────────────────────────────────────────────────────────
+   The treatments are static by design — the mark is a photographed object and
+   floating it would undercut that. The one motion here is a slow settle on
+   the plate and patch when a pointer rests on them, and it goes away under
+   reduced-motion. */
+
+.cortex-plate,
+.cortex-patch,
+.cortex-sleeve {
+  transition: transform 260ms cubic-bezier(0.22, 0.61, 0.36, 1),
+    box-shadow 260ms ease;
+}
+
+@media (hover: hover) {
+  .cortex-plate:hover,
+  .cortex-patch:hover,
+  .cortex-sleeve:hover {
+    transform: translateY(-2px);
+    box-shadow:
+      0 30px 72px rgba(0, 0, 0, 0.66),
+      inset 0 1px 0 rgba(255, 255, 255, 0.09);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cortex-plate,
+  .cortex-patch,
+  .cortex-sleeve,
+  .cortex-badge {
+    transition: none;
+  }
+  .cortex-plate:hover,
+  .cortex-patch:hover,
+  .cortex-sleeve:hover {
+    transform: none;
+  }
+  /* The seal's ring stops turning; the badge still appears, it just does not
+     travel to get there. */
+  .cortex-seal__ring {
+    animation: none;
+  }
+  .cortex-badge {
+    transform: none;
+  }
+}
