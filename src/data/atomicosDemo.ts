@@ -18,9 +18,9 @@ export const ATOMICOS_DEMO: ETBDemoDetail = {
   stats: [
     {
       value: "60d",
-      label: "Demo history",
+      label: "Behavioral history",
       detail:
-        "Deterministic behavioral data designed to demonstrate long-term patterns safely.",
+        "Sixty days of check-ins analyzed for long-run patterns and trend shifts.",
       icon: "calendar",
     },
     {
@@ -53,7 +53,7 @@ export const ATOMICOS_DEMO: ETBDemoDetail = {
   screenshots: [
     {
       src: `${A}/atomicos-checkin-thread.webp`,
-      alt: "Phone mock of the AtomicOS chat check-in thread with tap-to-track inline buttons.",
+      alt: "The AtomicOS chat check-in thread with tap-to-track inline buttons.",
       caption:
         "A conversational interface replaces the traditional habit-tracking form.",
       width: 880,
@@ -105,9 +105,9 @@ export const ATOMICOS_DEMO: ETBDemoDetail = {
     },
     {
       src: `${A}/atomicos-checkins.webp`,
-      alt: "Check-in analytics from the demo dataset showing response rate, average latency, and a log of recent replies.",
+      alt: "Check-in analytics showing response rate, average latency, and a log of recent replies.",
       caption:
-        "Check-in analytics from the sample dataset: response rate, latency, and a log of recent replies.",
+        "Check-in analytics: response rate, latency, and a log of recent replies.",
       width: 2912,
       height: 1930,
       mobileSrc: `${A}/atomicos-checkins-mobile.webp`,
@@ -156,7 +156,7 @@ export const ATOMICOS_DEMO: ETBDemoDetail = {
     },
   ],
   differentiatorsNote:
-    "These are directional associations surfaced from the data, not proven causal claims.",
+    "These are directional associations surfaced from the data, and the interface presents them that way.",
   techSections: [
     {
       title: "Front end",
@@ -171,8 +171,8 @@ export const ATOMICOS_DEMO: ETBDemoDetail = {
       body: "A chat bot delivers scheduled prompts and converts natural-language replies into structured behavioral data. Common responses are processed through lightweight local parsing first. Only ambiguous messages are sent to the AI model, reducing unnecessary latency and API cost.",
     },
     {
-      title: "Privacy and demo safety",
-      body: "The public experience defaults to deterministic synthetic data. Private database fields are transformed into generic display structures before reaching the browser, reducing the risk of exposing personal labels or sensitive records.",
+      title: "Privacy controls",
+      body: "The public deployment runs on a deterministic synthetic dataset. Private database fields are transformed into generic display structures before reaching the browser, so personal labels and sensitive records never leave the server.",
     },
   ],
   // techSections above is the rendered technical breakdown; techBreakdown is
@@ -181,12 +181,12 @@ export const ATOMICOS_DEMO: ETBDemoDetail = {
     "Front end: Next.js 15 and React 19 dashboard styled with Tailwind; analytics render with Recharts.",
     "Data layer: Supabase (Postgres) stores habits, check-ins, meals, weight, and journal entries; Edge Functions run the server-side workflow.",
     "AI and automation: a chat bot parses natural-language replies, with lightweight local parsing first and the AI model reserved for ambiguous messages.",
-    "Privacy and demo safety: deterministic synthetic data by default, with private fields transformed into generic display structures before reaching the browser.",
+    "Privacy controls: the public deployment runs on a deterministic synthetic dataset, with private fields transformed into generic display structures before reaching the browser.",
   ],
   outcomes: [
     "Built an end-to-end behavioral system connecting conversational input, scheduled automation, structured storage, analytics, and visual reporting.",
-    "Demonstrated how natural-language interaction can reduce the friction that causes people to abandon traditional tracking tools.",
-    "Created a privacy-safe, portfolio-ready demo that communicates the product experience without exposing personal health, journal, or financial data.",
+    "Reduced the friction that causes people to abandon traditional tracking tools by replacing forms with natural-language interaction.",
+    "Shipped a privacy-safe public view that communicates the product experience without exposing personal health, journal, or financial data.",
   ],
   lessonsLearned: [
     "The best tracking interface may not look like tracking at all. A casual reply is easier to sustain than opening another application and completing a form.",

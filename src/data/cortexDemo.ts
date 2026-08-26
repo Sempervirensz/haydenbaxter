@@ -14,7 +14,7 @@ export const CORTEX_DEMO: ETBDemoDetail = {
     "Most research systems are built to store information. Cortex was built to make knowledge usable.",
     "Cortex combines an Obsidian knowledge architecture, connected sources, structured notes, claims, topic maps, retrieval, drafting, and coverage analysis into one living brain for everything I learn.",
     "Raw research enters the system as evidence, becomes connected knowledge, and remains available to question, compare, develop, and publish. Cortex remembers where ideas came from, how they relate, where the evidence is strong, and where the knowledge base is still incomplete.",
-    "The result is not simply a vault or an AI assistant. It is a second brain that becomes more useful as its knowledge becomes more structured and connected.",
+    "Cortex is a second brain that becomes more useful as its knowledge becomes more structured and connected.",
   ],
   principle:
     "A second brain should not just remember what you know. It should help you build on it.",

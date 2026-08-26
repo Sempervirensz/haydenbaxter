@@ -8,7 +8,7 @@ export const CASEBRIEF_DEMO: ETBDemoDetail = {
   story: [
     "An injury does not arrive as a clean story. It is scattered across emergency-room notes, imaging reports, treatment records, bills, and follow-up documents. Important details may be buried, repeated, or missing entirely.",
     "CaseBrief brings those fragments together into a clear, source-backed narrative of what happened, how treatment unfolded, and what still needs attention. Legal teams can move from raw records to a structured case picture faster while keeping every important point connected to the underlying evidence.",
-    "The result is more than a summary. It is a fuller understanding of the client’s health journey, so the case can be built with greater care, clarity, and confidence.",
+    "CaseBrief delivers a fuller understanding of the client’s health journey, so the case can be built with greater care, clarity, and confidence.",
   ],
   principle:
     "Every client deserves a case built from the full story, not fragments of the record.",
@@ -69,7 +69,7 @@ export const CASEBRIEF_DEMO: ETBDemoDetail = {
     },
   ],
   differentiatorsNote:
-    "CaseBrief is designed to accelerate professional review while keeping evidence verification and legal judgment in human hands.",
+    "CaseBrief accelerates professional review while keeping evidence verification and legal judgment in human hands.",
   techSections: [
     {
       title: "Document intelligence pipeline",

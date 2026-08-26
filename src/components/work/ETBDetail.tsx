@@ -184,7 +184,7 @@ function getSystemSnapshot(project: ETBProject): string[] {
     return [
       "Speech input -> parse -> scripted sequence generation",
       "Prompt-to-scene mapping favors predictable narration flow",
-      "Tooling layer supports fast revisions for demos",
+      "Tooling layer supports fast revisions in production",
       common[0],
     ];
   }

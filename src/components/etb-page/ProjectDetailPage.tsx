@@ -181,9 +181,9 @@ function DemoShowcase({
         <AccordionList title="Outcomes" items={demo.outcomes} />
         <AccordionList title="Lessons learned" items={demo.lessonsLearned} />
 
-        {/* Honest limitations */}
+        {/* Limitations */}
         {demo.limitations && demo.limitations.length > 0 ? (
-          <AccordionList title="Honest limitations" items={demo.limitations} />
+          <AccordionList title="Limitations" items={demo.limitations} />
         ) : null}
       </div>
     </>

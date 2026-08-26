@@ -107,7 +107,7 @@ const AI: ConsultingPath = {
         meta: "Offer · Build",
         // work.ts → offers[1].oneLiner + modalSections.Approach
         body:
-          "Move from concept to a working prototype that proves the interaction, workflow, and system shape — the smallest credible system slice that demonstrates the actual user and operator loop.",
+          "Turn a defined problem into a working product slice that proves the interaction, workflow, and system shape — the smallest credible build that runs the actual user and operator loop.",
       },
     ],
     // work.ts → offers[*].systemSnapshot, condensed

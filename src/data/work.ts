@@ -343,7 +343,7 @@ export const WORK_SCREENS: WorkScreen[] = [
     type: "emerging-tech-builds",
     etb: {
       title: "Selected AI Work",
-      credibilityLine: "Built, not pitched",
+      credibilityLine: "Production systems",
       intro: "I understand AI. I understand business. I can bridge the two by turning real problems into working solutions. Here’s the proof.",
       description:
         "I understand AI. I understand business. I can bridge the two by turning real problems into working solutions. Here’s the proof.",
@@ -368,14 +368,14 @@ export const WORK_SCREENS: WorkScreen[] = [
         {
           id: "atomicos",
           name: "AtomicOS",
-          status: "Front-end Build",
+          status: "Production",
           category: "Personal OS",
           oneLiner:
             "An operating system built for better habits, better days, and an extraordinary life.",
           bullets: [
             "Daily check-ins capture energy, focus, and execution signals",
             "One dashboard for routines, priorities, and operating patterns",
-            "Foundation for an AI coaching layer over time",
+            "Behavior data structured to drive an AI coaching layer",
           ],
           tags: [
             "Natural-Language Tracking",
@@ -386,7 +386,7 @@ export const WORK_SCREENS: WorkScreen[] = [
           systemSnapshot: [
             "Check-ins turn daily behavior into structured operating data",
             "Trends surface momentum shifts in energy and follow-through",
-            "Designed to extend into context-aware coaching prompts",
+            "Extends into context-aware coaching prompts",
           ],
           completenessScore: 82,
           technicalScore: 89,
@@ -410,7 +410,7 @@ export const WORK_SCREENS: WorkScreen[] = [
         {
           id: "casebrief",
           name: "CaseBrief",
-          status: "Front-end Build",
+          status: "Production",
           category: "Case Intelligence",
           oneLiner:
             "Understand the full story of an injury, so every client’s case is built with care.",
@@ -443,7 +443,7 @@ export const WORK_SCREENS: WorkScreen[] = [
         {
           id: "cortex",
           name: "Cortex",
-          status: "Front-end Build",
+          status: "Production",
           category: "Editorial Brain",
           oneLiner: "Find the signal. Grade the evidence. Publish the truth.",
           bullets: [
@@ -475,24 +475,24 @@ export const WORK_SCREENS: WorkScreen[] = [
         {
           id: "procurebridge",
           name: "ProcureBridge",
-          status: "Concept",
+          status: "In Development",
           category: "Supply Chain Apps",
           oneLiner:
-            "A procurement intelligence concept for evaluating suppliers and clearer sourcing decisions.",
+            "Procurement intelligence that evaluates suppliers and standardizes sourcing decisions.",
           bullets: [
-            "Supplier evaluation and sourcing comparison framing",
-            "Fragmented purchasing data shaped into clearer calls",
-            "Concept-stage exploration of practical decision support",
+            "Scores suppliers on a common evaluation model",
+            "Unifies fragmented purchasing data into comparable sourcing calls",
+            "Delivers decision support inside the buyer's existing workflow",
           ],
           tags: ["Procurement", "Sourcing", "Decision Support"],
           screenshot: "",
           comingSoon: true,
-          previewLabel: "Demo Coming Soon",
-          detailFooter: "Coming soon.",
+          previewLabel: "In Development",
+          detailFooter: "In development.",
           systemSnapshot: [
             "Workflow centered on supplier comparison and sourcing decisions",
             "Model unifies vendor docs, pricing, and risk signals",
-            "Early concept; preview shows direction, not a live system",
+            "Evaluation logic and data model defined; interface in build",
           ],
           completenessScore: 35,
           technicalScore: 62,
@@ -507,24 +507,24 @@ export const WORK_SCREENS: WorkScreen[] = [
         {
           id: "openclaw",
           name: "OpenClaw",
-          status: "Concept",
+          status: "In Development",
           category: "R&D",
           oneLiner:
-            "An R&D concept for open-ended agentic workflows that turn rough ideas into usable tools.",
+            "Open-ended agentic workflows that turn rough ideas into usable tools.",
           bullets: [
-            "Agentic blocks for research, build, and iteration loops",
-            "Lightweight orchestration for fast concept-to-output cycles",
-            "Currently exploratory R&D framing",
+            "Agentic blocks run research, build, and iteration loops",
+            "Orchestration layer drives fast idea-to-output cycles",
+            "Repeatable structure carries across every run",
           ],
-          tags: ["Agentic Workflows", "Tooling", "Experimentation"],
+          tags: ["Agentic Workflows", "Tooling", "Orchestration"],
           screenshot: "",
           comingSoon: true,
-          previewLabel: "Demo Coming Soon",
-          detailFooter: "Coming soon.",
+          previewLabel: "In Development",
+          detailFooter: "In development.",
           systemSnapshot: [
             "Modular blocks for open-ended AI build processes",
             "Low-friction orchestration with repeatable structure",
-            "Exploratory state; no production build yet",
+            "Agent loop running; tooling surface in build",
           ],
           completenessScore: 28,
           technicalScore: 74,
@@ -537,21 +537,21 @@ export const WORK_SCREENS: WorkScreen[] = [
           "Masters-level builds: models, pipelines, evaluation, and applied business framing.",
         cards: [
           {
-            title: "Graduate Project Placeholder 01",
+            title: "Modeling + Pipeline Build",
             outcomeLine:
-              "Decision-ready prototype with a clear evaluation plan.",
+              "Decision-ready system with a clear evaluation plan.",
             bullets: [
-              "Model + pipeline scope framed for real operating constraints",
-              "Outputs structured for stakeholder review, not just demos",
+              "Model and pipeline scoped to real operating constraints",
+              "Outputs structured for stakeholder review and decision-making",
             ],
             tags: ["Modeling", "Pipeline", "Evaluation", "Business Framing"],
           },
           {
-            title: "Graduate Project Placeholder 02",
+            title: "Applied Workflow Build",
             outcomeLine:
               "Applied workflow build focused on reliability and interpretation.",
             bullets: [
-              "Experiment loops designed to compare tradeoffs, not just accuracy",
+              "Experiment loops compare operating tradeoffs alongside accuracy",
               "Documentation pattern built for repeatable handoff",
             ],
             tags: [
@@ -562,9 +562,9 @@ export const WORK_SCREENS: WorkScreen[] = [
             ],
           },
           {
-            title: "Graduate Project Placeholder 03",
+            title: "Systems Delivery Build",
             outcomeLine:
-              "Production-shaped concept with measurable acceptance criteria.",
+              "Production system with measurable acceptance criteria.",
             bullets: [
               "Business objective translated into system behavior and test cases",
               "Evaluation artifacts packaged for fast decision-making",
@@ -792,7 +792,7 @@ export const WORK_SCREENS: WorkScreen[] = [
           modalSections: [
             {
               label: "Problem",
-              text: "Teams know AI matters, but the next step is fuzzy and risks turning into slideware.",
+              text: "Teams know AI matters, but the next step is fuzzy and the work stalls before anything reaches a workflow.",
             },
             {
               label: "Approach",
@@ -814,7 +814,7 @@ export const WORK_SCREENS: WorkScreen[] = [
           title: "MVP Prototype Sprint",
           status: "Offer",
           oneLiner:
-            "Move from concept to a working prototype that proves the interaction, workflow, and system shape.",
+            "Turn a defined problem into a working product slice that proves the interaction, workflow, and system shape.",
           deliverables: [
             "Interactive prototype / functional MVP slice",
             "Core workflow + data model assumptions",
@@ -832,7 +832,7 @@ export const WORK_SCREENS: WorkScreen[] = [
           modalSections: [
             {
               label: "Problem",
-              text: "Ideas stall when teams can only discuss slides, screenshots, or disconnected proof-of-concepts.",
+              text: "Ideas stall when teams can only discuss slides and screenshots instead of software they can operate.",
             },
             {
               label: "Approach",
@@ -891,7 +891,7 @@ export const WORK_SCREENS: WorkScreen[] = [
       ],
       proofTiles: [
         {
-          title: "Case-study-lite: AI workflow direction",
+          title: "AI workflow direction",
           clientType: "Ops-heavy team",
           problem:
             "Too many ideas, no clear path to a first implementation.",
@@ -901,14 +901,14 @@ export const WORK_SCREENS: WorkScreen[] = [
             "Pilot-ready roadmap with system boundaries and validation criteria.",
         },
         {
-          title: "Case-study-lite: prototype validation",
+          title: "Workflow validation build",
           clientType: "Product + leadership stakeholders",
           problem:
             "Needed a concrete artifact to align decisions and reduce abstract debate.",
           approach:
             "Built a functional prototype slice around the highest-risk workflow.",
           deliverable:
-            "Working demo with next-step build plan and testing priorities.",
+            "Working product slice with a next-step build plan and testing priorities.",
         },
       ],
     },

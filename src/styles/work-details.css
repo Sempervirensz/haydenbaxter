@@ -754,13 +754,13 @@
   background: rgba(37, 99, 235, 0.04);
 }
 
-.etb-dos__status--front-end-build {
+.etb-dos__status--production {
   border-color: rgba(37, 99, 235, 0.3);
   color: rgba(37, 99, 235, 0.86);
   background: rgba(37, 99, 235, 0.08);
 }
 
-.etb-dos__status--concept {
+.etb-dos__status--in-development {
   border-color: rgba(17, 17, 22, 0.18);
   color: rgba(17, 17, 22, 0.56);
   background: rgba(17, 17, 22, 0.04);
@@ -1274,13 +1274,13 @@
   background: rgba(210, 155, 40, 0.08);
 }
 
-.etb-status--front-end-build {
+.etb-status--production {
   border-color: rgba(88, 110, 210, 0.35);
   color: rgba(60, 82, 175, 0.92);
   background: rgba(88, 110, 210, 0.08);
 }
 
-.etb-status--concept {
+.etb-status--in-development {
   border-color: rgba(17, 17, 22, 0.18);
   color: rgba(17, 17, 22, 0.56);
   background: rgba(17, 17, 22, 0.04);
