@@ -1,14 +1,5 @@
 import { CALENDLY_URL } from "@/data/connect";
 
-export const SPLASH_WORDS = [
-  "Hello",
-  "你好",
-  "Olá",
-  "नमस्ते",
-  "こんにちは",
-  "Step Inside\n\nScroll through each section.\nClick cards to flip them.\nUse the globe timeline to move through the journey.\n\nStart Exploring ↓",
-];
-
 /** Text label, or image asset path under /public */
 export type BrandLogo = {
   label: string;

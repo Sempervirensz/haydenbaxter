@@ -83,7 +83,7 @@ function DossierBody({ project }: { project: ETBProject }) {
       {/* next/link, matching ETBDetail's ProjectCTA exactly.
           A plain <a> here did a FULL document load: the app remounted, which
           reset the soft-lock gate and lost scroll position, and pressing Back
-          re-loaded the homepage from scratch and replayed the splash. Client-side
+          re-loaded the homepage from scratch. Client-side
           navigation keeps Back/Forward and the session intact. */}
       {route ? (
         <Link

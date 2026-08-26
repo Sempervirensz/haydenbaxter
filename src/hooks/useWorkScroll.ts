@@ -78,6 +78,12 @@ export function useWorkScroll() {
       return;
     }
 
+    /* ETB-P2-02 — the CD lerp keeps moving after the user stops scrolling, which
+       is motion, not a scroll-position mapping. `.claude/rules/perf-a11y.md`
+       requires every animation to respect this; useCinematicParallax.ts already
+       does. Under `reduce` the disc snaps to its scroll position instead. */
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
     let targetDeg = 0;
     let currentDeg = 0;
     let rafId = 0;
@@ -120,7 +126,7 @@ export function useWorkScroll() {
         }
       }
 
-      currentDeg += (targetDeg - currentDeg) * LERP_SPEED;
+      currentDeg += (targetDeg - currentDeg) * (reduceMotion ? 1 : LERP_SPEED);
 
       if (Math.abs(targetDeg - currentDeg) < 0.01) {
         currentDeg = targetDeg;
@@ -151,10 +157,48 @@ export function useWorkScroll() {
       rafId = requestAnimationFrame(tick);
     };
 
-    rafId = requestAnimationFrame(tick);
+    /* ETB-P2-01 — this loop used to run unconditionally for the whole session.
+       Measured while parked at the top of the page with Work entirely
+       off-screen: 482 rAF callbacks and 241 getBoundingClientRect() calls every
+       2 seconds — ~120 forced layout reads per second, forever, on a page the
+       user may never scroll into. Gate it on visibility instead.
+
+       Two conditions, because they fail differently: an IntersectionObserver
+       covers "scrolled away from Work", and visibilitychange covers "switched
+       tab", where rAF is throttled but not necessarily stopped. */
+    let onScreen = false;
+    let running = false;
+
+    const start = () => {
+      if (running || !onScreen || document.hidden) return;
+      running = true;
+      rafId = requestAnimationFrame(tick);
+    };
+    const stop = () => {
+      if (!running) return;
+      running = false;
+      cancelAnimationFrame(rafId);
+    };
+
+    const io = new IntersectionObserver(
+      (entries) => {
+        onScreen = entries.some((e) => e.isIntersecting);
+        if (onScreen) start();
+        else stop();
+      },
+      // A generous margin so the disc is already settled by the time the
+      // section edges into view, rather than snapping on entry.
+      { rootMargin: "200px 0px" }
+    );
+    io.observe(el);
+
+    const onVisibility = () => (document.hidden ? stop() : start());
+    document.addEventListener("visibilitychange", onVisibility);
 
     return () => {
-      cancelAnimationFrame(rafId);
+      stop();
+      io.disconnect();
+      document.removeEventListener("visibilitychange", onVisibility);
     };
   }, [screenBreaks, zones]);
 

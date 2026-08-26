@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Caveat, DM_Mono, DM_Sans, DM_Serif_Display, Permanent_Marker } from "next/font/google";
 import "./globals.css";
-import Splash from "@/components/Splash";
 import { SITE_URL, SITE_NAME, SITE_TITLE, SITE_DESCRIPTION } from "@/data/site";
 
 const dmSerifDisplay = DM_Serif_Display({
@@ -93,7 +92,6 @@ export default function RootLayout({
               "try{var u=navigator.userAgent;if(/^((?!chrome|crios|fxios|android).)*safari/i.test(u)){document.documentElement.classList.add('is-safari');}}catch(e){}",
           }}
         />
-        <Splash />
         {children}
       </body>
     </html>

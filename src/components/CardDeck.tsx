@@ -56,7 +56,7 @@ export default function CardDeck({
       {/* Card row */}
       <div
         ref={ref}
-        className="flex justify-center items-end gap-1 sm:gap-3 md:gap-6 pb-4 sm:pb-8 px-2 sm:px-4"
+        className="flex justify-center items-end gap-1 sm:gap-3 lg:gap-6 pb-4 sm:pb-8 px-2 sm:px-3 lg:px-4"
       >
         {CARDS.map((card) => (
           <PlayingCard

@@ -12,7 +12,7 @@
    Layout stability — prevent page-load / scroll-time jitter.
 
    `scrollbar-gutter: stable` reserves the vertical scrollbar gutter at all
-   times. Without it, every overflow toggle (Splash dismount, DetailModal
+   times. Without it, every overflow toggle (DetailModal
    open/close, ETB overlay open/close) causes the scrollbar to appear or
    disappear, shifting all content horizontally by ~15px. That single-frame
    jump reads as a "shake" and triggers a cascade of layout/paint work.
@@ -32,6 +32,19 @@ html {
   --card-border-radius: 12px;
   --flip-duration: 0.6s;
   --flip-easing: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* Entry deck on short desktop viewports.
+   `--card-width` was width-driven only, so a 900px-tall laptop rendered the
+   same 280px cards as a 1440px-tall display and the entry composition ran
+   ~295px past the fold. Mobile already solves this by sizing cards to fit;
+   this applies the same principle to short desktop heights. Tall displays are
+   unaffected — the clamp saturates at the original 280px above ~1000px. */
+@media (min-width: 1024px) {
+  :root {
+    --card-width: clamp(150px, calc((100svh - 600px) / 1.41), 280px);
+    --card-height: calc(var(--card-width) * 1.41);
+  }
 }
 
 /* Card column — locks width to card size so caption centers correctly */
@@ -243,7 +256,12 @@ html {
    child — a top margin here collapses out of the section and drags the whole
    hero down over the card fan below it. */
 .hero-copy {
-  padding-block: clamp(5rem, 3.5rem + 3vw, 9rem) clamp(3rem, 2rem + 2vw, 5rem);
+  /* Width-only until now: at 1440x900 this resolved to 99px/61px of vertical
+     padding around a 184px headline, which is what pushed the entry's
+     instruction and skip link below the fold (ETB-P1-03). The vw ramp still
+     governs tall displays; the vh cap only bites on short ones. */
+  padding-block: min(clamp(5rem, 3.5rem + 3vw, 9rem), 5.5vh)
+    min(clamp(3rem, 2rem + 2vw, 5rem), 3vh);
   padding-inline: var(--page-gutter);
 }
 
@@ -417,13 +435,24 @@ html {
   opacity: 0;
   transform: translateY(-6px) scale(0.98);
   transform-origin: top right;
-  transition: opacity 180ms ease, transform 200ms cubic-bezier(0.22, 1, 0.36, 1);
+  transition: opacity 180ms ease, transform 200ms cubic-bezier(0.22, 1, 0.36, 1),
+    visibility 0s linear 200ms;
   pointer-events: none;
+  /* Not just opacity/pointer-events: at mobile widths the panel is
+     `display: flex`, so a closed menu still held its five links in the tab
+     order. A keyboard user tabbed off the hamburger into invisible links —
+     focus vanished, and `aria-hidden` meant screen readers announced nothing
+     either. `aria-hidden` does not remove anything from the tab order; only
+     visibility/display/inert do. Delayed so the fade still plays on close. */
+  visibility: hidden;
 }
 .nav-mobile__panel.is-open {
   opacity: 1;
   transform: translateY(0) scale(1);
   pointer-events: auto;
+  visibility: visible;
+  transition: opacity 180ms ease,
+    transform 200ms cubic-bezier(0.22, 1, 0.36, 1), visibility 0s;
 }
 .nav-mobile__link {
   display: block;
@@ -1348,75 +1377,6 @@ html.is-safari body {
   }
 }
 
-/* SPLASH — greeting flash */
-.splash {
-  position: fixed;
-  inset: 0;
-  z-index: 9999;
-  background: #000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: opacity 600ms ease;
-  /* Failsafe: never leave the screen black if client JS errors */
-  animation: splash-failsafe 0s linear 4s forwards;
-}
-
-.splash.is-fading {
-  opacity: 0;
-  pointer-events: none;
-}
-
-/* Once the fade transition finishes, fully take the splash out of the
-   layout and pointer surface. Keeps it in the React tree (so client-side
-   route changes don't crash React's reconciler) but invisible. */
-.splash.is-hidden {
-  visibility: hidden;
-  pointer-events: none;
-  display: none;
-}
-
-.splash__word {
-  position: absolute;
-  font-family: var(--font-sans);
-  font-size: clamp(16px, 2.2vw, 24px);
-  font-weight: 500;
-  letter-spacing: 0.12em;
-  color: rgba(255, 255, 255, 0.88);
-  opacity: 0;
-  transform: scale(0.96);
-  transition: opacity 180ms ease, transform 180ms ease;
-}
-/* Emphasize the heading line of the final instruction block. */
-.splash__word:last-child::first-line {
-  font-weight: 700;
-  letter-spacing: 0.16em;
-  color: #fff;
-}
-
-.splash__word.is-visible {
-  opacity: 1;
-  transform: scale(1);
-}
-
-/* Final splash word is the multi-line instruction block — center the lines,
-   preserve the \n separators, and keep the same font treatment as the
-   greetings. */
-.splash__word:last-child {
-  white-space: pre-line;
-  text-align: center;
-  line-height: 1.55;
-  max-width: 52ch;
-  padding: 0 24px;
-}
-
-@keyframes splash-failsafe {
-  to {
-    opacity: 0;
-    visibility: hidden;
-    pointer-events: none;
-  }
-}
 
 /* ──────────────────────────────────────────────────────────
    Emerging Tech Builds — standalone gallery + detail pages

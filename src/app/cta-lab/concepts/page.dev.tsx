@@ -3,9 +3,8 @@ import CtaLab from "@/components/cta-lab/CtaLab";
 
 // The three-concept CTA interaction explorer (Rail / Split / Fold). It was at
 // /cta-lab until the direct-row prototype took that path; nothing about the lab
-// itself changed. Still under the /cta-lab prefix, so the noindex and
-// no-splash allowlists in src/data/site.ts and src/components/Splash.tsx cover
-// it without an edit.
+// itself changed. Still under the /cta-lab prefix, so the noindex allowlist in
+// src/data/site.ts covers it without an edit.
 
 export const metadata: Metadata = {
   title: "CTA Interaction Lab",
