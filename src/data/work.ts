@@ -322,7 +322,7 @@ export const WORK_SCREENS: WorkScreen[] = [
     type: "full",
     full: {
       image: { src: "", alt: "" },
-      background: "/WorldPulseCostal3.0.png",
+      background: "/WorldPulseCostal3.0.webp",
       role: "",
       caption: [
         "Founder at WorldPulse, where we turn complex supply chain data into visual, engaging product stories.",

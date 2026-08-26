@@ -717,7 +717,7 @@ html {
 
 /* Landing screen */
 .work__screen--landing {
-  background: url("/usethisbackground.png") center / cover no-repeat;
+  background: url("/usethisbackground.webp") center / cover no-repeat;
   border: 1px solid rgba(255, 255, 255, 0.10);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.10),
@@ -930,7 +930,7 @@ html {
   position: absolute;
   inset: 0;
   border-radius: 50%;
-  background: url("/images/portfolio/hayden-baxter-work-portfolio-cd.png") center / cover no-repeat;
+  background: url("/images/portfolio/hayden-baxter-work-portfolio-cd.webp") center / cover no-repeat;
   --cd-deg: 0deg;
   transform: translateZ(0) rotate(var(--cd-deg));
   /* Disc rotation driven exclusively by JS lerp on --cd-deg.

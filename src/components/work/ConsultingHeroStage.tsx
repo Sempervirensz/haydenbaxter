@@ -18,8 +18,8 @@ import { useCtaVariant } from "@/components/work/CtaVariant";
 import "@/components/work/work-together.css";
 
 /** Production swaps to the portrait crop at ≤640px — both are committed. */
-const HERO_WIDE = "/consulting/hero-2.png";
-const HERO_NARROW = "/consulting/mobile-statue.png";
+const HERO_WIDE = "/consulting/hero-2.webp";
+const HERO_NARROW = "/consulting/mobile-statue.webp";
 
 const ALT =
   "A winged victory statue lit against a golden hillside cityscape at night, above still water.";

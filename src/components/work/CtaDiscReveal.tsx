@@ -76,7 +76,7 @@ export default function CtaDiscReveal({
             <div className="cdr__stage" aria-hidden="true">
               <div className="cdr__disc">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img className="cdr__discImg" src="/images/portfolio/hayden-baxter-work-portfolio-cd.png" alt="" />
+                <img className="cdr__discImg" src="/images/portfolio/hayden-baxter-work-portfolio-cd.webp" alt="" />
                 <span className="cdr__discSheen" />
               </div>
             </div>

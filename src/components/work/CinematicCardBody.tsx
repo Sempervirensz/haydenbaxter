@@ -59,7 +59,7 @@ export default function CinematicCardBody({ card, isActive, peek, onTogglePeek }
             <div className="cstack__hero">
               <div
                 className="cstack__heroImg"
-                style={{ backgroundImage: 'url("/WorldPulseCostal3.0.png")' }}
+                style={{ backgroundImage: 'url("/WorldPulseCostal3.0.webp")' }}
               />
             </div>
             <div className="cstack__scrim" aria-hidden="true" />
