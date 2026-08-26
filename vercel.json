@@ -78,7 +78,7 @@
     },
     {
       "source": "/assets/pacific-map.png",
-      "destination": "/images/supply-chain/pacific-supply-chain-network-map.png",
+      "destination": "/images/supply-chain/pacific-supply-chain-network-map.webp",
       "permanent": true
     }
   ],

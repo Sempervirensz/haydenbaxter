@@ -460,9 +460,20 @@
   color: rgba(17, 17, 22, 0.62);
   text-align: left;
   display: -webkit-box;
-  -webkit-line-clamp: 1;
+  /* One line fits on a desktop row and truncates nothing there. On a phone the
+     same sentence wraps to 3-5 lines and the clamp cut every project's value
+     proposition to roughly 40 characters — the index page a client reads for
+     evidence rendered as five fragments. Three lines clears all five summaries
+     at 390px; the desktop row is unaffected because it never wraps. */
+  -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
+}
+
+@media (min-width: 768px) {
+  .etb-bar__summary {
+    -webkit-line-clamp: 1;
+  }
 }
 
 .etb-bar__chevron {

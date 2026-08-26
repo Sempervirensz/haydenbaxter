@@ -82,7 +82,7 @@ export default function CardDeck({
       >
         {activeCard && (
           <>
-            <h3
+            <h2
               className="card-caption__title font-bold tracking-wider"
               style={{
                 color: activeCard.color === "red" ? "#b91c1c" : "#ffffff",
@@ -90,7 +90,7 @@ export default function CardDeck({
               }}
             >
               {activeCard.title}
-            </h3>
+            </h2>
             <p
               className="card-caption__desc card-caption__desc--deck mt-0.5"
               style={{ fontFamily: "var(--font-sans)" }}

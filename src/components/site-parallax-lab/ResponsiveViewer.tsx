@@ -333,9 +333,6 @@ export default function ResponsiveViewer({ initialSrc }: { initialSrc?: string }
         <Link href={route.src} className="rv__btn rv__btn--wide">
           Open {route.label} full →
         </Link>
-        <Link href="/site-parallax-lab/work-handoff" className="rv__btn rv__btn--wide">
-          ← Handoff lab
-        </Link>
       </aside>
 
       <div className="rv__stage" ref={stageRef}>

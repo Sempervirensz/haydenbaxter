@@ -30,6 +30,12 @@
   color: var(--ink-muted);
   text-decoration: none;
   margin-bottom: clamp(2rem, 1.6rem + 1.2vw, 3.5rem);
+  /* WCAG 2.2 SC 2.5.8 wants 24x24 minimum. The type stays the same size; the
+     hit area grows around it, and the negative inline margin keeps the link
+     optically flush with the text column it sits above. */
+  min-height: 24px;
+  padding: 0.25rem 0.4rem;
+  margin-inline-start: -0.4rem;
 }
 
 .legal__back:hover,

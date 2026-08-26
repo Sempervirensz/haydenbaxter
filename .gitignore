@@ -29,3 +29,7 @@ public/Personal Photos/
 /test-results/
 /playwright-report/
 /blob-report/
+
+# Static sub-apps kept for reference. Out of public/ so Next stops copying
+# them into the deployed build (ETB-P1-04b); still here if ever needed.
+archive/

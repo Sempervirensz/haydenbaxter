@@ -73,7 +73,7 @@ export default function PlayingCard({
           type="button"
           className="card-hover-wrapper"
           onClick={onFlip}
-          aria-label={`${card.title} — click to flip`}
+          aria-label={`${card.title} — flip card`}
           aria-pressed={isFlipped}
         >
           <Tooltip visible={!isFlipped} color={card.color} />
@@ -98,7 +98,7 @@ export default function PlayingCard({
           pointerEvents: showCaption ? "auto" : "none",
         }}
       >
-        <h3
+        <h2
           className="card-caption__title font-bold tracking-wider leading-tight"
           style={{
             color: textColor,
@@ -106,7 +106,7 @@ export default function PlayingCard({
           }}
         >
           {card.title}
-        </h3>
+        </h2>
         <p
           className="card-caption__desc mt-0.5"
           style={{ fontFamily: "var(--font-sans)" }}

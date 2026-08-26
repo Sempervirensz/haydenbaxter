@@ -386,3 +386,64 @@ test.describe("SEO invariants", () => {
     expect(meta.ogImage, "og:image missing").toBeTruthy();
   });
 });
+
+test.describe("ETB-P2-06 — heading hierarchy does not skip or reverse", () => {
+  test("homepage heading levels never jump more than one step", async ({ page }) => {
+    await page.goto("/", { waitUntil: "load" });
+    await settle(page);
+    const levels = await page.evaluate(() =>
+      Array.from(document.querySelectorAll("h1,h2,h3,h4,h5,h6")).map((h) => ({
+        level: Number(h.tagName[1]),
+        text: (h.textContent || "").trim().slice(0, 40),
+      }))
+    );
+    expect(levels.length, "expected headings on the homepage").toBeGreaterThan(0);
+    expect(levels[0].level, "the page should start at h1").toBe(1);
+    const skips: string[] = [];
+    for (let i = 1; i < levels.length; i++) {
+      if (levels[i].level - levels[i - 1].level > 1) {
+        skips.push(`h${levels[i - 1].level} -> h${levels[i].level} at "${levels[i].text}"`);
+      }
+    }
+    expect(skips, "heading levels must not skip a step").toEqual([]);
+  });
+});
+
+test.describe("ETB-P2-05 — project summaries are readable on a phone", () => {
+  test("summaries get more than one line below 768px", async ({ page, viewport }) => {
+    test.skip(!viewport || viewport.width >= 768, "clamp only widens under 768px");
+    await page.goto("/emerging-tech-builds", { waitUntil: "load" });
+    await settle(page);
+    const clamps = await page.evaluate(() =>
+      Array.from(document.querySelectorAll(".etb-bar__summary")).map(
+        (el) => getComputedStyle(el).webkitLineClamp
+      )
+    );
+    expect(clamps.length, "expected project summary elements").toBeGreaterThan(0);
+    for (const c of clamps) {
+      expect(Number(c), "phone summaries should clamp to 3 lines, not 1").toBeGreaterThanOrEqual(3);
+    }
+  });
+});
+
+test.describe("ETB-P4-01 — control labels are not mouse-specific", () => {
+  test("no accessible name tells the user to click", async ({ page }) => {
+    await page.goto("/", { waitUntil: "load" });
+    await settle(page);
+    const mousey = await page.evaluate(() =>
+      Array.from(document.querySelectorAll("[aria-label]"))
+        .map((el) => el.getAttribute("aria-label") || "")
+        .filter((l) => /\bclick\b/i.test(l))
+    );
+    expect(mousey, "accessible names should not say 'click'").toEqual([]);
+  });
+});
+
+test.describe("ETB-P1-04b — static sub-apps are out of the build", () => {
+  for (const route of ["/atomic-os-demo", "/experiments/particle-globe-lab/dist"]) {
+    test(`${route} is not deployed`, async ({ page }) => {
+      const res = await page.goto(route, { waitUntil: "domcontentloaded" });
+      expect(res?.status(), `${route} should not be reachable`).toBe(404);
+    });
+  }
+});
