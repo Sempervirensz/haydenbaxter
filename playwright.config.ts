@@ -29,6 +29,9 @@ export const VIEWPORTS = {
 
 export default defineConfig({
   testDir: "./tests",
+  // tests/audit is the cross-browser matrix for /audit-repair; it has its own
+  // config (playwright.audit.config.ts) with Firefox and WebKit projects.
+  testIgnore: "**/audit/**",
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   /* Retry locally too, not just in CI.

@@ -9,7 +9,9 @@
     "lint": "next lint",
     "check:assets": "node scripts/check-assets.mjs",
     "check:scale": "node scripts/check-scale.mjs",
-    "check": "npx tsc --noEmit && npm run check:assets && npm run check:scale"
+    "check": "npx tsc --noEmit && npm run check:assets && npm run check:scale",
+    "test": "playwright test",
+    "test:audit": "playwright test -c playwright.audit.config.ts"
   },
   "dependencies": {
     "@react-three/drei": "^10.7.7",
@@ -25,6 +27,7 @@
     "three": "^0.183.2"
   },
   "devDependencies": {
+    "@playwright/test": "^1.62.1",
     "@tailwindcss/postcss": "^4.0.0",
     "@types/node": "^22.0.0",
     "@types/react": "^19.0.0",
