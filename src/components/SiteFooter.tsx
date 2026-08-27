@@ -28,6 +28,13 @@ export default function SiteFooter() {
               {link.label}
             </a>
           ))}
+          {/* The homepage gate is JS-driven: with JS unavailable it stays
+              display:none and #work resolves to nothing, so /emerging-tech-builds
+              had no route in at all. The footer renders without JS, so this is
+              the cheapest way to keep the work reachable. */}
+          <Link href="/emerging-tech-builds" className="site-footer__link">
+            Selected AI Work
+          </Link>
           <Link href="/privacy" className="site-footer__link">
             Privacy
           </Link>

@@ -31,7 +31,10 @@ export default defineConfig({
   testDir: "./tests",
   // tests/audit is the cross-browser matrix for /audit-repair; it has its own
   // config (playwright.audit.config.ts) with Firefox and WebKit projects.
-  testIgnore: "**/audit/**",
+  // tests/audit is the cross-browser matrix (playwright.audit.config.ts).
+  // entry-cta.spec.ts targets /entry-cta-lab, a dev-only route since 92fbecf —
+  // it runs from playwright.labs.config.ts against `next dev`.
+  testIgnore: ["**/audit/**", "**/entry-cta.spec.ts"],
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   /* Retry locally too, not just in CI.

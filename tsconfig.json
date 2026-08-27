@@ -31,8 +31,10 @@
   "include": [
     "**/*.ts",
     "**/*.tsx",
+    ".next-alt/types/**/*.ts",
     ".next/types/**/*.ts",
-    "next-env.d.ts"
+    "next-env.d.ts",
+    ".next-labs/types/**/*.ts"
   ],
   /* The e2e suite is checked by tests/tsconfig.json instead. Playwright's
      `test.use()` needs PlaywrightTestOptions in scope, which Next's compiler
@@ -45,12 +47,19 @@
      admin routes. A production `next build` then typechecks them against a route
      map that has no `/admin` and fails with "Type '"/admin"' is not assignable
      to type '"/"'", in a file nobody edited. Excluding it here neutralises the
-     include even when Next re-adds it. */
+     include even when Next re-adds it.
+
+     `.next-labs` is the same story: playwright.labs.config.ts runs a dev server
+     with NEXT_DIST_DIR=.next-labs so lab routes exist for entry-cta.spec.ts, and
+     Next adds its dev-mode types here too. Excluded for the identical reason. */
   "exclude": [
     "node_modules",
     "legacy",
     "tests",
     "playwright.config.ts",
-    ".next-alt"
+    "playwright.labs.config.ts",
+    "playwright.audit.config.ts",
+    ".next-alt",
+    ".next-labs"
   ]
 }

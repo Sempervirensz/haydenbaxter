@@ -92,6 +92,13 @@ export default function RootLayout({
               "try{var u=navigator.userAgent;if(/^((?!chrome|crios|fxios|android).)*safari/i.test(u)){document.documentElement.classList.add('is-safari');}}catch(e){}",
           }}
         />
+        {/* WCAG 2.4.1 (Level A). First focusable element in the document so a
+            keyboard user can bypass the nav — which matters more here than
+            usually, because the homepage is ~21,000px and the nav is five
+            stops before any content. */}
+        <a className="skip-link" href="#main">
+          Skip to content
+        </a>
         {children}
       </body>
     </html>

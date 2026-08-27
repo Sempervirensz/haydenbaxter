@@ -35,7 +35,7 @@ strength of a passing build alone.
 | ETB-P2-02 | P2 | CD rotation ignores `prefers-reduced-motion` | **Verified** | The lerp (`LERP_SPEED = 0.08`) kept the disc moving after the user stopped scrolling — motion, not a scroll-position mapping — violating `.claude/rules/perf-a11y.md`. Now reads the media query and snaps (`currentDeg` factor 1 instead of 0.08) under `reduce`, mirroring the existing house pattern at `useCinematicParallax.ts:33`. Verified the disc still tracks scroll in both modes. Matrix green: 426 passed / 0 failed / 6 skipped. |
 | ETB-P2-03 | P2 | No resume or CV anywhere | **Blocked** | `RESUME_HREF = null` (`src/data/workTogether.ts:57`). Requires a missing asset — a resume PDF only Hayden can supply. Wiring already exists; CTA flips automatically once the file lands in `public/`. |
 | ETB-P2-04 | P2 | Splash instructions contradict the actual entry UX | **Verified** | Resolved by ETB-P1-02: the copy lived only in `SPLASH_WORDS`, which was removed with the splash. The contradictory text ("Scroll through each section" while the gate holds `scrollRoom` at 0; a "globe timeline" absent from the entry) no longer ships. Note the onboarding line it carried — "Click cards to flip them" — is now gone too, which sharpens ETB-P1-03: the gate's only remaining instruction is the below-the-fold one. | Matrix green: **426 passed / 0 failed / 6 skipped** across Chromium+Firefox+WebKit × mobile·landscape·tablet·laptop·desktop·wide (the 6 skips are the documented WebKit Tab-order exclusions).
-| ETB-P2-05 | P2 | ETB summaries clamped to one line on mobile | **Verified** | `-webkit-line-clamp: 3` under 768px, with the original `1` restored at ≥768px where the sentence fits on one line and truncates nothing. All five project value propositions now readable on a phone. Matrix green: 501 passed / 0 failed / 21 skipped. |
+| ETB-P2-05 | P2 | ETB summaries clamped to one line on mobile | **Verified (corrected)** | `-webkit-line-clamp: 3` under 768px, with the original `1` restored at ≥768px where the sentence fits on one line and truncates nothing. All five project value propositions now readable on a phone. Matrix green: 501 passed / 0 failed / 21 skipped. |
 | ETB-P2-06 | P2 | Heading hierarchy H1 → H3 → H2 | **Verified** | Card titles promoted H3 → H2 in `PlayingCard.tsx` and `CardDeck.tsx`. New test asserts levels start at h1 and never skip a step. Matrix green: 501 passed / 0 failed / 21 skipped. |
 | ETB-P2-07 | P2 | Calendly iframe unsandboxed; `hide_gdpr_banner=1` | Pending | `src/components/CalendlyEmbed.tsx:92`. Sandbox attribute is a safe local fix; the GDPR-banner parameter is a separate judgement call — split it out and mark Blocked if it needs a decision. |
 | ETB-P2-08 | P2 | Playwright suite can't run from a clean clone | **Verified** | `@playwright/test@^1.62.1` added to `devDependencies`; `test` + `test:audit` scripts added; Firefox and WebKit engines installed; `scripts/serve-export.mjs` replaces `npx --yes serve` so a run cannot fail on a registry fetch. Matrix lives at `tests/audit/audit-regression.spec.ts` + `playwright.audit.config.ts` (18 projects). Promote to Verified on a green matrix. | Matrix green: **426 passed / 0 failed / 6 skipped** across Chromium+Firefox+WebKit × mobile·landscape·tablet·laptop·desktop·wide (the 6 skips are the documented WebKit Tab-order exclusions).
@@ -65,3 +65,65 @@ strength of a passing build alone.
 | 2026-08-26 | ETB-P2-01, ETB-P2-02 | Gated the Work rAF loop on visibility; honoured reduced-motion in the CD lerp | Verified; forced layouts 241/2s → 0 |
 | 2026-08-26 | ETB-P1-01…P2-09 (10) | Committed `618bfcc` + `367f651`, pushed, deployed | Live and verified on haydenbaxter.com |
 | 2026-08-26 | 11 findings | P1-04b, P2-05, P2-06, P3-03, P3-05, P3-06, P4-01, P4-02, P4-04 fixed; P3-04 and P4-03 found Invalid | Matrix 501/0/21 |
+
+## Round-2 findings
+
+| ID | Sev | Finding | Status | Evidence |
+|---|---|---|---|---|
+| ETB-P6-01 | P1 | 22.3 MB of personal camera originals served publicly | **Declined by owner** | Confirmed live: 5/5 return 200 on the production domain, not excluded from robots.txt. Deploy is `vercel --prod` from the working directory with no `.vercelignore`, so `.gitignore` does not stop them. Owner elected not to fix on 2026-08-26. **Left live deliberately — not an oversight.** |
+| ETB-P6-02 | P3 | 4 high npm advisories | **Assessed — upgrade scheduled** | None reachable on a static export: 0 server JS in `out/`, 0 API routes, 0 `use server`, `output: "export"`, `images.unoptimized: true`. All 8 Next runtime CVEs cover Server Actions / Image Optimization / rewrites / Edge — none deployed. Only `postcss`, `sharp`, `nanoid` matter, all build-time. `npm audit fix` leaves all 4; the real fix is Next 15.5.19 → 16.3.3, a **major upgrade** that belongs on its own branch gated on the 24-project matrix. Not folded into audit repair. |
+| ETB-P11-01 | P2 | Lab-route fix broke 27 tests | **Verified** | `entry-cta.spec.ts` targeted `/entry-cta-lab`, dev-only since `92fbecf`, while the suite builds production. Split onto `playwright.labs.config.ts` (dev server, own `NEXT_DIST_DIR`). **32 passed / 1 pre-existing flake** (a colour read mid-`transition: color 220ms`, unrelated to the split). |
+| ETB-P11-02 | P3 | No-JS visitors cannot reach the work | **Verified** | Gate stays `display:none` without JS and `#work` targets a hidden container. Added a real `/emerging-tech-builds` link to `SiteFooter`, which renders without JS. Guard added. |
+| ETB-P11-03 | P3 | Reload re-locks the gate | **Verified** | Gate state now persists in `sessionStorage` (session-scoped: a new visit still gets the designed entry). `try/catch` for private-mode Safari. Guard added. |
+| ETB-P5-01 | P2 | No skip-to-content link (WCAG 2.4.1, Level A) | **Verified** | The only Level A failure found. Skip link is now the first focusable element, visible on focus, moves focus into `<main id="main" tabIndex={-1}>`. Guard added. |
+| ETB-P5-02 | P2 | Text below WCAG AA contrast | **Verified** | Measured, not estimated. `.wl-c2__num` 4.08→AA, `.etb-bar__chevron` 2.77→≥3:1 (1.4.11), card red `#b91c1c`→`#8f1414` (was 3.06:1 at 12.2px). **`.wt__chev` corrected: 3.47:1 passes the 3:1 non-text bar — my report listed it as failing by applying the 4.5 text threshold. Not changed.** |
+| ETB-P5-03 | P4 | Marquee has no pause control | **Verified** | Already stopped entirely under `prefers-reduced-motion`; added `:hover`/`:focus-within` pause for everyone else. |
+| ETB-P4-02 | P2 | 1.06 MB of PNG still on the homepage | **Verified** | `worldpulse-…-logo.png` 0.57→0.128 MB (−78%), `casebrief-mark.png` 0.49→0.044 MB (−91%). Alpha preserved. No PNG art left in the bundle. Budget guard added. |
+| ETB-P9-01 | P2 | Evidence page had no `<h1>` | **Verified** | `h1 count: 0 → 1`. Visually hidden, because the design has no title slot and a visible one would be an unapproved design change. Project titles `h3`→`h2` so nothing skips. |
+| ETB-P9-03 | P3 | Terminology drift | **Closed — smaller than reported** | The built HTML contains **zero** occurrences of "Emerging Tech" on `/`, `/emerging-tech-builds` or `/blog`. User-facing copy is already consistent on "Selected AI Work"; the drift is confined to code comments and internal identifiers describing a route literally named `/emerging-tech-builds`. Only the URL differs, and changing it was not recommended. **No change made.** |
+| ETB-P9-02 | P2 | Employer proof sits ~20 screens deep | **Declined by owner** | Nike, Disney, Converse, Aosom, Three Tree are all present but behind the gate. Surfacing them above the fold is a positioning decision; owner declined on 2026-08-26. |
+| ETB-P7-01 | P2 | Six routes: large social card, no image | **Verified** | Root cause: Next replaces the parent `openGraph` wholesale, and `opengraph-image.tsx` only applies to its own segment. Added `socialCard()` in `src/data/site.ts` so both blocks are built from one place. **All 7 routes now og:image=1, twitter:image=1, titles matching.** Guard added. |
+| ETB-P10-01 | P3 | CSS bundle 321 KB / 164 KB largest chunk | **Verified (baseline + guard)** | Recorded as a measured baseline; 400 KB ceiling guard added so it cannot drift. Splitting the chunk was not proposed — image bytes dominate and the stylesheet has zero dead rules. |
+
+### Measured baselines (round 2)
+
+| Metric | Value | Context |
+|---|---|---|
+| Fast 3G full load | **42,246 ms** | FCP 4,892 ms — first paint is fine, images keep arriving |
+| Slow 4G full load | 17,298 ms | FCP 1,992 ms |
+| Unthrottled | 782 ms | The number round 1 reported in isolation |
+| Mobile initial transfer | 5.72 MB → ~4.7 MB after P4-02 | Was heavier than desktop |
+| Work scroll @ 4× CPU | **39.9 fps** | Holds up on a simulated mid-range device |
+| DOM after full journey | 549 nodes | No leak |
+| CSS bundle | 321 KB | Largest chunk 164 KB |
+
+**The site is network-bound, not CPU-bound:** 4× CPU throttling costs ~1 s; Fast 3G costs 41 s.
+
+### Correction to ETB-P2-05
+
+The original fix set `-webkit-line-clamp: 3` under 768px and was marked Verified on the strength of
+the computed property. That verified the wrong thing. The 320px viewport — added to the matrix in
+this round — showed `.etb-bar__head` at **65px of content in a 56px box**: the third line was being
+clipped, not shown.
+
+Root cause: `.etb-bar` is `flex: 1 1 0` in a column, so the five bars divide the **viewport's
+height** between them. At 568px tall each row gets ~58px, which cannot hold three lines.
+
+Corrected: `height: auto` on `.etb-bar__head` (was `height: 100%`, pinning it to the row), plus a
+2-line clamp under `(max-width: 767px) and (max-height: 700px)`. Measured after: 320×568 → 55/55,
+390×844 → 73/73, 768 and 1440 → no clipping at any width. The regression test's expectation was
+also wrong (it asserted ≥3 everywhere) and is now height-aware.
+
+**This is the clearest example in the audit of verifying a property instead of an outcome.**
+
+### Final state — round 2
+
+**Matrix: 926 passed / 0 failed / 34 skipped** across 3 engines × 8 widths (24 projects).
+**Lab suite: 32 passed / 1 pre-existing flake** (`playwright.labs.config.ts`).
+
+| Fixed and verified | Declined by owner | Assessed, scheduled |
+|---|---|---|
+| P11-01, P11-02, P11-03, P5-01, P5-02, P5-03, P4-02, P9-01, P7-01, P10-01, P2-05 (corrected) | **P6-01** (personal photos — left live deliberately), **P9-02** (employer proof placement) | **P6-02** (Next 15→16, own branch) |
+
+`ETB-P9-03` closed as smaller than reported — the built HTML contains zero user-facing
+"Emerging Tech" strings.

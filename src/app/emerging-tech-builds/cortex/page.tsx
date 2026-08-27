@@ -1,3 +1,4 @@
+import { socialCard } from "@/data/site";
 import type { Metadata } from "next";
 import ProjectDetailPage from "@/components/etb-page/ProjectDetailPage";
 import CortexMarkHero from "@/components/etb-page/cortex/CortexMarkHero";
@@ -16,11 +17,8 @@ export const metadata: Metadata = {
   title: "Cortex | Selected AI Work",
   description: DESCRIPTION,
   alternates: { canonical: "/emerging-tech-builds/cortex" },
-  openGraph: {
-    title: "Cortex | Selected AI Work | Hayden Baxter",
-    description: DESCRIPTION,
-    url: "/emerging-tech-builds/cortex",
-  },
+  ...socialCard({ title: "Cortex | Selected AI Work | Hayden Baxter", description: DESCRIPTION, path: "/emerging-tech-builds/cortex" }),
+
 };
 
 // The mark leads this page as a disc seal — cut to a circle, vignetted

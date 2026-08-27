@@ -1,3 +1,4 @@
+import { socialCard } from "@/data/site";
 import type { Metadata } from "next";
 import ProjectDetailPage from "@/components/etb-page/ProjectDetailPage";
 import AtomicOSMarkHero from "@/components/etb-page/atomicos/AtomicOSMarkHero";
@@ -16,11 +17,8 @@ export const metadata: Metadata = {
   title: "AtomicOS | Selected AI Work",
   description: DESCRIPTION,
   alternates: { canonical: "/emerging-tech-builds/atomic-os" },
-  openGraph: {
-    title: "AtomicOS | Selected AI Work | Hayden Baxter",
-    description: DESCRIPTION,
-    url: "/emerging-tech-builds/atomic-os",
-  },
+  ...socialCard({ title: "AtomicOS | Selected AI Work | Hayden Baxter", description: DESCRIPTION, path: "/emerging-tech-builds/atomic-os" }),
+
 };
 
 // The mark leads this page as a ledger plate — two hairlines with the atom

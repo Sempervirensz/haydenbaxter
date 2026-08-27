@@ -80,7 +80,7 @@ function DossierCard({ project }: { project: ETBProject }) {
       </div>
 
       {/* Title */}
-      <h3 className="etb-dos__title">{project.name}</h3>
+      <h2 className="etb-dos__title">{project.name}</h2>
 
       {panel ? (
         <>

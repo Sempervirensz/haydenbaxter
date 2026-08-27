@@ -14,14 +14,18 @@ import { defineConfig, devices } from "@playwright/test";
  * site has historically diverged — and it was the single largest untested
  * surface when the audit was written.
  *
- * 3 engines x 6 widths = 18 projects.
+ * 3 engines x 8 widths = 24 projects.
  */
 
-/** The six display classes every repair must survive. */
+/** The eight display classes every repair must survive. */
 export const AUDIT_VIEWPORTS = {
+  /* 320 and 1024 are named in the audit brief and were missing from the first
+     matrix. Both came back clean when finally tested — kept so they stay that way. */
+  xs: { width: 320, height: 568 },
   mobile: { width: 390, height: 844 },
   landscape: { width: 844, height: 390 },
   tablet: { width: 768, height: 1024 },
+  md: { width: 1024, height: 768 },
   laptop: { width: 1440, height: 900 },
   desktop: { width: 1920, height: 1080 },
   wide: { width: 2560, height: 1440 },

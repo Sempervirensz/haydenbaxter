@@ -318,7 +318,7 @@ export const WORK_SCREENS: WorkScreen[] = [
     id: 1,
     name: "WorldPulse",
     number: "01 / 04",
-    logo: { src: "/images/worldpulse/worldpulse-digital-product-passport-logo.png", alt: "WorldPulse" },
+    logo: { src: "/images/worldpulse/worldpulse-digital-product-passport-logo.webp", alt: "WorldPulse" },
     type: "full",
     full: {
       image: { src: "", alt: "" },
@@ -434,7 +434,7 @@ export const WORK_SCREENS: WorkScreen[] = [
           keepFullSummary: true,
           demo: CASEBRIEF_DEMO,
           mark: {
-            src: "/assets/casebrief-mark.png",
+            src: "/assets/casebrief-mark.webp",
             alt: "CaseBrief cube mark",
             width: 1024,
             height: 1024,

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import SiteFooter from "@/components/SiteFooter";
-import { SITE_NAME } from "@/data/site";
+import { SITE_NAME, socialCard } from "@/data/site";
 import "./privacy.css";
 
 const DESCRIPTION = `How ${SITE_NAME}'s portfolio site handles your information.`;
@@ -10,11 +10,8 @@ export const metadata: Metadata = {
   title: "Privacy Policy",
   description: DESCRIPTION,
   alternates: { canonical: "/privacy" },
-  openGraph: {
-    title: `Privacy Policy | ${SITE_NAME}`,
-    description: DESCRIPTION,
-    url: "/privacy",
-  },
+  ...socialCard({ title: `Privacy Policy | ${SITE_NAME}`, description: DESCRIPTION, path: "/privacy" }),
+
 };
 
 const CONTACT_EMAIL = "haydenjbaxter@gmail.com";

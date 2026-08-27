@@ -24,7 +24,7 @@ export const metadata: Metadata = {
 
 export default function Home() {
   return (
-    <main>
+    <main id="main" tabIndex={-1}>
       <StructuredData />
       <HeroSection />
       {/* Soft lock: the card deck + entry prompt. Holds the rest of the page

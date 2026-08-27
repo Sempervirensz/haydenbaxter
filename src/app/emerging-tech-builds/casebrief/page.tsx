@@ -1,3 +1,4 @@
+import { socialCard } from "@/data/site";
 import type { Metadata } from "next";
 import ProjectDetailPage from "@/components/etb-page/ProjectDetailPage";
 import CaseBriefMarkHero from "@/components/etb-page/casebrief/CaseBriefMarkHero";
@@ -16,11 +17,8 @@ export const metadata: Metadata = {
   title: "CaseBrief | Selected AI Work",
   description: DESCRIPTION,
   alternates: { canonical: "/emerging-tech-builds/casebrief" },
-  openGraph: {
-    title: "CaseBrief | Selected AI Work | Hayden Baxter",
-    description: DESCRIPTION,
-    url: "/emerging-tech-builds/casebrief",
-  },
+  ...socialCard({ title: "CaseBrief | Selected AI Work | Hayden Baxter", description: DESCRIPTION, path: "/emerging-tech-builds/casebrief" }),
+
 };
 
 // The mark leads this page as a navy plinth — the page adopts the cube's own

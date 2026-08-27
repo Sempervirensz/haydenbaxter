@@ -1,3 +1,4 @@
+import { socialCard } from "@/data/site";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { JOURNAL_COPY, BLOG_POSTS } from "@/data/journal";
@@ -8,11 +9,8 @@ export const metadata: Metadata = {
   title: "Journal",
   description: JOURNAL_COPY.subline,
   alternates: { canonical: "/blog" },
-  openGraph: {
-    title: "Journal | Hayden Baxter",
-    description: JOURNAL_COPY.subline,
-    url: "/blog",
-  },
+  ...socialCard({ title: "Journal | Hayden Baxter", description: JOURNAL_COPY.subline, path: "/blog" }),
+
 };
 
 export default function BlogIndexPage() {

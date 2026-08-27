@@ -392,7 +392,11 @@
   justify-content: space-between;
   gap: 12px;
   width: 100%;
-  height: 100%;
+  /* `height: 100%` pinned this to the row's height, so once the summary was
+     allowed three lines (ETB-P2-05) the third line was clipped at 320px —
+     65px of content in a 56px button. `min-height` still sets the comfortable
+     tap size; `auto` lets the row grow when the copy needs it. */
+  height: auto;
   min-height: clamp(52px, 7vh, 72px);
   padding: 0 clamp(16px, 2vw, 24px);
   cursor: pointer;
@@ -476,10 +480,22 @@
   }
 }
 
+/* The bars are `flex: 1 1 0` in a column, so the five of them divide the
+   viewport's height between them — at 568px tall each row gets ~58px, and three
+   lines of summary do not fit inside it. Two lines still recover most of the
+   sentence that the original one-line clamp cut, without fighting the accordion
+   for space it does not have. */
+@media (max-width: 767px) and (max-height: 700px) {
+  .etb-bar__summary {
+    -webkit-line-clamp: 2;
+  }
+}
+
 .etb-bar__chevron {
   flex-shrink: 0;
   font-size: 18px;
-  color: rgba(17, 17, 22, 0.42);
+  /* Was 2.77:1 against the card — under the 3:1 non-text minimum (1.4.11). */
+  color: rgba(17, 17, 22, 0.58);
   font-weight: 600;
   margin-left: 8px;
   transition: color 200ms ease, transform 200ms ease;

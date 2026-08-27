@@ -63,7 +63,9 @@ export default function PlayingCard({
   const flipTransform = `rotateY(${isFlipped ? 180 : 0}deg)`;
 
   const isRed = card.color === "red";
-  const textColor = isRed ? "#b91c1c" : "#ffffff";
+  // #b91c1c measured 3.06:1 on the card face at 12.2px — under AA (4.5:1).
+  // Darkened only the red; the suit colour reads the same at this size.
+  const textColor = isRed ? "#8f1414" : "#ffffff";
 
   return (
     <div className="card-column">
