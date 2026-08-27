@@ -1,0 +1,98 @@
+/* Mobile scroll lab HUD. Dev-only; never reaches a production bundle because
+   the component that imports it is behind a NODE_ENV check in page.tsx.
+
+   Pinned to the top so it cannot sit under the phone's home indicator or
+   overlap the CD player at the bottom of the Work landing — the disc is the
+   thing being watched while these numbers move. */
+.disc-probe {
+  position: fixed;
+  top: 8px;
+  left: 8px;
+  right: 8px;
+  z-index: 300;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 10px 12px;
+  border: 1px solid #cba86a;
+  border-radius: 10px;
+  background: rgba(8, 10, 10, 0.94);
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 12px;
+  line-height: 1.35;
+  color: rgba(255, 255, 255, 0.72);
+  /* The page underneath is what is being measured — never intercept a flick
+     that was aimed at the document. Only the controls take input. */
+  pointer-events: none;
+}
+.disc-probe button {
+  pointer-events: auto;
+}
+
+.disc-probe b {
+  color: #cba86a;
+  font-size: 13px;
+}
+.disc-probe em {
+  font-style: normal;
+  color: #cba86a;
+  font-variant-numeric: tabular-nums;
+}
+.disc-probe__bad,
+.disc-probe__bad em {
+  color: #e08a7e;
+}
+.disc-probe__muted {
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.disc-probe__arms {
+  display: flex;
+  gap: 6px;
+}
+.disc-probe__arms button {
+  flex: 1;
+  min-height: 34px;
+  padding: 0 8px;
+  border: 1px solid rgba(203, 168, 106, 0.45);
+  border-radius: 6px;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.72);
+  font: inherit;
+  cursor: pointer;
+}
+.disc-probe__arms button.is-on {
+  background: #cba86a;
+  border-color: #cba86a;
+  color: #14100a;
+}
+.disc-probe__arms button:focus-visible,
+.disc-probe__copy:focus-visible {
+  outline: 2px solid #f3f3f3;
+  outline-offset: 2px;
+}
+
+.disc-probe__gate {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.disc-probe__top,
+.disc-probe__row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+  align-items: baseline;
+}
+
+.disc-probe__copy {
+  align-self: flex-start;
+  min-height: 32px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: 6px;
+  background: #cba86a;
+  color: #14100a;
+  font: inherit;
+  cursor: pointer;
+}

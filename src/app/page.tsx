@@ -15,6 +15,18 @@ import { SITE_TITLE, SITE_DESCRIPTION } from "@/data/site";
 
 const WorkSection = dynamic(() => import("@/components/work/WorkSectionResponsive"));
 
+/* Mobile scroll lab HUD — `?disc=off|rect|cached` on the real page.
+ *
+ * Imported through a dead branch rather than at the top of the file. A plain
+ * `import` + `NODE_ENV &&` guard stops the component RENDERING in production
+ * but not being BUNDLED: its markup strings and its stylesheet both end up in
+ * the production page chunk, which is the opposite of what this branch is for.
+ * Behind a statically-false ternary the whole import is dropped instead. */
+const MobileScrollProbe =
+  process.env.NODE_ENV === "development"
+    ? dynamic(() => import("@/components/mobile-scroll-lab/MobileScrollProbe"))
+    : null;
+
 export const metadata: Metadata = {
   alternates: { canonical: "/" },
   openGraph: {
@@ -34,6 +46,7 @@ export default function Home() {
           The NODE_ENV check compiles it out of production entirely, so it costs
           real visitors nothing while staying available under `npm run dev`. */}
       {process.env.NODE_ENV === "development" && <PerfProbe />}
+      {MobileScrollProbe && <MobileScrollProbe />}
       <HeroSection />
       {/* Soft lock: the card deck + entry prompt. Holds the rest of the page
           until all four cards are flipped or Skip is pressed. */}

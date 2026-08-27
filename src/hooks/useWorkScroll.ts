@@ -2,6 +2,11 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { WORK_LANDING, WORK_SCROLL_CONFIG, type WorkScrollZone } from "@/data/work";
+import {
+  readDiscMode,
+  recordReadCost,
+  subscribeDiscMode,
+} from "@/components/mobile-scroll-lab/disc-scroll-probe";
 
 interface WorkScrollState {
   screenIndex: number;
@@ -66,6 +71,15 @@ export function useWorkScroll() {
   const screenBreaks = useMemo(() => WORK_SCROLL_CONFIG.screenBreaks, []);
   const zones = useMemo(() => WORK_SCROLL_CONFIG.zones, []);
 
+  /* Lets the mobile scroll lab tear down and re-arm the loop when the HUD
+     switches arms, so all three can be compared in one session on one device.
+     Compiled to a no-op in production: nothing ever calls setDiscMode there. */
+  const [discArm, setDiscArm] = useState(0);
+  useEffect(() => {
+    if (process.env.NODE_ENV !== "development") return;
+    return subscribeDiscMode(() => setDiscArm((n) => n + 1));
+  }, []);
+
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
@@ -73,7 +87,20 @@ export function useWorkScroll() {
     const mq = window.matchMedia(
       "(max-width: 640px) and (hover: none), (max-width: 640px) and (pointer: coarse)"
     );
-    if (mq.matches) {
+
+    /* Phones keep the disc frozen: the loop never starts, so nothing reads
+       layout while the user flicks through 20,000px of document.
+
+       The mobile scroll lab is the only thing that lifts this, and only under
+       `npm run dev` — see disc-scroll-probe.ts. `readDiscMode()` returns "off"
+       in production unconditionally, so this branch is exactly what shipped. */
+    const discMode = readDiscMode();
+    if (mq.matches && discMode === "off") {
+      if (process.env.NODE_ENV === "development") {
+        // Switching back to the baseline arm: put the disc where a phone that
+        // never ran the loop would have left it, rather than frozen mid-turn.
+        el.querySelector<HTMLElement>(".cd-disc")?.style.removeProperty("transform");
+      }
       setState({ screenIndex: -1, activeLabel: "", hintHidden: true });
       return;
     }
@@ -95,15 +122,68 @@ export function useWorkScroll() {
     const discEl = el.querySelector<HTMLElement>(".cd-disc");
     const labelEl = el.querySelector<HTMLElement>(".cd-active-label");
 
-    const getProgress = () => {
+    /* Shipped read. Two layout queries per frame, and the tick writes the
+       disc's transform before the next one, so each is a forced synchronous
+       layout against the full document. Desktop has always paid this. */
+    const getProgressByRect = () => {
       const rect = el.getBoundingClientRect();
       const scrollHeight = Math.max(el.offsetHeight - window.innerHeight, 0);
       const scrolled = Math.max(0, Math.min(scrollHeight, -rect.top));
       return scrollHeight > 0 ? scrolled / scrollHeight : 0;
     };
 
+    /* Lab arm "cached" — identical arithmetic, no layout read in the frame.
+       `-rect.top` is `scrollY - elTop` by definition, and the section's height
+       only changes when something resizes, so both are measured outside the
+       scroll path and re-measured when they can actually have changed. */
+    let elTop = 0;
+    let elHeight = 0;
+    let winH = 0;
+    const measure = () => {
+      elTop = el.getBoundingClientRect().top + window.scrollY;
+      elHeight = el.offsetHeight;
+      winH = window.innerHeight;
+    };
+
+    const getProgressCached = () => {
+      const scrollHeight = Math.max(elHeight - winH, 0);
+      const scrolled = Math.max(0, Math.min(scrollHeight, window.scrollY - elTop));
+      return scrollHeight > 0 ? scrolled / scrollHeight : 0;
+    };
+
+    const getProgress = discMode === "cached" ? getProgressCached : getProgressByRect;
+
+    let ro: ResizeObserver | undefined;
+    if (discMode === "cached") {
+      measure();
+      window.addEventListener("resize", measure);
+      /* The Work section grows as its chapters mount, and the URL bar
+         collapsing mid-scroll changes innerHeight without a resize event on
+         some mobile browsers — observe the element itself as well. */
+      ro = new ResizeObserver(measure);
+      ro.observe(el);
+    }
+
+    /* Read-cost accounting for the lab. False on every shipped path, so the
+       tick below does byte-for-byte the work it does today. Frame cadence is
+       measured by the HUD instead — it has to exist in the `off` arm too,
+       where this loop never runs. */
+    const instrument = discMode !== "off";
+
     const tick = () => {
-      const progress = getProgress();
+      let progress: number;
+      if (instrument) {
+        /* a→b times nothing and b→c times the read, on the same frame and in
+           the same cold state. Reporting c-b alone measures the clock as much
+           as the geometry, which is how both arms first came back identical. */
+        const a = performance.now();
+        const b = performance.now();
+        progress = getProgress();
+        const c = performance.now();
+        recordReadCost(c - b, b - a);
+      } else {
+        progress = getProgress();
+      }
 
       let nextScreenIndex = 0;
       for (let i = 1; i < screenBreaks.length; i += 1) {
@@ -199,8 +279,12 @@ export function useWorkScroll() {
       stop();
       io.disconnect();
       document.removeEventListener("visibilitychange", onVisibility);
+      if (ro) {
+        ro.disconnect();
+        window.removeEventListener("resize", measure);
+      }
     };
-  }, [screenBreaks, zones]);
+  }, [screenBreaks, zones, discArm]);
 
   return { ref, ...state };
 }
