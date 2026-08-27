@@ -10,6 +10,7 @@ import SiteFooter from "@/components/SiteFooter";
 import StructuredData from "@/components/StructuredData";
 import SoftLockGate from "@/components/design-lab/SoftLockGate";
 import PerfProbe from "@/components/x-perf/PerfProbe";
+import StoryProgressSpine from "@/components/work/StoryProgressSpine";
 import { SITE_TITLE, SITE_DESCRIPTION } from "@/data/site";
 
 const WorkSection = dynamic(() => import("@/components/work/WorkSectionResponsive"));
@@ -35,6 +36,9 @@ export default function Home() {
       <SoftLockGate>
         <BrandsCarousel />
         <WorkSection />
+        {/* Right-edge guide through the four Work chapters. Renders nothing
+            until Work is on screen, and nothing at all if it never mounts. */}
+        <StoryProgressSpine />
         {/* Directly below the Work section's closing "Let's work together"
             chapter, so the three areas that CTA names resolve into what each
             one actually covers before the page reaches Connect. */}

@@ -1,0 +1,120 @@
+/* ──────────────────────────────────────────────────────────────────────────
+   Story progress spine. Four markers on a hairline, in the scrollbar gutter.
+
+   POSITION IS THE CONTRAST STRATEGY.
+   The page has light surfaces — the ETB candy-bars in chapter 02 and
+   WorldPulse's white CTA pill — and white ink vanishes on both. Rather than
+   fight that with a plate or a blend mode (which does not work here: the
+   chapters establish their own stacking contexts, so the spine would blend
+   against the root background instead of the bar in front of it), the spine
+   simply never leaves the right gutter, which the page never paints into.
+
+   Sizing follows the site's metadata voice: nothing brighter than the chapter
+   rail, nothing wider than a scrollbar.
+   ────────────────────────────────────────────────────────────────────────── */
+
+.spine {
+  position: fixed;
+  top: 50%;
+  right: clamp(10px, 1.6vw, 22px);
+  transform: translateY(-50%);
+  /* Above the chapter rail (z 6), below the navbar (20) and every modal. */
+  z-index: 12;
+  /* Only the buttons take pointer events — the spine must never intercept a
+     click meant for the page. The chapter rail already caused exactly that
+     bug once; see the note on .cstack__head in cinematic-work-stack.css. */
+  pointer-events: none;
+}
+
+.spine__list {
+  position: relative;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.spine__item {
+  display: flex;
+  justify-content: center;
+}
+
+/* The hairline. Inset from the end markers so it reads as a rule between
+   them rather than a bar with caps. */
+.spine__rail {
+  position: absolute;
+  top: 22px;
+  bottom: 22px;
+  left: 50%;
+  width: 1px;
+  transform: translateX(-50%);
+  background: rgba(255, 255, 255, 0.14);
+  pointer-events: none;
+}
+
+/* 44x44 hit area with no paint of its own — the visible dot stays 6px.
+   Shrinking the dot must never shrink the target. */
+.spine__btn {
+  pointer-events: auto;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.spine__btn:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.9);
+  outline-offset: -8px;
+  border-radius: 50%;
+}
+
+.spine__marker {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  /* Hollow ahead, filled behind, bright now. */
+  background: transparent;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.38);
+  /* The markers sit ON the rule; an opaque ring punches it through so the
+     line does not appear to run across each dot. */
+  outline: 3px solid #0a0a0a;
+  outline-offset: -1px;
+  transition: background-color 220ms ease, box-shadow 220ms ease, transform 220ms ease;
+}
+
+.spine__item.is-done .spine__marker {
+  background: rgba(255, 255, 255, 0.5);
+  box-shadow: none;
+}
+
+.spine__item.is-active .spine__marker {
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.08);
+  transform: scale(1.35);
+}
+
+.spine__btn:hover .spine__marker {
+  background: rgba(255, 255, 255, 0.7);
+}
+
+/* Phones: same gutter, clear of the safe area on both edges. */
+@media (max-width: 640px) {
+  .spine {
+    right: max(env(safe-area-inset-right, 0px), 8px);
+  }
+}
+
+/* Direct state change, no easing — the marker still moves, it just arrives. */
+@media (prefers-reduced-motion: reduce) {
+  .spine__marker {
+    transition: none;
+  }
+}

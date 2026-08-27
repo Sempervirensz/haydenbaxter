@@ -5,6 +5,7 @@
 import { ATOMICOS_DEMO } from "@/data/atomicosDemo";
 import { CASEBRIEF_DEMO } from "@/data/casebriefDemo";
 import { CORTEX_DEMO } from "@/data/cortexDemo";
+import { WORK_CHAPTERS } from "@/data/workChapters";
 
 // ---- Shared base ----
 
@@ -315,9 +316,7 @@ export const WORK_SCROLL_CONFIG = {
 export const WORK_SCREENS: WorkScreen[] = [
   // ── Screen 1 — WorldPulse ──────────────────────────────────────────────
   {
-    id: 1,
-    name: "WorldPulse",
-    number: "01 / 04",
+    ...WORK_CHAPTERS[0],
     logo: { src: "/images/worldpulse/worldpulse-digital-product-passport-logo.webp", alt: "WorldPulse" },
     type: "full",
     full: {
@@ -337,9 +336,7 @@ export const WORK_SCREENS: WorkScreen[] = [
 
   // ── Screen 2 — Emerging Tech Builds ────────────────────────────────────
   {
-    id: 2,
-    name: "Selected AI Work",
-    number: "02 / 04",
+    ...WORK_CHAPTERS[1],
     type: "emerging-tech-builds",
     etb: {
       title: "Selected AI Work",
@@ -578,9 +575,7 @@ export const WORK_SCREENS: WorkScreen[] = [
 
   // ── Screen 3 — Supply Chain ────────────────────────────────────────────
   {
-    id: 3,
-    name: "Supply Chain",
-    number: "03 / 04",
+    ...WORK_CHAPTERS[2],
     type: "supply-chain",
     supplyChain: {
       description: "A look at my work in global supply chains, sourcing, and traceability. Ideas, systems, and lessons from the world behind the products we use every day.",
@@ -755,9 +750,7 @@ export const WORK_SCREENS: WorkScreen[] = [
 
   // ── Screen 4 — Consulting ──────────────────────────────────────────────
   {
-    id: 4,
-    name: "Consulting",
-    number: "04 / 04",
+    ...WORK_CHAPTERS[3],
     type: "consulting",
     consulting: {
       eyebrow: "AI strategy + implementation roadmap",

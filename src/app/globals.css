@@ -25,6 +25,31 @@ html {
   overscroll-behavior-y: none;
 }
 
+/* ──────────────────────────────────────────────────────────────────────────
+   The page scrollbar.
+
+   Until now this was the raw OS scrollbar — a light grey bar against a
+   #0a0a0a page, the one piece of chrome that never joined the site.
+
+   STANDARD PROPERTIES ONLY, DELIBERATELY.
+   The obvious richer version uses ::-webkit-scrollbar to get a rounded,
+   inset thumb. It is not worth it here: declaring that pseudo-element makes
+   Chrome swap macOS overlay scrollbars for CLASSIC ones, which then reserve
+   ~12px permanently and shift the whole layout sideways. `scrollbar-color`
+   repaints without touching the scrollbar's box model or its overlay
+   behaviour, so nothing moves.
+
+   Support: Firefox 64+, Chrome 121+, Safari 18.2+. Older engines keep their
+   default bar — plainer, never broken. Scoped to `html` so this is the PAGE
+   scrollbar only; inner scrollers keep their own.
+
+   Scrolling itself is untouched: same wheel, trackpad, touch, keyboard and
+   drag behaviour, same document height, same thumb geometry.
+   ────────────────────────────────────────────────────────────────────────── */
+html {
+  scrollbar-color: rgba(255, 255, 255, 0.24) transparent;
+}
+
 /* Custom Properties */
 :root {
   --card-width: 280px;
