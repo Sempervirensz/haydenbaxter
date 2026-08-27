@@ -13,24 +13,7 @@ interface PlayingCardProps {
   isFlipped: boolean;
   showCaption: boolean;
   onFlip: () => void;
-  scrollProgress: number;
-}
-
-function easeOutCubic(t: number): number {
-  return 1 - Math.pow(1 - t, 3);
-}
-
-function computeUnveilTransform(
-  progress: number,
-  bunched: CardData["bunchedTransform"],
-  scale: number
-): string {
-  const t = easeOutCubic(Math.min(Math.max(progress, 0), 1));
-  const tx = bunched.translateX * scale * (1 - t);
-  const ty = bunched.translateY * scale * (1 - t);
-  const rot = bunched.rotate * (1 - t);
-  const sc = bunched.scale + (1 - bunched.scale) * t;
-  return `translateX(${tx}px) translateY(${ty}px) rotate(${rot}deg) scale(${sc})`;
+  scrollProgress: number | null;
 }
 
 export default function PlayingCard({
@@ -38,7 +21,6 @@ export default function PlayingCard({
   isFlipped,
   showCaption,
   onFlip,
-  scrollProgress,
 }: PlayingCardProps) {
   const wrapperRef = useRef<HTMLButtonElement>(null);
   const [transformScale, setTransformScale] = useState(1);
@@ -55,21 +37,25 @@ export default function PlayingCard({
     return () => window.removeEventListener("resize", updateScale);
   }, []);
 
-  const unveilTransform = computeUnveilTransform(
-    scrollProgress,
-    card.bunchedTransform,
-    transformScale
-  );
   const flipTransform = `rotateY(${isFlipped ? 180 : 0}deg)`;
 
   const isRed = card.color === "red";
-  // #b91c1c measured 3.06:1 on the card face at 12.2px — under AA (4.5:1).
-  // Darkened only the red; the suit colour reads the same at this size.
   const textColor = isRed ? "#8f1414" : "#ffffff";
+
+  // Bunched geometry handed to CSS. --unveil is written once per frame on the
+  // deck container by useScrollProgress; the transform below is the exact
+  // algebra computeUnveilTransform used, evaluated by the style engine.
+  const vars = {
+    "--bx": card.bunchedTransform.translateX,
+    "--by": card.bunchedTransform.translateY,
+    "--br": card.bunchedTransform.rotate,
+    "--bs": card.bunchedTransform.scale,
+    "--cscale": transformScale,
+  } as React.CSSProperties;
 
   return (
     <div className="card-column">
-      <div className="card-perspective-wrapper" style={{ transform: unveilTransform }}>
+      <div className="card-perspective-wrapper card-perspective-wrapper--cssvar" style={vars}>
         <button
           ref={wrapperRef}
           type="button"
@@ -80,18 +66,15 @@ export default function PlayingCard({
         >
           <Tooltip visible={!isFlipped} color={card.color} />
           <div className="card-inner" style={{ transform: flipTransform }}>
-            {/* Front face — the card back design (initially visible) */}
             <div className="card-face card-front">
               <CardBack variant={card.backVariant} />
             </div>
-            {/* Back face — the card content (revealed on flip) */}
             <div className="card-face card-back">
               <CardFront card={card} />
             </div>
           </div>
         </button>
       </div>
-      {/* Caption below card — desktop only (mobile uses shared caption in CardDeck) */}
       <div
         className="card-caption hidden sm:block"
         style={{
@@ -102,17 +85,11 @@ export default function PlayingCard({
       >
         <h2
           className="card-caption__title font-bold tracking-wider leading-tight"
-          style={{
-            color: textColor,
-            fontFamily: "var(--font-serif)",
-          }}
+          style={{ color: textColor, fontFamily: "var(--font-serif)" }}
         >
           {card.title}
         </h2>
-        <p
-          className="card-caption__desc mt-0.5"
-          style={{ fontFamily: "var(--font-sans)" }}
-        >
+        <p className="card-caption__desc mt-0.5" style={{ fontFamily: "var(--font-sans)" }}>
           {card.description}
         </p>
       </div>

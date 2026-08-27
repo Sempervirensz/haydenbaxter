@@ -137,8 +137,11 @@ export default function SoftLockGate({ children }: { children: React.ReactNode }
       {/* Real homepage card-deck section — unchanged markup. */}
       <section className="bg-[#0a0a0a] relative pb-8">
         <div
-          className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] max-w-full h-[400px] rounded-full opacity-20 blur-[120px] pointer-events-none"
-          style={{ background: "radial-gradient(ellipse, rgba(255,255,255,0.15), transparent)" }}
+          className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] max-w-full h-[400px] rounded-full opacity-20 pointer-events-none"
+          style={{
+            background:
+              "radial-gradient(ellipse at center, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0.11) 28%, rgba(255,255,255,0.05) 52%, rgba(255,255,255,0.015) 72%, transparent 88%)",
+          }}
         />
         <CardDeck onRevealedChange={handleRevealed} />
       </section>

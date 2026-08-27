@@ -18,7 +18,7 @@
 //
 // All copy comes from `@/data/personas`. Nothing is retyped here.
 
-import { useId, useState } from "react";
+import { useId, useState, useEffect, useRef } from "react";
 import {
   PERSONAS,
   PERSONAS_HEADING,
@@ -43,6 +43,7 @@ import "@/components/personas.css";
  * and as the reduced-motion fallback.
  */
 const PLATE_SRC = "/personas-plate.mp4";
+const PLATE_LEAD_PX = 600;
 const PLATE_POSTER = "/personas-plate.jpg";
 
 export default function PersonasSection() {
@@ -54,6 +55,27 @@ export default function PersonasSection() {
   const [open, setOpen] = useState<PersonaId | null>(null);
   const reducedMotion = usePrefersReducedMotion();
   const uid = useId();
+
+  /* autoPlay defeats preload="none" — the media element begins resource
+     selection as soon as it has a src, gate or no gate. So withhold the src
+     until Personas is actually approaching the viewport. */
+  const plateRef = useRef<HTMLVideoElement>(null);
+  const [armed, setArmed] = useState(false);
+  useEffect(() => {
+    const el = plateRef.current;
+    if (!el || armed) return;
+    const io = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((e) => e.isIntersecting)) {
+          setArmed(true);
+          io.disconnect();
+        }
+      },
+      { rootMargin: `${PLATE_LEAD_PX}px` }
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, [armed]);
 
   return (
     <section id="personas" className="personas">
@@ -69,9 +91,10 @@ export default function PersonasSection() {
                this clip before the visitor had flipped a card. autoPlay still
                starts it once it scrolls into view. */
             <video
-              src={PLATE_SRC}
-              poster={PLATE_POSTER}
-              autoPlay
+              ref={plateRef}
+              src={armed ? PLATE_SRC : undefined}
+              poster={armed ? PLATE_POSTER : undefined}
+              autoPlay={armed}
               muted
               loop
               playsInline
