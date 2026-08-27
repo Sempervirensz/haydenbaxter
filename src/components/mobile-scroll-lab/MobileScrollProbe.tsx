@@ -31,6 +31,9 @@ import {
 } from "./disc-scroll-probe";
 import { NATIVE_STYLE_ID, nativeDiscCss, supportsNativeTimeline } from "./disc-techniques";
 import { DISC_TECHNIQUES, techniqueDef } from "./disc-technique-catalog";
+import { LANDING_VARIANTS } from "./landing-variant-catalog";
+import { type LandingOptions } from "./landing-variants";
+import { readLandingOptions, setLandingOptions, subscribeLanding } from "./landing-bus";
 import { WORK_SCROLL_CONFIG } from "@/data/work";
 import "./mobile-scroll-lab.css";
 
@@ -63,6 +66,12 @@ export default function MobileScrollProbe() {
      judged on. Collapsible, and collapsed by default when framed, because the
      numbers only mean anything on a real phone anyway. */
   const [collapsed, setCollapsed] = useState(false);
+  /* The landing arms, drivable HERE rather than only from /mobile-scroll-lab.
+     That lab frames the homepage in a phone-sized iframe, which is the right
+     tool on a desktop and a phone-inside-a-phone on a phone. On the device the
+     arms have to be reachable from the page itself, or the only way to switch
+     one is hand-editing a query string on a touch keyboard. */
+  const [landing, setLandingState] = useState<LandingOptions>(readLandingOptions);
   const scrolling = useRef(false);
 
   useEffect(() => {
@@ -102,6 +111,7 @@ export default function MobileScrollProbe() {
   }, []);
 
   useEffect(() => subscribeDiscMode(() => setMode(readDiscMode())), []);
+  useEffect(() => subscribeLanding(() => setLandingState(readLandingOptions())), []);
 
   /* Driven from outside when this page is framed by /mobile-scroll-lab. */
   useEffect(() => listenForDiscMessages(), []);
@@ -165,16 +175,17 @@ export default function MobileScrollProbe() {
   const report = useCallback(() => {
     if (!stats) return "";
     return [
-      `DISC ARM: ${mode}  gate ${gate ? "ON" : "OFF (not a phone)"}  ${env}`,
+      `DISC ${mode} · LANDING ${landing.variant}${landing.start ? "+01" : ""}${landing.play !== "off" ? "+play:" + landing.play : ""}${landing.cue ? "+cue" : ""}  gate ${gate ? "ON" : "OFF (not a phone)"}  ${env}`,
       `scroll frames ${stats.frames} over ${Math.round(stats.spanMs)}ms`,
       `  fps ${fmt(stats.fps)}  p95 ${stats.frameP95}ms  worst ${Math.round(stats.frameMax)}ms`,
-      `  janky >16.7ms ${stats.over16} (${stats.frames ? Math.round((stats.over16 / stats.frames) * 100) : 0}%)  dropped >33ms ${stats.over33}`,
+      `  ${Math.round(1000 / stats.nominalMs)}Hz device (${stats.nominalMs}ms budget)`,
+      `  janky ${stats.over16} (${stats.frames ? Math.round((stats.over16 / stats.frames) * 100) : 0}%)  dropped ${stats.over33}`,
       stats.reads
         ? `  geometry read: net ${fmt(stats.readMean, 3)}ms/tick  worst ${fmt(stats.readMax, 2)}ms  over ${stats.reads} ticks (clock floor ${fmt(stats.readFloor, 3)}ms)`
         : `  geometry read: none — loop not running (baseline arm)`,
       `  long tasks ${stats.longTasks}  worst ${Math.round(stats.longMax)}ms`,
     ].join("\n");
-  }, [stats, mode, gate, env]);
+  }, [stats, mode, gate, env, landing]);
 
   const copy = useCallback(() => {
     navigator.clipboard?.writeText(report()).then(
@@ -226,6 +237,56 @@ export default function MobileScrollProbe() {
       </div>
       )}
 
+      {!embedded && (
+        <>
+          <div className="disc-probe__arms" role="group" aria-label="Chapter titles">
+            {LANDING_VARIANTS.map((v) => (
+              <button
+                key={v.id}
+                type="button"
+                aria-pressed={landing.variant === v.id}
+                className={landing.variant === v.id ? "is-on" : ""}
+                onClick={() => setLandingOptions({ ...landing, variant: v.id })}
+              >
+                {v.label}
+              </button>
+            ))}
+          </div>
+          <div className="disc-probe__arms" role="group" aria-label="Nudges">
+            <button
+              type="button"
+              aria-pressed={landing.start}
+              className={landing.start ? "is-on" : ""}
+              onClick={() => setLandingOptions({ ...landing, start: !landing.start })}
+            >
+              01 next
+            </button>
+            <button
+              type="button"
+              aria-pressed={landing.play !== "off"}
+              className={landing.play !== "off" ? "is-on" : ""}
+              onClick={() =>
+                setLandingOptions({
+                  ...landing,
+                  play:
+                    landing.play === "off" ? "hub" : landing.play === "hub" ? "shell" : "off",
+                })
+              }
+            >
+              {landing.play === "off" ? "play" : `play·${landing.play}`}
+            </button>
+            <button
+              type="button"
+              aria-pressed={landing.cue}
+              className={landing.cue ? "is-on" : ""}
+              onClick={() => setLandingOptions({ ...landing, cue: !landing.cue })}
+            >
+              cue
+            </button>
+          </div>
+        </>
+      )}
+
       <div className={`disc-probe__gate ${gate ? "" : "disc-probe__bad"}`}>
         {embedded && <b className="disc-probe__armTag">{mode}</b>} gate{" "}
         {gate ? "ON" : "OFF — pointer is fine, this is not the frozen case"} · {env}
@@ -260,6 +321,7 @@ export default function MobileScrollProbe() {
             <span>p95 <em>{stats.frameP95}ms</em></span>
             <span>worst <em>{Math.round(stats.frameMax)}ms</em></span>
             <span>frames <em>{stats.frames}</em></span>
+            <span className="disc-probe__muted">{Math.round(1000 / stats.nominalMs)}Hz</span>
           </div>
           <div className="disc-probe__row">
             <span className={jankPct > 10 ? "disc-probe__bad" : ""}>

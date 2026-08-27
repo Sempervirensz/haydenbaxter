@@ -39,10 +39,16 @@ export default function LandingAffordanceLab() {
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    // Armed by any landing param, so `?disc=` alone leaves this inert.
-    const hasAny =
-      params.has("landing") || params.has("start") || params.has("play") || params.has("cue");
-    if (!hasAny && !params.has("lab")) return;
+    /* Armed by ANY lab param, `?disc=` included.
+       
+       It used to require a landing param specifically, which made the HUD's
+       landing buttons dead on a phone opened with `?disc=cached` alone: the
+       controls were there and pressing them did nothing, which is the exact
+       failure these arms exist to fix. */
+    const hasAny = ["landing", "start", "play", "cue", "lab", "disc"].some((k) =>
+      params.has(k)
+    );
+    if (!hasAny) return;
     setArmed(true);
     setOpts(readLandingOptions());
     const unsubscribe = subscribeLanding(() => setOpts(readLandingOptions()));

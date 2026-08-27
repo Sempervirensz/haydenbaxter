@@ -87,6 +87,8 @@ export interface DiscStats {
   fps: number;
   frameP95: number;
   frameMax: number;
+  /** The device's own frame budget, detected rather than assumed. */
+  nominalMs: number;
   over16: number;
   over33: number;
   reads: number;
@@ -100,8 +102,6 @@ export interface DiscStats {
 const hist = new Uint32Array(BUCKETS);
 let frames = 0;
 let frameMax = 0;
-let over16 = 0;
-let over33 = 0;
 let reads = 0;
 let readSum = 0;
 let readMax = 0;
@@ -115,8 +115,6 @@ export function recordFrameDelta(ms: number) {
   frames += 1;
   spanMs += ms;
   if (ms > frameMax) frameMax = ms;
-  if (ms > 16.7) over16 += 1;
-  if (ms > 33.4) over33 += 1;
   hist[ms >= BUCKETS ? BUCKETS - 1 : ms | 0] += 1;
 }
 
@@ -140,8 +138,6 @@ export function resetDiscStats() {
   hist.fill(0);
   frames = 0;
   frameMax = 0;
-  over16 = 0;
-  over33 = 0;
   reads = 0;
   readSum = 0;
   readMax = 0;
@@ -164,14 +160,41 @@ export function readDiscStats(): DiscStats {
       }
     }
   }
+  /* Jank measured against the DEVICE's frame budget, not a constant.
+     
+     This used to count frames over a hard-coded 16.7ms, which is the nominal
+     frame time of a 60Hz display — so on a 60Hz phone essentially every healthy
+     frame landed a hair over it and the readout said "60.3 fps, janky 61%",
+     which is nonsense on its face. A 120Hz phone had the opposite problem and
+     under-reported.
+     
+     The modal frame time IS the refresh interval: whatever the device does most
+     of the time is what it is trying to do. Everything else is relative to it. */
+  let mode = 0;
+  let modeCount = 0;
+  for (let i = 1; i < BUCKETS; i += 1) {
+    if (hist[i] > modeCount) {
+      modeCount = hist[i];
+      mode = i;
+    }
+  }
+  const nominal = mode || 16;
+  let jank = 0;
+  let dropped = 0;
+  for (let i = 0; i < BUCKETS; i += 1) {
+    if (i > nominal * 1.5) jank += hist[i];
+    if (i > nominal * 2.5) dropped += hist[i];
+  }
+
   return {
     frames,
     spanMs,
     fps: spanMs > 0 ? (frames * 1000) / spanMs : 0,
     frameP95: p95,
     frameMax,
-    over16,
-    over33,
+    nominalMs: nominal,
+    over16: jank,
+    over33: dropped,
     reads,
     /* Net of the clock's own overhead, floored at zero: on a frame where the
        read is genuinely free, noise can put the empty pair above it. */
