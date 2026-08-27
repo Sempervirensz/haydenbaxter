@@ -60,6 +60,7 @@ export const NON_PUBLIC_PREFIXES = [
   "/site-parallax-lab",
   "/work-display-lab",
   "/worldpulse-hero-lab",
+  "/story-nav-lab",
   "/work-preview",
   "/procurebridge-preview",
   "/atomicos-preview",

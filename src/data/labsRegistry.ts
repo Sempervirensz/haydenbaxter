@@ -46,6 +46,8 @@ export const LAB_GROUPS: LabGroup[] = [
       { label: "Cinematic Work Stack", path: "/site-parallax-lab/work-cinema" },
       { label: "↳ Responsive Viewer", path: "/site-parallax-lab/work-cinema/viewer" },
       { label: "Work merged (CD scroll + cinematic)", path: "/site-parallax-lab/work-merged" },
+      { label: "Story navigation lab", path: "/story-nav-lab", note: "12 edge-nav variants · counter + scrollbar treatments · 4 viewports" },
+      { label: "↳ Stage only", path: "/story-nav-lab/stage", note: "The framed page on its own — for keyboard-only testing" },
       { label: "Sticky Depth Handoff", path: "/site-parallax-lab/work-handoff" },
       { label: "Work display lab", path: "/work-display-lab" },
       { label: "Work preview", path: "/work-preview" },

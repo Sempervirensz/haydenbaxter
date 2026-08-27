@@ -1,0 +1,401 @@
+/* ──────────────────────────────────────────────────────────────────────────
+   Story navigator — shared shell for all twelve variants.
+
+   Design constraints taken from .claude/rules/design-language.md and the
+   existing chapter rail (.cstack__num / .mws-rail__num): mono, uppercase,
+   --track-dymo tracking, --ink-* alphas, no bright chrome. The navigator is
+   metadata, so it uses the metadata voice the site already has.
+
+   TOUCH TARGET vs PAINTED DOT
+   These are deliberately decoupled. `.snav__btn` is a >=44px hit area with no
+   background of its own; `.snav__marker` is the 6px thing you actually see.
+   Shrinking the dot never shrinks the target.
+
+   LEGIBILITY OVER PHOTOGRAPHY
+   Chapter 01 is a sunlit coastline and 04 is a bright cityscape, so alpha-only
+   ink disappears. Every painted element carries a drop-shadow rather than a
+   plate — a panel behind the nav would violate "no permanent panels".
+   ────────────────────────────────────────────────────────────────────────── */
+
+.snav {
+  position: fixed;
+  top: 50%;
+  right: clamp(14px, 2.2vw, 34px);
+  transform: translateY(-50%);
+  /* Above card chrome (.cstack__head is 6) and the navbar (20), below modals. */
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-mono, ui-monospace, monospace);
+  /* Never let the navigator's own box swallow clicks meant for the page —
+     only its buttons are interactive. */
+  pointer-events: none;
+}
+
+.snav__list {
+  position: relative;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+}
+
+.snav__item {
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* ── The hit area ────────────────────────────────────────────────────────── */
+
+.snav__btn {
+  pointer-events: auto;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  /* 44px minimum in both axes, per the brief. */
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0 6px 0 10px;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  color: inherit;
+  font: inherit;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.snav__btn:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.9);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+/* ── The painted marker ──────────────────────────────────────────────────── */
+
+.snav__marker {
+  flex: none;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.34);
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.65));
+  transition: background-color 220ms ease, transform 220ms ease, box-shadow 220ms ease;
+}
+
+.snav__item.is-done .snav__marker {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.snav__item.is-active .snav__marker {
+  background: rgba(255, 255, 255, 0.95);
+  transform: scale(1.5);
+  box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.09);
+}
+
+.snav__btn:hover .snav__marker {
+  background: rgba(255, 255, 255, 0.72);
+}
+
+/* ── The section name ────────────────────────────────────────────────────── */
+
+.snav__name {
+  font-size: var(--text-label, 0.75rem);
+  letter-spacing: var(--track-dymo, 0.18em);
+  text-transform: uppercase;
+  color: var(--ink-body, rgba(255, 255, 255, 0.82));
+  white-space: nowrap;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+  /* Hidden names take up no space and are not read twice by AT — the
+     accessible name lives on the button. */
+  opacity: 0;
+  transform: translateX(6px);
+  max-width: 0;
+  overflow: hidden;
+  transition: opacity 240ms ease, transform 240ms ease, max-width 240ms ease;
+}
+
+.snav__name.is-shown {
+  opacity: 1;
+  transform: none;
+  max-width: 22ch;
+}
+
+.snav__nameCount,
+.snav__dotCount,
+.snav__spineEnd {
+  color: var(--ink-faint, rgba(255, 255, 255, 0.54));
+  font-size: 0.9em;
+  letter-spacing: var(--track-label, 0.12em);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+}
+
+.snav__dotCount {
+  position: absolute;
+  right: calc(100% - 2px);
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.snav__spineEnd {
+  pointer-events: none;
+  font-size: var(--text-label, 0.75rem);
+  writing-mode: vertical-rl;
+}
+
+/* ── The spine rule ──────────────────────────────────────────────────────── */
+
+.snav--spine .snav__list {
+  padding-right: 21px; /* centres the rule under the 6px markers */
+}
+
+.snav__rail {
+  position: absolute;
+  top: 22px;
+  bottom: 22px;
+  right: 21px;
+  width: 1px;
+  background: rgba(255, 255, 255, 0.16);
+  pointer-events: none;
+}
+
+/* Continuous variants fill the rule to read progress. */
+.snav--continuous .snav__rail::after {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: var(--snav-fill, 0%);
+  background: rgba(255, 255, 255, 0.62);
+  transition: height 260ms ease;
+}
+
+/* Section-only spine: hollow ahead, filled behind. */
+.snav--spine-sections .snav__marker {
+  background: transparent;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.4);
+}
+.snav--spine-sections .snav__item.is-done .snav__marker {
+  background: rgba(255, 255, 255, 0.55);
+  box-shadow: none;
+}
+.snav--spine-sections .snav__item.is-active .snav__marker {
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.09);
+}
+
+/* Markers sit ON the rule, so give them an opaque core to punch through it. */
+.snav--spine .snav__marker {
+  outline: 3px solid #0a0a0a;
+  outline-offset: -1px;
+}
+
+/* ── Numbered markers ────────────────────────────────────────────────────── */
+
+.snav--numbered .snav__marker {
+  width: auto;
+  height: auto;
+  min-width: 2.2ch;
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+  outline: none;
+  text-align: right;
+  font-size: var(--text-label, 0.75rem);
+  letter-spacing: var(--track-label, 0.12em);
+  color: rgba(255, 255, 255, 0.38);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+  transform: none;
+  filter: none;
+}
+
+.snav--numbered .snav__item.is-done .snav__marker {
+  color: rgba(255, 255, 255, 0.52);
+}
+
+.snav--numbered .snav__item.is-active .snav__marker {
+  color: rgba(255, 255, 255, 0.96);
+  transform: none;
+  box-shadow: none;
+}
+
+.snav--numbered .snav__btn:hover .snav__marker {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* ── Label + dots: proximity scaling ─────────────────────────────────────── */
+
+.snav--label-dots .snav__marker {
+  transition: transform 220ms ease, background-color 220ms ease;
+}
+.snav--label-dots .snav__item.is-done .snav__marker {
+  transform: scale(0.85);
+}
+
+/* ── Collapsible mobile ──────────────────────────────────────────────────── */
+
+.snav--collapsible {
+  /* column-reverse: the toggle sits at the bottom and the list opens upward
+     from it, so the panel reads as belonging to the control that opened it
+     rather than floating below a disconnected row of dots. */
+  flex-direction: column-reverse;
+  align-items: flex-end;
+}
+
+.snav__toggle {
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0 6px;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.snav__toggle:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.9);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+.snav__toggleDots {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.snav__toggleDot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.34);
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.65));
+  transition: background-color 200ms ease, transform 200ms ease;
+}
+
+.snav__toggleDot.is-active {
+  background: rgba(255, 255, 255, 0.95);
+  transform: scale(1.4);
+}
+
+/* Expanded list gets the one concession to a surface: a soft scrim, because
+   four stacked names over a photograph is the case text-shadow alone loses.
+   It exists only while expanded, so it is not a permanent panel. */
+.snav--collapsible.is-open .snav__list {
+  padding: 8px 10px 8px 16px;
+  border-radius: 10px;
+  background: rgba(10, 10, 10, 0.72);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.snav--collapsible .snav__name {
+  opacity: 1;
+  transform: none;
+  max-width: 22ch;
+}
+
+/* ── mobile-minimal readout ──────────────────────────────────────────────── */
+
+.snav--mobile-minimal {
+  top: auto;
+  bottom: calc(env(safe-area-inset-bottom, 0px) + 16px);
+  right: clamp(14px, 4vw, 24px);
+  transform: none;
+}
+
+.snav__readout {
+  pointer-events: auto;
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  min-height: 44px;
+  padding: 0 4px;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.snav__readout:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.9);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+.snav__readoutName {
+  font-size: var(--text-label, 0.75rem);
+  letter-spacing: var(--track-dymo, 0.18em);
+  text-transform: uppercase;
+  color: var(--ink-body, rgba(255, 255, 255, 0.82));
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+}
+
+.snav__readoutCount {
+  font-size: var(--text-label, 0.75rem);
+  letter-spacing: var(--track-label, 0.12em);
+  color: var(--ink-faint, rgba(255, 255, 255, 0.54));
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+}
+
+/* ── Screen-reader-only text ─────────────────────────────────────────────── */
+
+.snav__srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ── Mobile placement ────────────────────────────────────────────────────── */
+
+/* ── Mobile placement ────────────────────────────────────────────────────
+   At 390px there is not room for a reading column AND a ~180px label at the
+   vertical centre — mid-right placement put the active label straight through
+   the body copy. Every edge variant therefore drops to the bottom-right on
+   phones: clear of the reading column, clear of the safe area, and clear of
+   the browser's own bottom chrome. The dot column keeps its edge alignment;
+   only the anchor moves. */
+
+@media (max-width: 640px) {
+  .snav {
+    top: auto;
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 20px);
+    right: max(env(safe-area-inset-right, 0px), 14px);
+    transform: none;
+  }
+}
+
+/* ── Reduced motion ──────────────────────────────────────────────────────── */
+/* Direct movement, not elaborate animation. State still changes — it just
+   arrives immediately instead of easing. Applies both to the OS setting and to
+   the lab's simulated switch (.snav--reduced), so the two agree. */
+
+.snav--reduced .snav__marker,
+.snav--reduced .snav__name,
+.snav--reduced .snav__toggleDot,
+.snav--reduced .snav__rail::after {
+  transition: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .snav__marker,
+  .snav__name,
+  .snav__toggleDot,
+  .snav__rail::after {
+    transition: none !important;
+  }
+}
