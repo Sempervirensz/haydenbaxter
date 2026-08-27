@@ -27,6 +27,15 @@ const MobileScrollProbe =
     ? dynamic(() => import("@/components/mobile-scroll-lab/MobileScrollProbe"))
     : null;
 
+/* Landing affordance arms — `?landing=`, `?start`, `?play`, `?cue`. Answers a
+   different question on the same screen: people tap the chapter titles
+   expecting to go somewhere, and today nothing happens. Same dead-branch
+   import, same reason. */
+const LandingAffordanceLab =
+  process.env.NODE_ENV === "development"
+    ? dynamic(() => import("@/components/mobile-scroll-lab/LandingAffordanceLab"))
+    : null;
+
 export const metadata: Metadata = {
   alternates: { canonical: "/" },
   openGraph: {
@@ -47,6 +56,7 @@ export default function Home() {
           real visitors nothing while staying available under `npm run dev`. */}
       {process.env.NODE_ENV === "development" && <PerfProbe />}
       {MobileScrollProbe && <MobileScrollProbe />}
+      {LandingAffordanceLab && <LandingAffordanceLab />}
       <HeroSection />
       {/* Soft lock: the card deck + entry prompt. Holds the rest of the page
           until all four cards are flipped or Skip is pressed. */}

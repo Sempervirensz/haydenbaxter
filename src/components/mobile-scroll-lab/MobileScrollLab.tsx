@@ -23,6 +23,9 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { DISC_CHANNEL } from "./disc-scroll-probe";
+import { LANDING_CHANNEL } from "./landing-bus";
+import { LANDING_DEFAULTS, type LandingOptions } from "./landing-variants";
+import { LANDING_VARIANTS, landingDef } from "./landing-variant-catalog";
 import type { DiscTechnique } from "./disc-techniques";
 import { DISC_TECHNIQUES } from "./disc-technique-catalog";
 import "./mobile-scroll-lab.css";
@@ -41,13 +44,20 @@ export default function MobileScrollLab() {
   const [technique, setTechnique] = useState<DiscTechnique>("cached");
   const [width, setWidth] = useState(390);
   const [height, setHeight] = useState(760);
+  const [landing, setLanding] = useState<LandingOptions>(LANDING_DEFAULTS);
   const [lan, setLan] = useState("");
   const frame = useRef<HTMLIFrameElement>(null);
 
   useEffect(() => {
-    // Whatever host this lab was opened on is the host a phone should use.
-    setLan(`${window.location.origin}/?disc=${technique}`);
-  }, [technique]);
+    /* Whatever host this lab was opened on is the host a phone should use, and
+       the URL carries the whole arm — so a run on the phone is the run that is
+       selected here, not an approximation of it. */
+    const q = new URLSearchParams({ disc: technique, landing: landing.variant });
+    if (landing.start) q.set("start", "1");
+    if (landing.play !== "off") q.set("play", landing.play);
+    if (landing.cue) q.set("cue", "1");
+    setLan(`${window.location.origin}/?${q}`);
+  }, [technique, landing]);
 
   /* The frame's src is set once and never re-bound to `technique`.
      
@@ -56,7 +66,9 @@ export default function MobileScrollLab() {
      soft-lock gate, and scrolled Work back out of view. The whole point of the
      message channel is switching without losing the scroll position you are
      judging the technique from. */
-  const [initialSrc] = useState(() => `/?disc=${technique}`);
+  /* `lab` arms the landing enhancer even when every arm starts at its default,
+     so toggling one mid-session takes effect without a reload. */
+  const [initialSrc] = useState(() => `/?disc=${technique}&lab=1`);
 
   const post = useCallback((value: DiscTechnique) => {
     frame.current?.contentWindow?.postMessage({ source: DISC_CHANNEL, value }, "*");
@@ -70,9 +82,30 @@ export default function MobileScrollLab() {
     [post]
   );
 
-  /* A manual reload of the frame comes back on whatever `?disc=` it was opened
-     with — re-send so the buttons and the frame cannot disagree. */
-  const onFrameLoad = useCallback(() => post(technique), [post, technique]);
+  const postLanding = useCallback((value: LandingOptions) => {
+    frame.current?.contentWindow?.postMessage(
+      { source: LANDING_CHANNEL, value },
+      "*"
+    );
+  }, []);
+
+  const setLandingOpt = useCallback(
+    (patch: Partial<LandingOptions>) => {
+      setLanding((prev) => {
+        const next = { ...prev, ...patch };
+        postLanding(next);
+        return next;
+      });
+    },
+    [postLanding]
+  );
+
+  /* A manual reload of the frame comes back on whatever the URL said — re-send
+     both channels so the controls and the frame cannot disagree. */
+  const onFrameLoad = useCallback(() => {
+    post(technique);
+    postLanding(landing);
+  }, [post, postLanding, technique, landing]);
 
   const reloadFrame = useCallback(() => {
     const win = frame.current?.contentWindow;
@@ -97,9 +130,10 @@ export default function MobileScrollLab() {
       <header className="msl__head">
         <h1 className="msl__title">Mobile scroll lab</h1>
         <p className="msl__sub">
-          Six ways to turn the CD disc, driving the real homepage. The disc is
-          frozen on phones today because the shipped way of turning it reads
-          layout every frame — these are the alternatives.
+          Two questions on one screen, driving the real homepage. The disc is
+          frozen on phones because the shipped way of turning it reads layout
+          every frame. And people tap the chapter titles expecting to go
+          somewhere, which today does nothing at all.
         </p>
       </header>
 
@@ -125,6 +159,60 @@ export default function MobileScrollLab() {
                 {t.label}
               </button>
             ))}
+          </div>
+        </div>
+
+        <div className="msl__group" role="group" aria-label="Chapter titles">
+          <span className="msl__legend">chapter titles</span>
+          <div className="msl__btns">
+            {LANDING_VARIANTS.map((v) => (
+              <button
+                key={v.id}
+                type="button"
+                aria-pressed={landing.variant === v.id}
+                className={`msl__btn ${landing.variant === v.id ? "is-on" : ""}`}
+                onClick={() => setLandingOpt({ variant: v.id })}
+              >
+                {v.label}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div className="msl__group" role="group" aria-label="Encouragement">
+          <span className="msl__legend">nudges</span>
+          <div className="msl__btns">
+            <button
+              type="button"
+              aria-pressed={landing.start}
+              className={`msl__btn ${landing.start ? "is-on" : ""}`}
+              onClick={() => setLandingOpt({ start: !landing.start })}
+            >
+              01 as next step
+            </button>
+            <button
+              type="button"
+              aria-pressed={landing.play !== "off"}
+              className={`msl__btn ${landing.play !== "off" ? "is-on" : ""}`}
+              onClick={() =>
+                setLandingOpt({
+                  play:
+                    landing.play === "off" ? "hub" : landing.play === "hub" ? "shell" : "off",
+                })
+              }
+            >
+              {landing.play === "off"
+                ? "press play"
+                : `press play · ${landing.play}`}
+            </button>
+            <button
+              type="button"
+              aria-pressed={landing.cue}
+              className={`msl__btn ${landing.cue ? "is-on" : ""}`}
+              onClick={() => setLandingOpt({ cue: !landing.cue })}
+            >
+              scroll cue
+            </button>
           </div>
         </div>
 
@@ -176,6 +264,10 @@ export default function MobileScrollLab() {
           {current.note}
         </p>
       )}
+      <p className="msl__note">
+        <span className="msl__noteId">{landingDef(landing.variant).label}</span>
+        {landingDef(landing.variant).note}
+      </p>
 
       <div className="msl__stage">
         <iframe

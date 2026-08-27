@@ -272,3 +272,176 @@
   border-radius: 3px;
   background: rgba(203, 168, 106, 0.18);
 }
+
+/* ===========================================================================
+   Landing affordance arms (`mslx-`), applied to the real landing screen.
+
+   Everything here is additive and namespaced, so removing the class removes
+   the arm. Nothing overrides a shipped `.wl-c2__*` rule outright — an arm that
+   quietly restyled the list would be testing two changes at once.
+   ======================================================================== */
+
+/* A row that is a control in this arm. */
+.wl-c2__item.mslx-tappable {
+  cursor: pointer;
+  /* Extends the hit area to the full row without moving the type: the shipped
+     grid rows are ~44px on mobile, which is the floor, not comfortable. */
+  margin-inline: -12px;
+  padding-inline: 12px;
+  border-radius: 8px;
+  -webkit-tap-highlight-color: transparent;
+  transition: opacity 320ms ease, background-color 160ms ease;
+}
+@media (hover: hover) and (pointer: fine) {
+  .wl-c2__item.mslx-tappable:hover {
+    opacity: 1;
+    background: rgba(243, 243, 243, 0.045);
+  }
+}
+/* Tactile press, per the DYMO idiom — the row goes down, not away. */
+.wl-c2__item.mslx-tappable:active {
+  background: rgba(243, 243, 243, 0.07);
+  transform: translateY(1px);
+}
+.wl-c2__item.mslx-tappable:focus-visible {
+  outline: 2px solid #cba86a;
+  outline-offset: 2px;
+}
+
+/* A row that is deliberately NOT a control, in the `first only` arm. Reads as
+   what is coming rather than as a dimmed button. */
+.wl-c2__item.mslx-preview {
+  cursor: default;
+  opacity: 0.42;
+}
+.wl-c2__item.mslx-preview .wl-c2__name {
+  font-style: italic;
+}
+
+/* Chapter 01 as the next step. */
+.wl-c2__item.mslx-next {
+  opacity: 1;
+  border-bottom-color: rgba(203, 168, 106, 0.55);
+}
+.wl-c2__item.mslx-next .wl-c2__num,
+.wl-c2__item.mslx-next .wl-c2__name {
+  color: #f3f3f3;
+}
+.wl-c2__item.mslx-next .wl-c2__num {
+  color: #cba86a;
+}
+.mslx-startTag {
+  /* The list is a two-column grid (number | name); this belongs under the name
+     rather than in a third column that would re-flow every row. */
+  grid-column: 2;
+  justify-self: start;
+  margin-top: 6px;
+  padding: 3px 9px;
+  border-radius: 4px;
+  background: rgba(203, 168, 106, 0.16);
+  color: #cba86a;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 10px;
+  letter-spacing: var(--track-dymo, 0.12em);
+  text-transform: uppercase;
+}
+
+/* The CD as a play control. */
+.cd-player-wrap.mslx-play {
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.cd-player-wrap.mslx-play:focus-visible {
+  outline: 2px solid #cba86a;
+  outline-offset: 6px;
+  border-radius: 12px;
+}
+.mslx-playBadge {
+  position: absolute;
+  z-index: 5;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+}
+
+/* `hub` — a play glyph in the spindle. Big, central, and the one part of the
+   disc artwork that carries no printed detail to compete with. */
+.mslx-playBadge--hub {
+  top: 55%;
+  left: 50%;
+  translate: -50% -50%;
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  background: rgba(10, 10, 10, 0.72);
+  border: 1px solid rgba(203, 168, 106, 0.7);
+  color: #cba86a;
+  font-size: 19px;
+  line-height: 1;
+  /* Optical centring: a triangle glyph sits left of its own box. */
+  text-indent: 3px;
+}
+
+/* `shell` — light up the PLAY button already printed on the transport.
+   
+   Positioned as a fraction of the shell rather than in pixels: the artwork is
+   a fixed 900x1100 scaled to 100% width, so the printed button sits at the
+   same fraction of the box at every size. Measured off the asset, not guessed. */
+.mslx-playBadge--shell {
+  top: 28.2%;
+  left: 82.8%;
+  /* `translate` then `rotate` — individual transform properties compose in
+     that order, so this centres on the button and then matches its tilt,
+     rather than swinging the box around the shell's origin. */
+  translate: -50% -50%;
+  rotate: 18deg;
+  width: 17.5%;
+  aspect-ratio: 1.85;
+  border-radius: 999px;
+  border: 1px solid rgba(203, 168, 106, 0.9);
+  background: rgba(203, 168, 106, 0.14);
+  box-shadow: 0 0 14px rgba(203, 168, 106, 0.45);
+}
+
+.cd-player-wrap.mslx-play:active .mslx-playBadge--hub {
+  background: rgba(203, 168, 106, 0.9);
+  color: #14100a;
+}
+.cd-player-wrap.mslx-play:active .mslx-playBadge--shell {
+  background: rgba(203, 168, 106, 0.55);
+}
+@media (prefers-reduced-motion: reduce) {
+  .wl-c2__item.mslx-tappable {
+    transition: none;
+  }
+  .wl-c2__item.mslx-tappable:active {
+    transform: none;
+  }
+}
+
+/* Collapsed: a single tag that names the arm and gets out of the way of the
+   chapter list underneath, which is the other thing being judged on this
+   screen. */
+.disc-probe.is-collapsed {
+  left: auto;
+  padding: 0;
+  border: 0;
+  background: none;
+}
+.disc-probe__fold {
+  align-self: flex-end;
+  min-height: 26px;
+  padding: 0 9px;
+  border: 1px solid rgba(203, 168, 106, 0.5);
+  border-radius: 6px;
+  background: rgba(8, 10, 10, 0.9);
+  color: #cba86a;
+  font: inherit;
+  font-size: 11px;
+  cursor: pointer;
+  pointer-events: auto;
+}
+.disc-probe__fold:focus-visible {
+  outline: 2px solid #f3f3f3;
+  outline-offset: 2px;
+}

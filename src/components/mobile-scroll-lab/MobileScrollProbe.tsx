@@ -58,6 +58,11 @@ export default function MobileScrollProbe() {
      the explanation. Repeating them here costs a third of a 390px viewport —
      of the very thing being looked at. Embedded, the HUD is numbers only. */
   const [embedded, setEmbedded] = useState(false);
+  /* The HUD sits at the top of the viewport, which is exactly where the chapter
+     list sits — it was covering row 01, the row the landing arms are being
+     judged on. Collapsible, and collapsed by default when framed, because the
+     numbers only mean anything on a real phone anyway. */
+  const [collapsed, setCollapsed] = useState(false);
   const scrolling = useRef(false);
 
   useEffect(() => {
@@ -66,9 +71,12 @@ export default function MobileScrollProbe() {
     setMode(readDiscMode());
     setNativeOk(supportsNativeTimeline());
     try {
-      setEmbedded(window.self !== window.top);
+      const framed = window.self !== window.top;
+      setEmbedded(framed);
+      setCollapsed(framed);
     } catch {
       setEmbedded(true); // Cross-origin frame: still a frame.
+      setCollapsed(true);
     }
 
     const mq = window.matchMedia(PHONE_GATE);
@@ -183,7 +191,21 @@ export default function MobileScrollProbe() {
   const jankPct = stats && stats.frames ? (stats.over16 / stats.frames) * 100 : 0;
 
   return (
-    <div className={`disc-probe ${embedded ? "is-embedded" : ""}`} role="status" aria-live="polite">
+    <div
+      className={`disc-probe ${embedded ? "is-embedded" : ""} ${collapsed ? "is-collapsed" : ""}`}
+      role="status"
+      aria-live="polite"
+    >
+      <button
+        type="button"
+        className="disc-probe__fold"
+        aria-expanded={!collapsed}
+        onClick={() => setCollapsed((c) => !c)}
+      >
+        {collapsed ? `${mode} ▾` : "hide ▴"}
+      </button>
+      {collapsed ? null : (
+      <>
       {!embedded && (
       <div className="disc-probe__arms" role="group" aria-label="Disc scroll arm">
         {DISC_TECHNIQUES.map((t) => (
@@ -266,6 +288,8 @@ export default function MobileScrollProbe() {
             {copied ? "copied" : "Copy all"}
           </button>
         </>
+      )}
+      </>
       )}
     </div>
   );

@@ -22,6 +22,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { WORK_CHAPTERS } from "@/data/workChapters";
+import { findChapters } from "./findChapters";
 import "./story-progress-spine.css";
 
 /** Ordinal + name per chapter. WORK_CHAPTERS is the shared source WORK_SCREENS
@@ -29,25 +30,6 @@ import "./story-progress-spine.css";
  *  it does not drag the AtomicOS / CaseBrief / Cortex demo payloads that
  *  src/data/work.ts carries into the homepage's initial bundle. */
 const CHAPTERS = WORK_CHAPTERS;
-
-/**
- * The live chapter elements, in order.
- *
- * Desktop (WorkSectionCinematic, >=1024px) tags each chapter with
- * `data-cstack-id`; mobile (WorkSectionMobile) renders the same four
- * `.work__chapter--detail` tracks untagged. Empty means Work has not mounted
- * yet — WorkSectionResponsive renders a bare `<section id="work">` until it has
- * measured the viewport and its dynamic import has landed.
- */
-function findChapters(): HTMLElement[] {
-  const tagged = Array.from(
-    document.querySelectorAll<HTMLElement>("[data-cstack-id]")
-  ).sort((a, b) => Number(a.dataset.cstackId) - Number(b.dataset.cstackId));
-  if (tagged.length) return tagged;
-  return Array.from(
-    document.querySelectorAll<HTMLElement>("#work .work__chapter--detail")
-  );
-}
 
 export default function StoryProgressSpine() {
   const [section, setSection] = useState(0); // 0 = outside the story
