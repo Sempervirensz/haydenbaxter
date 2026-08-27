@@ -203,7 +203,50 @@ export default function LandingAffordanceLab() {
         const list = landing.querySelector(".wl-c2__list");
         if (list?.parentElement === landing) list.after(hint);
         else landing.appendChild(hint);
-        cleanups.push(() => hint.remove());
+
+        /* Half a restoration is worse than none: globals.css already styles
+           `.scroll-hint.is-hidden` with a 600ms fade, and useWorkScroll already
+           computes the flag for it (`progress > 0.08`) — but nothing has
+           consumed either since the port. A cue that says "Scroll to explore"
+           and is still saying it four chapters later stops being a cue and
+           becomes furniture.
+           
+           Same threshold as the hook, computed the cheap way this branch has
+           been arguing for all along: geometry cached outside the scroll frame,
+           and only `scrollY` read inside it. */
+        const work = document.querySelector<HTMLElement>("#work");
+        let top = 0;
+        let span = 0;
+        const measure = () => {
+          if (!work) return;
+          top = work.getBoundingClientRect().top + window.scrollY;
+          span = Math.max(work.offsetHeight - window.innerHeight, 0);
+        };
+        let queued = false;
+        const read = () => {
+          queued = false;
+          if (span <= 0) return;
+          const progress = (window.scrollY - top) / span;
+          hint.classList.toggle("is-hidden", progress > 0.08);
+        };
+        const onScroll = () => {
+          if (queued) return;
+          queued = true;
+          requestAnimationFrame(read);
+        };
+        measure();
+        read();
+        window.addEventListener("scroll", onScroll, { passive: true });
+        window.addEventListener("resize", measure);
+        const ro = work ? new ResizeObserver(measure) : null;
+        ro?.observe(work!);
+
+        cleanups.push(() => {
+          window.removeEventListener("scroll", onScroll);
+          window.removeEventListener("resize", measure);
+          ro?.disconnect();
+          hint.remove();
+        });
       }
     };
 
