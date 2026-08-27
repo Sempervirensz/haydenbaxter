@@ -1,64 +1,24 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { WORK_LANDING, WORK_SCROLL_CONFIG, type WorkScrollZone } from "@/data/work";
+import { WORK_LANDING, WORK_SCROLL_CONFIG } from "@/data/work";
+import { getCdState, LERP_SPEED } from "@/hooks/cdChoreography";
 import {
   readDiscMode,
   recordReadCost,
   subscribeDiscMode,
 } from "@/components/mobile-scroll-lab/disc-scroll-probe";
+import {
+  makeSmoother,
+  techniqueRunsLoop,
+  techniqueUsesCache,
+} from "@/components/mobile-scroll-lab/disc-techniques";
 
 interface WorkScrollState {
   screenIndex: number;
   activeLabel: string;
   hintHidden: boolean;
 }
-
-function ease(t: number): number {
-  return t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
-}
-
-function clamp01(value: number): number {
-  return Math.max(0, Math.min(1, value));
-}
-
-function getCdState(progress: number, zones: WorkScrollZone[]) {
-  const p = clamp01(progress);
-
-  for (const zone of zones) {
-    if (p >= zone.hold[0] && p <= zone.hold[1]) {
-      return { deg: zone.deg, label: zone.label };
-    }
-  }
-
-  const last = zones[zones.length - 1];
-  if (p > last.hold[1]) {
-    const extra = (p - last.hold[1]) / (1 - last.hold[1]);
-    return {
-      deg: last.deg - extra * extra * 720,
-      label: last.label,
-    };
-  }
-
-  for (let i = 0; i < zones.length - 1; i += 1) {
-    const start = zones[i];
-    const end = zones[i + 1];
-    const tStart = start.hold[1];
-    const tEnd = end.hold[0];
-
-    if (p > tStart && p < tEnd) {
-      const t = ease((p - tStart) / (tEnd - tStart));
-      return {
-        deg: start.deg + (end.deg - start.deg) * t,
-        label: t < 0.5 ? start.label : end.label,
-      };
-    }
-  }
-
-  return { deg: 0, label: WORK_LANDING.activeLabel };
-}
-
-const LERP_SPEED = 0.08;
 
 export function useWorkScroll() {
   const ref = useRef<HTMLElement>(null);
@@ -94,11 +54,20 @@ export function useWorkScroll() {
        The mobile scroll lab is the only thing that lifts this, and only under
        `npm run dev` — see disc-scroll-probe.ts. `readDiscMode()` returns "off"
        in production unconditionally, so this branch is exactly what shipped. */
-    const discMode = readDiscMode();
-    if (mq.matches && discMode === "off") {
-      if (process.env.NODE_ENV === "development") {
-        // Switching back to the baseline arm: put the disc where a phone that
-        // never ran the loop would have left it, rather than frozen mid-turn.
+    /* Every lab call below hangs off this. In a production build it folds to
+       `false`, the branches that reach into the lab modules become unreachable,
+       and the technique table stops being bundled — which is not theoretical:
+       it shipped once, and the export was grepped to prove it stopped. */
+    const LAB = process.env.NODE_ENV === "development";
+    const discMode = LAB ? readDiscMode() : "off";
+    /* Two separate reasons the loop might not run, and they are not the same
+       condition. `native` never runs it, on any device, because CSS is already
+       driving the disc. `off` is the shipped build, which runs the loop on
+       desktop and freezes it on phones — so that one is gated on the device. */
+    if ((LAB && !techniqueRunsLoop(discMode)) || (mq.matches && discMode === "off")) {
+      if (LAB) {
+        // Leaving a JS arm: drop the inline transform it left behind, or the
+        // disc stays frozen mid-turn under whatever runs next.
         el.querySelector<HTMLElement>(".cd-disc")?.style.removeProperty("transform");
       }
       setState({ screenIndex: -1, activeLabel: "", hintHidden: true });
@@ -151,10 +120,11 @@ export function useWorkScroll() {
       return scrollHeight > 0 ? scrolled / scrollHeight : 0;
     };
 
-    const getProgress = discMode === "cached" ? getProgressCached : getProgressByRect;
+    const usesCachedGeometry = LAB && techniqueUsesCache(discMode);
+    const getProgress = usesCachedGeometry ? getProgressCached : getProgressByRect;
 
     let ro: ResizeObserver | undefined;
-    if (discMode === "cached") {
+    if (usesCachedGeometry) {
       measure();
       window.addEventListener("resize", measure);
       /* The Work section grows as its chapters mount, and the URL bar
@@ -169,6 +139,11 @@ export function useWorkScroll() {
        measured by the HUD instead — it has to exist in the `off` arm too,
        where this loop never runs. */
     const instrument = discMode !== "off";
+
+    /* How the written angle follows the curve. Shipped is the lerp; the lab's
+       `direct` and `freewheel` arms swap only this, so a difference between
+       them is a difference in feel and not in choreography. */
+    const smooth = LAB && discMode !== "off" ? makeSmoother(discMode, reduceMotion) : null;
 
     const tick = () => {
       let progress: number;
@@ -206,9 +181,14 @@ export function useWorkScroll() {
         }
       }
 
-      currentDeg += (targetDeg - currentDeg) * (reduceMotion ? 1 : LERP_SPEED);
+      currentDeg = smooth
+        ? smooth(currentDeg, targetDeg, progress)
+        : currentDeg + (targetDeg - currentDeg) * (reduceMotion ? 1 : LERP_SPEED);
 
-      if (Math.abs(targetDeg - currentDeg) < 0.01) {
+      /* Only the position-mapped arms settle onto the target — freewheel is an
+         impulse model and never converges on one, so snapping it would delete
+         the coast that is the whole point of it. */
+      if (discMode !== "freewheel" && Math.abs(targetDeg - currentDeg) < 0.01) {
         currentDeg = targetDeg;
       }
 

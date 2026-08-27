@@ -18,9 +18,9 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import {
-  DISC_MODES,
   type DiscMode,
   type DiscStats,
+  listenForDiscMessages,
   readDiscMode,
   readDiscStats,
   recordFrameDelta,
@@ -29,6 +29,9 @@ import {
   setDiscMode,
   subscribeDiscMode,
 } from "./disc-scroll-probe";
+import { NATIVE_STYLE_ID, nativeDiscCss, supportsNativeTimeline } from "./disc-techniques";
+import { DISC_TECHNIQUES, techniqueDef } from "./disc-technique-catalog";
+import { WORK_SCROLL_CONFIG } from "@/data/work";
 import "./mobile-scroll-lab.css";
 
 const PHONE_GATE =
@@ -50,12 +53,23 @@ export default function MobileScrollProbe() {
   const [env, setEnv] = useState("");
   const [stats, setStats] = useState<DiscStats | null>(null);
   const [copied, setCopied] = useState(false);
+  const [nativeOk, setNativeOk] = useState(true);
+  /* Framed by /mobile-scroll-lab, the outer page owns the technique picker and
+     the explanation. Repeating them here costs a third of a 390px viewport —
+     of the very thing being looked at. Embedded, the HUD is numbers only. */
+  const [embedded, setEmbedded] = useState(false);
   const scrolling = useRef(false);
 
   useEffect(() => {
     if (!new URLSearchParams(window.location.search).has("disc")) return;
     setArmed(true);
     setMode(readDiscMode());
+    setNativeOk(supportsNativeTimeline());
+    try {
+      setEmbedded(window.self !== window.top);
+    } catch {
+      setEmbedded(true); // Cross-origin frame: still a frame.
+    }
 
     const mq = window.matchMedia(PHONE_GATE);
     /* Re-read on resize, not once on mount: a phone's innerHeight changes when
@@ -80,6 +94,9 @@ export default function MobileScrollProbe() {
   }, []);
 
   useEffect(() => subscribeDiscMode(() => setMode(readDiscMode())), []);
+
+  /* Driven from outside when this page is framed by /mobile-scroll-lab. */
+  useEffect(() => listenForDiscMessages(), []);
 
   /* Frame sampler. Deliberately outside the work-scroll loop so the `off` arm
      — where that loop never starts — still produces a baseline cadence. */
@@ -166,27 +183,51 @@ export default function MobileScrollProbe() {
   const jankPct = stats && stats.frames ? (stats.over16 / stats.frames) * 100 : 0;
 
   return (
-    <div className="disc-probe" role="status" aria-live="polite">
+    <div className={`disc-probe ${embedded ? "is-embedded" : ""}`} role="status" aria-live="polite">
+      {!embedded && (
       <div className="disc-probe__arms" role="group" aria-label="Disc scroll arm">
-        {DISC_MODES.map((m) => (
+        {DISC_TECHNIQUES.map((t) => (
           <button
-            key={m}
+            key={t.id}
             type="button"
-            aria-pressed={mode === m}
-            className={mode === m ? "is-on" : ""}
-            onClick={() => setDiscMode(m)}
+            aria-pressed={mode === t.id}
+            className={mode === t.id ? "is-on" : ""}
+            onClick={() => setDiscMode(t.id)}
+            title={t.note}
           >
-            {m}
+            {t.label}
           </button>
         ))}
         <button type="button" onClick={() => { resetDiscStats(); setStats(readDiscStats()); }}>
           reset
         </button>
       </div>
+      )}
 
       <div className={`disc-probe__gate ${gate ? "" : "disc-probe__bad"}`}>
-        gate {gate ? "ON" : "OFF — pointer is fine, this is not the frozen case"} · {env}
+        {embedded && <b className="disc-probe__armTag">{mode}</b>} gate{" "}
+        {gate ? "ON" : "OFF — pointer is fine, this is not the frozen case"} · {env}
       </div>
+
+      {!embedded && <div className="disc-probe__note">{techniqueDef(mode).note}</div>}
+
+      {mode === "native" && !nativeOk && (
+        <div className="disc-probe__bad">
+          this browser has no view-timeline — the disc will not turn in this arm
+        </div>
+      )}
+
+      {/* The native arm IS this stylesheet: no JS runs for it, so mounting the
+          rule is the whole implementation. Unmounting with the arm is what
+          keeps it from composing on top of the JS arms' transform. */}
+      {mode === "native" && nativeOk && (
+        <style
+          id={NATIVE_STYLE_ID}
+          dangerouslySetInnerHTML={{
+            __html: nativeDiscCss(WORK_SCROLL_CONFIG.zones, WORK_SCROLL_CONFIG.screenBreaks[1]),
+          }}
+        />
+      )}
 
       {!stats || stats.frames === 0 ? (
         <b>scroll through Work to sample…</b>

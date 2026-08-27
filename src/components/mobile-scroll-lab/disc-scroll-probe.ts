@@ -8,18 +8,8 @@
  * during momentum scroll, on the slowest device we ship to. That is precisely
  * what `perf/entry-screen-and-card-motion` spent its commits removing.
  *
- * So this measures instead of guessing, with three arms:
- *
- *   off      shipped behaviour — loop never starts, disc frozen. The baseline:
- *            what scrolling this page costs with no disc work at all.
- *   rect     naive flip. Loop runs, geometry read per frame. The expensive
- *            version, and the one the perf work argues against.
- *   cached   loop runs, geometry measured on resize only and progress derived
- *            from `window.scrollY` alone — the same trick `useScrollProgress`
- *            already uses on this page. No layout read in the scroll frame.
- *
- * If `cached` holds frame rate against `off`, the perf objection is answered
- * and the disc can turn. If it does not, the disc stays frozen and we know why.
+ * So this measures instead of guessing. The arms live in disc-techniques.ts;
+ * this module is only the instrument they are measured with.
  *
  * Two separate measurements, because they answer different halves:
  *   • frame cadence is sampled by the HUD's own rAF, so it exists in all three
@@ -34,11 +24,11 @@
  * per frame — because the instrument must not become the jank it is measuring.
  */
 
-export type DiscMode = "off" | "rect" | "cached";
+import { isDiscTechnique, type DiscTechnique } from "./disc-techniques";
 
-export const DISC_MODES: DiscMode[] = ["off", "rect", "cached"];
+export type DiscMode = DiscTechnique;
 
-const VALID = new Set<string>(DISC_MODES);
+
 
 /* Set by the HUD so all three arms can be compared on one device without
    reloading — a reload means re-flipping the four gate cards, and lands the
@@ -54,13 +44,30 @@ export function readDiscMode(): DiscMode {
   if (typeof window === "undefined") return "off";
   if (override) return override;
   const v = new URLSearchParams(window.location.search).get("disc");
-  return v && VALID.has(v) ? (v as DiscMode) : "off";
+  return v && isDiscTechnique(v) ? (v as DiscMode) : "off";
 }
 
 export function setDiscMode(mode: DiscMode) {
   override = mode;
   resetDiscStats();
   listeners.forEach((fn) => fn());
+}
+
+/* The framing lab drives the page from outside an iframe, following the
+   postMessage idiom the entry-cta lab already uses. Same guard as everything
+   else here: dev only, and the message is ignored unless it names a technique
+   that actually exists. */
+export const DISC_CHANNEL = "disc-ctl";
+
+export function listenForDiscMessages() {
+  if (process.env.NODE_ENV !== "development") return () => {};
+  const onMessage = (e: MessageEvent) => {
+    const data = e.data as { source?: string; value?: string } | null;
+    if (!data || data.source !== DISC_CHANNEL) return;
+    if (data.value && isDiscTechnique(data.value)) setDiscMode(data.value as DiscMode);
+  };
+  window.addEventListener("message", onMessage);
+  return () => window.removeEventListener("message", onMessage);
 }
 
 export function subscribeDiscMode(fn: () => void) {
