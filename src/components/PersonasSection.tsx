@@ -62,8 +62,12 @@ export default function PersonasSection() {
       <div className="personas__stage">
         <div className="personas__plate" aria-hidden="true">
           {reducedMotion ? (
-            <img src={PLATE_POSTER} alt="" />
+            <img src={PLATE_POSTER} alt="" loading="lazy" decoding="async" />
           ) : (
+            /* preload="none": Personas sits ~15 screens below the entry and
+               behind the gate, but the default preload had the phone fetching
+               this clip before the visitor had flipped a card. autoPlay still
+               starts it once it scrolls into view. */
             <video
               src={PLATE_SRC}
               poster={PLATE_POSTER}
@@ -71,6 +75,7 @@ export default function PersonasSection() {
               muted
               loop
               playsInline
+              preload="none"
             />
           )}
         </div>

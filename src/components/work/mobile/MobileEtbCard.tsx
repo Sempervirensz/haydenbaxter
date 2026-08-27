@@ -66,8 +66,7 @@ function DossierBody({ project }: { project: ETBProject }) {
           alt=""
           aria-hidden="true"
           width={project.mark.width}
-          height={project.mark.height}
-        />
+          height={project.mark.height} loading="lazy" decoding="async" />
       )}
       <span className="wm-dos__category">
         {panel?.meta ?? project.category} · {project.status}

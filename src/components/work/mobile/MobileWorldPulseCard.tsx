@@ -51,7 +51,7 @@ export default function MobileWorldPulseCard() {
   return (
     <article className={`wm-card wm-card--wp ${open ? "is-open" : ""}`}>
       <div className="wm-wp__media">
-        <img className="wm-wp__img" src={HERO_IMG} alt={IMG_ALT} />
+        <img className="wm-wp__img" src={HERO_IMG} alt={IMG_ALT} loading="lazy" decoding="async" />
       </div>
       <span className="wm-wp__scrim" aria-hidden="true" />
 
@@ -110,8 +110,7 @@ export default function MobileWorldPulseCard() {
           src={LOGO?.src ?? ""}
           alt={LOGO?.alt ?? "WorldPulse"}
           width={4166}
-          height={2000}
-        />
+          height={2000} loading="lazy" decoding="async" />
         <span className="wm-label">WorldPulse · Founder</span>
         {/* The card already carries the lede, so the panel holds the rest. */}
         {rest.map((p, i) => (

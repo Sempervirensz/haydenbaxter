@@ -40,7 +40,7 @@ export default function MobileConsultingCard() {
   const media = (
     <>
       <div className="wm-cns__media">
-        <img className="wm-cns__img" src={IMG} alt={IMG_ALT} />
+        <img className="wm-cns__img" src={IMG} alt={IMG_ALT} loading="lazy" decoding="async" />
       </div>
       <span className="wm-cns__vignette" aria-hidden="true" />
     </>
