@@ -27,8 +27,12 @@ export default function Home() {
   return (
     <main id="main" tabIndex={-1}>
       <StructuredData />
-      {/* Renders nothing unless ?perf=1 — see PerfProbe. */}
-      <PerfProbe />
+      {/* Dev-only. `?perf=1` prints load/paint timings and the slowest requests
+          with their wait-vs-download split — built to diagnose a reported 26s
+          mobile load that turned out to be network conditions, not the site.
+          The NODE_ENV check compiles it out of production entirely, so it costs
+          real visitors nothing while staying available under `npm run dev`. */}
+      {process.env.NODE_ENV === "development" && <PerfProbe />}
       <HeroSection />
       {/* Soft lock: the card deck + entry prompt. Holds the rest of the page
           until all four cards are flipped or Skip is pressed. */}
