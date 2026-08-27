@@ -9,6 +9,7 @@ import JournalSection from "@/components/JournalSection";
 import SiteFooter from "@/components/SiteFooter";
 import StructuredData from "@/components/StructuredData";
 import SoftLockGate from "@/components/design-lab/SoftLockGate";
+import PerfProbe from "@/components/x-perf/PerfProbe";
 import { SITE_TITLE, SITE_DESCRIPTION } from "@/data/site";
 
 const WorkSection = dynamic(() => import("@/components/work/WorkSectionResponsive"));
@@ -26,6 +27,8 @@ export default function Home() {
   return (
     <main id="main" tabIndex={-1}>
       <StructuredData />
+      {/* Renders nothing unless ?perf=1 — see PerfProbe. */}
+      <PerfProbe />
       <HeroSection />
       {/* Soft lock: the card deck + entry prompt. Holds the rest of the page
           until all four cards are flipped or Skip is pressed. */}

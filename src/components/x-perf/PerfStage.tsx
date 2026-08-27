@@ -163,10 +163,15 @@ export default function PerfStage({ variant }: { variant: string }) {
               <div><dt>Requests</dt><dd>{summary!.reqs}</dd></div>
               <div><dt>Spread</dt><dd>{Math.max(...runs.map(r=>r.load)) - Math.min(...runs.map(r=>r.load))} ms</dd></div>
             </dl>
-            {summary!.kb < 50 ? (
+            {summary!.kb === 0 ? (
               <p className="pl-readout__warn">
-                Under 50 KB measured — this was served from cache, so the timings are
-                meaningless. Close the tab, open a fresh private one, and run it again.
+                Safari does not report transfer size in Resource Timing, so KB reads 0
+                here. The timings above are real — compare those between variants.
+              </p>
+            ) : summary!.kb < 50 ? (
+              <p className="pl-readout__warn">
+                Under 50 KB — served from cache, so these timings are meaningless. Fresh
+                private tab, run again.
               </p>
             ) : (
               <p className="pl-readout__note">
