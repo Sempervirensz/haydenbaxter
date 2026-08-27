@@ -341,6 +341,12 @@ test.describe("entry route choice — every iteration", () => {
     for (const id of ["even"]) {
       await page.goto(`${LAB}?v=${id}`, { waitUntil: "load" });
       await ready(page, id);
+      /* `.ecta__line--direct` carries `transition: color 220ms ease`. Reading the
+         computed colour before it settles returns an interpolated value — 0.85
+         against an expected 0.86 — which reads as a real mismatch and made this
+         the suite's only flake. Wait for the transition rather than widen the
+         assertion, so a genuine colour drift still fails. */
+      await page.waitForTimeout(400);
       const [story, direct] = await page.evaluate(() => [
         getComputedStyle(document.querySelector(".ecta__line--story")!).color,
         getComputedStyle(document.querySelector(".ecta__line--direct")!).color,

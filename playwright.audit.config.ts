@@ -85,7 +85,13 @@ export default defineConfig({
    * sibling `foo/` asset directory (that listing bug produced two false
    * findings during the original audit). */
   webServer: {
-    command: `npx next build && node scripts/serve-export.mjs ${PORT}`,
+    /* CI builds once in a setup job and hands `out/` to each engine shard as an
+       artifact, so the shards must NOT rebuild — three parallel `next build`
+       runs would triple the wall clock for an identical result. Locally the
+       flag is unset and the build still happens here. */
+    command: process.env.PW_SKIP_BUILD
+      ? `node scripts/serve-export.mjs ${PORT}`
+      : `npx next build && node scripts/serve-export.mjs ${PORT}`,
     url: BASE,
     reuseExistingServer: false,
     timeout: 300_000,

@@ -1,0 +1,128 @@
+name: CI
+
+# Deploys go out via `vercel --prod` from a machine, not from git — so this
+# workflow does not deploy anything. Its whole job is to tell you, before you
+# run that command, whether the site still works.
+#
+# It exists because of a real incident: a line-clamp fix was verified by reading
+# a CSS value instead of checking the text was visible, shipped, and sat broken
+# on small phones for hours. Nothing automatic was watching. Now something is.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch: # so you can trigger a run by hand from the Actions tab
+
+concurrency:
+  # A newer push makes an in-flight run pointless; cancel it rather than pay for both.
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  NODE_VERSION: "20"
+
+jobs:
+  # ── Fast feedback ─────────────────────────────────────────────────────────
+  # Types and the repo's own asset/scale guards. Seconds, not minutes — most
+  # mistakes die here before the expensive job starts.
+  check:
+    name: Types & asset guards
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - run: npm ci
+      - name: Typecheck
+        run: npx tsc --noEmit
+      - name: Asset + scale guards
+        run: npm run check:assets && npm run check:scale
+
+  # ── Build once ────────────────────────────────────────────────────────────
+  # The export is identical for every browser, so building it three times would
+  # triple the wall clock for no new information. Build here, hand `out/` to the
+  # shards as an artifact.
+  build:
+    name: Production build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - run: npm ci
+      - name: Build static export
+        run: npm run build
+      - name: Fail if lab routes leaked into the build
+        # ETB-P1-04: labs are `page.dev.tsx` and must never ship. Cheaper to
+        # assert here than to discover it live again.
+        run: |
+          if find out -name '*.html' | grep -Eq '(cd-lab|sc-lab|design-lab|offer-lab|personas-lab|/lab/)'; then
+            echo "::error::Lab routes found in the production export"
+            find out -name '*.html' | grep -E '(cd-lab|sc-lab|design-lab|offer-lab|personas-lab|/lab/)'
+            exit 1
+          fi
+          echo "No lab routes in the export."
+      - uses: actions/upload-artifact@v4
+        with:
+          name: export
+          path: out
+          retention-days: 3
+
+  # ── The matrix ────────────────────────────────────────────────────────────
+  # Sharded by engine so a failure names the browser, and so three runners work
+  # in parallel instead of one working three times as long.
+  matrix:
+    name: ${{ matrix.engine }} × 8 widths
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false # a Safari failure should not hide a Firefox one
+      matrix:
+        engine: [chromium, firefox, webkit]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - run: npm ci
+
+      - name: Cache Playwright browsers
+        id: pw-cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: pw-${{ runner.os }}-${{ matrix.engine }}-${{ hashFiles('package-lock.json') }}
+
+      - name: Install ${{ matrix.engine }}
+        run: npx playwright install --with-deps ${{ matrix.engine }}
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: export
+          path: out
+
+      - name: Run the matrix
+        # PW_SKIP_BUILD: `out/` arrived as an artifact; rebuilding would waste
+        # ~4 minutes per shard to produce the same bytes.
+        env:
+          PW_SKIP_BUILD: "1"
+        run: npx playwright test -c playwright.audit.config.ts --project=${{ matrix.engine }}-xs --project=${{ matrix.engine }}-mobile --project=${{ matrix.engine }}-landscape --project=${{ matrix.engine }}-tablet --project=${{ matrix.engine }}-md --project=${{ matrix.engine }}-laptop --project=${{ matrix.engine }}-desktop --project=${{ matrix.engine }}-wide
+
+      - name: Upload the report on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: report-${{ matrix.engine }}
+          path: |
+            playwright-report
+            test-results
+          retention-days: 7
