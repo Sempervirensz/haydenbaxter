@@ -15,6 +15,8 @@ export default function CardFront({ card }: CardFrontProps) {
         sizes="(max-width: 640px) 25vw, 280px"
         className="object-contain"
         loading="lazy"
+        fetchPriority="low"
+        decoding="async"
         draggable={false}
       />
     </div>

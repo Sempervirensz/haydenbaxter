@@ -25,12 +25,14 @@ const permanentMarker = Permanent_Marker({
   weight: "400",
   subsets: ["latin"],
   variable: "--font-marker",
+  preload: false,
 });
 
 const caveat = Caveat({
   weight: ["500", "600"],
   subsets: ["latin"],
   variable: "--font-cursive",
+  preload: false,
 });
 
 export const metadata: Metadata = {
