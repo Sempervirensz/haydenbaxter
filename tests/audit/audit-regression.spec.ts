@@ -554,21 +554,6 @@ test.describe("ETB-P9-01 — the evidence page has a top-level heading", () => {
   });
 });
 
-test.describe("ETB-P11-03 — the gate survives a reload", () => {
-  test("opening the gate then reloading does not re-lock it", async ({ page }) => {
-    await page.goto("/", { waitUntil: "load" });
-    await settle(page);
-    await openGate(page);
-    const opened = await page.evaluate(() => document.documentElement.scrollHeight);
-    expect(opened, "gate should be open before reload").toBeGreaterThan(3000);
-
-    await page.reload({ waitUntil: "load" });
-    await settle(page);
-    const after = await page.evaluate(() => document.documentElement.scrollHeight);
-    expect(after, "the gate must stay open across a reload in the same session").toBeGreaterThan(3000);
-  });
-});
-
 test.describe("ETB-P11-02 — the work is reachable without JavaScript", () => {
   test("the no-JS homepage links to the evidence page", async ({ browser }) => {
     const ctx = await browser.newContext({ javaScriptEnabled: false });

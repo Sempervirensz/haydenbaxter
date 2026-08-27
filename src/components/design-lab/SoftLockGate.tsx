@@ -16,8 +16,6 @@
 // links still release the gate via SOFT_LOCK_RELEASE, as before.
 
 import { useCallback, useEffect, useState } from "react";
-
-const GATE_KEY = "hb:gate-open";
 import CardDeck from "@/components/CardDeck";
 import {
   CONSULTING_TARGET,
@@ -39,22 +37,6 @@ export default function SoftLockGate({ children }: { children: React.ReactNode }
   const [released, setReleased] = useState(false); // latches once all four flip
   const [skipped, setSkipped] = useState(false);
 
-  /* Reloading, or arriving via back/forward, used to drop the visitor back at
-     the locked gate with their scroll position gone — they had to flip four
-     cards again to reach content they had already opened.
-
-     Session-scoped on purpose: a new visit still gets the designed entry; the
-     same visit is not punished for reloading. Wrapped because private-mode
-     Safari throws on sessionStorage access rather than returning null. */
-  const [restored, setRestored] = useState(false);
-
-  useEffect(() => {
-    try {
-      if (sessionStorage.getItem(GATE_KEY) === "1") setRestored(true);
-    } catch {
-      /* storage unavailable — the gate simply behaves as it did before */
-    }
-  }, []);
 
   const handleRevealed = useCallback((count: number, ids: ReadonlySet<number>) => {
     setFlipped(ids);
@@ -75,20 +57,11 @@ export default function SoftLockGate({ children }: { children: React.ReactNode }
     return () => window.removeEventListener(SOFT_LOCK_RELEASE, onRelease);
   }, []);
 
-  const open = released || skipped || restored;
+  const open = released || skipped;
 
   // Runs after the commit that removes `display: none`, so the target is laid
   // out and scrollable — no polling or rAF needed (rAF wouldn't fire at all if
   // the tab were backgrounded).
-  useEffect(() => {
-    if (!open) return;
-    try {
-      sessionStorage.setItem(GATE_KEY, "1");
-    } catch {
-      /* non-fatal: the gate just will not persist */
-    }
-  }, [open]);
-
   useEffect(() => {
     if (!open || !pendingHash) return;
     const target = document.querySelector(pendingHash);
