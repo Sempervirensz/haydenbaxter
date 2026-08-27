@@ -138,3 +138,14 @@
 @media (prefers-reduced-motion: reduce) {
   .pl-card__inner { transition: none; }
 }
+
+.pl-readout__warn {
+  margin: 0 0 14px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: rgba(224, 138, 126, .12);
+  border: 1px solid rgba(224, 138, 126, .4);
+  color: #e08a7e;
+  font-size: 13px;
+  line-height: 1.5;
+}

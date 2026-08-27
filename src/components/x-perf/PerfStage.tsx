@@ -25,6 +25,24 @@ function median(ns: number[]) {
 
 export default function PerfStage({ variant }: { variant: string }) {
   const v = PERF_VARIANTS.find((x) => x.id === variant) ?? PERF_VARIANTS[0];
+
+  /* Cache-bust every image on every run.
+   *
+   * The first version of this only busted the HTML URL, so runs 2 and 3 served
+   * images straight from cache: encodedBodySize reported 0 KB and the "load"
+   * figure was a warm-cache number (161ms) that had nothing to do with the
+   * problem being investigated. Taking a median across [cold, warm, warm]
+   * produced a warm answer.
+   *
+   * The token is derived from the run index in the URL, so it is stable within
+   * a run and different between runs. Fonts/CSS/JS still warm after run 1 —
+   * they are identical across variants, so variant-to-variant COMPARISON stays
+   * valid even though the absolute number flatters slightly. */
+  const [cb] = useState(() => {
+    if (typeof window === "undefined") return "0";
+    return new URLSearchParams(location.search).get("t") || "0";
+  });
+  const bust = (url: string) => `${url}?cb=${cb}`;
   const [runs, setRuns] = useState<Run[]>([]);
   const [done, setDone] = useState(false);
   const [flipped, setFlipped] = useState(false);
@@ -62,7 +80,7 @@ export default function PerfStage({ variant }: { variant: string }) {
       setRuns(all);
       if (all.length < RUNS) {
         // Cache-bust so run 2 and 3 are not artificially fast.
-        window.location.replace(`${location.pathname}?r=${all.length}&t=${Date.now()}`);
+        window.location.replace(`${location.pathname}?r=${all.length}&t=${Date.now()}-${Math.random().toString(36).slice(2, 8)}`);
       } else {
         setDone(true);
       }
@@ -104,12 +122,12 @@ export default function PerfStage({ variant }: { variant: string }) {
                 <span className="pl-card__face pl-card__front">
                   {!noImages && (
                     <img
-                      src={
+                      src={bust(
                         (c.backVariant === "red"
                           ? "/images/cards/playing-card-back-red"
                           : "/images/cards/playing-card-back-blue") +
                         (smallBacks ? "-sm.webp" : ".webp")
-                      }
+                      )}
                       alt=""
                       width={smallBacks ? 260 : 560}
                       height={smallBacks ? 388 : 835}
@@ -118,7 +136,7 @@ export default function PerfStage({ variant }: { variant: string }) {
                 </span>
                 <span className="pl-card__face pl-card__back">
                   {!noImages && (showFaces || flipped) && (
-                    <img src={c.faceImage} alt="" loading={showFaces ? undefined : "lazy"} />
+                    <img src={bust(c.faceImage)} alt="" loading={showFaces ? undefined : "lazy"} />
                   )}
                 </span>
               </span>
@@ -145,7 +163,16 @@ export default function PerfStage({ variant }: { variant: string }) {
               <div><dt>Requests</dt><dd>{summary!.reqs}</dd></div>
               <div><dt>Spread</dt><dd>{Math.max(...runs.map(r=>r.load)) - Math.min(...runs.map(r=>r.load))} ms</dd></div>
             </dl>
-            <p className="pl-readout__note">Median of {RUNS} runs. If the spread is large, the connection moved — run it again.</p>
+            {summary!.kb < 50 ? (
+              <p className="pl-readout__warn">
+                Under 50 KB measured — this was served from cache, so the timings are
+                meaningless. Close the tab, open a fresh private one, and run it again.
+              </p>
+            ) : (
+              <p className="pl-readout__note">
+                Median of {RUNS} runs. If the spread is large, the connection moved — run it again.
+              </p>
+            )}
             <div className="pl-actions">
               <button className="pl-btn" onClick={copy}>Copy result</button>
               <a className="pl-btn pl-btn--ghost" href="/x-perf">All variants</a>
