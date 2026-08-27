@@ -64,6 +64,9 @@ export const NON_PUBLIC_PREFIXES = [
   "/procurebridge-preview",
   "/atomicos-preview",
   "/happybirthdaykemmerlee",
+  // Temporary: the mobile load lab. Ships deliberately (it must be measured on a
+  // real phone on cellular) but must never be indexed. Delete with the route.
+  "/x-perf",
 ] as const;
 
 /** Absolute canonical URL for a site-relative path ("/" -> the bare origin). */
