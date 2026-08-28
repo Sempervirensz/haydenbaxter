@@ -12,6 +12,7 @@
 // sink/dim + parallax is driven by useCinematicParallax.
 
 import { useRef, useState } from "react";
+import { WORK_CHAPTER_ANCHORS } from "@/data/work";
 import { useWorkScroll } from "@/hooks/useWorkScroll";
 import { useCinematicParallax } from "@/hooks/useCinematicParallax";
 import WorkLanding from "@/components/work/WorkLanding";
@@ -32,6 +33,10 @@ export default function WorkSectionCinematic() {
       {CINEMATIC_CARDS.map((card, idx) => (
         <div
           key={card.id}
+          /* Link target for the consulting offers' secondary buttons.
+             `undefined` for the chapters without one, which renders no
+             attribute at all. */
+          id={WORK_CHAPTER_ANCHORS[card.id]}
           className="work__chapter work__chapter--detail"
           style={{ zIndex: idx + 2 }}
           data-cstack-chapter

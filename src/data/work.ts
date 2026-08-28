@@ -277,6 +277,20 @@ export type WorkScreen =
 // Landing & scroll config (unchanged)
 // ---------------------------------------------------------------------------
 
+/**
+ * Stable in-page anchors for the Work chapters other sections link to.
+ *
+ * Keyed by `WorkScreen.id`, which `CINEMATIC_CARDS` uses for the same four
+ * chapters — so the >=1024px stack and the <1024px stack read the SAME id from
+ * here and cannot drift. Chapters without an entry render no `id` attribute:
+ * WorldPulse and Consulting are reached through `#work` and the soft-lock
+ * gate's `resolveConsultingChapter`, and neither needs one.
+ */
+export const WORK_CHAPTER_ANCHORS: Record<number, string> = {
+  2: "selected-ai-work",
+  3: "supply-chain",
+};
+
 export const WORK_LANDING = {
   title: "Work",
   quote: "Rooted in outcome and action.",

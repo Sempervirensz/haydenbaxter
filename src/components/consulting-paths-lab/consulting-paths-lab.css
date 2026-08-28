@@ -2766,6 +2766,18 @@
     flex: 1 1 auto;
   }
 
+  /* `.cpp-action` is `white-space: nowrap` + `overflow: hidden` (the sheen needs
+     the clip), which was safe while every label was two short words. A longer
+     one — "View Supply Chain Experience" — has no room at 375px and gets CUT at
+     both ends rather than wrapping, because it is centred. Letting it break to a
+     second line is the only thing that changes; type, colour, border, radius and
+     padding are untouched, and a label that already fits is unaffected.
+     `:not([data-solo])` keeps this off the WorldPulse and Experience panels,
+     which share this class and are not part of this change. */
+  .cpp-path:not([data-solo]) .cpp-path__actions .cpp-action {
+    white-space: normal;
+  }
+
   /* ---- Direction fixes at phone width ---- */
 
   /* The spine is a two-column device; stacked there is nothing to separate. */

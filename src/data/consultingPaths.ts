@@ -22,11 +22,21 @@
 // takes selective consulting work. "Fractional" and "Advisor" name a mode of
 // engagement, never availability for employment.
 
-import { CALENDLY_URL, CONNECT_LINKS } from "@/data/connect";
 import type { DestinationAction } from "@/data/workTogether";
 
-const EMAIL_HREF =
-  CONNECT_LINKS.find((l) => l.id === "email")?.href ?? "mailto:haydenjbaxter@gmail.com";
+/* Both offers send the visitor somewhere already on this page rather than out
+   to a calendar or a mail client.
+   - `#connect` is ConnectSection's own id. It carries the Calendly embed, so
+     the booking route AGENTS.md guards is unchanged — it now goes through the
+     section that owns it instead of a second inline CALENDLY_URL.
+   - The chapter anchors come from WORK_CHAPTER_ANCHORS in `src/data/work.ts`,
+     which both Work branches read, so these can't point at a desktop-only id.
+   Plain hashes on a plain <a>: `Action` already renders one, and an in-page
+   jump inside the scroll-driven Work stack is instant on this site by
+   decision, not omission — see the comment on `land()` in SoftLockGate. */
+const CONNECT_HREF = "#connect";
+const AI_WORK_HREF = "#selected-ai-work";
+const SUPPLY_CHAIN_HREF = "#supply-chain";
 
 export type ConsultingPathId = "ai" | "supply";
 
@@ -48,6 +58,11 @@ export interface ConsultingPath {
   name: string;
   /** One line, always visible. The reason to pick this side. */
   summary: string;
+  /** The card's badge strip: the named offers on this side. Defaults to the
+      engagement titles below, which is what every path shipped before this
+      existed. `[]` prints no strip — a path that does not want to lead with
+      named products. */
+  badges?: string[];
   /** Always visible under the summary. Short, scannable. */
   capabilities: string[];
   /** Revealed on expand. */
@@ -67,10 +82,17 @@ export interface ConsultingPath {
 
 /* ---------------------------------------------------------------------------
    Path A — Fractional AI Partner
-   Sources: consultingOffers.ts → ai (descriptor + bullets);
-            work.ts → consulting.offers (AI Roadmap Sprint, MVP Prototype
+   Sources: work.ts → consulting.offers (AI Roadmap Sprint, MVP Prototype
             Sprint: oneLiner, status, modalSections, systemSnapshot),
             consulting.founderLine, consulting.identityLine.
+
+   The card's own two lines — `summary` and `capabilities` — are the exception
+   to the SOURCING rule at the top of this file, and deliberately so. Carried
+   verbatim from consultingOffers.ts they read as an agency descriptor
+   ("bridging AI, systems design, and user experience") over five capability
+   labels, which asks the visitor to already know which capability they need.
+   The rewrite below asks for a problem instead. The old strings are still in
+   consultingOffers.ts, where the offer cards use them.
    ------------------------------------------------------------------------ */
 
 const AI: ConsultingPath = {
@@ -78,17 +100,19 @@ const AI: ConsultingPath = {
   index: "01",
   kicker: "AI Systems",
   name: "Fractional AI Partner",
-  // consultingOffers.ts → ai.descriptor
+  // Second person, no jargon: it has to land on someone who does not know what
+  // "fractional" means and has not yet decided what kind of AI help they want.
   summary:
-    "Bridging AI, systems design, and user experience into practical tools and products.",
-  // consultingOffers.ts → ai.bullets
-  capabilities: [
-    "AI workflow design",
-    "Intelligent interfaces",
-    "Internal tools & agents",
-    "Automation systems",
-    "Rapid prototyping",
-  ],
+    "I work alongside you to figure out where AI can actually help your business.",
+  /* No badge strip on this side. The two named sprints are still the shape of
+     the work — they live in `detail.engagements` below — but leading with them
+     asked the visitor to choose a product before describing a problem, which is
+     the step this card now removes. */
+  badges: [],
+  /* The credits line, set as an invitation rather than a menu. Three entries,
+     because the tracklist layout runs them together middot-separated and three
+     is what stays legible when it wraps on a phone. */
+  capabilities: ["Bring a problem", "Explore an idea", "Build a solution"],
   detail: {
     // work.ts → consulting.founderLine
     lede:
@@ -125,8 +149,8 @@ const AI: ConsultingPath = {
       action: { label: "See Selected AI Work", href: "/emerging-tech-builds" },
     },
   },
-  primary: { label: "Discuss a project", href: CALENDLY_URL, external: true },
-  secondary: { label: "Send an email", href: EMAIL_HREF },
+  primary: { label: "Discuss a project", href: CONNECT_HREF },
+  secondary: { label: "View Selected AI Work", href: AI_WORK_HREF },
 };
 
 /* ---------------------------------------------------------------------------
@@ -182,8 +206,8 @@ const SUPPLY: ConsultingPath = {
     // work.ts → supplyChain.featured.roleLine
     note: "Across Aosom, Disney, and Three Tree: procurement execution, supplier coordination, data integrity, and reporting discipline.",
   },
-  primary: { label: "Discuss a project", href: CALENDLY_URL, external: true },
-  secondary: { label: "Send an email", href: EMAIL_HREF },
+  primary: { label: "Discuss a project", href: CONNECT_HREF },
+  secondary: { label: "View Supply Chain Experience", href: SUPPLY_CHAIN_HREF },
 };
 
 /** Left to right on desktop, stacked on narrow. */

@@ -20,7 +20,12 @@
 //
 // The legacy WorkSection.tsx is left intact for the labs that still import it.
 
-import { WORK_LANDING, WORK_SCREENS, WORK_SCROLL_CONFIG } from "@/data/work";
+import {
+  WORK_CHAPTER_ANCHORS,
+  WORK_LANDING,
+  WORK_SCREENS,
+  WORK_SCROLL_CONFIG,
+} from "@/data/work";
 import { useWorkScroll } from "@/hooks/useWorkScroll";
 import MobileWorldPulseCard from "./mobile/MobileWorldPulseCard";
 import MobileEtbCard from "./mobile/MobileEtbCard";
@@ -79,6 +84,8 @@ export default function WorkSectionMobile() {
         return (
           <div
             key={screen.id}
+            /* Same anchors the cinematic branch uses, read from the same map. */
+            id={WORK_CHAPTER_ANCHORS[screen.id]}
             className="work__chapter work__chapter--detail"
             style={{ zIndex: idx + 2 }}
           >

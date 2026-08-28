@@ -33,7 +33,7 @@ export type PathId = "consulting" | "worldpulse" | "experience";
 /** Every concept starts here. Matches HERO_CTA_LABEL in consultingHeroTransition.ts. */
 export const CTA_LABEL = "Let's work together";
 
-export const CTA_HINT = "Three ways in";
+export const CTA_HINT = "Choose where to start";
 
 const EMAIL_HREF =
   CONNECT_LINKS.find((l) => l.id === "email")?.href ?? "mailto:haydenjbaxter@gmail.com";
@@ -119,7 +119,7 @@ const CONSULTING: PathDef = {
   id: "consulting",
   index: "01",
   label: "Start a Consulting Project",
-  lede: "AI systems and supply-chain strategy.",
+  lede: "AI or supply chain consulting",
   meta: "Strategy · Systems · Build",
   destination: {
     eyebrow: "Consulting",
