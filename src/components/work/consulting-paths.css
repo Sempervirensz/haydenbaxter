@@ -598,26 +598,6 @@
   color: var(--ink-4);
 }
 
-.cpp-path__proof {
-  margin: 8px 0 0;
-  font-family: var(--face-body);
-  font-size: var(--text-sm);
-  line-height: var(--body-lh);
-  color: var(--ink-4);
-}
-
-.cpp-path__proofLink {
-  color: var(--ink-2, inherit);
-  text-decoration: underline;
-  text-underline-offset: 3px;
-  white-space: nowrap;
-}
-
-.cpp-path__proofLink:hover,
-.cpp-path__proofLink:focus-visible {
-  color: var(--ink-1, inherit);
-}
-
 /* ---- The base block: always visible, never moves ---- */
 
 .cpp-path__base {
@@ -1657,6 +1637,18 @@
 
   .cpp-path__actions .cpp-action {
     flex: 1 1 auto;
+  }
+
+  /* `.cpp-action` is `white-space: nowrap` + `overflow: hidden` (the sheen needs
+     the clip), which was safe while every label was two short words. A longer
+     one — "View Supply Chain Experience" — has no room at 375px and gets CUT at
+     both ends rather than wrapping, because it is centred. Letting it break to a
+     second line is the only thing that changes; type, colour, border, radius and
+     padding are untouched, and a label that already fits is unaffected.
+     `:not([data-solo])` keeps this off the WorldPulse and Experience panels,
+     which share this class and are not part of this change. */
+  .cpp-path:not([data-solo]) .cpp-path__actions .cpp-action {
+    white-space: normal;
   }
 
   

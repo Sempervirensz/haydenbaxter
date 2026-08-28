@@ -22,11 +22,21 @@
 // takes selective consulting work. "Fractional" and "Advisor" name a mode of
 // engagement, never availability for employment.
 
-import { CALENDLY_URL, CONNECT_LINKS } from "@/data/connect";
 import type { DestinationAction } from "@/data/workTogether";
 
-const EMAIL_HREF =
-  CONNECT_LINKS.find((l) => l.id === "email")?.href ?? "mailto:haydenjbaxter@gmail.com";
+/* Both offers send the visitor somewhere already on this page rather than out
+   to a calendar or a mail client.
+   - `#connect` is ConnectSection's own id. It carries the Calendly embed, so
+     the booking route AGENTS.md guards is unchanged — it now goes through the
+     section that owns it instead of a second inline CALENDLY_URL.
+   - The chapter anchors come from WORK_CHAPTER_ANCHORS in `src/data/work.ts`,
+     which both Work branches read, so these can't point at a desktop-only id.
+   Plain hashes on a plain <a>: `Action` already renders one, and an in-page
+   jump inside the scroll-driven Work stack is instant on this site by
+   decision, not omission — see the comment on `land()` in SoftLockGate. */
+const CONNECT_HREF = "#connect";
+const AI_WORK_HREF = "#selected-ai-work";
+const SUPPLY_CHAIN_HREF = "#supply-chain";
 
 export type ConsultingPathId = "ai" | "supply";
 
@@ -125,8 +135,8 @@ const AI: ConsultingPath = {
       action: { label: "See Selected AI Work", href: "/emerging-tech-builds" },
     },
   },
-  primary: { label: "Discuss a project", href: CALENDLY_URL, external: true },
-  secondary: { label: "Send an email", href: EMAIL_HREF },
+  primary: { label: "Discuss a project", href: CONNECT_HREF },
+  secondary: { label: "View Selected AI Work", href: AI_WORK_HREF },
 };
 
 /* ---------------------------------------------------------------------------
@@ -182,8 +192,8 @@ const SUPPLY: ConsultingPath = {
     // work.ts → supplyChain.featured.roleLine
     note: "Across Aosom, Disney, and Three Tree: procurement execution, supplier coordination, data integrity, and reporting discipline.",
   },
-  primary: { label: "Discuss a project", href: CALENDLY_URL, external: true },
-  secondary: { label: "Send an email", href: EMAIL_HREF },
+  primary: { label: "Discuss a project", href: CONNECT_HREF },
+  secondary: { label: "View Supply Chain Experience", href: SUPPLY_CHAIN_HREF },
 };
 
 /** Left to right on desktop, stacked on narrow. */
