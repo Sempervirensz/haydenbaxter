@@ -191,7 +191,46 @@ html {
   transition: none !important;
 }
 
-/* DYMO nav tags */
+/* DYMO nav tags
+   The vertical padding is tokenised because the navbar's HEIGHT is derived from
+   it below, and the hero's top padding is derived from that in turn. Inlining
+   these clamps in `.tag` again would let the button and the clearance that keeps
+   the hero out from under it drift apart silently. */
+:root {
+  --tag-pad-top: clamp(0.625rem, 0.5rem + 0.35vw, 1.05rem);
+  --tag-pad-inline: clamp(0.75rem, 0.6rem + 0.5vw, 1.45rem);
+  --tag-pad-bottom: clamp(0.5625rem, 0.45rem + 0.32vw, 0.95rem);
+
+  /* `.tag` sets line-height: 1, so its text box is exactly --text-label tall;
+     +2px for the 1px border on each edge. Checked against the live navbar: the
+     token resolves to 86.4896px where the element measures 86.48px. */
+  --nav-tag-height: calc(
+    var(--tag-pad-top) + var(--tag-pad-bottom) + var(--text-label) + 2px
+  );
+  --nav-pad-block: 1rem;
+  --nav-height: calc(2 * var(--nav-pad-block) + var(--nav-tag-height));
+}
+
+@media (min-width: 640px) {
+  :root {
+    --nav-pad-block: 1.5rem;
+  }
+}
+
+/* Short displays buy back some of what the hero's nav clearance costs the entry
+   composition, without touching the deck. Taller displays keep the full air. */
+@media (min-width: 640px) and (max-height: 800px) {
+  :root {
+    --nav-pad-block: 1rem;
+  }
+}
+
+/* Owns the nav's vertical padding so --nav-height above stays true; the
+   horizontal gutter is still Tailwind's, on the element. */
+.navbar {
+  padding-block: var(--nav-pad-block);
+}
+
 .tag {
   display: inline-block;
   font-family: var(--font-mono);
@@ -205,10 +244,9 @@ html {
   user-select: none;
   color: var(--ink-body);
   /* Padding tracks the label size so the emboss keeps its proportions instead
-     of turning into a thin strip around larger type. */
-  padding: clamp(0.625rem, 0.5rem + 0.35vw, 1.05rem)
-    clamp(0.75rem, 0.6rem + 0.5vw, 1.45rem)
-    clamp(0.5625rem, 0.45rem + 0.32vw, 0.95rem);
+     of turning into a thin strip around larger type. Same values as before, now
+     read from the tokens the navbar's height is measured from. */
+  padding: var(--tag-pad-top) var(--tag-pad-inline) var(--tag-pad-bottom);
   border-radius: 3px;
   background: #1c1c1c;
   border: 1px solid rgba(255, 255, 255, 0.08);
@@ -260,7 +298,17 @@ html {
      padding around a 184px headline, which is what pushed the entry's
      instruction and skip link below the fold (ETB-P1-03). The vw ramp still
      governs tall displays; the vh cap only bites on short ones. */
-  padding-block: min(clamp(5rem, 3.5rem + 3vw, 9rem), 5.5vh)
+  /* The `max()` is the nav clearance. Navbar is `absolute top-0` inside the hero
+     section, so this padding is the ONLY thing holding the copy clear of it —
+     and the 5.5vh cap alone reaches the navbar's ~86px only on a viewport
+     1551px TALL. Below that (i.e. every real display) the copy started inside
+     the nav band and the eyebrow ran under the button row. No extra gap
+     constant: the navbar's own bottom padding is already the air above the
+     eyebrow. */
+  padding-block: max(
+      var(--nav-height),
+      min(clamp(5rem, 3.5rem + 3vw, 9rem), 5.5vh)
+    )
     min(clamp(3rem, 2rem + 2vw, 5rem), 3vh);
   padding-inline: var(--page-gutter);
 }

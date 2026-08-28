@@ -134,8 +134,11 @@ export default function SoftLockGate({ children }: { children: React.ReactNode }
 
   return (
     <>
-      {/* Real homepage card-deck section — unchanged markup. */}
-      <section className="bg-[#0a0a0a] relative pb-8">
+      {/* Real homepage card-deck section.
+          pb-2, not pb-8: that stacked with the card row's own pb-8 for ~80px of
+          dead space between the captions and the flip indicator. Reclaiming it
+          is what pays for the hero's nav clearance without shrinking the deck. */}
+      <section className="bg-[#0a0a0a] relative pb-2">
         <div
           className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] max-w-full h-[400px] rounded-full opacity-20 blur-[120px] pointer-events-none"
           style={{ background: "radial-gradient(ellipse, rgba(255,255,255,0.15), transparent)" }}
