@@ -414,6 +414,34 @@
   .cpp-screen[data-open="none"] .cpp-paths {
     align-items: stretch;
   }
+
+  /* …and the CONTENT has to look it too, which stretching the boxes alone does
+     not buy. `justify-content: flex-end` on `.cpp-path` drops the shorter
+     panel's whole identity block to the floor of the stretched box, so a pair
+     whose content heights differ shows its two kickers and two names 60–120px
+     apart with an empty band above the shorter one's title — legible as a
+     rendering fault rather than as an alignment.
+
+     Letting the base grow into the panel and pinning the actions to the bottom
+     of it holds BOTH ends: kickers and names on one line at the top, the two
+     CTA rows on one floor. The slack lands in the middle of the shorter card,
+     above its own hairline, where a section rule sitting lower reads as
+     spacing rather than as a gap.
+
+     `flex-grow` only — never shrink. The base overflowing a short row is
+     existing behaviour (the taller panel does it at 1280×800 today); allowing
+     it to shrink instead would start compressing that panel's content, which
+     is a different change than this one.
+
+     `:not([data-solo])` keeps it off the WorldPulse and Experience panels,
+     which share these classes but are a lone panel with nothing to align to. */
+  .cpp-screen[data-open="none"] .cpp-path:not([data-solo]) .cpp-path__base {
+    flex-grow: 1;
+  }
+
+  .cpp-screen[data-open="none"] .cpp-path:not([data-solo]) .cpp-path__actions {
+    margin-top: auto;
+  }
 }
 
 /* ---- One path ---------------------------------------------------------- */

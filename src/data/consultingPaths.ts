@@ -58,6 +58,11 @@ export interface ConsultingPath {
   name: string;
   /** One line, always visible. The reason to pick this side. */
   summary: string;
+  /** The card's badge strip: the named offers on this side. Defaults to the
+      engagement titles below, which is what every path shipped before this
+      existed. `[]` prints no strip — a path that does not want to lead with
+      named products. */
+  badges?: string[];
   /** Always visible under the summary. Short, scannable. */
   capabilities: string[];
   /** Revealed on expand. */
@@ -77,10 +82,17 @@ export interface ConsultingPath {
 
 /* ---------------------------------------------------------------------------
    Path A — Fractional AI Partner
-   Sources: consultingOffers.ts → ai (descriptor + bullets);
-            work.ts → consulting.offers (AI Roadmap Sprint, MVP Prototype
+   Sources: work.ts → consulting.offers (AI Roadmap Sprint, MVP Prototype
             Sprint: oneLiner, status, modalSections, systemSnapshot),
             consulting.founderLine, consulting.identityLine.
+
+   The card's own two lines — `summary` and `capabilities` — are the exception
+   to the SOURCING rule at the top of this file, and deliberately so. Carried
+   verbatim from consultingOffers.ts they read as an agency descriptor
+   ("bridging AI, systems design, and user experience") over five capability
+   labels, which asks the visitor to already know which capability they need.
+   The rewrite below asks for a problem instead. The old strings are still in
+   consultingOffers.ts, where the offer cards use them.
    ------------------------------------------------------------------------ */
 
 const AI: ConsultingPath = {
@@ -88,17 +100,19 @@ const AI: ConsultingPath = {
   index: "01",
   kicker: "AI Systems",
   name: "Fractional AI Partner",
-  // consultingOffers.ts → ai.descriptor
+  // Second person, no jargon: it has to land on someone who does not know what
+  // "fractional" means and has not yet decided what kind of AI help they want.
   summary:
-    "Bridging AI, systems design, and user experience into practical tools and products.",
-  // consultingOffers.ts → ai.bullets
-  capabilities: [
-    "AI workflow design",
-    "Intelligent interfaces",
-    "Internal tools & agents",
-    "Automation systems",
-    "Rapid prototyping",
-  ],
+    "I work alongside you to figure out where AI can actually help your business.",
+  /* No badge strip on this side. The two named sprints are still the shape of
+     the work — they live in `detail.engagements` below — but leading with them
+     asked the visitor to choose a product before describing a problem, which is
+     the step this card now removes. */
+  badges: [],
+  /* The credits line, set as an invitation rather than a menu. Three entries,
+     because the tracklist layout runs them together middot-separated and three
+     is what stays legible when it wraps on a phone. */
+  capabilities: ["Bring a problem", "Explore an idea", "Build a solution"],
   detail: {
     // work.ts → consulting.founderLine
     lede:

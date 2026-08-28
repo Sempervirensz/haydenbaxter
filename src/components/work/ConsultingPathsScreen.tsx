@@ -77,6 +77,12 @@ export default function ConsultingPathsScreen({ onBack }: { onBack: () => void }
 function PathPanel({ path }: { path: ConsultingPath }) {
   const d = path.detail;
 
+  /* The named offers, unless the path opts out with `badges: []`. Rendering an
+     empty <span> rather than nothing would leave the strip's own 10px top
+     margin behind as a gap under the summary, so it comes out of the tree
+     entirely and the column closes up on its own. */
+  const badges = path.badges ?? d.engagements.map((e) => e.title);
+
   return (
     <article className="cpp-path" data-path={path.id} data-state="closed">
       <div className="cpp-path__base">
@@ -100,14 +106,18 @@ function PathPanel({ path }: { path: ConsultingPath }) {
           <span className="cpp-path__summary">{path.summary}</span>
 
           {/* WHAT THE OFFER ACTUALLY IS. Without these a visitor scanning the
-              pair sees two disciplines and no products — nothing to want. */}
-          <span className="cpp-path__offers">
-            {d.engagements.map((e) => (
-              <span key={e.title} className="cpp-path__offer">
-                {e.title}
-              </span>
-            ))}
-          </span>
+              pair sees two disciplines and no products — nothing to want.
+              The AI side opts out: it leads with an invitation rather than a
+              product, and the capability line under it carries that instead. */}
+          {badges.length > 0 && (
+            <span className="cpp-path__offers">
+              {badges.map((b) => (
+                <span key={b} className="cpp-path__offer">
+                  {b}
+                </span>
+              ))}
+            </span>
+          )}
 
           <span className="cpp-path__caps">
             {path.capabilities.map((c) => (
