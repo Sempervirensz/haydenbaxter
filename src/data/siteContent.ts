@@ -1,4 +1,5 @@
 import { CALENDLY_URL } from "@/data/connect";
+import { RESUME_HREF } from "@/data/workTogether";
 
 /** Text label, or image asset path under /public */
 export type BrandLogo = {
@@ -13,6 +14,7 @@ export const SITE_CONTENT = {
       { label: "Work", href: "#work" },
       { label: "About", href: "#about" },
       { label: "Connect", href: "#connect" },
+      { label: "Resume", href: RESUME_HREF, external: true },
       { label: "Journal", href: "/blog" },
       // Booking always points at the single source of truth in `data/connect`
       // so the nav CTA can't drift from the Connect-section embed again.

@@ -42,14 +42,15 @@ export default function Navbar() {
         </span>
         <div className="nav-tags flex items-center gap-2 sm:gap-3">
           {navLinks.map((link) => {
-            const isExternal = /^https?:\/\//.test(link.href);
+            const opensNewTab =
+              ("external" in link && link.external) || /^https?:\/\//.test(link.href);
             return (
               <a
                 key={link.label}
                 href={link.href}
                 className={`tag ${link.cta ? "tag--cta" : "tag--nav"}`}
                 onClick={(e) => handleAnchorClick(e, link.href)}
-                {...(isExternal && {
+                {...(opensNewTab && {
                   target: "_blank",
                   rel: "noopener noreferrer",
                 })}
@@ -80,7 +81,8 @@ export default function Navbar() {
         aria-hidden={!open}
       >
         {navLinks.map((link) => {
-          const isExternal = /^https?:\/\//.test(link.href);
+          const opensNewTab =
+            ("external" in link && link.external) || /^https?:\/\//.test(link.href);
           return (
             <a
               key={link.label}
@@ -91,7 +93,7 @@ export default function Navbar() {
                 handleAnchorClick(e, link.href);
               }}
               role="menuitem"
-              {...(isExternal && {
+              {...(opensNewTab && {
                 target: "_blank",
                 rel: "noopener noreferrer",
               })}
