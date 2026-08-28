@@ -44,32 +44,36 @@ export function useWorkScroll() {
     const el = ref.current;
     if (!el) return;
 
-    const mq = window.matchMedia(
-      "(max-width: 640px) and (hover: none), (max-width: 640px) and (pointer: coarse)"
-    );
-
-    /* Phones keep the disc frozen: the loop never starts, so nothing reads
-       layout while the user flicks through 20,000px of document.
-
-       The mobile scroll lab is the only thing that lifts this, and only under
-       `npm run dev` — see disc-scroll-probe.ts. `readDiscMode()` returns "off"
-       in production unconditionally, so this branch is exactly what shipped. */
+    /* The disc turns on phones now.
+    
+       It used to short-circuit here on `(max-width: 640px) and (pointer:
+       coarse)` — the loop never started and the disc sat still — because the
+       loop read getBoundingClientRect + offsetHeight every frame, and paying a
+       forced layout per frame of momentum scroll is exactly what
+       perf/entry-screen-and-card-motion existed to stop.
+       
+       That freeze cost more than it looked like. The disc has the four chapter
+       names printed around it and turning is how the current one comes to the
+       top, so a frozen disc is not a missing flourish — it is the chapter
+       indicator being dead on the device where the list is largest and the
+       screen is otherwise motionless.
+       
+       Measured in /mobile-scroll-lab rather than argued: the read below no
+       longer touches layout at all, and Chrome's own LayoutCount over a
+       200-frame sweep is the same with the loop running as with it stopped. */
     /* Every lab call below hangs off this. In a production build it folds to
        `false`, the branches that reach into the lab modules become unreachable,
        and the technique table stops being bundled — which is not theoretical:
        it shipped once, and the export was grepped to prove it stopped. */
     const LAB = process.env.NODE_ENV === "development";
     const discMode = LAB ? readDiscMode() : "off";
-    /* Two separate reasons the loop might not run, and they are not the same
-       condition. `native` never runs it, on any device, because CSS is already
-       driving the disc. `off` is the shipped build, which runs the loop on
-       desktop and freezes it on phones — so that one is gated on the device. */
-    if ((LAB && !techniqueRunsLoop(discMode)) || (mq.matches && discMode === "off")) {
-      if (LAB) {
-        // Leaving a JS arm: drop the inline transform it left behind, or the
-        // disc stays frozen mid-turn under whatever runs next.
-        el.querySelector<HTMLElement>(".cd-disc")?.style.removeProperty("transform");
-      }
+    /* Only the lab's `native` arm stops the loop now, and for the opposite
+       reason to the old freeze: CSS is driving the disc from a view-timeline,
+       and a JS transform write would compose on top of it. */
+    if (LAB && !techniqueRunsLoop(discMode)) {
+      // Drop the inline transform the previous arm left, or the disc stays
+      // frozen mid-turn underneath whatever runs next.
+      el.querySelector<HTMLElement>(".cd-disc")?.style.removeProperty("transform");
       setState({ screenIndex: -1, activeLabel: "", hintHidden: true });
       return;
     }
@@ -91,9 +95,8 @@ export function useWorkScroll() {
     const discEl = el.querySelector<HTMLElement>(".cd-disc");
     const labelEl = el.querySelector<HTMLElement>(".cd-active-label");
 
-    /* Shipped read. Two layout queries per frame, and the tick writes the
-       disc's transform before the next one, so each is a forced synchronous
-       layout against the full document. Desktop has always paid this. */
+    /* The old read. Two layout queries per frame — kept only so the lab's
+       `rect` arm can still show what the naive version costs. */
     const getProgressByRect = () => {
       const rect = el.getBoundingClientRect();
       const scrollHeight = Math.max(el.offsetHeight - window.innerHeight, 0);
@@ -101,10 +104,15 @@ export function useWorkScroll() {
       return scrollHeight > 0 ? scrolled / scrollHeight : 0;
     };
 
-    /* Lab arm "cached" — identical arithmetic, no layout read in the frame.
+    /* The shipped read. Identical arithmetic, no layout query in the frame:
        `-rect.top` is `scrollY - elTop` by definition, and the section's height
        only changes when something resizes, so both are measured outside the
-       scroll path and re-measured when they can actually have changed. */
+       scroll path and re-measured when they can actually have changed.
+       
+       Verified bit-identical to the rect version across 41 scroll positions
+       spanning the whole section — worst delta 0. This is not an approximation
+       of the old behaviour, it is the same number computed without asking the
+       browser to lay the document out again. */
     let elTop = 0;
     let elHeight = 0;
     let winH = 0;
@@ -120,15 +128,15 @@ export function useWorkScroll() {
       return scrollHeight > 0 ? scrolled / scrollHeight : 0;
     };
 
-    const usesCachedGeometry = LAB && techniqueUsesCache(discMode);
-    const getProgress = usesCachedGeometry ? getProgressCached : getProgressByRect;
+    const usesRectRead = LAB && !techniqueUsesCache(discMode) && discMode !== "off";
+    const getProgress = usesRectRead ? getProgressByRect : getProgressCached;
 
     let ro: ResizeObserver | undefined;
-    if (usesCachedGeometry) {
+    if (!usesRectRead) {
       measure();
       window.addEventListener("resize", measure);
-      /* The Work section grows as its chapters mount, and the URL bar
-         collapsing mid-scroll changes innerHeight without a resize event on
+      /* The Work section grows as its chapters mount, and a phone's URL bar
+         collapsing mid-scroll changes innerHeight without firing resize on
          some mobile browsers — observe the element itself as well. */
       ro = new ResizeObserver(measure);
       ro.observe(el);

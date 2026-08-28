@@ -6,6 +6,8 @@ import WorldPulseDetail from "@/components/work/WorldPulseDetail";
 import ETBDetail from "@/components/work/ETBDetail";
 import SupplyChainDetail from "@/components/work/SupplyChainDetail";
 import ConsultingHeroStage from "@/components/work/ConsultingHeroStage";
+import WorkChapterList from "@/components/work/WorkChapterList";
+import ScrollCue from "@/components/work/ScrollCue";
 
 function DetailBody({ screen, isActive }: { screen: WorkScreen; isActive: boolean }) {
   switch (screen.type) {
@@ -25,28 +27,11 @@ function DetailBody({ screen, isActive }: { screen: WorkScreen; isActive: boolea
 export default function WorkSection() {
   const { ref, screenIndex, activeLabel } = useWorkScroll();
 
-  const trackList = WORK_SCROLL_CONFIG.zones.filter((z) => z.label !== "");
-
   return (
     <section id="work" ref={ref} className="work">
       <div className="work__chapter work__chapter--landing" style={{ zIndex: 1 }}>
         <article className="work__screen work__screen--landing">
-          <ol className="wl-c2__list" aria-label={WORK_LANDING.title}>
-            {trackList.map((zone, i) => {
-              const isActive = zone.label === activeLabel;
-              return (
-                <li
-                  key={zone.label}
-                  className={`wl-c2__item ${isActive ? "is-active" : ""}`}
-                >
-                  <span className="wl-c2__num">
-                    {String(i + 1).padStart(2, "0")}
-                  </span>
-                  <span className="wl-c2__name">{zone.label}</span>
-                </li>
-              );
-            })}
-          </ol>
+          <WorkChapterList activeLabel={activeLabel} />
 
           <div className="cd-player-wrap" aria-hidden="true">
             <img src="/playershellpngtransparent.png" alt="" className="cd-player-shell" />
@@ -55,6 +40,8 @@ export default function WorkSection() {
               <div className="cd-disc" />
             </div>
           </div>
+
+          <ScrollCue />
         </article>
       </div>
 

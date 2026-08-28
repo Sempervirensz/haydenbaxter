@@ -16,7 +16,6 @@
  */
 
 import { useEffect, useState } from "react";
-import { WORK_LANDING } from "@/data/work";
 import { findChapters } from "@/components/work/findChapters";
 import {
   LANDING_DEFAULTS,
@@ -30,8 +29,6 @@ import {
   subscribeLanding,
 } from "./landing-bus";
 import "./mobile-scroll-lab.css";
-
-const HINT_ID = "mslx-scroll-hint";
 
 export default function LandingAffordanceLab() {
   const [opts, setOpts] = useState<LandingOptions>(LANDING_DEFAULTS);
@@ -92,46 +89,39 @@ export default function LandingAffordanceLab() {
       };
 
       /* ---- the chapter list ------------------------------------------- */
+      /* The rows are real <button>s now (WorkChapterList), so this no longer
+         paints controls onto them — it argues with the ones already there.
+         Adding a second role="button" over a real button was the failure mode
+         waiting to happen here. */
       const items = Array.from(landing.querySelectorAll<HTMLElement>(".wl-c2__item"));
       items.forEach((li, i) => {
+        const hit = li.querySelector<HTMLButtonElement>(".wl-c2__hit");
+        if (!hit) return;
         const chapter = targetChapter(opts.variant, i);
-        const name = li.querySelector(".wl-c2__name")?.textContent ?? "";
 
         if (chapter === null) {
-          // Not a control in this arm. `first` says so out loud; the others
-          // simply leave the row as shipped.
-          if (opts.variant === "first") {
-            li.classList.add("mslx-preview");
-            cleanups.push(() => li.classList.remove("mslx-preview"));
-          }
+          // `first`: this row stops being a control and says so.
+          li.classList.add("mslx-preview");
+          hit.disabled = true;
+          cleanups.push(() => {
+            li.classList.remove("mslx-preview");
+            hit.disabled = false;
+          });
           return;
         }
 
-        /* role + tabindex rather than a real <button>, because this enhances
-           existing markup from outside. If an arm wins, the row should become
-           an actual <button> in the component — this is enough to judge feel,
-           not enough to ship. */
-        li.classList.add("mslx-tappable");
-        li.setAttribute("role", "button");
-        li.setAttribute("tabindex", "0");
-        li.setAttribute("aria-label", `${name} — chapter ${chapter}`);
+        if (chapter === i + 1) return; // shipped — leave the real button alone.
 
-        const onClick = () => go(chapter);
-        const onKey = (e: KeyboardEvent) => {
-          if (e.key !== "Enter" && e.key !== " ") return;
-          e.preventDefault(); // Space would otherwise page-scroll away.
+        /* `funnel`: send every row to 01. Captured before the component's own
+           handler so the shipped destination never runs, rather than racing
+           two scrollIntoView calls against each other. */
+        const divert = (e: Event) => {
+          e.stopImmediatePropagation();
+          e.preventDefault();
           go(chapter);
         };
-        li.addEventListener("click", onClick);
-        li.addEventListener("keydown", onKey);
-        cleanups.push(() => {
-          li.classList.remove("mslx-tappable");
-          li.removeAttribute("role");
-          li.removeAttribute("tabindex");
-          li.removeAttribute("aria-label");
-          li.removeEventListener("click", onClick);
-          li.removeEventListener("keydown", onKey);
-        });
+        hit.addEventListener("click", divert, true);
+        cleanups.push(() => hit.removeEventListener("click", divert, true));
       });
 
       /* ---- chapter 01 as the next step -------------------------------- */
@@ -190,70 +180,9 @@ export default function LandingAffordanceLab() {
         }
       }
 
-      /* ---- the cue the port dropped ------------------------------------ */
-      if (opts.cue && !document.getElementById(HINT_ID)) {
-        /* Rebuilt to the legacy markup exactly — `.scroll-hint` > mouse + text
-           — because globals.css still styles all three class names. This is
-           restoring an element, not designing one. */
-        const hint = document.createElement("div");
-        hint.id = HINT_ID;
-        hint.className = "scroll-hint";
-        const mouse = document.createElement("div");
-        mouse.className = "scroll-hint__mouse";
-        mouse.setAttribute("aria-hidden", "true");
-        const text = document.createElement("span");
-        text.className = "scroll-hint__text";
-        text.textContent = WORK_LANDING.scrollHint;
-        hint.append(mouse, text);
-
-        const list = landing.querySelector(".wl-c2__list");
-        if (list?.parentElement === landing) list.after(hint);
-        else landing.appendChild(hint);
-
-        /* Half a restoration is worse than none: globals.css already styles
-           `.scroll-hint.is-hidden` with a 600ms fade, and useWorkScroll already
-           computes the flag for it (`progress > 0.08`) — but nothing has
-           consumed either since the port. A cue that says "Scroll to explore"
-           and is still saying it four chapters later stops being a cue and
-           becomes furniture.
-           
-           Same threshold as the hook, computed the cheap way this branch has
-           been arguing for all along: geometry cached outside the scroll frame,
-           and only `scrollY` read inside it. */
-        const work = document.querySelector<HTMLElement>("#work");
-        let top = 0;
-        let span = 0;
-        const measure = () => {
-          if (!work) return;
-          top = work.getBoundingClientRect().top + window.scrollY;
-          span = Math.max(work.offsetHeight - window.innerHeight, 0);
-        };
-        let queued = false;
-        const read = () => {
-          queued = false;
-          if (span <= 0) return;
-          const progress = (window.scrollY - top) / span;
-          hint.classList.toggle("is-hidden", progress > 0.08);
-        };
-        const onScroll = () => {
-          if (queued) return;
-          queued = true;
-          requestAnimationFrame(read);
-        };
-        measure();
-        read();
-        window.addEventListener("scroll", onScroll, { passive: true });
-        window.addEventListener("resize", measure);
-        const ro = work ? new ResizeObserver(measure) : null;
-        ro?.observe(work!);
-
-        cleanups.push(() => {
-          window.removeEventListener("scroll", onScroll);
-          window.removeEventListener("resize", measure);
-          ro?.disconnect();
-          hint.remove();
-        });
-      }
+      /* The scroll cue is not an arm any more — it ships. See
+         components/work/ScrollCue.tsx. Injecting a second one here would have
+         put two "Scroll to explore" prompts on the screen. */
     };
 
     apply(true);

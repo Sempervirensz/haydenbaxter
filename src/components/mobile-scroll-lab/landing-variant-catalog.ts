@@ -12,14 +12,9 @@ export interface LandingVariantDef {
 
 export const LANDING_VARIANTS: LandingVariantDef[] = [
   {
-    id: "inert",
-    label: "inert",
-    note: "Shipped. The titles look like a menu and do nothing. Leave this on to test whether the cue and the turning disc fix it on their own.",
-  },
-  {
-    id: "chapter",
-    label: "chapter",
-    note: "A tapped title goes where it says. Least surprising, and it keeps faith with the visitor who taps 04 because Consulting is what they came for.",
+    id: "shipped",
+    label: "shipped",
+    note: "What is live: a tapped title goes where it says. Keeps faith with the visitor who taps 04 because Consulting is what they came for.",
   },
   {
     id: "funnel",

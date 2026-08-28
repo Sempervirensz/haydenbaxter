@@ -22,7 +22,7 @@
  * rather than presets, so the cheap fix can be tested apart from the big one.
  */
 
-export type LandingVariant = "inert" | "chapter" | "funnel" | "first";
+export type LandingVariant = "shipped" | "funnel" | "first";
 
 export interface LandingOptions {
   variant: LandingVariant;
@@ -37,12 +37,13 @@ export interface LandingOptions {
    *  makes a control that is ALREADY DRAWN ON THE OBJECT real, rather than
    *  adding a second one next to it. */
   play: "off" | "hub" | "shell";
-  /** Put back the "Scroll to explore" cue the port dropped. */
-  cue: boolean;
+  /** Retired: the cue now ships. Kept in the type only so a saved URL with
+   *  `?cue=1` on it does not fail to parse. */
+  cue?: boolean;
 }
 
 export const LANDING_DEFAULTS: LandingOptions = {
-  variant: "inert",
+  variant: "shipped",
   start: false,
   play: "off",
   cue: false,
@@ -57,8 +58,7 @@ export function isPlayStyle(v: string): v is LandingOptions["play"] {
 
 export function isLandingVariant(v: string): v is LandingVariant {
   switch (v) {
-    case "inert":
-    case "chapter":
+    case "shipped":
     case "funnel":
     case "first":
       return true;
@@ -68,14 +68,16 @@ export function isLandingVariant(v: string): v is LandingVariant {
 }
 
 /** Which chapter (1-based) a tap on row `index` should scroll to, or null if
- *  that row is not a control in this variant. */
+ *  that row should not be a control at all in this variant.
+ *
+ *  `shipped` returns the row's own chapter because that is now what the site
+ *  does — WorkChapterList renders real buttons and this arm leaves them alone.
+ *  The other two exist to argue with it. */
 export function targetChapter(
   variant: LandingVariant,
   index: number
 ): number | null {
   switch (variant) {
-    case "chapter":
-      return index + 1;
     case "funnel":
       // Every row lands on 01. The row still reads as itself, which is the
       // known cost of this arm: a tap on "Consulting" arriving at WorldPulse
@@ -84,6 +86,6 @@ export function targetChapter(
     case "first":
       return index === 0 ? 1 : null;
     default:
-      return null;
+      return index + 1;
   }
 }

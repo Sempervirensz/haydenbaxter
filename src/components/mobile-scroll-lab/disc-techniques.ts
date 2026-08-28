@@ -22,6 +22,7 @@ import type { WorkScrollZone } from "@/data/work";
 
 export type DiscTechnique =
   | "off"
+  | "frozen"
   | "rect"
   | "cached"
   | "direct"
@@ -34,6 +35,7 @@ export type DiscTechnique =
 export function isDiscTechnique(v: string): v is DiscTechnique {
   switch (v) {
     case "off":
+    case "frozen":
     case "rect":
     case "cached":
     case "direct":
@@ -45,16 +47,16 @@ export function isDiscTechnique(v: string): v is DiscTechnique {
   }
 }
 
-/** May the JS loop run on this technique, on ANY device?
+/** May the JS loop run on this technique?
  *
- *  `off` is true, which reads oddly until you remember what `off` means: it is
- *  the shipped build, and the shipped build runs the loop on desktop and
- *  freezes it on phones. The freeze is a device gate, applied separately.
- *  `native` is false everywhere — the compositor drives the disc through a CSS
- *  `rotate`, and a JS transform write would compose on top and show the disc at
- *  the sum of the two. */
+ *  `off` means the shipped build, and the shipped build now turns the disc on
+ *  every device — so it is true. `frozen` is the behaviour phones USED to get,
+ *  kept because the unfreeze has to be measured against something and `off` no
+ *  longer is that thing. `native` is false for the opposite reason: the
+ *  compositor drives the disc through a CSS `rotate`, and a JS transform write
+ *  would compose on top and show the disc at the sum of the two. */
 export function techniqueRunsLoop(id: DiscTechnique): boolean {
-  return id !== "native";
+  return id !== "native" && id !== "frozen";
 }
 
 /** Cheap geometry (cached on resize) rather than a layout read per frame. */

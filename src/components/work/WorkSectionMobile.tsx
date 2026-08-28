@@ -27,6 +27,8 @@ import MobileEtbCard from "./mobile/MobileEtbCard";
 import MobileSupplyChainCard from "./mobile/MobileSupplyChainCard";
 import MobileConsultingCard from "./mobile/MobileConsultingCard";
 import "./mobile/work-mobile-cards.css";
+import WorkChapterList from "./WorkChapterList";
+import ScrollCue from "./ScrollCue";
 
 const CARD_BY_ID: Record<number, () => React.JSX.Element> = {
   1: MobileWorldPulseCard,
@@ -38,8 +40,6 @@ const CARD_BY_ID: Record<number, () => React.JSX.Element> = {
 export default function WorkSectionMobile() {
   const { ref, activeLabel } = useWorkScroll();
 
-  const trackList = WORK_SCROLL_CONFIG.zones.filter((z) => z.label !== "");
-
   return (
     <section id="work" ref={ref} className="work work--mobile">
       {/* Landing chapter — copied verbatim from WorkSection so the CD player,
@@ -47,22 +47,7 @@ export default function WorkSectionMobile() {
           behave identically. */}
       <div className="work__chapter work__chapter--landing" style={{ zIndex: 1 }}>
         <article className="work__screen work__screen--landing">
-          <ol className="wl-c2__list" aria-label={WORK_LANDING.title}>
-            {trackList.map((zone, i) => {
-              const isActive = zone.label === activeLabel;
-              return (
-                <li
-                  key={zone.label}
-                  className={`wl-c2__item ${isActive ? "is-active" : ""}`}
-                >
-                  <span className="wl-c2__num">
-                    {String(i + 1).padStart(2, "0")}
-                  </span>
-                  <span className="wl-c2__name">{zone.label}</span>
-                </li>
-              );
-            })}
-          </ol>
+          <WorkChapterList activeLabel={activeLabel} />
 
           <div className="cd-player-wrap" aria-hidden="true">
             <img src="/playershellpngtransparent.webp" alt="" className="cd-player-shell" />
@@ -71,6 +56,8 @@ export default function WorkSectionMobile() {
               <div className="cd-disc" />
             </div>
           </div>
+
+          <ScrollCue />
         </article>
       </div>
 

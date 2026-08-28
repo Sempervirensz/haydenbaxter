@@ -175,7 +175,7 @@ export default function MobileScrollProbe() {
   const report = useCallback(() => {
     if (!stats) return "";
     return [
-      `DISC ${mode} · LANDING ${landing.variant}${landing.start ? "+01" : ""}${landing.play !== "off" ? "+play:" + landing.play : ""}${landing.cue ? "+cue" : ""}  gate ${gate ? "ON" : "OFF (not a phone)"}  ${env}`,
+      `DISC ${mode} · LANDING ${landing.variant}${landing.start ? "+01" : ""}${landing.play !== "off" ? "+play:" + landing.play : ""}  gate ${gate ? "ON" : "OFF (not a phone)"}  ${env}`,
       `scroll frames ${stats.frames} over ${Math.round(stats.spanMs)}ms`,
       `  fps ${fmt(stats.fps)}  p95 ${stats.frameP95}ms  worst ${Math.round(stats.frameMax)}ms`,
       `  ${Math.round(1000 / stats.nominalMs)}Hz device (${stats.nominalMs}ms budget)`,
@@ -274,14 +274,6 @@ export default function MobileScrollProbe() {
               }
             >
               {landing.play === "off" ? "play" : `play·${landing.play}`}
-            </button>
-            <button
-              type="button"
-              aria-pressed={landing.cue}
-              className={landing.cue ? "is-on" : ""}
-              onClick={() => setLandingOptions({ ...landing, cue: !landing.cue })}
-            >
-              cue
             </button>
           </div>
         </>

@@ -813,6 +813,8 @@ html {
 }
 
 .wl-c2__item {
+  /* Anchor for the full-row hit target below. */
+  position: relative;
   display: grid;
   grid-template-columns: clamp(3.5rem, 2.8rem + 1.4vw, 5.5rem) 1fr;
   align-items: baseline;
@@ -864,6 +866,47 @@ html {
 
 .wl-c2__item.is-active .wl-c2__name {
   color: #f3f3f3;
+}
+
+/* The chapter titles navigate.
+   
+   A transparent button stretched over the whole row rather than a wrapper
+   around the text: `.wl-c2__item` is the grid and five rules across as many
+   media queries set its columns, gap and padding, so wrapping would mean
+   re-pointing all of them. This adds a real control without touching one of
+   them. The accessible name is on the button (see WorkChapterList). */
+.wl-c2__hit {
+  position: absolute;
+  /* Bleeds past the row's own box so the target reaches the comfortable 44px
+     even where the padding rules compress to 3px on short viewports. */
+  inset: -2px -12px;
+  width: auto;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: background-color 160ms ease;
+}
+@media (hover: hover) and (pointer: fine) {
+  .wl-c2__hit:hover {
+    background: rgba(243, 243, 243, 0.05);
+  }
+  /* The row itself lifts out of its dimmed state on hover, so the whole line
+     answers the pointer rather than just the rectangle behind it. */
+  .wl-c2__item:has(.wl-c2__hit:hover) {
+    opacity: 1;
+  }
+}
+.wl-c2__hit:active {
+  background: rgba(243, 243, 243, 0.08);
+}
+.wl-c2__hit:focus-visible {
+  outline: 2px solid #cba86a;
+  outline-offset: 2px;
+}
+.wl-c2__item:has(.wl-c2__hit:focus-visible) {
+  opacity: 1;
 }
 
 @media (prefers-reduced-motion: reduce) {

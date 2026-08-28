@@ -5,27 +5,14 @@
 // cinematic section can reuse it without modifying the original WorkSection.
 
 import { WORK_LANDING, WORK_SCROLL_CONFIG } from "@/data/work";
+import WorkChapterList from "./WorkChapterList";
+import ScrollCue from "./ScrollCue";
 
 export default function WorkLanding({ activeLabel }: { activeLabel: string }) {
-  const trackList = WORK_SCROLL_CONFIG.zones.filter((z) => z.label !== "");
-
   return (
     <div className="work__chapter work__chapter--landing" style={{ zIndex: 1 }}>
       <article className="work__screen work__screen--landing">
-        <ol className="wl-c2__list" aria-label={WORK_LANDING.title}>
-          {trackList.map((zone, i) => {
-            const isActive = zone.label === activeLabel;
-            return (
-              <li
-                key={zone.label}
-                className={`wl-c2__item ${isActive ? "is-active" : ""}`}
-              >
-                <span className="wl-c2__num">{String(i + 1).padStart(2, "0")}</span>
-                <span className="wl-c2__name">{zone.label}</span>
-              </li>
-            );
-          })}
-        </ol>
+        <WorkChapterList activeLabel={activeLabel} />
 
         <div className="cd-player-wrap" aria-hidden="true">
           <img src="/playershellpngtransparent.webp" alt="" className="cd-player-shell" />
@@ -34,6 +21,8 @@ export default function WorkLanding({ activeLabel }: { activeLabel: string }) {
             <div className="cd-disc" />
           </div>
         </div>
+
+        <ScrollCue />
       </article>
     </div>
   );

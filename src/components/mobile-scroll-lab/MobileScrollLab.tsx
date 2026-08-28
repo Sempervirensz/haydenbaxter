@@ -55,7 +55,6 @@ export default function MobileScrollLab() {
     const q = new URLSearchParams({ disc: technique, landing: landing.variant });
     if (landing.start) q.set("start", "1");
     if (landing.play !== "off") q.set("play", landing.play);
-    if (landing.cue) q.set("cue", "1");
     setLan(`${window.location.origin}/?${q}`);
   }, [technique, landing]);
 
@@ -204,14 +203,6 @@ export default function MobileScrollLab() {
               {landing.play === "off"
                 ? "press play"
                 : `press play · ${landing.play}`}
-            </button>
-            <button
-              type="button"
-              aria-pressed={landing.cue}
-              className={`msl__btn ${landing.cue ? "is-on" : ""}`}
-              onClick={() => setLandingOpt({ cue: !landing.cue })}
-            >
-              scroll cue
             </button>
           </div>
         </div>
