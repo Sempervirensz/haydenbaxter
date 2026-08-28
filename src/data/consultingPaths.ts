@@ -165,17 +165,26 @@ const SUPPLY: ConsultingPath = {
   index: "02",
   kicker: "Supply Chain",
   name: "Supply Chain Advisor",
-  // consultingOffers.ts → supply.descriptor
+  /* First person, and a problem rather than a discipline. The old descriptor
+     ("operational strategy, supplier systems, product visibility") named the
+     field and left the visitor to work out whether their problem was inside
+     it; this names the problems and says where. It is the one string on this
+     side that is not carried from an existing source — it adds no scope, it
+     restates supply.descriptor in the voice the rest of the site uses. The
+     original is untouched in consultingOffers.ts → supply.descriptor. */
   summary:
-    "Bridging operational strategy, supplier systems, and product visibility across global networks.",
-  // consultingOffers.ts → supply.bullets
-  capabilities: [
-    "Procurement & sourcing",
-    "Supplier relationships",
-    "Traceability systems",
-    "Logistics & operations",
-    "International coordination",
-  ],
+    "I help companies navigate procurement, sourcing, and supplier challenges across global supply chains, especially across Asia.",
+  /* No badge strip on this side. "Global Supplier Ops" and "Data Governance"
+     are operator record, not products a visitor can pick up, so printing them
+     as offers framed a résumé as a menu. They keep their real job in
+     `detail.engagements` below. */
+  badges: [],
+  /* No credits line either. The summary now carries procurement, sourcing and
+     suppliers in a sentence, so a mono strip under it asked the same three
+     terms to be read twice — and the two lines it cost are most of what makes
+     this card scannable on a phone. The full list is unchanged in
+     consultingOffers.ts → supply.bullets. */
+  capabilities: [],
   detail: {
     // work.ts → supplyChain.bridgeLine
     lede:

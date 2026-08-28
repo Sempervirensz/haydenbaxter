@@ -105,10 +105,12 @@ function PathPanel({ path }: { path: ConsultingPath }) {
           <span className="cpp-path__name">{path.name}</span>
           <span className="cpp-path__summary">{path.summary}</span>
 
-          {/* WHAT THE OFFER ACTUALLY IS. Without these a visitor scanning the
-              pair sees two disciplines and no products — nothing to want.
-              The AI side opts out: it leads with an invitation rather than a
-              product, and the capability line under it carries that instead. */}
+          {/* WHAT THE OFFER ACTUALLY IS — for a path that has products to name.
+              Both current paths opt out, for different reasons: the AI side
+              leads with an invitation rather than a product, and the supply
+              side's named work is operator record, which a strip of offers
+              misdescribes. The strip stays because the reason to print one is
+              still real; it is the two paths that currently decline it. */}
           {badges.length > 0 && (
             <span className="cpp-path__offers">
               {badges.map((b) => (
@@ -119,13 +121,18 @@ function PathPanel({ path }: { path: ConsultingPath }) {
             </span>
           )}
 
-          <span className="cpp-path__caps">
-            {path.capabilities.map((c) => (
-              <span key={c} className="cpp-path__cap">
-                {c}
-              </span>
-            ))}
-          </span>
+          {/* Same rule as the strip above: an empty `.cpp-path__caps` is still
+              a flex row carrying its own 7px top margin, so an emptied list has
+              to leave the tree rather than render as nothing. */}
+          {path.capabilities.length > 0 && (
+            <span className="cpp-path__caps">
+              {path.capabilities.map((c) => (
+                <span key={c} className="cpp-path__cap">
+                  {c}
+                </span>
+              ))}
+            </span>
+          )}
         </div>
 
         <div className="cpp-path__actions">
