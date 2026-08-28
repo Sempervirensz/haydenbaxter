@@ -41,8 +41,24 @@ export default function WorkChapterList({ activeLabel }: Props) {
        same chapter cannot scroll to different places. */
     const el = findChapters()[chapter - 1];
     if (!el) return;
+
+    /* Smooth only when smooth is short.
+    
+       The browser scales smooth-scroll duration with distance, and Work is
+       ~13,000px at desktop widths: a jump to chapter 3 measured 9,908px and
+       took 4.07 SECONDS on the live site, animating the disc and the cinematic
+       parallax the whole way. That is not navigation, it is a cutscene played
+       at someone who asked to go somewhere. SoftLockGate already reached this
+       conclusion for its skip-ahead route and jumps instantly for the same
+       reason.
+       
+       The cap is set from measurement, not taste: the same jump on a phone is
+       2,095px and settles in 1.57s, which reads as movement rather than a wait.
+       2,400px keeps that and drops the desktop cutscene. */
+    const distance = Math.abs(el.getBoundingClientRect().top);
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    el.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" });
+    const smooth = !reduce && distance <= 2400;
+    el.scrollIntoView({ behavior: smooth ? "smooth" : "auto", block: "start" });
   }, []);
 
   return (
