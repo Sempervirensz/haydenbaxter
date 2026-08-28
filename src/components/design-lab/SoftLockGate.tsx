@@ -15,7 +15,7 @@
 // The old "Skip the intro" button is gone; the second line replaces it. Nav
 // links still release the gate via SOFT_LOCK_RELEASE, as before.
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import CardDeck from "@/components/CardDeck";
 import {
   CONSULTING_TARGET,
@@ -30,7 +30,23 @@ import {
 } from "./softLockEvents";
 import "./design-lab.css";
 
-export default function SoftLockGate({ children }: { children: React.ReactNode }) {
+// The three optional props exist for /lab/card-entry-motion and are inert when
+// omitted, which is how the homepage renders it. `deckProgress` is forwarded
+// straight to CardDeck's own optional override; `onRevealedChange` and
+// `onOpenChange` are read-only observers. There is still exactly one source of
+// truth for flip state and gate state — this component — and none of these props
+// can change it.
+export default function SoftLockGate({
+  children,
+  deckProgress,
+  onRevealedChange,
+  onOpenChange,
+}: {
+  children: React.ReactNode;
+  deckProgress?: number | readonly number[] | null;
+  onRevealedChange?: (count: number, flipped: ReadonlySet<number>) => void;
+  onOpenChange?: (open: boolean) => void;
+}) {
   // Which cards are face-up, straight from CardDeck. The indicator renders this
   // set; nothing else counts flips independently.
   const [flipped, setFlipped] = useState<ReadonlySet<number>>(() => new Set());
@@ -38,9 +54,16 @@ export default function SoftLockGate({ children }: { children: React.ReactNode }
   const [skipped, setSkipped] = useState(false);
 
 
+  // Held in a ref so `handleRevealed` keeps a stable identity: CardDeck lists it
+  // in an effect's dependencies, and a new function every render would re-run
+  // that effect on every commit.
+  const observerRef = useRef(onRevealedChange);
+  observerRef.current = onRevealedChange;
+
   const handleRevealed = useCallback((count: number, ids: ReadonlySet<number>) => {
     setFlipped(ids);
     if (count >= DECK_SIZE) setReleased(true);
+    observerRef.current?.(count, ids);
   }, []);
 
   // A nav link to a gated section counts as engaging with the entry — without
@@ -58,6 +81,12 @@ export default function SoftLockGate({ children }: { children: React.ReactNode }
   }, []);
 
   const open = released || skipped;
+
+  const openObserverRef = useRef(onOpenChange);
+  openObserverRef.current = onOpenChange;
+  useEffect(() => {
+    openObserverRef.current?.(open);
+  }, [open]);
 
   // Runs after the commit that removes `display: none`, so the target is laid
   // out and scrollable — no polling or rAF needed (rAF wouldn't fire at all if
@@ -143,7 +172,7 @@ export default function SoftLockGate({ children }: { children: React.ReactNode }
           className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] max-w-full h-[400px] rounded-full opacity-20 blur-[120px] pointer-events-none"
           style={{ background: "radial-gradient(ellipse, rgba(255,255,255,0.15), transparent)" }}
         />
-        <CardDeck onRevealedChange={handleRevealed} />
+        <CardDeck onRevealedChange={handleRevealed} progressOverride={deckProgress} />
       </section>
 
       {/* Soft lock — instructions in the black space right under the cards. */}
