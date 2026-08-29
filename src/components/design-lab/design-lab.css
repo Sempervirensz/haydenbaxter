@@ -708,3 +708,41 @@
     gap: 8px;
   }
 }
+
+/* ---------------------------------------------------------------------------
+   Scroll-dealt entry — the pinned scene and the runway behind it.
+   Chosen in /lab/card-entry-motion (option 02). See src/data/entryMotion.ts.
+   -------------------------------------------------------------------------*/
+
+/* Height is set inline from the measured viewport, because the runway is a
+   px distance derived from it rather than a ratio of it. Unpinned (reduced
+   motion) the track has no height of its own and the entry lays out exactly as
+   it did before. */
+.entry-track {
+  position: relative;
+}
+
+.entry-scene.is-pinned {
+  position: sticky;
+  /* `top` is set inline: 0 where the entry fits the fold, and the negative
+     overflow where it does not, so the scene can ride up far enough to show its
+     own bottom edge before pinning. Never `overflow: hidden` here — that would
+     clip the guidance on exactly the short viewports the offset exists for. */
+  z-index: 1;
+}
+
+/* The instruction swaps between "Scroll to deal the cards." and the flip line.
+   Locking the row's height keeps the deck above it from shifting by a line when
+   the copy changes length. */
+.dlab-soft__line {
+  transition: opacity 220ms ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .entry-scene.is-pinned {
+    position: static;
+  }
+  .dlab-soft__line {
+    transition: none;
+  }
+}

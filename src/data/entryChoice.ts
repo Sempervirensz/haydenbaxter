@@ -12,6 +12,13 @@
 // /entry-cta-lab cannot drift apart in wording or destination.
 
 export const ENTRY_CHOICE = {
+  /**
+   * Shown while the cards are still spreading, in place of `story`. The entry
+   * asks for one gesture at a time: scroll until they settle, then flip. Both
+   * lines occupy the same slot and the block is height-locked, so the swap
+   * cannot shift the deck sitting directly above it.
+   */
+  dealing: "Scroll to deal the cards.",
   story: "Flip the four cards to continue in Story Mode.",
   /** Lowercase italic, set apart — the pause between the two routes. */
   divider: "or",

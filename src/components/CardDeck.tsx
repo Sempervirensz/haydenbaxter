@@ -27,7 +27,8 @@ export default function CardDeck({
   const [flippedCards, setFlippedCards] = useState<Set<number>>(new Set());
   const [lastFlippedId, setLastFlippedId] = useState<number | null>(null);
   const [isMobile, setIsMobile] = useState(false);
-  const { ref, progress } = useScrollProgress();
+  // Skip the hook's listener entirely when a caller supplies the progress.
+  const { ref, progress } = useScrollProgress(progressOverride == null);
 
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 640);
