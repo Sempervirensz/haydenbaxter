@@ -1,0 +1,1138 @@
+/* ===========================================================================
+   Consulting colour lab — /consulting-color-lab
+   ===========================================================================
+
+   Loaded AFTER `consulting-paths.css`, and it only ever adds. Every rule here
+   is gated on `[data-treatment]`, which the control never writes, so the
+   control stage resolves entirely against the production sheet and renders as
+   the site does.
+
+   SPECIFICITY
+
+   The production file's own note applies here and is worth repeating: its
+   selectors carry the axis attributes (`[data-layout="tracklist"]` and
+   friends) on purpose, so a rule that wants to beat one has to carry them too
+   or it ties and resolves by source order. Ties resolving in this file's
+   favour is true today only because of the import order in
+   `ConsultingColorScreen.tsx` — which is a fragile thing to rely on. So every
+   override below repeats the axis attribute it is overriding and adds
+   `[data-treatment]` on top of it, which wins outright.
+
+   WHAT IS SHARED, AND WHY
+
+   All three directions start from one readability floor (section 3). That is
+   deliberate: the ink ramp is a defect fix, not a flavour. Measured against
+   the #f5f4f1 sheet the shipped tokens land at
+
+       --ink-1  17.3:1   path name          passes
+       --ink-2   7.8:1   credits line       passes
+       --ink-3   4.2:1   lede, summary,     FAILS AA (4.5:1)
+                         secondary button
+       --ink-4   2.6:1   eyebrow, kicker,   FAILS badly
+                         track numeral
+
+   so two of the four steps — carrying everything on the panel except the two
+   names — are below the AA floor for normal text. No direction should be able
+   to "win" by being the only one that fixed that, so none of them owns it.
+   What each direction owns is what it does with colour on top.
+   ======================================================================== */
+
+/* ===========================================================================
+   1. LAB SHELL
+   ======================================================================== */
+
+.ccl-root {
+  min-height: 100vh;
+  background: #08090d;
+  padding: clamp(20px, 3vw, 44px);
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+@media (min-width: 1440px) {
+  .ccl-root:has(.ccl-panel[data-open="true"]) {
+    padding-right: 520px;
+  }
+}
+
+.ccl-stages {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: center;
+  gap: clamp(26px, 3vw, 48px);
+  width: 100%;
+}
+
+/* The contact sheet. 640px is the floor at which the pair still renders side
+   by side — below 701px of container the sheet stacks, and a gallery of
+   stacked phone layouts is not what any of these directions is arguing. */
+.ccl-root[data-viewport="gallery"] .ccl-stages {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(640px, 1fr));
+  align-items: start;
+}
+
+.ccl-frame {
+  position: relative;
+  flex: 0 1 auto;
+  /* Room for the caption, which is positioned below the frame rather than
+     flowed after it — `.wt` is `position: absolute; inset: 0`, so a caption in
+     normal flow renders underneath the stage at y=0 and is invisible. */
+  margin-bottom: 46px;
+}
+
+.ccl-frame--desktop {
+  width: min(1920px, 100%);
+  height: clamp(560px, 82vh, 980px);
+}
+
+.ccl-frame--narrow {
+  width: 390px;
+  height: 780px;
+}
+
+.ccl-frame--gallery {
+  width: 100%;
+  height: clamp(620px, 60vh, 820px);
+}
+
+/* `.wt` needs a positioned box with a real height. The rounded frame and the
+   filmic edge are lab chrome only; in production the host card supplies
+   them. */
+.ccl-stage {
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 30px 90px rgba(0, 0, 0, 0.6);
+  background: #05060a;
+}
+
+.ccl-frame__tag {
+  position: absolute;
+  top: calc(100% + 12px);
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.ccl-frame__note {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-family: var(--font-sans);
+  font-size: 12.5px;
+  letter-spacing: 0;
+  text-transform: none;
+  color: rgba(255, 255, 255, 0.42);
+}
+
+/* ---- Control panel ---- */
+
+.ccl-panel {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  z-index: 40;
+  width: min(480px, calc(100vw - 32px));
+  max-height: calc(100vh - 32px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 14px;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(12, 13, 18, 0.94);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.6);
+}
+
+.ccl-panel[data-open="false"] {
+  width: auto;
+}
+
+.ccl-panel__toggle {
+  all: unset;
+  box-sizing: border-box;
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.62);
+  padding: 8px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  text-align: center;
+}
+
+.ccl-panel__toggle:hover {
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+.ccl-panel__body {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: start;
+  gap: 12px 14px;
+}
+
+.ccl-panel__title,
+.ccl-panel__note,
+.ccl-group--wide,
+.ccl-arg {
+  grid-column: 1 / -1;
+}
+
+.ccl-panel__title {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-size: 20px;
+  color: rgba(246, 245, 240, 0.95);
+}
+
+.ccl-panel__note {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.48);
+}
+
+.ccl-group__label {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.ccl-group__hint {
+  margin: 2px 0 4px;
+  font-family: var(--font-sans);
+  font-size: 11.5px;
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.46);
+}
+
+.ccl-group__items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.ccl-toggle {
+  all: unset;
+  box-sizing: border-box;
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.62);
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  white-space: nowrap;
+}
+
+.ccl-toggle:hover {
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.38);
+}
+
+.ccl-toggle[data-on="true"] {
+  color: #dce6ff;
+  border-color: rgba(93, 140, 255, 0.7);
+  background: rgba(37, 99, 235, 0.24);
+}
+
+/* ---- The written argument, beside the thing it argues about ---- */
+
+.ccl-arg {
+  margin-top: 4px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.ccl-arg__name {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  margin: 0 0 8px;
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-size: 18px;
+  color: rgba(246, 245, 240, 0.95);
+}
+
+.ccl-arg__temp {
+  flex: 0 0 auto;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(147, 180, 255, 0.85);
+}
+
+.ccl-arg__label {
+  margin: 12px 0 5px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.38);
+}
+
+.ccl-arg__list {
+  margin: 0;
+  padding-left: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.ccl-arg__list li,
+.ccl-arg__body {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.66);
+}
+
+.ccl-arg__foot {
+  margin: 8px 0 0;
+  font-family: var(--font-sans);
+  font-size: 11.5px;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.ccl-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-mono);
+  font-size: 11px;
+}
+
+.ccl-table th,
+.ccl-table td {
+  padding: 5px 6px;
+  text-align: left;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.6);
+  font-weight: 400;
+}
+
+.ccl-table td:nth-child(2) {
+  font-family: var(--font-sans);
+  font-size: 11.5px;
+}
+
+.ccl-table__ratio {
+  text-align: right !important;
+  font-variant-numeric: tabular-nums;
+}
+
+/* A failing row is the finding. Colour alone would not carry it, so the ratio
+   is printed as the value and the row is only tinted on top of that. */
+.ccl-table tr[data-pass="false"] th,
+.ccl-table tr[data-pass="false"] td {
+  color: #ffb4a8;
+}
+
+.ccl-panel :focus-visible,
+.ccl-toggle:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.7);
+  outline-offset: 2px;
+}
+
+/* ===========================================================================
+   2. MOTION
+   ===========================================================================
+   The lab's own switch, so the reduced state can be reviewed on a machine
+   without the OS setting on. It mirrors the block at the end of
+   `work-together.css` rather than replacing it — the media query below still
+   applies on its own for a real visitor.
+   ======================================================================== */
+
+.ccl-root[data-motion="reduced"] *,
+.ccl-root[data-motion="reduced"] *::before,
+.ccl-root[data-motion="reduced"] *::after {
+  animation: none !important;
+  transition: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ccl-root *,
+  .ccl-root *::before,
+  .ccl-root *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* Every treatment below states its hover affordance twice: once as a
+   transform or a size change, and once as a colour or border change. Under
+   reduced motion the transform is dropped and the colour half still carries
+   the signal, so no hover state becomes invisible rather than merely still. */
+
+/* ===========================================================================
+   3. THE SHARED READABILITY FLOOR
+   ===========================================================================
+
+   Applied identically to all three directions. Ratios in the trailing
+   comments are measured against each direction's own sheet colour, which is
+   why the alpha values are the same but the notes differ slightly.
+
+   `--ink-4` is the interesting one. Lifting it from 0.40 to 0.62 buys 2.6:1 →
+   ~5.1:1, which clears AA — but it also turns the metadata layer into a
+   fourth shade of grey competing with the body copy, which is most of what
+   "everything blends together" actually describes. So every direction ALSO
+   moves that layer off grey and onto its path's hue. The lifted grey stays as
+   the fallback for the one metadata element that is not path-scoped: the
+   screen eyebrow.
+   ======================================================================== */
+
+.cpp-screen[data-treatment] {
+  --ink-2: rgba(17, 17, 22, 0.82); /* 10.3:1 */
+  --ink-3: rgba(17, 17, 22, 0.68); /*  6.3:1 — was 4.2:1 */
+  --ink-4: rgba(17, 17, 22, 0.62); /*  5.1:1 — was 2.6:1 */
+}
+
+/* The serif names come off the permanent 78% hold.
+
+   That opacity is not a resting decision anyone made: tracklist dims the name
+   and restores it on `:hover` or `[data-state="open"]`, and production ships
+   with nothing openable, so the restore rule can only ever fire on hover. The
+   effect is that both names render at 78% for the entire time the panel is on
+   screen — the single largest contributor to the muted read, and the reason
+   the two biggest elements on the sheet do not act like the two biggest
+   elements on the sheet. */
+.cpp-screen[data-treatment][data-layout="tracklist"] .cpp-path__name {
+  opacity: 1;
+}
+
+/* Dimming still has a job — it just becomes a hover signal instead of a
+   resting state. When one column is hovered the OTHER recedes, so hovering
+   does something rather than merely undoing a default.
+
+   `:has()` on the grid rather than a sibling selector: the two paths are grid
+   items with no reliable source order relationship to hover, and this states
+   the intent directly. */
+.cpp-screen[data-treatment] .cpp-paths:has(.cpp-path:hover) .cpp-path:not(:hover) {
+  opacity: 0.62;
+}
+
+.cpp-screen[data-treatment] .cpp-path {
+  transition: opacity 220ms ease, background 260ms ease, border-color 260ms ease;
+}
+
+/* The secondary button inherits `--ink-3`, so it comes along for free — but
+   its border was `--hair-2` at 0.18 alpha, which is a 1.3:1 edge. A control
+   whose boundary is invisible is not a control. */
+.cpp-screen[data-treatment] .cpp-action--ghost {
+  border-color: rgba(17, 17, 22, 0.3);
+  color: var(--ink-2);
+}
+
+/* ===========================================================================
+   4. DRAFTING — cool, technical
+   ===========================================================================
+
+   THESIS: colour means ACTION, not category.
+
+   The shipped scheme gives each path its own hue and then paints that hue
+   onto that path's button, so blue and gold are simultaneously saying "this
+   is which discipline" and "this is the thing to press". Two jobs, two
+   families, and neither reads cleanly. Here one system blue owns every call
+   to action on the sheet, and the path hues retreat to identity marks —
+   a tick and a numeral — where they cannot be confused for a control.
+
+   The sheet cools to a blue-grey drafting stock and the hairlines are
+   re-mixed from slate rather than from pure black, so the neutrals sit in the
+   same family as the accent instead of reading as a warm sheet with a cold
+   button dropped on it.
+   ======================================================================== */
+
+.cpp-screen[data-treatment="drafting"][data-layout="tracklist"] {
+  /* "01 /" is wider than the bare "01" tracklist sizes the gutter for. */
+  --track-gutter: clamp(2.9rem, 3.6cqw, 4.5rem);
+}
+
+.cpp-screen[data-treatment="drafting"] {
+  --sheet-bg: #f1f3f6;
+  --sheet-border: rgba(30, 45, 70, 0.12);
+  --ink-1: #0e1116;
+  --ink-2: rgba(14, 17, 22, 0.82);
+  --ink-3: rgba(14, 17, 22, 0.68); /* 6.3:1 on #f1f3f6 */
+  --ink-4: rgba(14, 17, 22, 0.62); /* 5.1:1 */
+  --hair: rgba(30, 45, 70, 0.13);
+  --hair-2: rgba(30, 45, 70, 0.26);
+  --chip-neutral-bg: rgba(30, 45, 70, 0.05);
+  --chip-neutral-border: rgba(30, 45, 70, 0.1);
+
+  /* The system hue. Deliberately a separate token from `--rgb`: `--rgb` is
+     per-path identity and still varies, this does not. */
+  --sys-rgb: 27, 75, 184;
+  --sys-ink: #1b4bb8; /* 6.9:1 on the sheet */
+  --sys-on: #f5f8fd; /* 7.6:1 on the fill */
+}
+
+/* Identity marks keep their own hue; everything else on the sheet is system
+   blue or ink. */
+.cpp-screen[data-treatment="drafting"][data-layout="tracklist"] .cpp-path__kicker {
+  color: var(--sys-ink);
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+}
+
+/* Registration tick — a filled square in the PATH's hue, which is the only
+   place the two paths differ chromatically. Small enough to be a mark rather
+   than a swatch, and it is the thing that lets you tell the two columns apart
+   from across the room without either column owning a colour. */
+.cpp-screen[data-treatment="drafting"][data-layout="tracklist"]
+  .cpp-path__kicker::before {
+  content: "";
+  flex: 0 0 auto;
+  width: 7px;
+  height: 7px;
+  background: var(--accent-ink);
+  transition: transform 220ms ease, background 220ms ease;
+}
+
+.cpp-screen[data-treatment="drafting"] .cpp-path:hover .cpp-path__kicker::before {
+  transform: scale(1.35);
+}
+
+/* The numeral becomes a real drawing callout: mono, system blue, with the
+   slash a spec sheet would set it with. */
+.cpp-screen[data-treatment="drafting"][data-layout="tracklist"] .cpp-path__ghost {
+  color: var(--sys-ink);
+  font-weight: 500;
+}
+
+.cpp-screen[data-treatment="drafting"][data-layout="tracklist"]
+  .cpp-path__ghost::after {
+  content: " /";
+  opacity: 0.45;
+}
+
+/* A real gutter rule. The shipped pair is separated by nothing but whitespace,
+   which is why the eye reads the sheet as one wide block of grey rather than
+   as two columns to choose between. */
+.cpp-screen[data-treatment="drafting"][data-layout="tracklist"] .cpp-paths {
+  position: relative;
+}
+
+@container wt (min-width: 701px) {
+  .cpp-screen[data-treatment="drafting"][data-layout="tracklist"] .cpp-paths::after {
+    content: "";
+    position: absolute;
+    top: 12px;
+    bottom: 0;
+    left: 50%;
+    width: 1px;
+    background: linear-gradient(
+      to bottom,
+      rgba(var(--sys-rgb), 0.22),
+      rgba(var(--sys-rgb), 0.04)
+    );
+    pointer-events: none;
+  }
+}
+
+/* Credits become a spec row: hairline dividers instead of middots, which is
+   how a drawing lists tolerances. */
+.cpp-screen[data-treatment="drafting"][data-layout="tracklist"] .cpp-path__cap {
+  color: var(--ink-2);
+  padding-right: 9px;
+  margin-right: 3px;
+  border-right: 1px solid var(--hair-2);
+}
+
+.cpp-screen[data-treatment="drafting"][data-layout="tracklist"]
+  .cpp-path__cap:last-child {
+  border-right: 0;
+}
+
+.cpp-screen[data-treatment="drafting"][data-layout="tracklist"]
+  .cpp-path__cap:not(:last-child)::after {
+  content: none;
+}
+
+.cpp-screen[data-treatment="drafting"] .cpp-path__summary {
+  color: var(--ink-2);
+  max-width: 42ch;
+}
+
+/* ---- The two ranks, made unmistakable ---------------------------------- */
+
+/* PRIMARY: the one saturated element in the column. A filled control against
+   a text link cannot be misread as a pair of equals, which is exactly what
+   two outlined pills of the same size currently are. */
+.cpp-screen[data-treatment="drafting"][data-button="cue"] .cpp-action--primary {
+  border: 1px solid var(--sys-ink);
+  border-radius: 7px;
+  background: var(--sys-ink);
+  color: var(--sys-on);
+  padding: 10px 18px 10px 10px;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.18) inset,
+    0 6px 16px rgba(var(--sys-rgb), 0.22);
+}
+
+.cpp-screen[data-treatment="drafting"][data-button="cue"]
+  .cpp-action--primary::before {
+  border-color: rgba(255, 255, 255, 0.45);
+  color: var(--sys-on);
+  margin-right: 10px;
+}
+
+.cpp-screen[data-treatment="drafting"][data-button="cue"] .cpp-action--primary:hover,
+.cpp-screen[data-treatment="drafting"][data-button="cue"]
+  .cpp-action--primary:focus-visible {
+  background: #14389a;
+  border-color: #14389a;
+  color: #fff;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.2) inset,
+    0 8px 20px rgba(var(--sys-rgb), 0.3);
+}
+
+.cpp-screen[data-treatment="drafting"][data-button="cue"]
+  .cpp-action--primary:hover::before,
+.cpp-screen[data-treatment="drafting"][data-button="cue"]
+  .cpp-action--primary:focus-visible::before {
+  background: #fff;
+  color: #14389a;
+}
+
+/* SECONDARY: no pill at all. A bordered box next to a filled box still reads
+   as two buttons; a ruled text link reads as an aside. The rule thickens AND
+   turns blue on hover, so the affordance survives reduced motion. */
+.cpp-screen[data-treatment="drafting"][data-button="cue"] .cpp-action--ghost {
+  padding: 10px 2px;
+  border: 0;
+  border-bottom: 1px solid var(--hair-2);
+  border-radius: 0;
+  background: none;
+  color: var(--ink-2);
+}
+
+.cpp-screen[data-treatment="drafting"][data-button="cue"] .cpp-action--ghost:hover,
+.cpp-screen[data-treatment="drafting"][data-button="cue"]
+  .cpp-action--ghost:focus-visible {
+  color: var(--sys-ink);
+  border-bottom: 2px solid var(--sys-ink);
+  padding-bottom: 9px;
+}
+
+.cpp-screen[data-treatment="drafting"] .cpp-action:focus-visible {
+  outline: 2px solid var(--sys-ink);
+  outline-offset: 3px;
+}
+
+/* The two ranks stack, and the primary is sized by its label.
+
+   `.cpp-path__actions` is a wrapping flex row and `.cpp-action--primary` is
+   `flex: 1 1 auto`, so whether the secondary fits beside the primary depends
+   on how long that path's secondary label happens to be. It does: "View
+   Selected AI Work" fits on the AI side and "View Supply Chain Experience"
+   does not on the supply side. Production wears that as two pills at slightly
+   different widths and it passes unnoticed; with a filled control on one side
+   of the row and a text link on the other, the same wrap made one column show
+   a small button beside a link and the other a full-bleed button above one.
+   Two paths that are meant to read as equals cannot be drawn two different
+   ways by an accident of string length.
+
+   Stacking also keeps the primary at its label's width rather than stretched
+   to the column — a full-width saturated bar is the single biggest thing
+   separating "an accent system" from "a product page". */
+.cpp-screen[data-treatment="drafting"] .cpp-path__actions {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+}
+
+.cpp-screen[data-treatment="drafting"] .cpp-action--primary {
+  flex: 0 0 auto;
+}
+
+/* The back control and the eyebrow join the same system. */
+.cpp-screen[data-treatment="drafting"] .cpp-screen__eyebrow {
+  color: var(--sys-ink);
+}
+
+/* ===========================================================================
+   5. LETTERPRESS — warm, editorial
+   ===========================================================================
+
+   THESIS: hierarchy from SCALE and MATERIAL, not from more colour.
+
+   The sheet has no entry point. The eye arrives on a 13px grey lede, then
+   meets two serif names of equal weight with nothing telling it which to read
+   first or where a column starts. This direction gives each column a poster
+   figure to start on, drops through a name and a summary set at real reading
+   size, and lands on a control the site already owns and this panel does not
+   currently use anywhere: the DYMO plate.
+
+   Brass becomes the section's connective accent — the eyebrow, the rules —
+   while each path keeps its own hue for its numeral and kicker. That is the
+   opposite division to Drafting on purpose: here the shared colour is
+   editorial furniture and the per-path colour is the louder of the two.
+   ======================================================================== */
+
+.cpp-screen[data-treatment="letterpress"] {
+  --sheet-bg: #f6f2e8;
+  --sheet-border: rgba(60, 45, 20, 0.12);
+  --ink-1: #17130d;
+  --ink-2: rgba(23, 19, 13, 0.82);
+  --ink-3: rgba(23, 19, 13, 0.68); /* 6.1:1 on #f6f2e8 */
+  --ink-4: rgba(23, 19, 13, 0.62);
+  --hair: rgba(60, 45, 20, 0.14);
+  --hair-2: rgba(60, 45, 20, 0.26);
+  --chip-neutral-bg: rgba(60, 45, 20, 0.05);
+  --chip-neutral-border: rgba(60, 45, 20, 0.1);
+
+  /* A warmer, darker plate than the shipped `--plate-bg: #1c1c1c`, so the
+     DYMO slab reads as pressed into this paper rather than dropped onto it. */
+  --plate-bg: #1a1712;
+  --plate-ink: #f3ede1;
+  --plate-edge: #0d0b08;
+
+  /* The connective accent. Brass darkened from the shipped #8a6a1f (4.6:1) to
+     clear 5.3:1 on the warmer sheet — the same move the supply path's ink
+     makes below. */
+  --rule-ink: #7d5f16;
+}
+
+/* Supply's ink darkens for the same reason. Cobalt is already 6.6:1 and is
+   left alone. */
+.cpp-screen[data-treatment="letterpress"] .cpp-path[data-path="supply"] {
+  --accent-ink: #7d5f16; /* 5.3:1 */
+}
+
+.cpp-screen[data-treatment="letterpress"] .cpp-screen__eyebrow {
+  color: var(--rule-ink);
+}
+
+.cpp-screen[data-treatment="letterpress"] .cpp-screen__head {
+  border-bottom: 1px solid rgba(125, 95, 22, 0.32);
+}
+
+/* ---- The poster figure -------------------------------------------------
+
+   `.cpp-path__ghost` is already absolutely positioned in the gutter and is
+   already in the markup for every direction — Ledger and Marquee draw it at
+   poster scale, tracklist sets it as a small mono numeral. Promoting it back
+   is what buys the column a starting point, with no new DOM. */
+
+.cpp-screen[data-treatment="letterpress"][data-layout="tracklist"] {
+  --track-gutter: clamp(3.2rem, 4.4cqw, 5.4rem);
+}
+
+.cpp-screen[data-treatment="letterpress"][data-layout="tracklist"] .cpp-path__ghost {
+  top: 2px;
+  font-family: var(--face-display);
+  font-size: clamp(38px, 4.4cqw, 58px);
+  font-weight: 400;
+  letter-spacing: -0.03em;
+  line-height: 0.82;
+  /* Low enough to sit behind the type rather than compete with it, high
+     enough to be legible as a figure. Decorative: `aria-hidden` already, and
+     the kicker still prints the same index for a screen reader. */
+  color: rgba(var(--rgb), 0.3);
+  transition: color 260ms ease;
+}
+
+.cpp-screen[data-treatment="letterpress"] .cpp-path:hover .cpp-path__ghost {
+  color: rgba(var(--rgb), 0.55);
+}
+
+/* Kicker on a brass hairline, with the index dropped: the poster figure in
+   the gutter is now printing it at 48px, so the mono repeat was the same
+   number twice on one line. */
+.cpp-screen[data-treatment="letterpress"][data-layout="tracklist"] .cpp-path__kicker {
+  color: var(--accent-ink);
+  padding-bottom: 6px;
+  border-bottom: 1px solid rgba(125, 95, 22, 0.34);
+  align-self: stretch;
+}
+
+.cpp-screen[data-treatment="letterpress"][data-layout="tracklist"] .cpp-path__index {
+  display: none;
+}
+
+/* Reading typography, which is what a 13px grey line at 46ch was not. */
+.cpp-screen[data-treatment="letterpress"][data-layout="tracklist"] .cpp-path__name {
+  font-size: clamp(23px, 2.9cqw, 37px);
+  line-height: 1.02;
+  margin-top: 2px;
+}
+
+.cpp-screen[data-treatment="letterpress"] .cpp-path__summary {
+  color: var(--ink-2);
+  font-size: var(--text-body-sm);
+  line-height: 1.58;
+  max-width: 44ch;
+}
+
+.cpp-screen[data-treatment="letterpress"] .cpp-screen__lede {
+  color: var(--ink-2);
+  font-size: var(--text-body-sm);
+}
+
+.cpp-screen[data-treatment="letterpress"][data-layout="tracklist"] .cpp-path__caps {
+  padding-top: 7px;
+  border-top: 1px solid var(--hair);
+}
+
+.cpp-screen[data-treatment="letterpress"][data-layout="tracklist"] .cpp-path__cap {
+  color: var(--ink-2);
+}
+
+/* ---- The DYMO plate ----------------------------------------------------
+
+   The site's signature control, which this panel currently uses nowhere. Deep
+   inset emboss, hard bottom edge, mono uppercase, and a press on :active —
+   the recipe from the design-language rules, minus the 1–2deg rotation, which
+   a two-column grid with a shared baseline cannot absorb without reading as a
+   layout fault. */
+
+.cpp-screen[data-treatment="letterpress"][data-button="cue"] .cpp-action--primary {
+  border: 1px solid #000;
+  border-radius: 9px;
+  border-left: 3px solid var(--accent-ink);
+  background: var(--plate-bg);
+  color: var(--plate-ink);
+  padding: 11px 20px 11px 10px;
+  letter-spacing: var(--track-dymo);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.6), 0 3px 0 var(--plate-edge),
+    0 8px 20px rgba(26, 23, 18, 0.32);
+  transition: transform 140ms ease, box-shadow 140ms ease, color 140ms ease;
+}
+
+.cpp-screen[data-treatment="letterpress"][data-button="cue"]
+  .cpp-action--primary::before {
+  /* The plate is a dark ground on every surface, so the glyph takes the
+     LIFTED ink rather than following the sheet — the same rule the production
+     file states for `--accent-plate-ink`. */
+  border-color: var(--accent-plate-ink);
+  color: var(--accent-plate-ink);
+  margin-right: 10px;
+}
+
+.cpp-screen[data-treatment="letterpress"][data-button="cue"] .cpp-action--primary:hover,
+.cpp-screen[data-treatment="letterpress"][data-button="cue"]
+  .cpp-action--primary:focus-visible {
+  color: #fff;
+  background: #221d16;
+  transform: translateY(-1px);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.6), 0 4px 0 var(--plate-edge),
+    0 10px 24px rgba(26, 23, 18, 0.38);
+}
+
+.cpp-screen[data-treatment="letterpress"][data-button="cue"]
+  .cpp-action--primary:hover::before,
+.cpp-screen[data-treatment="letterpress"][data-button="cue"]
+  .cpp-action--primary:focus-visible::before {
+  background: var(--accent-plate-ink);
+  color: var(--plate-bg);
+}
+
+/* Pressed: the plate goes down and the hard edge under it shortens, which is
+   the whole tactile trick. Kept off `transform` alone so it still reads under
+   reduced motion via the shadow change. */
+.cpp-screen[data-treatment="letterpress"][data-button="cue"]
+  .cpp-action--primary:active {
+  transform: translateY(2px);
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.7), 0 1px 0 var(--plate-edge);
+}
+
+/* 20px of side padding put the longest label ("View Supply Chain Experience")
+   flush against the sheet's own padding edge at gallery width — legible, but
+   it read as a clipped button rather than a full one. 15px is what production
+   uses and what the column can actually spare. */
+.cpp-screen[data-treatment="letterpress"][data-button="cue"] .cpp-action--ghost {
+  border: 1px solid rgba(60, 45, 20, 0.32);
+  color: var(--ink-2);
+  padding: 11px 15px;
+}
+
+.cpp-screen[data-treatment="letterpress"][data-button="cue"] .cpp-action--ghost:hover,
+.cpp-screen[data-treatment="letterpress"][data-button="cue"]
+  .cpp-action--ghost:focus-visible {
+  border-color: var(--accent-ink);
+  color: var(--ink-1);
+  background: rgba(var(--rgb), 0.06);
+}
+
+/* ===========================================================================
+   6. INDEX — between
+   ===========================================================================
+
+   THESIS: the panel is not short of colour. It is short of CONTRAST, and of
+   colour doing a job.
+
+   This is the control-adjacent direction and it is here to be a real test,
+   not a filler. Nothing decorative is added: no new marks, no new rules
+   between columns, no new type sizes, no change of surface. Every accent
+   already in the shipped scheme stays exactly where it is. What changes is
+   that each path's hue is given exactly three jobs and is then not used for
+   anything else:
+
+       1. the kicker and track numeral      — identity, at rest
+       2. a lane bar in the gutter          — where this column starts
+       3. the primary CTA's fill            — the ask
+
+   If this reads as enough, the finding is that the muting was a contrast
+   defect wearing a colour costume, and the cheapest correct fix is the one
+   that touches four tokens and one opacity.
+   ======================================================================== */
+
+/* Supply's ink darkens to match cobalt's headroom — 4.6:1 is a pass, but the
+   kicker is 11.5px of uppercase mono and small type wants more. */
+.cpp-screen[data-treatment="index"] .cpp-path[data-path="supply"] {
+  --accent-ink: #7d5f16; /* 5.4:1 */
+}
+
+/* Job 1. The whole metadata layer moves off grey and onto the path's hue at
+   rest, rather than only when open — which production, shipping with nothing
+   openable, never reaches. 2.6:1 grey becomes 6.6:1 / 5.4:1 colour, and the
+   two columns become legible as two things without a single new element. */
+.cpp-screen[data-treatment="index"][data-layout="tracklist"] .cpp-path__kicker,
+.cpp-screen[data-treatment="index"][data-layout="tracklist"] .cpp-path__ghost {
+  color: var(--accent-ink);
+}
+
+.cpp-screen[data-treatment="index"][data-layout="tracklist"] .cpp-path__index {
+  color: var(--ink-4);
+}
+
+/* Job 2. `.cpp-path__rule` is in the markup already and tracklist hides it.
+   Bringing it back as a vertical lane bar in the gutter — rather than as the
+   34px horizontal dash the other layouts draw — gives each column a left edge
+   that says where it begins. It grows on hover, and the colour deepens at the
+   same time so the signal survives reduced motion. */
+.cpp-screen[data-treatment="index"][data-layout="tracklist"] .cpp-path__base {
+  position: relative;
+}
+
+/* The bar and the track numeral both want the gutter, and both were absolutely
+   positioned at left: 0 — the bar painted over the leading digit. The numeral
+   steps right by the bar's width plus a hair, and the gutter widens by the
+   same amount so the copy column is unmoved. */
+.cpp-screen[data-treatment="index"][data-layout="tracklist"] {
+  --track-gutter: clamp(2.9rem, 3.6cqw, 4.5rem);
+}
+
+.cpp-screen[data-treatment="index"][data-layout="tracklist"] .cpp-path__ghost {
+  left: 12px;
+}
+
+.cpp-screen[data-treatment="index"][data-layout="tracklist"] .cpp-path__rule {
+  display: block;
+  position: absolute;
+  left: 0;
+  top: 13px;
+  width: 3px;
+  height: 34px;
+  border-radius: 3px;
+  background: var(--accent-ink);
+  opacity: 0.75;
+  transition: height 300ms var(--ease), opacity 220ms ease;
+}
+
+.cpp-screen[data-treatment="index"][data-layout="tracklist"]
+  .cpp-path:hover
+  .cpp-path__rule {
+  height: 62px;
+  opacity: 1;
+}
+
+/* The column ground: a wash that starts at 4.5% under the kicker and fades to
+   nothing before the copy ends, so it reads as warmth at the top of a column
+   rather than as a filled cell. 10% on hover is still under the threshold at
+   which it reads as a selected table row. The hairline above the column
+   taking the hue on hover is what actually tells you which lane you are in. */
+.cpp-screen[data-treatment="index"][data-layout="tracklist"] .cpp-path,
+.cpp-screen[data-treatment="index"][data-layout="tracklist"]
+  .cpp-path[data-state="open"] {
+  background: linear-gradient(to bottom, rgba(var(--rgb), 0.045), rgba(var(--rgb), 0));
+  border-top-color: rgba(var(--rgb), 0.3);
+}
+
+.cpp-screen[data-treatment="index"][data-layout="tracklist"] .cpp-path:hover {
+  background: linear-gradient(to bottom, rgba(var(--rgb), 0.1), rgba(var(--rgb), 0.01));
+  border-top-color: rgba(var(--rgb), 0.6);
+}
+
+.cpp-screen[data-treatment="index"] .cpp-path__summary {
+  color: var(--ink-2);
+}
+
+/* Job 3. The fill, and the one place this direction refuses to be symmetrical.
+
+   Filling both buttons the same way is what makes a two-accent palette look
+   cheap: run cobalt and brass through one recipe and one of them always comes
+   out wrong. Deep blue wants light type on it; brass at a value dark enough
+   to carry white type stops being brass and becomes olive. So each hue is
+   used in the direction it actually works, using tokens the shipped palette
+   already declares for exactly this reason (`--ai-on: #ffffff`,
+   `--sup-on: #17150e` — two inks per hue, as the production file's own
+   palette note explains).
+
+       AI      fill #1e4ebe (the text-safe ink), white label     7.3:1
+       Supply  fill #b8924a (the hue itself),   near-black label 6.3:1
+
+   The cue ring survives on both — it is the panel's one piece of transport
+   vocabulary and the thing that makes this read as this site's button. */
+.cpp-screen[data-treatment="index"] .cpp-path[data-path="ai"] {
+  --fill: var(--accent-ink);
+  --fill-ink: var(--on-accent);
+  --fill-ring: rgba(255, 255, 255, 0.55);
+}
+
+.cpp-screen[data-treatment="index"] .cpp-path[data-path="supply"] {
+  --fill: var(--solid);
+  --fill-ink: var(--on-accent);
+  --fill-ring: rgba(23, 21, 14, 0.5);
+}
+
+.cpp-screen[data-treatment="index"][data-button="cue"] .cpp-action--primary {
+  border-color: var(--fill);
+  background: var(--fill);
+  color: var(--fill-ink);
+}
+
+.cpp-screen[data-treatment="index"][data-button="cue"] .cpp-action--primary::before {
+  border-color: var(--fill-ring);
+  color: var(--fill-ink);
+}
+
+.cpp-screen[data-treatment="index"][data-button="cue"] .cpp-action--primary:hover,
+.cpp-screen[data-treatment="index"][data-button="cue"]
+  .cpp-action--primary:focus-visible {
+  background: var(--ink-1);
+  border-color: var(--ink-1);
+  color: var(--sheet-bg);
+  transform: translateY(-1px);
+}
+
+.cpp-screen[data-treatment="index"][data-button="cue"]
+  .cpp-action--primary:hover::before,
+.cpp-screen[data-treatment="index"][data-button="cue"]
+  .cpp-action--primary:focus-visible::before {
+  background: var(--accent-plate-ink);
+  border-color: var(--accent-plate-ink);
+  color: var(--ink-1);
+}
+
+/* Secondary stays the shipped outline pill and only gains legibility — the
+   point of this direction is that it does not redesign the control. */
+.cpp-screen[data-treatment="index"][data-button="cue"] .cpp-action--ghost:hover,
+.cpp-screen[data-treatment="index"][data-button="cue"]
+  .cpp-action--ghost:focus-visible {
+  border-color: var(--accent-ink);
+  color: var(--ink-1);
+}
+
+/* ===========================================================================
+   7. MASTHEAD AXIS
+   ===========================================================================
+
+   Applied to all four stages equally, control included, so it can be judged
+   without confounding the colour comparison.
+
+   `CONSULTING_SCREEN.title` has been sitting in `consultingPaths.ts` unused:
+   production's masthead is one 13px grey lede and nothing else, so the section
+   opens with no heading-level anchor at all. That is a hierarchy finding
+   independent of any palette, which is why it is its own switch rather than
+   folded into whichever direction happened to want it.
+   ======================================================================== */
+
+.cpp-screen[data-masthead="headline"] .cpp-screen__title {
+  margin: 0 0 2px;
+  font-size: clamp(24px, 2.6cqw, 34px);
+}
+
+@container wt (max-width: 700px) {
+  .cpp-screen[data-masthead="headline"] .cpp-screen__title {
+    font-size: clamp(21px, 6.2cqw, 27px);
+  }
+}
+
+/* ===========================================================================
+   8. NARROW
+   ===========================================================================
+   Container queries against `wt`, the same container the shipped sheet keys
+   off — so the 390px frame in this lab exercises the real phone layout rather
+   than a viewport approximation of it.
+   ======================================================================== */
+
+@container wt (max-width: 700px) {
+  /* The gutter rule is a two-column device. Stacked, it would draw a vertical
+     line down the middle of the copy. */
+  .cpp-screen[data-treatment="drafting"][data-layout="tracklist"] .cpp-paths::after {
+    display: none;
+  }
+
+  /* Stacked, the spec row wraps to one item per line and every line ends on a
+     divider that divides nothing — the same fault the production file
+     documents for its middot, which it fixed by tying the separator to the
+     item BEFORE it. A vertical rule cannot be tied that way once the row is a
+     column, so the divider is dropped and the shipped middot comes back. */
+  .cpp-screen[data-treatment="drafting"][data-layout="tracklist"] .cpp-path__cap {
+    padding-right: 0;
+    margin-right: 0;
+    border-right: 0;
+  }
+
+  .cpp-screen[data-treatment="drafting"][data-layout="tracklist"]
+    .cpp-path__cap:not(:last-child)::after {
+    content: "\00a0\00b7";
+    opacity: 0.5;
+  }
+
+  /* A 58px poster figure in a 2.1rem gutter overlaps the kicker on a phone. */
+  .cpp-screen[data-treatment="letterpress"][data-layout="tracklist"] {
+    --track-gutter: 2.6rem;
+  }
+
+  .cpp-screen[data-treatment="letterpress"][data-layout="tracklist"]
+    .cpp-path__ghost {
+    font-size: clamp(26px, 8cqw, 34px);
+  }
+
+  /* Both actions go full width when stacked: a text-link secondary sharing a
+     row with a filled primary is fine at 1600px and cramped at 390px. */
+  .cpp-screen[data-treatment] .cpp-path__actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .cpp-screen[data-treatment] .cpp-action {
+    justify-content: flex-start;
+  }
+
+  .cpp-screen[data-treatment="drafting"][data-button="cue"] .cpp-action--ghost {
+    align-self: flex-start;
+  }
+}
