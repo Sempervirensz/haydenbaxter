@@ -232,13 +232,15 @@ function PathPanel({
             ))}
           </ul>
 
-          <ul className="cpp-path__signals">
-            {d.signals.map((s) => (
-              <li key={s}>{s}</li>
-            ))}
-          </ul>
+          {d.signals && d.signals.length > 0 && (
+            <ul className="cpp-path__signals">
+              {d.signals.map((s) => (
+                <li key={s}>{s}</li>
+              ))}
+            </ul>
+          )}
 
-          <p className="cpp-path__note">{d.note}</p>
+          {d.note && <p className="cpp-path__note">{d.note}</p>}
         </div>
       </div>
 

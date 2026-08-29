@@ -84,10 +84,17 @@ export interface Destination {
   lede: string;
   /** Two side-by-side groups on desktop, stacked on narrow. */
   blocks: [DestinationBlock, DestinationBlock];
-  /** Mono credential strip under the blocks. */
-  signals: string[];
-  /** One supporting line above the actions. */
-  note: string;
+  /**
+   * Mono credential strip under the blocks.
+   *
+   * Optional, and omitted rather than emptied: an empty array still renders a
+   * zero-height `<ul>` that keeps its share of the parent's `gap`, which is a
+   * visible band of nothing. Every render site skips the element entirely when
+   * this is absent.
+   */
+  signals?: string[];
+  /** One supporting line above the actions. Optional, on the same terms. */
+  note?: string;
   primary: DestinationAction;
   secondary?: DestinationAction;
 }
@@ -185,38 +192,34 @@ const WORLDPULSE: PathDef = {
   destination: {
     eyebrow: "Active venture",
     title: "WorldPulse",
-    // work.ts → WORK_SCREENS[0].full.caption (both lines, condensed)
+    // work.ts → WORK_SCREENS[0].full.caption, reduced to the one claim the
+    // panel has to land. The founder framing it used to open with is carried by
+    // the eyebrow and by "we build" below; repeating it in prose was the single
+    // largest block of duplicated information on the screen.
     lede:
-      "Founder at WorldPulse, where we turn complex supply chain data into visual, engaging product stories. WorldPulse proves that supply chain does not have to feel cold, hidden, or technical — we make product origin, compliance, and traceability easier to understand through design-driven Digital Product Passports.",
+      "Turning Digital Product Passports from a compliance requirement into a better way to understand and experience products.",
     blocks: [
       {
         label: "What we build",
-        // consultingOffers.ts → worldpulse
+        // consultingOffers.ts → worldpulse, stated rather than gestured at.
         descriptor:
-          "Exploring how products, materials, and supply chains can become more transparent, intelligent, and connected.",
-        items: [
-          "Digital Product Passports",
-          "Product storytelling",
-          "Traceability systems",
-          "Sustainability visibility",
-          "AI-enhanced experiences",
-        ],
+          "Digital Product Passports that combine compliance, traceability, and product storytelling.",
+        // In `tracklist` these set as one middot-separated credits line, so
+        // three words is a line, not a list. The five-item version restated the
+        // descriptor a second time in mono.
+        items: ["Compliance", "Traceability", "Storytelling"],
       },
       {
-        label: "Conversations open now",
-        descriptor:
-          "The venture is active and building. These are the conversations worth having.",
-        items: [
-          "Potential customers",
-          "Pilot partners",
-          "Strategic collaborators",
-          "Commercial partners",
-          "Investors",
-        ],
+        label: "Conversations open",
+        descriptor: "WorldPulse is actively building and open to:",
+        // Investors first: investment and venture conversations are the current
+        // objective of this path.
+        items: ["Investors", "Pilot partners", "Customers", "Strategic partners"],
       },
     ],
-    signals: ["Digital Product Passports", "Traceability", "worldxpulse.com"],
-    note: "Founder-led, and building now — the fastest way in is a direct conversation about where you fit.",
+    // No `signals` and no `note`. The credential strip repeated the capability
+    // line word for word, and the note repeated the eyebrow, the descriptor and
+    // both buttons in one sentence. See the comments on `Destination`.
     primary: { label: "Explore WorldPulse", href: WORLDPULSE_HREF, external: true },
     secondary: { label: "Discuss a partnership", href: CALENDLY_URL, external: true },
   },

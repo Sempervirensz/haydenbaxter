@@ -74,13 +74,15 @@ export default function OfferScreen({ path, layout, surface }: Props) {
         ))}
       </div>
 
-      <ul className="ofr__signals" aria-label="Credentials">
-        {d.signals.map((s) => (
-          <li key={s}>{s}</li>
-        ))}
-      </ul>
+      {d.signals && d.signals.length > 0 && (
+        <ul className="ofr__signals" aria-label="Credentials">
+          {d.signals.map((s) => (
+            <li key={s}>{s}</li>
+          ))}
+        </ul>
+      )}
 
-      <p className="ofr__note">{d.note}</p>
+      {d.note && <p className="ofr__note">{d.note}</p>}
     </div>
   );
 

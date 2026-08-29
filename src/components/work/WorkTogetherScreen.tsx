@@ -50,14 +50,16 @@ export default function WorkTogetherScreen({
           ))}
         </div>
 
-        <ul className="wt-screen__signals">
-          {d.signals.map((s) => (
-            <li key={s}>{s}</li>
-          ))}
-        </ul>
+        {d.signals && d.signals.length > 0 && (
+          <ul className="wt-screen__signals">
+            {d.signals.map((s) => (
+              <li key={s}>{s}</li>
+            ))}
+          </ul>
+        )}
 
         <footer className="wt-screen__foot">
-          <p className="wt-screen__note">{d.note}</p>
+          {d.note && <p className="wt-screen__note">{d.note}</p>}
           <div className="wt-screen__actions">
             <Action action={d.primary} kind="primary" />
             {d.secondary && <Action action={d.secondary} kind="ghost" />}

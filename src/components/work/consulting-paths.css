@@ -1106,10 +1106,6 @@
   .cpp-path[data-solo="true"] {
     flex-direction: column;
   }
-
-  .cpp-path[data-solo="true"] .cpp-path__cap:nth-child(n + 4) {
-    display: revert;
-  }
 }
 
 
@@ -1650,15 +1646,23 @@
      collapsed path shows three and the rest arrive with the detail. Dropping
      the extras rather than clipping the row: a fixed max-height cut the third
      line through the middle of the chips, which reads as a rendering fault
-     rather than as a summary. */
-  .cpp-path[data-state="closed"] .cpp-path__cap:nth-child(n + 4) {
+     rather than as a summary.
+
+     `:not([data-solo])` because a solo panel has no detail for the extras to
+     arrive in — `.cpp-path__reveal` only exists on the pair. Unscoped, this hid
+     the fourth and fifth capability of WorldPulse and Experience OUTRIGHT on
+     every phone, with the middot rule below tidying the cut so it read as a
+     deliberate three rather than as loss. The solo section already tried to opt
+     out with `display: revert`, but at equal specificity this block wins on
+     source order, so the opt-out never applied. */
+  .cpp-path:not([data-solo])[data-state="closed"] .cpp-path__cap:nth-child(n + 4) {
     display: none;
   }
 
   /* Tracklist hangs its separator off the end of each credit, so trimming the
      list to three left a middot pointing at nothing. */
   .cpp-screen[data-layout="tracklist"]
-    .cpp-path[data-state="closed"]
+    .cpp-path:not([data-solo])[data-state="closed"]
     .cpp-path__cap:nth-child(3)::after {
     content: none;
   }

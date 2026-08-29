@@ -109,13 +109,18 @@ export default function WorkTogetherSolo({
                 ))}
               </div>
 
-              <ul className="cpp-path__signals">
-                {d.signals.map((s) => (
-                  <li key={s}>{s}</li>
-                ))}
-              </ul>
+              {/* Both are optional, and the guard is on the ELEMENT, not on its
+                  contents: `.cpp-path__base` is a flex column with a gap, so an
+                  empty `<ul>` or `<p>` still costs a full gap of empty panel. */}
+              {d.signals && d.signals.length > 0 && (
+                <ul className="cpp-path__signals">
+                  {d.signals.map((s) => (
+                    <li key={s}>{s}</li>
+                  ))}
+                </ul>
+              )}
 
-              <p className="cpp-path__note">{d.note}</p>
+              {d.note && <p className="cpp-path__note">{d.note}</p>}
 
               <div className="cpp-path__actions">
                 <Action action={d.primary} kind="primary" />

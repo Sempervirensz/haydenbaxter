@@ -58,14 +58,16 @@ export default function Destination({ path, onBack, primary, variant }: Props) {
           ))}
         </div>
 
-        <ul className="ctal-screen__signals">
-          {d.signals.map((s) => (
-            <li key={s}>{s}</li>
-          ))}
-        </ul>
+        {d.signals && d.signals.length > 0 && (
+          <ul className="ctal-screen__signals">
+            {d.signals.map((s) => (
+              <li key={s}>{s}</li>
+            ))}
+          </ul>
+        )}
 
         <footer className="ctal-screen__foot">
-          <p className="ctal-screen__note">{d.note}</p>
+          {d.note && <p className="ctal-screen__note">{d.note}</p>}
           <div className="ctal-screen__actions">
             <Action action={d.primary} kind="primary" />
             {d.secondary && <Action action={d.secondary} kind="ghost" />}
