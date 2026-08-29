@@ -100,6 +100,11 @@ export const LAB_GROUPS: LabGroup[] = [
         path: "/cta-lab/concepts",
         note: "Rail / Split / Fold — the explorer that shipped Rail to production",
       },
+      {
+        label: "Experience lab",
+        path: "/experience-lab",
+        note: "Path 03 only \u00b7 8 directions for \u201cMy Experience\u201d, rendered inside the real Consulting card \u00b7 mobile-first, with a fits/overflows readout",
+      },
       { label: "Consulting hero lab", path: "/consulting-hero-lab" },
       { label: "Consulting lab", path: "/consulting-lab" },
       { label: "Consulting parallax lab", path: "/consulting-parallax-lab" },

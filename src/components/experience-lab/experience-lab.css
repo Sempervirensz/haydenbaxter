@@ -1,0 +1,1304 @@
+/* ===========================================================================
+   EXPERIENCE LAB — eight directions for "My Experience"
+   ===========================================================================
+
+   Two layers, kept apart on purpose:
+
+     .xlab-page / .xlab-bar / .xlab-frame    the lab's own chrome. Dark, mono,
+                                             deliberately unlike the work.
+     .xlab / .xlab-*                         the concepts, inside the sheet.
+
+   The concepts inherit the shipped sheet's tokens — `--ink-1..4`, `--hair`,
+   `--accent-ink`, `--face-display/body/label` — from `.cpp-screen` and
+   `.cpp-path[data-path="supply"]` in consulting-paths.css. That is the whole
+   point: a direction that needs a colour or a face the section does not own is
+   a direction that will not survive promotion, and here it cannot cheat.
+
+   MOBILE FIRST. Every concept below is solved at ~303px of sheet — what a
+   402px phone actually leaves after the card gutter, the copy column inset and
+   the sheet's own padding. The `@container` blocks at the end are the widening,
+   not the design.
+   ======================================================================== */
+
+/* ---------------------------------------------------------------------------
+   1. LAB CHROME
+   ------------------------------------------------------------------------ */
+
+.xlab-page {
+  min-height: 100vh;
+  background: #08090c;
+  color: rgba(255, 255, 255, 0.86);
+  padding: 20px 12px 64px;
+}
+
+.xlab-bar {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  max-width: 1180px;
+  margin: 0 auto 26px;
+  padding: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.025);
+}
+
+.xlab-bar__kicker {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.34);
+}
+
+.xlab-bar__title {
+  margin: 6px 0 0;
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-size: 28px;
+  line-height: 1;
+  color: rgba(246, 245, 240, 0.96);
+}
+
+.xlab-bar__sub {
+  margin: 7px 0 0;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.xlab-bar__group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.xlab-bar__label {
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.34);
+}
+
+.xlab-bar__hint {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: rgba(255, 255, 255, 0.34);
+}
+
+.xlab-switch {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.xlab-switch__btn {
+  all: unset;
+  box-sizing: border-box;
+  cursor: pointer;
+  min-width: 44px;
+  min-height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.58);
+  transition: color 140ms ease, border-color 140ms ease, background 140ms ease;
+}
+
+.xlab-switch__btn--wide {
+  letter-spacing: 0.14em;
+}
+
+.xlab-switch__btn:hover {
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.36);
+}
+
+.xlab-switch__btn:focus-visible {
+  outline: 2px solid #e3c47f;
+  outline-offset: 2px;
+}
+
+.xlab-switch__btn.is-on {
+  color: #17150e;
+  background: #e3c47f;
+  border-color: #e3c47f;
+}
+
+.xlab-bar__read {
+  padding-top: 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.09);
+}
+
+.xlab-bar__thesis {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.82);
+  max-width: 68ch;
+}
+
+.xlab-bar__solves {
+  margin: 8px 0 0;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.5);
+  max-width: 68ch;
+}
+
+.xlab-bar__solves span {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #e3c47f;
+  margin-right: 8px;
+}
+
+/* ---- The frames ---- */
+
+.xlab-stage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 40px;
+  max-width: 1180px;
+  margin: 0 auto;
+}
+
+.xlab-frame {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.xlab-frame__cap {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.xlab-frame__idx {
+  color: #e3c47f;
+}
+
+.xlab-frame__name {
+  flex: 1;
+  color: rgba(255, 255, 255, 0.66);
+}
+
+/* The readout the lab exists for. Green is not in the palette and this is lab
+   chrome, so it borrows the two inks the panel already owns: brass for a fit,
+   the site's cobalt-lift for an overflow, which reads as information rather
+   than as an error state. */
+.xlab-frame__fit {
+  color: rgba(255, 255, 255, 0.4);
+  letter-spacing: 0.1em;
+}
+
+.xlab-frame__fit[data-over] {
+  color: #93b4ff;
+}
+
+/* The frame renders at true device pixels and is scaled to fit the window, so
+   container queries inside resolve against the real width. */
+.xlab-frame__scaler {
+  position: relative;
+  overflow: hidden;
+}
+
+.xlab-frame__screen {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform-origin: top left;
+  border-radius: 22px;
+  overflow: clip;
+  background: #06070b;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.7);
+  /* Mirrors `.work--mobile .wmob-screen` — the card sizes against this. */
+  container-type: size;
+  container-name: phone;
+}
+
+/* Mirrors `.work--mobile .wm-chapter` at phone width. */
+.xlab-frame__chapter {
+  height: 100%;
+  padding: 6px;
+}
+
+.xlab-card {
+  border-radius: 18px;
+}
+
+/* `display: contents` and not a box: production's sheet is a DIRECT child of
+   `.wt__unfurl`, and its `max-height: 100%` resolves against that. Wrapping it
+   in a real div gives the max-height an unconstrained parent to resolve
+   against, the sheet grows to its full content height, and the baseline
+   reports FITS while actually overflowing the card. The element stays in the
+   tree, so the measure effect can still find `.cpp-screen` inside it. */
+.xlab-baseline {
+  display: contents;
+}
+
+/* ---- Compare mode ---- */
+
+.xlab-stage--compare {
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 44px 28px;
+}
+
+.xlab-notes {
+  max-width: 1180px;
+  margin: 56px auto 0;
+  padding: 22px 18px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.xlab-notes__head {
+  margin: 0 0 18px;
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.34);
+}
+
+.xlab-notes__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 20px;
+}
+
+.xlab-notes__item {
+  display: grid;
+  grid-template-columns: 34px 1fr;
+  gap: 12px;
+  align-items: start;
+}
+
+.xlab-notes__idx {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.16em;
+  color: #e3c47f;
+  padding-top: 3px;
+}
+
+.xlab-notes__name {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-size: 19px;
+  color: rgba(246, 245, 240, 0.94);
+}
+
+.xlab-notes__thesis {
+  margin: 5px 0 0;
+  font-family: var(--font-sans);
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.xlab-notes__solves {
+  margin: 5px 0 0;
+  font-family: var(--font-sans);
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.44);
+}
+
+@media (min-width: 720px) {
+  .xlab-page { padding: 32px 24px 80px; }
+  .xlab-bar { padding: 24px; }
+  .xlab-notes__list { grid-template-columns: 1fr 1fr; gap: 24px 40px; }
+}
+
+/* ---------------------------------------------------------------------------
+   2. SHARED CONCEPT GROUND
+   ---------------------------------------------------------------------------
+   The sheet body. `.xlab-body` is `.cpp-path`, so it already carries the brass
+   `--accent-ink`, the tint ramp and the grooves; the reset below removes only
+   the padding the pair layout adds, since a solo body has no gutter to keep.
+   ------------------------------------------------------------------------ */
+
+.xlab-sheet .xlab-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  box-shadow: none;
+}
+
+.xlab {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-top: 4px;
+}
+
+/* Every concept ends on the same two buttons, so what is being compared above
+   them is the composition and not the ask. */
+.xlab-actions {
+  margin-top: auto;
+  padding-top: 10px;
+}
+
+.xlab-rule {
+  display: block;
+  height: 1px;
+  background: var(--hair);
+}
+
+.xlab-rule--heavy {
+  background: var(--hair-2);
+}
+
+/* Middot separator, tied to the item before it with a non-breaking space so a
+   wrapped run never opens a line with a stray dot — the fix
+   consulting-paths.css already made for its credits line. */
+.xlab-dot::before {
+  content: "\00a0·\00a0";
+  opacity: 0.45;
+}
+
+/* ---------------------------------------------------------------------------
+   01 — LEDGER
+   ---------------------------------------------------------------------------
+   Four rows and nothing else. The company takes the display face at a size
+   that survives 303px — 26px is the largest DM Serif Display that still lets
+   "WorldPulse" and its role share a line — and the role sits on the same
+   baseline in mono, right-aligned, so the two columns read as one entry rather
+   than as a heading with a caption.
+   ------------------------------------------------------------------------ */
+
+.xlab-ledger__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.xlab-ledger__row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 9px 0 8px;
+  border-top: 1px solid var(--hair);
+}
+
+.xlab-ledger__row:first-child {
+  border-top: 0;
+  padding-top: 2px;
+}
+
+.xlab-ledger__company {
+  font-family: var(--face-display);
+  font-size: clamp(22px, 8.2cqw, 29px);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--ink-1);
+}
+
+.xlab-ledger__role {
+  flex: 0 0 auto;
+  font-family: var(--face-label);
+  font-size: 10.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  white-space: nowrap;
+}
+
+.xlab-ledger__proof {
+  margin: 0;
+  font-family: var(--face-label);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  line-height: 1.6;
+  color: var(--accent-ink);
+}
+
+.xlab-ledger__edu {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.xlab-ledger__degree {
+  font-family: var(--face-body);
+  font-size: 14px;
+  line-height: 1.35;
+  color: var(--ink-2);
+}
+
+.xlab-ledger__school {
+  font-family: var(--face-label);
+  font-size: 10.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+}
+
+/* ---------------------------------------------------------------------------
+   02 — TRAJECTORY
+   ---------------------------------------------------------------------------
+   One brass hairline down the gutter with a node at each stop. The last node is
+   a ring rather than a dot — the same open circle the cue button draws around
+   its ▶ — because it is the stop still running.
+   ------------------------------------------------------------------------ */
+
+.xlab-traj__spine {
+  list-style: none;
+  margin: 0;
+  padding: 0 0 0 22px;
+  position: relative;
+}
+
+/* The spine itself. Stops one node short of the bottom so the line does not
+   run past the last stop into nothing. */
+.xlab-traj__spine::before {
+  content: "";
+  position: absolute;
+  left: 4px;
+  top: 7px;
+  bottom: 14px;
+  width: 1px;
+  background: linear-gradient(
+    to bottom,
+    var(--hair-2) 0%,
+    rgba(var(--rgb), 0.55) 78%,
+    rgba(var(--rgb), 0.9) 100%
+  );
+}
+
+.xlab-traj__stop {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  padding: 0 0 12px;
+}
+
+.xlab-traj__stop:last-child {
+  padding-bottom: 4px;
+}
+
+.xlab-traj__node {
+  position: absolute;
+  left: -22px;
+  top: 6px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--ink-4);
+}
+
+.xlab-traj__stop[data-last] .xlab-traj__node {
+  left: -24px;
+  top: 3px;
+  width: 13px;
+  height: 13px;
+  background: transparent;
+  border: 1.5px solid var(--accent-ink);
+}
+
+/* The one label in the composition. It appears once, exactly where the career
+   turns, so the turn is legible without a sentence explaining it. */
+.xlab-traj__turn {
+  display: block;
+  margin: 3px 0 5px;
+  font-family: var(--face-label);
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--accent-ink);
+}
+
+.xlab-traj__role {
+  font-family: var(--face-label);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+}
+
+.xlab-traj__company {
+  font-family: var(--face-display);
+  font-size: clamp(20px, 7.2cqw, 26px);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  color: var(--ink-2);
+}
+
+.xlab-traj__stop[data-last] .xlab-traj__company {
+  color: var(--ink-1);
+}
+
+.xlab-traj__runtime {
+  margin: 0;
+  padding-top: 8px;
+  border-top: 1px solid var(--hair);
+  font-family: var(--face-label);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  line-height: 1.6;
+  color: var(--ink-2);
+}
+
+/* ---------------------------------------------------------------------------
+   03 — TWO AXES
+   ---------------------------------------------------------------------------
+   Two bands and a mark between them. The conclusion is set LAST, in the display
+   face, so the sheet reads evidence → evidence → conclusion instead of asking
+   the visitor to accept a positioning line before seeing anything.
+   ------------------------------------------------------------------------ */
+
+.xlab--axes {
+  gap: 0;
+}
+
+.xlab-axes__band {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 12px 0 14px;
+}
+
+.xlab-axes__band[data-axis="a"] {
+  padding-top: 2px;
+}
+
+.xlab-axes__label {
+  font-family: var(--face-label);
+  font-size: 10px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--accent-ink);
+}
+
+.xlab-axes__names {
+  margin: 1px 0 0;
+  font-family: var(--face-display);
+  font-size: clamp(22px, 7.8cqw, 29px);
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+  color: var(--ink-1);
+}
+
+.xlab-axes__proof {
+  margin: 5px 0 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px 14px;
+}
+
+.xlab-axes__fig {
+  font-family: var(--face-label);
+  font-size: 10.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+/* The join. A hairline across the sheet with the multiplication mark sitting on
+   it — "operations × technology" stated as a mark rather than as a sentence. */
+.xlab-axes__join {
+  position: relative;
+  height: 1px;
+  background: var(--hair-2);
+  margin: 2px 0;
+}
+
+.xlab-axes__cross {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  padding-right: 10px;
+  background: var(--sheet-bg);
+  font-family: var(--face-body);
+  font-size: 19px;
+  line-height: 1;
+  color: var(--accent-ink);
+}
+
+.xlab-axes__conclusion {
+  margin: 4px 0 0;
+  padding-top: 13px;
+  border-top: 1px solid var(--hair);
+  font-family: var(--face-display);
+  font-size: clamp(18px, 6cqw, 23px);
+  line-height: 1.15;
+  letter-spacing: -0.015em;
+  color: var(--ink-1);
+}
+
+/* ---------------------------------------------------------------------------
+   04 — SCALE
+   ---------------------------------------------------------------------------
+   The figures are the composition. 中文 is set at the same display size as the
+   two numerals on purpose: it makes the language a quantity rather than a line
+   item, which is the only way it competes with 100+ in the same glance.
+   ------------------------------------------------------------------------ */
+
+.xlab-scale__figs {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.xlab-scale__fig {
+  display: grid;
+  grid-template-columns: 108px 1fr;
+  align-items: baseline;
+  gap: 12px;
+  padding: 9px 0;
+  border-bottom: 1px solid var(--hair);
+}
+
+.xlab-scale__fig:first-child {
+  padding-top: 0;
+}
+
+.xlab-scale__num {
+  font-family: var(--face-display);
+  /* Ceiling set by the widest figure: "100+" at 46px measures ~101px, which is
+     what the 108px column above is sized to hold. */
+  font-size: clamp(36px, 12cqw, 46px);
+  line-height: 0.9;
+  letter-spacing: -0.03em;
+  color: var(--ink-1);
+  font-variant-numeric: tabular-nums;
+}
+
+/* The CJK face has no -0.03em to give and sits on a different optical centre
+   than the Latin numerals, so it takes its own tracking and a hair of lead. */
+.xlab-scale__fig[data-fig="language"] .xlab-scale__num {
+  letter-spacing: 0;
+  font-size: clamp(31px, 10.4cqw, 40px);
+  color: var(--accent-ink);
+}
+
+.xlab-scale__cap {
+  margin: 0;
+  font-family: var(--face-label);
+  font-size: 10.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  line-height: 1.4;
+  color: var(--ink-3);
+}
+
+.xlab-scale__foot {
+  margin: 0;
+  font-family: var(--face-label);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  line-height: 1.55;
+  color: var(--ink-2);
+}
+
+.xlab-scale__foot--edu {
+  margin-top: 3px;
+  color: var(--ink-4);
+}
+
+/* ---------------------------------------------------------------------------
+   05 — LINER NOTES
+   ---------------------------------------------------------------------------
+   The record sleeve. Two sides, catalogue numbers in the gutter, credits and
+   pressing notes underneath. The grooves come free: `.xlab-body` is a
+   `.cpp-path` inside a `[data-layout="tracklist"]` sheet, so the concentric
+   rings already draw from its right edge.
+   ------------------------------------------------------------------------ */
+
+.xlab--liner {
+  gap: 8px;
+}
+
+.xlab-liner__side {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.xlab-liner__sideHead {
+  display: flex;
+  align-items: baseline;
+  gap: 9px;
+  margin: 0;
+  padding-bottom: 5px;
+  border-bottom: 1px solid var(--hair-2);
+  font-weight: 400;
+}
+
+.xlab-liner__sideKey {
+  font-family: var(--face-label);
+  font-size: 10px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--accent-ink);
+}
+
+.xlab-liner__sideName {
+  font-family: var(--face-label);
+  font-size: 10px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+}
+
+.xlab-liner__tracks {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.xlab-liner__track {
+  display: grid;
+  grid-template-columns: 26px 1fr auto;
+  align-items: baseline;
+  gap: 0 8px;
+  padding: 1px 0;
+}
+
+.xlab-liner__cat {
+  font-family: var(--face-label);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  color: var(--ink-4);
+  font-variant-numeric: tabular-nums;
+}
+
+.xlab-liner__company {
+  font-family: var(--face-display);
+  font-size: clamp(17px, 6cqw, 21px);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  color: var(--ink-1);
+}
+
+.xlab-liner__role {
+  font-family: var(--face-label);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  white-space: nowrap;
+}
+
+/* Label in the margin, content beside it — a sleeve sets its personnel that
+   way, and stacking the heading over the run cost ~15px a block for nothing. */
+.xlab-liner__notes {
+  display: grid;
+  grid-template-columns: 62px 1fr;
+  gap: 0 10px;
+  align-items: baseline;
+}
+
+.xlab-liner__notesHead {
+  margin: 0;
+  padding-top: 2px;
+  font-family: var(--face-label);
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+}
+
+.xlab-liner__credits {
+  margin: 0;
+  font-family: var(--face-body);
+  font-size: 11.5px;
+  line-height: 1.45;
+  color: var(--ink-2);
+}
+
+.xlab-liner__runtime {
+  margin: 0;
+  padding-top: 8px;
+  border-top: 1px solid var(--hair);
+  font-family: var(--face-label);
+  font-size: 10.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent-ink);
+}
+
+/* ---------------------------------------------------------------------------
+   06 — ONE SENTENCE
+   ---------------------------------------------------------------------------
+   One mechanism: evidence in full ink, prose at --ink-3. No bold, no chips, no
+   colour — the proof is simply darker than the sentence carrying it, which is
+   what lets the four employers and the two figures be scanned in a glance
+   without the paragraph turning into a list.
+   ------------------------------------------------------------------------ */
+
+.xlab-sentence__body {
+  margin: 2px 0 0;
+  font-family: var(--face-display);
+  font-size: clamp(18px, 5.9cqw, 23px);
+  line-height: 1.22;
+  letter-spacing: -0.015em;
+  color: var(--ink-3);
+  text-wrap: pretty;
+}
+
+.xlab-sentence__ev {
+  font-style: normal;
+  color: var(--ink-1);
+}
+
+.xlab-sentence__foot {
+  margin: 0;
+  padding-top: 10px;
+  border-top: 1px solid var(--hair);
+  font-family: var(--face-label);
+  font-size: 10.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  line-height: 1.6;
+  color: var(--ink-4);
+}
+
+/* ---------------------------------------------------------------------------
+   07 — RECORD
+   ---------------------------------------------------------------------------
+   The object label. Field names in a fixed 74px mono column — wide enough for
+   GLOBAL OPERATIONS to break to two lines cleanly at 10px, narrow enough to
+   leave the value column a real measure at 303px.
+   ------------------------------------------------------------------------ */
+
+.xlab-record__fields {
+  margin: 0;
+}
+
+.xlab-record__field {
+  display: grid;
+  grid-template-columns: 74px 1fr;
+  gap: 0 12px;
+  padding: 4px 0;
+  border-bottom: 1px solid var(--hair);
+}
+
+/* The sheet head rules above the first field and the actions rule below the
+   last one, so the list draws neither end itself. */
+.xlab-record__field:first-child {
+  padding-top: 2px;
+}
+
+.xlab-record__field:last-child {
+  border-bottom: 0;
+}
+
+.xlab-record__field dt {
+  font-family: var(--face-label);
+  font-size: 9.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  line-height: 1.5;
+  color: var(--ink-4);
+}
+
+.xlab-record__field[data-current] dt {
+  color: var(--accent-ink);
+}
+
+.xlab-record__field dd {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.xlab-record__pair {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.xlab-record__pair + .xlab-record__pair {
+  margin-top: 7px;
+}
+
+.xlab-record__lead {
+  font-family: var(--face-body);
+  font-size: 13.5px;
+  line-height: 1.3;
+  color: var(--ink-1);
+}
+
+.xlab-record__field[data-current] .xlab-record__lead {
+  font-family: var(--face-display);
+  font-size: clamp(19px, 6.4cqw, 24px);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+}
+
+.xlab-record__sub {
+  font-family: var(--face-label);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  line-height: 1.4;
+  color: var(--ink-3);
+}
+
+/* ---------------------------------------------------------------------------
+   08 — PLAYHEAD
+   ---------------------------------------------------------------------------
+   The row interaction above the sheet, one level down. Closed stops recede to
+   the 0.32 `.wl-c2__item` uses on the Work landing; the open one comes to full
+   and steps 4px right, exactly as the track listing does.
+   ------------------------------------------------------------------------ */
+
+.xlab-play__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.xlab-play__item {
+  border-top: 1px solid var(--hair);
+}
+
+.xlab-play__item:first-child {
+  border-top: 0;
+}
+
+.xlab-play__btn {
+  all: unset;
+  box-sizing: border-box;
+  cursor: pointer;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 26px 1fr;
+  gap: 0 8px;
+  /* A 44px target at rest without padding the closed rows apart: the open row
+     grows by its reveal, the closed ones keep the floor. */
+  min-height: 44px;
+  align-items: center;
+  padding: 6px 0;
+  opacity: 0.34;
+  transition: opacity 320ms ease, transform 320ms cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.xlab-play__item[data-open] .xlab-play__btn {
+  opacity: 1;
+  transform: translateX(4px);
+}
+
+.xlab-play__btn:hover,
+.xlab-play__btn:focus-visible {
+  opacity: 0.78;
+}
+
+.xlab-play__item[data-open] .xlab-play__btn:hover {
+  opacity: 1;
+}
+
+.xlab-play__btn:focus-visible {
+  outline: 2px solid var(--accent-ink);
+  outline-offset: 3px;
+}
+
+.xlab-play__num {
+  align-self: start;
+  padding-top: 5px;
+  font-family: var(--face-label);
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  color: var(--ink-4);
+  font-variant-numeric: tabular-nums;
+}
+
+.xlab-play__item[data-open] .xlab-play__num {
+  color: var(--accent-ink);
+}
+
+.xlab-play__main {
+  position: relative;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  padding-bottom: 9px;
+}
+
+.xlab-play__company {
+  font-family: var(--face-display);
+  font-size: clamp(21px, 7.6cqw, 27px);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  color: var(--ink-1);
+  text-align: left;
+}
+
+/* Height, not display: a reveal that toggles `display` cannot be tweened and
+   makes the sheet jump by ~30px on every press. */
+.xlab-play__reveal {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 3px 9px;
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition:
+    max-height 320ms cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 200ms ease;
+}
+
+.xlab-play__item[data-open] .xlab-play__reveal {
+  max-height: 44px;
+  opacity: 1;
+}
+
+.xlab-play__role {
+  font-family: var(--face-label);
+  font-size: 10.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+}
+
+.xlab-play__phase {
+  font-family: var(--face-label);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent-ink);
+}
+
+/* The scrub line from the rows above, at the sheet's scale. `background-size`
+   animates where a width would reflow the row. */
+.xlab-play__scrub {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  border-radius: 2px;
+  background-color: var(--hair);
+  background-image: linear-gradient(90deg, var(--accent-ink), var(--accent-ink));
+  background-repeat: no-repeat;
+  background-size: var(--fill, 0%) 100%;
+  transition: background-size 420ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.xlab-play__proof {
+  margin: 0;
+  padding-top: 11px;
+  border-top: 1px solid var(--hair);
+  font-family: var(--face-label);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  line-height: 1.6;
+  color: var(--ink-2);
+}
+
+/* ---------------------------------------------------------------------------
+   3. WIDENING
+   ---------------------------------------------------------------------------
+   Container queries against `.wt`, matching production's own 701px hinge, so a
+   concept promoted into the card keeps this behaviour with no viewport rules.
+   The phone layouts above are the design; these are the room a bigger card
+   gives them.
+   ------------------------------------------------------------------------ */
+
+@container wt (min-width: 701px) {
+  .xlab {
+    gap: 18px;
+  }
+
+  .xlab-ledger__list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 40px;
+  }
+
+  .xlab-ledger__row:nth-child(2) {
+    border-top: 0;
+    padding-top: 2px;
+  }
+
+  /* The spine lies down: four columns on one rule, the turn label above it.
+     The 22px of top padding is what the label lives in — without it the label
+     is positioned outside the spine's box and lands ON the rule. */
+  .xlab-traj__spine {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0 22px;
+    padding: 22px 0 0;
+  }
+
+  .xlab-traj__spine::before {
+    left: 0;
+    right: 0;
+    top: 29px;
+    bottom: auto;
+    width: auto;
+    height: 1px;
+    background: linear-gradient(
+      to right,
+      var(--hair-2) 0%,
+      rgba(var(--rgb), 0.55) 78%,
+      rgba(var(--rgb), 0.9) 100%
+    );
+  }
+
+  .xlab-traj__stop {
+    padding: 26px 0 0;
+  }
+
+  .xlab-traj__node,
+  .xlab-traj__stop[data-last] .xlab-traj__node {
+    left: 0;
+    top: 3px;
+  }
+
+  /* Anchored right and set nowrap so it runs LEFT into the empty space over the
+     previous stop rather than wrapping inside a 150px column. It is pointing at
+     the turn either way, and pointing is the whole job. */
+  .xlab-traj__turn {
+    position: absolute;
+    top: -22px;
+    left: auto;
+    right: 0;
+    margin: 0;
+    white-space: nowrap;
+    text-align: right;
+  }
+
+  .xlab--axes {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: start;
+    column-gap: 30px;
+  }
+
+  .xlab-axes__join {
+    width: 1px;
+    height: 100%;
+    margin: 0;
+  }
+
+  .xlab-axes__cross {
+    left: 50%;
+    top: 24px;
+    transform: translate(-50%, 0);
+    padding: 6px 0;
+  }
+
+  .xlab-axes__conclusion,
+  .xlab--axes .xlab-actions {
+    grid-column: 1 / -1;
+  }
+
+  .xlab-scale__figs {
+    flex-direction: row;
+    gap: 30px;
+  }
+
+  .xlab-scale__fig {
+    flex: 1;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+    border-bottom: 0;
+    border-left: 1px solid var(--hair);
+    padding: 0 0 0 16px;
+  }
+
+  .xlab-scale__fig:first-child {
+    border-left: 0;
+    padding-left: 0;
+  }
+
+  .xlab--liner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 40px;
+  }
+
+  .xlab--liner .xlab-liner__runtime,
+  .xlab--liner .xlab-actions {
+    grid-column: 1 / -1;
+  }
+
+  .xlab-record__field {
+    grid-template-columns: 120px 1fr;
+  }
+
+  .xlab-play__list {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0 20px;
+  }
+
+  .xlab-play__item {
+    border-top: 0;
+    border-left: 1px solid var(--hair);
+    padding-left: 14px;
+  }
+
+  .xlab-play__item:first-child {
+    border-left: 0;
+    padding-left: 0;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   4. REDUCED MOTION
+   ---------------------------------------------------------------------------
+   Grounded motion is a house rule, and everything animated here is a state
+   change rather than an entrance — so under reduce the states still land, they
+   just land immediately. The recede stays: it is contrast, not movement.
+   ------------------------------------------------------------------------ */
+
+@media (prefers-reduced-motion: reduce) {
+  .xlab-play__btn,
+  .xlab-play__reveal,
+  .xlab-play__scrub,
+  .xlab-switch__btn {
+    transition: none;
+  }
+
+  .xlab-play__item[data-open] .xlab-play__btn {
+    transform: none;
+  }
+}
