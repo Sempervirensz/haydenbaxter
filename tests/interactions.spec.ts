@@ -187,3 +187,74 @@ test.describe("navigation", () => {
     await expect(page.locator("#about")).toBeInViewport({ ratio: 0.05, timeout: 8000 });
   });
 });
+
+test.describe("Work landing — CD disc on phones", () => {
+  /* Emulate a real phone explicitly.
+   *
+   * Every project in playwright.config.ts is `devices["Desktop Chrome"]` with a
+   * narrow viewport, so even the 375px `mobile` project reports `hover: hover`
+   * and `pointer: fine`. useWorkScroll's phone branch keys off
+   * `(max-width: 640px) and (hover: none), (max-width: 640px) and (pointer: coarse)`
+   * — which NO project reaches. Without this override the test would exercise
+   * the tablet code path at a phone width and prove nothing about phones. */
+  test.use({ viewport: { width: 390, height: 844 }, hasTouch: true, isMobile: true });
+
+  test("the disc turns as the CD travels through the viewport", async ({ page }, testInfo) => {
+    // The context above replaces the project viewport, so all eight projects
+    // would run a byte-identical test. Once is enough.
+    test.skip(
+      testInfo.project.name !== "mobile",
+      "phone-emulated — runs once, under the mobile project"
+    );
+
+    await openSite(page, "/");
+
+    const geom = await page.evaluate(() => {
+      const el = document.querySelector<HTMLElement>(".cd-player-wrap");
+      if (!el) return null;
+      let top = 0;
+      let n: HTMLElement | null = el;
+      while (n) {
+        top += n.offsetTop;
+        n = n.offsetParent as HTMLElement | null;
+      }
+      return { top, h: el.getBoundingClientRect().height, vh: window.innerHeight };
+    });
+    expect(geom, "CD player missing from the Work landing").not.toBeNull();
+
+    /* The phone mapping runs 0 → 1 across the CD's OWN pass through the
+       viewport: 0 as its top edge enters at the bottom, 1 as its bottom edge
+       leaves at the top. Sampling any other window reads the holds instead of
+       the sweep and understates the movement. */
+    const from = Math.max(0, geom!.top - geom!.vh);
+    const to = geom!.top + geom!.h;
+
+    const seen: string[] = [];
+    for (let i = 0; i <= 5; i++) {
+      await page.evaluate(
+        (y) => window.scrollTo(0, y),
+        Math.round(from + ((to - from) * i) / 5)
+      );
+      // The lerp converges at 0.08/frame, so a settle beat is not optional —
+      // sampling immediately reads the previous target and flattens the spread.
+      await page.waitForTimeout(1200);
+      seen.push(
+        await page.evaluate(
+          () => (document.querySelector(".cd-disc") as HTMLElement).style.transform
+        )
+      );
+    }
+
+    /* An EMPTY inline transform is the actual regression this guards: it means
+       useWorkScroll returned before it ever reached `.cd-disc`, which is how the
+       disc sat frozen at 0deg on phones while spinning fine on tablet. */
+    for (const t of seen) {
+      expect(t, `disc carries no JS-written rotation (got "${t}")`).toContain("rotate(");
+    }
+
+    expect(
+      new Set(seen).size,
+      `disc did not turn across its travel: ${seen.join(" | ")}`
+    ).toBeGreaterThan(3);
+  });
+});
