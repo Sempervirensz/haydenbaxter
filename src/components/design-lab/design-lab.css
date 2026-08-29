@@ -731,18 +731,8 @@
   z-index: 1;
 }
 
-/* The instruction swaps between "Scroll to deal the cards." and the flip line.
-   Locking the row's height keeps the deck above it from shifting by a line when
-   the copy changes length. */
-.dlab-soft__line {
-  transition: opacity 220ms ease;
-}
-
 @media (prefers-reduced-motion: reduce) {
   .entry-scene.is-pinned {
     position: static;
-  }
-  .dlab-soft__line {
-    transition: none;
   }
 }

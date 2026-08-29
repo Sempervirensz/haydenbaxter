@@ -157,7 +157,6 @@ export default function SoftLockGate({
     return () => window.removeEventListener("scroll", onScroll);
   }, [reduced, runway]);
 
-  const dealt = dealProgress >= 1;
   const pinned = !reduced && runway > 0;
   const sceneTop = resolveSceneTop(metrics.viewportH, metrics.sceneH);
 
@@ -281,9 +280,7 @@ export default function SoftLockGate({
             {/* Directly beneath the card row and above the choice. */}
             <FlipIndicator flipped={flipped} />
 
-            <p className="dlab-soft__line">
-              {dealt ? ENTRY_CHOICE.story : ENTRY_CHOICE.dealing}
-            </p>
+            <p className="dlab-soft__line">{ENTRY_CHOICE.story}</p>
 
             {/* Not aria-hidden: "A or B" is the meaning, and hiding it would
                 leave two unrelated sentences to a screen reader. */}
