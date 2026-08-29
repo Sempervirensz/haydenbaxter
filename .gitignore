@@ -1,7 +1,12 @@
 .next/
-# Build dir for the `next-dev-alt` launch config (NEXT_DIST_DIR), used when a
-# second dev server has to run against this folder.
-.next-alt/
+# Every NEXT_DIST_DIR build dir, not an enumeration of the ones that existed
+# when this line was written. Each concurrent dev server needs its own
+# (see the `next-dev-*` entries in .claude/launch.json), so the list grows
+# whenever another agent session starts one — and `vercel --prod` uploads the
+# WORKING TREE, so a dist dir nobody remembered to list here is ~100MB pushed
+# to production. `.next-motion/` and `.next-wp/` were both missing when this
+# was generalised.
+.next-*/
 node_modules/
 out/
 .DS_Store
@@ -33,4 +38,3 @@ public/Personal Photos/
 # Static sub-apps kept for reference. Out of public/ so Next stops copying
 # them into the deployed build (ETB-P1-04b); still here if ever needed.
 archive/
-.next-labs/
