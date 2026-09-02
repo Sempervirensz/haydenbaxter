@@ -12,6 +12,11 @@
 // quantity of difference instead of a line item. The employers drop to a mono
 // footnote, where they are still doing their job because the visitor has
 // already met all three in the brands marquee at the top of the page.
+//
+// Both schools sit in that footnote with them. Neither is set as a degree
+// abbreviation beyond what the source gives — Arizona State carries the M.S.,
+// Utah State is named by its programme — because inventing degree letters is
+// exactly the kind of résumé filler this direction exists to strip out.
 
 import { CAREER, EDUCATION, FIGURES } from "@/data/experienceLab";
 import { ConceptActions, Rule } from "./parts";
@@ -32,19 +37,28 @@ export default function Scale() {
 
       <Rule />
 
-      <p className="xlab-scale__foot">
-        {CAREER.map((s, i) => (
-          <span key={s.id}>
-            {i > 0 && <span className="xlab-dot" aria-hidden="true" />}
-            {s.company}
-          </span>
+      {/* The footnote is ONE block, not three siblings. Both schools are named
+          here now, and three lines spaced by the concept's 12px stack gap read
+          as a list of unrelated facts; held together at 4px they read as the
+          single citation the figures rest on. It also buys back most of the
+          height the second school costs. */}
+      <div className="xlab-scale__notes">
+        <p className="xlab-scale__foot">
+          {CAREER.map((s, i) => (
+            <span key={s.id}>
+              {i > 0 && <span className="xlab-dot" aria-hidden="true" />}
+              {s.company}
+            </span>
+          ))}
+        </p>
+        {EDUCATION.map((e) => (
+          <p key={e.id} className="xlab-scale__foot xlab-scale__foot--edu">
+            {e.programShort}
+            <span className="xlab-dot" aria-hidden="true" />
+            {e.schoolShort}
+          </p>
         ))}
-      </p>
-      <p className="xlab-scale__foot xlab-scale__foot--edu">
-        {EDUCATION[0].programShort}
-        <span className="xlab-dot" aria-hidden="true" />
-        {EDUCATION[0].schoolShort}
-      </p>
+      </div>
 
       <ConceptActions />
     </div>

@@ -682,7 +682,7 @@
   grid-template-columns: 108px 1fr;
   align-items: baseline;
   gap: 12px;
-  padding: 9px 0;
+  padding: 7px 0;
   border-bottom: 1px solid var(--hair);
 }
 
@@ -719,19 +719,35 @@
   color: var(--ink-3);
 }
 
+/* Employers and schools as one citation block. The concept's 12px stack gap
+   between them made three peers out of what is one footnote. */
+.xlab-scale__notes {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
 .xlab-scale__foot {
   margin: 0;
   font-family: var(--face-label);
   font-size: 11px;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  line-height: 1.55;
+  line-height: 1.5;
   color: var(--ink-2);
 }
 
+/* The schools recede below the employers — same block, second rank. Tracking
+   comes in a notch so the longer of the two ("INTL BUSINESS + CHINESE · UTAH
+   STATE", 36 characters) still sets on one line inside a 293px sheet. */
 .xlab-scale__foot--edu {
-  margin-top: 3px;
+  font-size: 10.5px;
+  letter-spacing: 0.1em;
   color: var(--ink-4);
+}
+
+.xlab-scale__foot--edu:first-of-type {
+  margin-top: 2px;
 }
 
 /* ---------------------------------------------------------------------------
