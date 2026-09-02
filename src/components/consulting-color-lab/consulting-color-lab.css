@@ -74,6 +74,17 @@
   align-items: start;
 }
 
+/* The Drafting button rows need their own floor. Two of the four are gated at
+   1000px and 1180px of card — at the 4-up sheet's ~1050px stages they would
+   both resolve to Stack and the sheet would show four identical rows. 1200px
+   tiles put every variant above its own threshold, which costs a column of
+   the grid and buys a comparison that is actually about the rows. */
+.ccl-root[data-viewport="rows"] .ccl-stages {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(1200px, 1fr));
+  align-items: start;
+}
+
 .ccl-frame {
   position: relative;
   flex: 0 1 auto;
@@ -313,6 +324,11 @@
   font-size: 12px;
   line-height: 1.5;
   color: rgba(255, 255, 255, 0.66);
+}
+
+.ccl-arg__body--trade {
+  margin-top: 0.4rem;
+  color: rgba(227, 196, 127, 0.8);
 }
 
 .ccl-arg__foot {
@@ -671,6 +687,127 @@
 
 .cpp-screen[data-treatment="drafting"] .cpp-action--primary {
   flex: 0 0 auto;
+}
+
+/* ---------------------------------------------------------------------------
+   DRAFTING · THE BUTTON ROW — `[data-actions]`
+   ---------------------------------------------------------------------------
+   The first question asked of Drafting was whether its buttons are straight.
+   Measured at 1800px they already are: both primaries on one y, both
+   secondaries on one y, identical primary boxes, left edges flush — every
+   delta is 0. The one thing that is NOT equal is the secondary's rule, which
+   runs the length of its label, and the two labels differ by 69px:
+
+       "View Selected AI Work"        210px
+       "View Supply Chain Experience" 278px
+
+   Four rows. `stack` is the base rule above and needs no selector of its own.
+   Each keeps the thesis — one system blue, a filled primary, a quiet
+   secondary — and changes only geometry.
+
+   THE CONSTRAINT THAT SHAPES ALL OF THEM
+
+   That 278px label is close to the whole width of a column in the 4-up
+   contact sheet (~290px of usable width). Any row that puts it inside a box
+   with real padding cannot fit on one line there. So `equal` and `split` are
+   gated behind a container query and fall back to `stack` below it — gated
+   on the CONTAINER, never on flex-wrap, because wrapping is per-item: it
+   would fold the supply column and leave the AI column on one line, which is
+   the exact asymmetry this axis exists to remove. Degrading both columns
+   together is the point.
+   ------------------------------------------------------------------------ */
+
+/* RULE — stack, with the secondary's underline spanning the full column.
+
+   The smallest possible answer to the actual complaint: it changes one
+   property, keeps Drafting's filled-button-over-text-link rank exactly as
+   it is, and makes the two columns end on the same line. The label stays
+   left; only the rule runs the width. */
+/* `align-items: stretch` on the row was wrong: Drafting's action row is a
+   COLUMN flex, so the cross axis is horizontal and stretch widened the
+   primary to the full column as well — which is the full-bleed saturated bar
+   this direction is specifically trying not to be. Only the secondary is
+   asked to stretch, and it asks for itself. */
+.cpp-screen[data-treatment="drafting"][data-actions="rule"][data-button="cue"]
+  .cpp-action--ghost {
+  align-self: stretch;
+  justify-content: flex-start;
+}
+
+/* EQUAL — four identical boxes: same width in a column, same width across
+   both columns.
+
+   `minmax(0, 22rem)` gives a single track that is 22rem when there is room
+   and shrinks with the column otherwise. Because both columns are the same
+   width, both tracks resolve to the same number — which is what buys the
+   cross-column match that a `max-content` track cannot: max-content sizes to
+   each column's OWN longest label, and the two differ.
+
+   `grid-auto-rows: 1fr` equalises the two rows, so the primary and secondary
+   are the same height even though only one carries the cue ring. */
+@container wt (min-width: 1000px) {
+  .cpp-screen[data-treatment="drafting"][data-actions="equal"] .cpp-path__actions {
+    display: grid;
+    grid-template-columns: minmax(0, 22rem);
+    grid-auto-rows: 1fr;
+    /* Drafting's base row sets `align-items: flex-start` for its column flex.
+       That property carries into grid, where it governs the BLOCK axis, so
+       the two boxes sized to their own content and came out 3px apart — the
+       primary carries a 24px cue ring the secondary does not. `stretch` is
+       what makes `grid-auto-rows: 1fr` actually show up on the items. */
+    align-items: stretch;
+    justify-content: start;
+    gap: 8px;
+  }
+
+  .cpp-screen[data-treatment="drafting"][data-actions="equal"] .cpp-action {
+    justify-content: center;
+  }
+
+  /* The secondary becomes the primary's outline. Same box, no fill — the
+     rank gap narrows from filled-vs-link to filled-vs-outlined, which is
+     this row's whole trade. */
+  .cpp-screen[data-treatment="drafting"][data-actions="equal"][data-button="cue"]
+    .cpp-action--ghost {
+    padding: 10px 16px;
+    border: 1px solid var(--hair-2);
+    border-radius: 7px;
+    color: var(--ink-2);
+  }
+
+  .cpp-screen[data-treatment="drafting"][data-actions="equal"][data-button="cue"]
+    .cpp-action--ghost:hover,
+  .cpp-screen[data-treatment="drafting"][data-actions="equal"][data-button="cue"]
+    .cpp-action--ghost:focus-visible {
+    padding: 10px 16px;
+    border: 1px solid var(--sys-ink);
+    color: var(--sys-ink);
+    background: rgba(var(--sys-rgb), 0.06);
+  }
+}
+
+/* SPLIT — one row, one baseline. Primary flush left, text link flush right,
+   the gap between them absorbing the label difference, so the row's OUTER
+   edges are straight in both columns.
+
+   No `flex-wrap`: see the note above. Either both columns are on one line or
+   neither is. */
+@container wt (min-width: 1180px) {
+  .cpp-screen[data-treatment="drafting"][data-actions="split"] .cpp-path__actions {
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .cpp-screen[data-treatment="drafting"][data-actions="split"] .cpp-action--primary {
+    flex: 0 0 auto;
+  }
+
+  .cpp-screen[data-treatment="drafting"][data-actions="split"] .cpp-action--ghost {
+    flex: 0 0 auto;
+    margin-left: auto;
+  }
 }
 
 /* The back control and the eyebrow join the same system. */
@@ -1110,6 +1247,10 @@
     content: "\00a0\00b7";
     opacity: 0.5;
   }
+
+  /* `equal` and `split` are gated at 1000px / 1180px of container, so on a
+     phone they are already resolving as `stack` and need nothing here. The
+     full-width rule of `rule` is what a stacked phone layout wants anyway. */
 
   /* A 58px poster figure in a 2.1rem gutter overlaps the kicker on a phone. */
   .cpp-screen[data-treatment="letterpress"][data-layout="tracklist"] {

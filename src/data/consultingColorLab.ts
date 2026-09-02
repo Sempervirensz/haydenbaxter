@@ -167,3 +167,57 @@ export const MASTHEADS: { id: MastheadId; label: string; note: string }[] = [
     note: "Restores CONSULTING_SCREEN.title, already written and already in the data file, above the lede.",
   },
 ];
+
+/* ---------------------------------------------------------------------------
+   Drafting — the button row
+   ---------------------------------------------------------------------------
+   Drafting is the direction being taken forward, and the first question asked
+   of it was whether its buttons are straight and aligned. Measured at 1800px:
+   both primaries at the same y, both secondaries at the same y, identical
+   button boxes across the two columns, left edges flush — every delta is 0.
+   The one thing that is NOT equal is the secondary's rule, which runs the
+   length of its label: "View Selected AI Work" is 69px shorter than "View
+   Supply Chain Experience".
+
+   Four answers to that, all inside Drafting's thesis (one system blue, a
+   filled primary, a quiet secondary). Only the row changes.
+   ------------------------------------------------------------------------ */
+
+export type ActionsId = "stack" | "rule" | "equal" | "split";
+
+export interface ActionsRow {
+  id: ActionsId;
+  label: string;
+  /** What is straight, and what is allowed to vary. */
+  note: string;
+  tradeoff: string;
+}
+
+export const DRAFTING_ACTIONS: ActionsRow[] = [
+  {
+    id: "stack",
+    label: "Stack",
+    note: "As shown so far. Primary at its label's width, ruled text link beneath, left edges flush. Both primaries on one y, both links on one y — already straight everywhere except one place.",
+    tradeoff: "The secondary's rule runs the length of its label, so the two columns end 69px apart. That single unequal edge is what reads as not-quite-aligned once you look for it.",
+  },
+  {
+    id: "rule",
+    label: "Rule",
+    note: "Stack, with the secondary's underline spanning the full column instead of its label. One property changes; the two columns now end on the same line.",
+    tradeoff: "A rule the width of the column reads slightly more like a divider than like an underlined link — it needs the label left-aligned to stay legible as a control.",
+  },
+  {
+    id: "equal",
+    label: "Equal",
+    note: "Four identical boxes: same width within a column and across both. The secondary becomes an outlined box the size of the primary.",
+    tradeoff: "Gives up the text-link secondary, so the rank gap narrows from filled-vs-link to filled-vs-outlined. The most orderly and the least editorial. Needs 1000px of card; below that it renders as Stack.",
+  },
+  {
+    id: "split",
+    label: "Split",
+    note: "One row, one baseline: primary flush left, text link flush right. The row's outer edges are straight in both columns and the gap absorbs the label difference.",
+    tradeoff: "The most horizontal of the four, which suits a wide card and nothing else — it needs 1180px and falls back to Stack below that. Puts the two ranks at equal optical height, which slightly flattens the hierarchy Drafting just built.",
+  },
+];
+
+export const DEFAULT_ACTIONS: ActionsId = "stack";

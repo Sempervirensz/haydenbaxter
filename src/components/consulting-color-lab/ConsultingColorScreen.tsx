@@ -28,7 +28,7 @@ import {
   type ConsultingPath,
 } from "@/data/consultingPaths";
 import type { DestinationAction } from "@/data/workTogether";
-import type { MastheadId, TreatmentId } from "@/data/consultingColorLab";
+import type { ActionsId, MastheadId, TreatmentId } from "@/data/consultingColorLab";
 import "@/components/work/consulting-paths.css";
 import "./consulting-color-lab.css";
 
@@ -36,9 +36,17 @@ interface Props {
   onBack: () => void;
   treatment: TreatmentId;
   masthead: MastheadId;
+  /** Drafting's button row. Written for every treatment; only Drafting's
+      stylesheet matches it. */
+  actions?: ActionsId;
 }
 
-export default function ConsultingColorScreen({ onBack, treatment, masthead }: Props) {
+export default function ConsultingColorScreen({
+  onBack,
+  treatment,
+  masthead,
+  actions = "stack",
+}: Props) {
   return (
     <section
       className="cpp-screen"
@@ -53,6 +61,7 @@ export default function ConsultingColorScreen({ onBack, treatment, masthead }: P
       // sheet to match and the panel is the shipped article byte for byte.
       {...(treatment === "control" ? {} : { "data-treatment": treatment })}
       data-masthead={masthead}
+      data-actions={actions}
     >
       <header className="cpp-screen__head">
         <span className="cpp-screen__eyebrow">{CONSULTING_SCREEN.eyebrow}</span>

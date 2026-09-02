@@ -12,15 +12,22 @@
 // chip four times compares each one against your memory of the last. Side by
 // side it is one look.
 //
+// Round two added a second contact sheet: Drafting is the direction going
+// forward, and its button row has four iterations of its own. "Drafting rows"
+// shows all four at once for the same reason.
+//
 // Nothing on the live site imports any of this.
 
 import { useEffect, useState } from "react";
 import {
+  DEFAULT_ACTIONS,
   DEFAULT_TREATMENT,
+  DRAFTING_ACTIONS,
   MASTHEADS,
   SHIPPED_CONTRAST,
   TREATMENTS,
   getTreatment,
+  type ActionsId,
   type MastheadId,
   type TreatmentId,
 } from "@/data/consultingColorLab";
@@ -29,18 +36,21 @@ import ConsultingColorStage from "./ConsultingColorStage";
 import "@/components/work/work-together.css";
 import "./consulting-color-lab.css";
 
-type ViewportMode = "gallery" | "desktop" | "narrow";
+type ViewportMode = "gallery" | "rows" | "desktop" | "narrow";
 
 export default function ConsultingColorLab() {
   const [view, setView] = useState<ViewportMode>("gallery");
   const [treatment, setTreatment] = useState<TreatmentId>(DEFAULT_TREATMENT);
   const [masthead, setMasthead] = useState<MastheadId>("production");
+  const [actions, setActions] = useState<ActionsId>(DEFAULT_ACTIONS);
   const [forceReduced, setForceReduced] = useState(false);
   const [panelOpen, setPanelOpen] = useState(true);
 
   const osReduced = usePrefersReducedMotion();
   const reduced = osReduced || forceReduced;
   const active = getTreatment(treatment);
+  const row = DRAFTING_ACTIONS.find((a) => a.id === actions) ?? DRAFTING_ACTIONS[0];
+  const showRows = treatment === "drafting" || view === "rows";
 
   /* The panel only earns a gutter of its own from 1440px up. Narrower than
      that it is a fixed overlay sitting on the very thing being judged, so it
@@ -49,6 +59,10 @@ export default function ConsultingColorLab() {
   useEffect(() => {
     if (window.innerWidth < 1440) setPanelOpen(false);
   }, []);
+
+  const singleLabel = `${active.label}${
+    treatment === "drafting" ? ` · ${row.label}` : ""
+  } — ${view === "narrow" ? "390px container" : "desktop"}`;
 
   return (
     <main
@@ -64,9 +78,23 @@ export default function ConsultingColorLab() {
               width="gallery"
               treatment={t.id}
               masthead={masthead}
+              actions={actions}
               primary={i === 0}
               label={t.label}
               note={t.thesis}
+            />
+          ))
+        ) : view === "rows" ? (
+          DRAFTING_ACTIONS.map((a, i) => (
+            <ConsultingColorStage
+              key={a.id}
+              width="gallery"
+              treatment="drafting"
+              masthead={masthead}
+              actions={a.id}
+              primary={i === 0}
+              label={`Drafting · ${a.label}`}
+              note={a.note}
             />
           ))
         ) : (
@@ -74,9 +102,10 @@ export default function ConsultingColorLab() {
             width={view}
             treatment={treatment}
             masthead={masthead}
+            actions={actions}
             primary
-            label={`${active.label} — ${view === "narrow" ? "390px container" : "desktop"}`}
-            note={active.thesis}
+            label={singleLabel}
+            note={treatment === "drafting" ? row.note : active.thesis}
           />
         )}
       </div>
@@ -104,13 +133,17 @@ export default function ConsultingColorLab() {
               label="View"
               hint={
                 view === "gallery"
-                  ? "All four at once. The only way to compare skins rather than remember them."
-                  : "One direction, full size. Use the chips below to switch."
+                  ? "All four directions at once. The only way to compare skins rather than remember them."
+                  : view === "rows"
+                    ? "Drafting four times, one button row each, on 1200px cards so Equal and Split clear their container gates."
+                    : "One direction, full size. Use the chips below to switch."
               }
+              wide
             >
               {(
                 [
                   ["gallery", "All four"],
+                  ["rows", "Drafting rows"],
                   ["desktop", "Desktop"],
                   ["narrow", "390px"],
                 ] as [ViewportMode, string][]
@@ -131,13 +164,33 @@ export default function ConsultingColorLab() {
                   on={treatment === t.id}
                   onClick={() => {
                     setTreatment(t.id);
-                    if (view === "gallery") setView("desktop");
+                    if (view === "gallery" || view === "rows") setView("desktop");
                   }}
                   label={t.label}
                   hint={t.thesis}
                 />
               ))}
             </Group>
+
+            {/* Only meaningful for Drafting; hidden otherwise so the panel
+                does not offer a control that changes nothing. */}
+            {showRows && (
+              <Group label="Drafting · button row" hint={row.note} wide>
+                {DRAFTING_ACTIONS.map((a) => (
+                  <Toggle
+                    key={a.id}
+                    on={actions === a.id}
+                    onClick={() => {
+                      setActions(a.id);
+                      setTreatment("drafting");
+                      if (view === "gallery" || view === "rows") setView("desktop");
+                    }}
+                    label={a.label}
+                    hint={a.note}
+                  />
+                ))}
+              </Group>
+            )}
 
             <Group
               label="Masthead"
@@ -184,6 +237,14 @@ export default function ConsultingColorLab() {
 
               <h3 className="ccl-arg__label">Tradeoff</h3>
               <p className="ccl-arg__body">{active.tradeoff}</p>
+
+              {treatment === "drafting" && (
+                <>
+                  <h3 className="ccl-arg__label">Button row · {row.label}</h3>
+                  <p className="ccl-arg__body">{row.note}</p>
+                  <p className="ccl-arg__body ccl-arg__body--trade">{row.tradeoff}</p>
+                </>
+              )}
             </section>
 
             {/* The measured version of "muted". Printed in the panel because
@@ -193,11 +254,11 @@ export default function ConsultingColorLab() {
               <h3 className="ccl-arg__label">Shipped ink ramp, on #f5f4f1</h3>
               <table className="ccl-table">
                 <tbody>
-                  {SHIPPED_CONTRAST.map((row) => (
-                    <tr key={row.token} data-pass={row.passes ? "true" : "false"}>
-                      <th scope="row">{row.token}</th>
-                      <td>{row.role}</td>
-                      <td className="ccl-table__ratio">{row.ratio}</td>
+                  {SHIPPED_CONTRAST.map((r) => (
+                    <tr key={r.token} data-pass={r.passes ? "true" : "false"}>
+                      <th scope="row">{r.token}</th>
+                      <td>{r.role}</td>
+                      <td className="ccl-table__ratio">{r.ratio}</td>
                     </tr>
                   ))}
                 </tbody>

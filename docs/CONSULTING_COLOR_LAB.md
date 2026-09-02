@@ -235,6 +235,64 @@ today** and is worth fixing regardless of which direction is chosen.
 
 ---
 
+## Round two — Drafting's button row
+
+Drafting is the direction going forward. The first question asked of it was
+whether its buttons are straight and aligned. **They already are**, measured on
+a 1180px card:
+
+| | Stack (as first shown) |
+|---|---|
+| Both primaries on one y | yes |
+| Both secondaries on one y | yes |
+| Primary boxes identical across columns | yes, 233.6px |
+| Left edges flush, primary to secondary | yes |
+| **Secondary rule length** | **210px vs 283px** |
+
+One thing is unequal: the secondary's underline runs the length of its label,
+and "View Selected AI Work" is 69px shorter than "View Supply Chain
+Experience". That single edge is what reads as not-quite-aligned once you look
+for it.
+
+Four rows, on the `[data-actions]` axis. All four keep the thesis — one system
+blue, a filled primary, a quiet secondary — and change only geometry.
+
+| Row | What it equalises | Cost |
+|---|---|---|
+| **Stack** | Everything except the secondary's rule length. | The two columns end 69px apart. |
+| **Rule** | The underline spans the full column, so both columns end on the same line. One property changes. | A full-width rule reads slightly more like a divider than an underlined link. |
+| **Equal** | Four identical boxes — same width in a column and across both, same height. | Gives up the text link for an outlined box, narrowing the rank gap from filled-vs-link to filled-vs-outlined. |
+| **Split** | One row, one baseline: primary flush left, link flush right. Row outer edges straight in both columns. | Most horizontal of the four; puts both ranks at equal optical height, flattening the hierarchy slightly. |
+
+### The constraint that shapes all of them
+
+"View Supply Chain Experience" is 283px of type. In the 4-up contact sheet a
+column has about 290px of usable width, so any row that puts that label in a
+box with real padding cannot fit on one line there.
+
+`equal` and `split` are therefore gated behind container queries (1000px and
+1180px of card) and fall back to `stack` below them — gated on the
+**container**, never on `flex-wrap`. Wrapping is per-item: it would fold the
+supply column and leave the AI column on one line, which is the exact
+asymmetry this axis exists to remove. Both columns degrade together or neither
+does.
+
+The "Drafting rows" view in the lab renders on 1200px cards for this reason;
+at the normal 4-up width all four would resolve to Stack.
+
+### Two bugs found while building it
+
+- `align-items: stretch` on Rule's row widened the **primary** to full column
+  as well. Drafting's action row is a column flex, so the cross axis is
+  horizontal. Only the secondary should stretch, and it now asks for itself
+  with `align-self`.
+- Equal's boxes came out 3px apart in height. Drafting's base row sets
+  `align-items: flex-start` for its flex layout, and that property carries
+  into grid where it governs the block axis — so `grid-auto-rows: 1fr` had
+  nothing to show. `align-items: stretch` on the grid fixes it.
+
+Both are the kind of thing that measures instantly and eyeballs as "fine".
+
 ## Recommendation
 
 **Index**, with the Masthead switch on.

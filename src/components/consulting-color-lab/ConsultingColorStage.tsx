@@ -16,13 +16,14 @@
 import { useCallback, useEffect, useRef } from "react";
 import { CTA_HINT, CTA_LABEL, PATHS } from "@/data/workTogether";
 import { HERO_ALT, HERO_NARROW, HERO_WIDE } from "@/data/ctaRowLab";
-import type { MastheadId, TreatmentId } from "@/data/consultingColorLab";
+import type { ActionsId, MastheadId, TreatmentId } from "@/data/consultingColorLab";
 import ConsultingColorScreen from "./ConsultingColorScreen";
 
 interface Props {
   width: "desktop" | "narrow" | "gallery";
   treatment: TreatmentId;
   masthead: MastheadId;
+  actions?: ActionsId;
   /** Only one stage claims the tab order, so a compare has one tab sequence
       rather than four interleaved ones. */
   primary: boolean;
@@ -35,6 +36,7 @@ export default function ConsultingColorStage({
   width,
   treatment,
   masthead,
+  actions,
   primary,
   label,
   note,
@@ -141,6 +143,7 @@ export default function ConsultingColorStage({
               onBack={refocus}
               treatment={treatment}
               masthead={masthead}
+              actions={actions}
             />
           </div>
         </div>
