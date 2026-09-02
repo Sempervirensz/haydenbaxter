@@ -3787,10 +3787,14 @@ html.is-safari body {
   border-radius: 10px;
   background: rgba(8, 10, 10, 0.95);
   font-family: var(--font-mono), ui-monospace, monospace;
-  font-size: 12px;
+  /* --text-meta runs 12px → 15.5px, which is what the fixed 12px meant on a
+     phone; the token just lets it scale up on a large display like every
+     other readout. (Fixed 12px tripped check:scale and kept CI red on main
+     from the day the probe shipped.) */
+  font-size: var(--text-meta);
   color: rgba(255, 255, 255, 0.72);
 }
-.perf-probe b { color: #7fd6c2; font-size: 12px; }
+.perf-probe b { color: #7fd6c2; }
 .perf-probe em { font-style: normal; color: #7fd6c2; font-variant-numeric: tabular-nums; }
 .perf-probe button {
   margin-left: auto;
