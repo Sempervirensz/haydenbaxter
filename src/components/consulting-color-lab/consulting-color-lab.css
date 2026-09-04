@@ -486,11 +486,27 @@
    button dropped on it.
    ======================================================================== */
 
-.cpp-screen[data-treatment="drafting"][data-layout="tracklist"] {
+.cpp-screen[data-system="drafting"][data-layout="tracklist"] {
   /* "01 /" is wider than the bare "01" tracklist sizes the gutter for. */
   --track-gutter: clamp(2.9rem, 3.6cqw, 4.5rem);
 }
 
+/* The system hue, shared by both. Deliberately a separate token from `--rgb`:
+   `--rgb` is per-path identity and still varies, this does not. It clears
+   6.9:1 on the cool sheet and 7.0:1 on the shipped one, so it needs no
+   per-surface variant. */
+.cpp-screen[data-system="drafting"] {
+  --sys-rgb: 27, 75, 184;
+  --sys-ink: #1b4bb8;
+  --sys-on: #f5f8fd; /* 7.6:1 on the fill */
+}
+
+/* THE COOL SHEET — the one thing that does not port.
+   `WorkTogetherSolo` (WorldPulse and Experience) renders the same
+   `.cpp-screen` and hard-codes the same `data-surface="paper"`, so moving the
+   surface is a change to all three screens or to none. Everything above and
+   below this block is surface-independent; only this is not, which is what
+   the Portable treatment exists to isolate. */
 .cpp-screen[data-treatment="drafting"] {
   --sheet-bg: #f1f3f6;
   --sheet-border: rgba(30, 45, 70, 0.12);
@@ -502,17 +518,20 @@
   --hair-2: rgba(30, 45, 70, 0.26);
   --chip-neutral-bg: rgba(30, 45, 70, 0.05);
   --chip-neutral-border: rgba(30, 45, 70, 0.1);
+}
 
-  /* The system hue. Deliberately a separate token from `--rgb`: `--rgb` is
-     per-path identity and still varies, this does not. */
-  --sys-rgb: 27, 75, 184;
-  --sys-ink: #1b4bb8; /* 6.9:1 on the sheet */
-  --sys-on: #f5f8fd; /* 7.6:1 on the fill */
+/* PORTABLE — the same system on the shipped sheet. It inherits the shared
+   readability floor and changes one thing: the shipped `--hair-2` is 0.18
+   alpha, which the spec row's vertical dividers disappear into on the warmer
+   ground. The cool sheet's slate hairlines were carrying that legibility for
+   free. */
+.cpp-screen[data-treatment="portable"] {
+  --hair-2: rgba(17, 17, 22, 0.24);
 }
 
 /* Identity marks keep their own hue; everything else on the sheet is system
    blue or ink. */
-.cpp-screen[data-treatment="drafting"][data-layout="tracklist"] .cpp-path__kicker {
+.cpp-screen[data-system="drafting"][data-layout="tracklist"] .cpp-path__kicker {
   color: var(--sys-ink);
   display: inline-flex;
   align-items: center;
@@ -523,7 +542,7 @@
    place the two paths differ chromatically. Small enough to be a mark rather
    than a swatch, and it is the thing that lets you tell the two columns apart
    from across the room without either column owning a colour. */
-.cpp-screen[data-treatment="drafting"][data-layout="tracklist"]
+.cpp-screen[data-system="drafting"][data-layout="tracklist"]
   .cpp-path__kicker::before {
   content: "";
   flex: 0 0 auto;
@@ -533,18 +552,18 @@
   transition: transform 220ms ease, background 220ms ease;
 }
 
-.cpp-screen[data-treatment="drafting"] .cpp-path:hover .cpp-path__kicker::before {
+.cpp-screen[data-system="drafting"] .cpp-path:hover .cpp-path__kicker::before {
   transform: scale(1.35);
 }
 
 /* The numeral becomes a real drawing callout: mono, system blue, with the
    slash a spec sheet would set it with. */
-.cpp-screen[data-treatment="drafting"][data-layout="tracklist"] .cpp-path__ghost {
+.cpp-screen[data-system="drafting"][data-layout="tracklist"] .cpp-path__ghost {
   color: var(--sys-ink);
   font-weight: 500;
 }
 
-.cpp-screen[data-treatment="drafting"][data-layout="tracklist"]
+.cpp-screen[data-system="drafting"][data-layout="tracklist"]
   .cpp-path__ghost::after {
   content: " /";
   opacity: 0.45;
@@ -553,12 +572,12 @@
 /* A real gutter rule. The shipped pair is separated by nothing but whitespace,
    which is why the eye reads the sheet as one wide block of grey rather than
    as two columns to choose between. */
-.cpp-screen[data-treatment="drafting"][data-layout="tracklist"] .cpp-paths {
+.cpp-screen[data-system="drafting"][data-layout="tracklist"] .cpp-paths {
   position: relative;
 }
 
 @container wt (min-width: 701px) {
-  .cpp-screen[data-treatment="drafting"][data-layout="tracklist"] .cpp-paths::after {
+  .cpp-screen[data-system="drafting"][data-layout="tracklist"] .cpp-paths::after {
     content: "";
     position: absolute;
     top: 12px;
@@ -576,24 +595,24 @@
 
 /* Credits become a spec row: hairline dividers instead of middots, which is
    how a drawing lists tolerances. */
-.cpp-screen[data-treatment="drafting"][data-layout="tracklist"] .cpp-path__cap {
+.cpp-screen[data-system="drafting"][data-layout="tracklist"] .cpp-path__cap {
   color: var(--ink-2);
   padding-right: 9px;
   margin-right: 3px;
   border-right: 1px solid var(--hair-2);
 }
 
-.cpp-screen[data-treatment="drafting"][data-layout="tracklist"]
+.cpp-screen[data-system="drafting"][data-layout="tracklist"]
   .cpp-path__cap:last-child {
   border-right: 0;
 }
 
-.cpp-screen[data-treatment="drafting"][data-layout="tracklist"]
+.cpp-screen[data-system="drafting"][data-layout="tracklist"]
   .cpp-path__cap:not(:last-child)::after {
   content: none;
 }
 
-.cpp-screen[data-treatment="drafting"] .cpp-path__summary {
+.cpp-screen[data-system="drafting"] .cpp-path__summary {
   color: var(--ink-2);
   max-width: 42ch;
 }
@@ -603,7 +622,7 @@
 /* PRIMARY: the one saturated element in the column. A filled control against
    a text link cannot be misread as a pair of equals, which is exactly what
    two outlined pills of the same size currently are. */
-.cpp-screen[data-treatment="drafting"][data-button="cue"] .cpp-action--primary {
+.cpp-screen[data-system="drafting"][data-button="cue"] .cpp-action--primary {
   border: 1px solid var(--sys-ink);
   border-radius: 7px;
   background: var(--sys-ink);
@@ -613,15 +632,15 @@
     0 6px 16px rgba(var(--sys-rgb), 0.22);
 }
 
-.cpp-screen[data-treatment="drafting"][data-button="cue"]
+.cpp-screen[data-system="drafting"][data-button="cue"]
   .cpp-action--primary::before {
   border-color: rgba(255, 255, 255, 0.45);
   color: var(--sys-on);
   margin-right: 10px;
 }
 
-.cpp-screen[data-treatment="drafting"][data-button="cue"] .cpp-action--primary:hover,
-.cpp-screen[data-treatment="drafting"][data-button="cue"]
+.cpp-screen[data-system="drafting"][data-button="cue"] .cpp-action--primary:hover,
+.cpp-screen[data-system="drafting"][data-button="cue"]
   .cpp-action--primary:focus-visible {
   background: #14389a;
   border-color: #14389a;
@@ -630,9 +649,9 @@
     0 8px 20px rgba(var(--sys-rgb), 0.3);
 }
 
-.cpp-screen[data-treatment="drafting"][data-button="cue"]
+.cpp-screen[data-system="drafting"][data-button="cue"]
   .cpp-action--primary:hover::before,
-.cpp-screen[data-treatment="drafting"][data-button="cue"]
+.cpp-screen[data-system="drafting"][data-button="cue"]
   .cpp-action--primary:focus-visible::before {
   background: #fff;
   color: #14389a;
@@ -641,7 +660,7 @@
 /* SECONDARY: no pill at all. A bordered box next to a filled box still reads
    as two buttons; a ruled text link reads as an aside. The rule thickens AND
    turns blue on hover, so the affordance survives reduced motion. */
-.cpp-screen[data-treatment="drafting"][data-button="cue"] .cpp-action--ghost {
+.cpp-screen[data-system="drafting"][data-button="cue"] .cpp-action--ghost {
   padding: 10px 2px;
   border: 0;
   border-bottom: 1px solid var(--hair-2);
@@ -650,15 +669,15 @@
   color: var(--ink-2);
 }
 
-.cpp-screen[data-treatment="drafting"][data-button="cue"] .cpp-action--ghost:hover,
-.cpp-screen[data-treatment="drafting"][data-button="cue"]
+.cpp-screen[data-system="drafting"][data-button="cue"] .cpp-action--ghost:hover,
+.cpp-screen[data-system="drafting"][data-button="cue"]
   .cpp-action--ghost:focus-visible {
   color: var(--sys-ink);
   border-bottom: 2px solid var(--sys-ink);
   padding-bottom: 9px;
 }
 
-.cpp-screen[data-treatment="drafting"] .cpp-action:focus-visible {
+.cpp-screen[data-system="drafting"] .cpp-action:focus-visible {
   outline: 2px solid var(--sys-ink);
   outline-offset: 3px;
 }
@@ -679,13 +698,13 @@
    Stacking also keeps the primary at its label's width rather than stretched
    to the column — a full-width saturated bar is the single biggest thing
    separating "an accent system" from "a product page". */
-.cpp-screen[data-treatment="drafting"] .cpp-path__actions {
+.cpp-screen[data-system="drafting"] .cpp-path__actions {
   flex-direction: column;
   align-items: flex-start;
   gap: 2px;
 }
 
-.cpp-screen[data-treatment="drafting"] .cpp-action--primary {
+.cpp-screen[data-system="drafting"] .cpp-action--primary {
   flex: 0 0 auto;
 }
 
@@ -728,7 +747,7 @@
    primary to the full column as well — which is the full-bleed saturated bar
    this direction is specifically trying not to be. Only the secondary is
    asked to stretch, and it asks for itself. */
-.cpp-screen[data-treatment="drafting"][data-actions="rule"][data-button="cue"]
+.cpp-screen[data-system="drafting"][data-actions="rule"][data-button="cue"]
   .cpp-action--ghost {
   align-self: stretch;
   justify-content: flex-start;
@@ -746,7 +765,7 @@
    `grid-auto-rows: 1fr` equalises the two rows, so the primary and secondary
    are the same height even though only one carries the cue ring. */
 @container wt (min-width: 1000px) {
-  .cpp-screen[data-treatment="drafting"][data-actions="equal"] .cpp-path__actions {
+  .cpp-screen[data-system="drafting"][data-actions="equal"] .cpp-path__actions {
     display: grid;
     grid-template-columns: minmax(0, 22rem);
     grid-auto-rows: 1fr;
@@ -760,14 +779,14 @@
     gap: 8px;
   }
 
-  .cpp-screen[data-treatment="drafting"][data-actions="equal"] .cpp-action {
+  .cpp-screen[data-system="drafting"][data-actions="equal"] .cpp-action {
     justify-content: center;
   }
 
   /* The secondary becomes the primary's outline. Same box, no fill — the
      rank gap narrows from filled-vs-link to filled-vs-outlined, which is
      this row's whole trade. */
-  .cpp-screen[data-treatment="drafting"][data-actions="equal"][data-button="cue"]
+  .cpp-screen[data-system="drafting"][data-actions="equal"][data-button="cue"]
     .cpp-action--ghost {
     padding: 10px 16px;
     border: 1px solid var(--hair-2);
@@ -775,9 +794,9 @@
     color: var(--ink-2);
   }
 
-  .cpp-screen[data-treatment="drafting"][data-actions="equal"][data-button="cue"]
+  .cpp-screen[data-system="drafting"][data-actions="equal"][data-button="cue"]
     .cpp-action--ghost:hover,
-  .cpp-screen[data-treatment="drafting"][data-actions="equal"][data-button="cue"]
+  .cpp-screen[data-system="drafting"][data-actions="equal"][data-button="cue"]
     .cpp-action--ghost:focus-visible {
     padding: 10px 16px;
     border: 1px solid var(--sys-ink);
@@ -793,25 +812,25 @@
    No `flex-wrap`: see the note above. Either both columns are on one line or
    neither is. */
 @container wt (min-width: 1180px) {
-  .cpp-screen[data-treatment="drafting"][data-actions="split"] .cpp-path__actions {
+  .cpp-screen[data-system="drafting"][data-actions="split"] .cpp-path__actions {
     flex-direction: row;
     flex-wrap: nowrap;
     align-items: center;
     gap: 16px;
   }
 
-  .cpp-screen[data-treatment="drafting"][data-actions="split"] .cpp-action--primary {
+  .cpp-screen[data-system="drafting"][data-actions="split"] .cpp-action--primary {
     flex: 0 0 auto;
   }
 
-  .cpp-screen[data-treatment="drafting"][data-actions="split"] .cpp-action--ghost {
+  .cpp-screen[data-system="drafting"][data-actions="split"] .cpp-action--ghost {
     flex: 0 0 auto;
     margin-left: auto;
   }
 }
 
 /* The back control and the eyebrow join the same system. */
-.cpp-screen[data-treatment="drafting"] .cpp-screen__eyebrow {
+.cpp-screen[data-system="drafting"] .cpp-screen__eyebrow {
   color: var(--sys-ink);
 }
 
@@ -1227,7 +1246,7 @@
 @container wt (max-width: 700px) {
   /* The gutter rule is a two-column device. Stacked, it would draw a vertical
      line down the middle of the copy. */
-  .cpp-screen[data-treatment="drafting"][data-layout="tracklist"] .cpp-paths::after {
+  .cpp-screen[data-system="drafting"][data-layout="tracklist"] .cpp-paths::after {
     display: none;
   }
 
@@ -1236,13 +1255,13 @@
      documents for its middot, which it fixed by tying the separator to the
      item BEFORE it. A vertical rule cannot be tied that way once the row is a
      column, so the divider is dropped and the shipped middot comes back. */
-  .cpp-screen[data-treatment="drafting"][data-layout="tracklist"] .cpp-path__cap {
+  .cpp-screen[data-system="drafting"][data-layout="tracklist"] .cpp-path__cap {
     padding-right: 0;
     margin-right: 0;
     border-right: 0;
   }
 
-  .cpp-screen[data-treatment="drafting"][data-layout="tracklist"]
+  .cpp-screen[data-system="drafting"][data-layout="tracklist"]
     .cpp-path__cap:not(:last-child)::after {
     content: "\00a0\00b7";
     opacity: 0.5;
@@ -1273,7 +1292,7 @@
     justify-content: flex-start;
   }
 
-  .cpp-screen[data-treatment="drafting"][data-button="cue"] .cpp-action--ghost {
+  .cpp-screen[data-system="drafting"][data-button="cue"] .cpp-action--ghost {
     align-self: flex-start;
   }
 }

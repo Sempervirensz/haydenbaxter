@@ -60,6 +60,13 @@ export default function ConsultingColorScreen({
       // Control writes no attribute at all, so there is nothing for the lab
       // sheet to match and the panel is the shipped article byte for byte.
       {...(treatment === "control" ? {} : { "data-treatment": treatment })}
+      // Drafting's system — ramp, metadata colour, gutter rule, spec row,
+      // button ranks — is shared by two treatments, and only the sheet colour
+      // separates them. `data-system` carries everything that ports to the
+      // other screens; `data-treatment` carries the part that does not.
+      {...(treatment === "drafting" || treatment === "portable"
+        ? { "data-system": "drafting" }
+        : {})}
       data-masthead={masthead}
       data-actions={actions}
     >

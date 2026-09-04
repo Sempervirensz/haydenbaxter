@@ -293,6 +293,61 @@ at the normal 4-up width all four would resolve to Stack.
 
 Both are the kind of thing that measures instantly and eyeballs as "fine".
 
+## Round three — the scope question Drafting raises
+
+`WorkTogetherSolo.tsx` — the **WorldPulse** and **Experience** screens — renders
+the same `.cpp-screen` and hard-codes the same axis values:
+
+```
+data-layout="tracklist"  data-palette="cobalt-brass"
+data-surface="paper"     data-type="house"  data-button="cue"
+```
+
+Drafting changes `--sheet-bg`, the whole ink ramp, the hairline mix and both
+`.cpp-action` recipes. Those are shared. So promoting it forks three ways:
+
+1. **Consulting only** — the other two screens keep warm `#f5f4f1` while
+   Consulting goes cool `#f1f3f6`. Two paper colours one click apart in the
+   same card flow.
+2. **All three** — consistent, but now a change to the site's surface
+   vocabulary rather than a Consulting fix. Also: the Experience screen takes
+   the **brass** accent, and Drafting makes every CTA cobalt — so Experience
+   would lose its only colour differentiation from WorldPulse.
+3. **Portable** — everything Drafting does except the paper.
+
+### Portable
+
+A fifth treatment, built to make option 3 visible rather than hypothetical.
+Measured side by side, the system is identical and only the sheet moves:
+
+| | Drafting | Portable |
+|---|---|---|
+| Sheet | `rgb(241,243,246)` | `rgb(245,244,241)` — shipped |
+| Kicker | 6.88:1 | 6.96:1 |
+| Summary | 10.32:1 | 10.32:1 |
+| Eyebrow | 6.88:1 | 6.96:1 |
+| Spec row | 10.32:1 | 10.32:1 |
+| AI / Supply fill | `rgb(27,75,184)` both | identical |
+| Identity ticks | cobalt / brass | identical |
+
+One value changes beyond the sheet: `--hair-2` lifts from the shipped 0.18 to
+0.24 alpha, because the spec row's vertical dividers disappear into the warmer
+ground — the cool sheet's slate hairlines were carrying that legibility for
+free.
+
+**Tradeoff.** It loses the most distinctive thing about Drafting. On the warm
+sheet the cobalt reads a shade louder, because the neutrals are no longer in
+its family — making the accent look native rather than dropped on was exactly
+what the cool stock was doing.
+
+### How it is built
+
+Drafting and Portable share a `data-system="drafting"` attribute carrying all
+39 of the system's selectors. `data-treatment` carries only what does not port:
+the cool sheet block, and Portable's hairline bump. That split is not a lab
+convenience — it is the promotion plan. Whatever ships to all three screens is
+exactly what sits under `data-system`.
+
 ## Recommendation
 
 **Index**, with the Masthead switch on.

@@ -50,7 +50,10 @@ export default function ConsultingColorLab() {
   const reduced = osReduced || forceReduced;
   const active = getTreatment(treatment);
   const row = DRAFTING_ACTIONS.find((a) => a.id === actions) ?? DRAFTING_ACTIONS[0];
-  const showRows = treatment === "drafting" || view === "rows";
+  // The button-row axis belongs to Drafting's system, which Portable also
+  // runs — so the control stays offered on both.
+  const showRows =
+    treatment === "drafting" || treatment === "portable" || view === "rows";
 
   /* The panel only earns a gutter of its own from 1440px up. Narrower than
      that it is a fixed overlay sitting on the very thing being judged, so it
@@ -61,7 +64,7 @@ export default function ConsultingColorLab() {
   }, []);
 
   const singleLabel = `${active.label}${
-    treatment === "drafting" ? ` · ${row.label}` : ""
+    showRows && view !== "rows" ? ` · ${row.label}` : ""
   } — ${view === "narrow" ? "390px container" : "desktop"}`;
 
   return (
@@ -105,7 +108,7 @@ export default function ConsultingColorLab() {
             actions={actions}
             primary
             label={singleLabel}
-            note={treatment === "drafting" ? row.note : active.thesis}
+            note={showRows ? row.note : active.thesis}
           />
         )}
       </div>
@@ -238,7 +241,7 @@ export default function ConsultingColorLab() {
               <h3 className="ccl-arg__label">Tradeoff</h3>
               <p className="ccl-arg__body">{active.tradeoff}</p>
 
-              {treatment === "drafting" && (
+              {showRows && (
                 <>
                   <h3 className="ccl-arg__label">Button row · {row.label}</h3>
                   <p className="ccl-arg__body">{row.note}</p>

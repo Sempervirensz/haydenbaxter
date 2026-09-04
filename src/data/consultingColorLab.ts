@@ -47,7 +47,12 @@ export const SHIPPED_CONTRAST: ContrastRow[] = [
    Treatments
    ------------------------------------------------------------------------ */
 
-export type TreatmentId = "control" | "drafting" | "letterpress" | "index";
+export type TreatmentId =
+  | "control"
+  | "drafting"
+  | "portable"
+  | "letterpress"
+  | "index";
 
 export interface Treatment {
   id: TreatmentId;
@@ -94,6 +99,23 @@ export const TREATMENTS: Treatment[] = [
       "Primary vs. secondary is unmistakable at a glance — a filled control against a text link, not two outlined pills of the same weight. Making blue mean 'this is the action' stops the two accent families competing for the same job.",
     tradeoff:
       "Contradicts the shipped comment that each path's CTA should carry that path's hue, so the button no longer proves which conversation you are starting. Two solid fills is also the loudest this site has been on a light surface — it is the direction most at risk of reading as a product page.",
+  },
+  {
+    id: "portable",
+    label: "Portable",
+    thesis:
+      "Everything Drafting does except the paper — so it can ship to all three screens, not just this one.",
+    temperature: "Neutral · the shipped sheet",
+    changed: [
+      "Drafting's ink ramp, metadata colour, gutter rule, spec row and button ranks — unchanged.",
+      "The sheet stays #f5f4f1. No cool paper, no slate hairlines.",
+      "Hairlines lift from 0.18 to 0.24 alpha so the spec row's dividers still read on the warmer ground.",
+      "Same system blue for every call to action; brass still only an identity tick.",
+    ],
+    solves:
+      "WorldPulse and Experience render the same `.cpp-screen` and hard-code the same `data-surface=\"paper\"`. Drafting's cool sheet is therefore a change to all three or to none — ship it on Consulting alone and two paper colours sit one click apart in the same card. This is the subset that ports: the hierarchy win comes from the ramp and the filled-vs-link rank, and neither needs the surface to move.",
+    tradeoff:
+      "Loses the most distinctive thing about Drafting. On the warm sheet the cobalt reads a shade louder, because the neutrals are no longer in its family — the thing the cool stock was doing was making the accent look native rather than dropped on.",
   },
   {
     id: "letterpress",
