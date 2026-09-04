@@ -664,91 +664,13 @@
 }
 
 /* ---------------------------------------------------------------------------
-   04 — SCALE
+   04 — SCALE  *** SHIPPED ***
    ---------------------------------------------------------------------------
-   The figures are the composition. 中文 is set at the same display size as the
-   two numerals on purpose: it makes the language a quantity rather than a line
-   item, which is the only way it competes with 100+ in the same glance.
+   No rules here. This direction is production: concept 04 renders
+   `ExperienceRecord`, which brings `experience-screen.css` with it. Restyling
+   it from the lab would mean the lab and the site disagreed about the one
+   composition that shipped.
    ------------------------------------------------------------------------ */
-
-.xlab-scale__figs {
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-}
-
-.xlab-scale__fig {
-  display: grid;
-  grid-template-columns: 108px 1fr;
-  align-items: baseline;
-  gap: 12px;
-  padding: 7px 0;
-  border-bottom: 1px solid var(--hair);
-}
-
-.xlab-scale__fig:first-child {
-  padding-top: 0;
-}
-
-.xlab-scale__num {
-  font-family: var(--face-display);
-  /* Ceiling set by the widest figure: "100+" at 46px measures ~101px, which is
-     what the 108px column above is sized to hold. */
-  font-size: clamp(36px, 12cqw, 46px);
-  line-height: 0.9;
-  letter-spacing: -0.03em;
-  color: var(--ink-1);
-  font-variant-numeric: tabular-nums;
-}
-
-/* The CJK face has no -0.03em to give and sits on a different optical centre
-   than the Latin numerals, so it takes its own tracking and a hair of lead. */
-.xlab-scale__fig[data-fig="language"] .xlab-scale__num {
-  letter-spacing: 0;
-  font-size: clamp(31px, 10.4cqw, 40px);
-  color: var(--accent-ink);
-}
-
-.xlab-scale__cap {
-  margin: 0;
-  font-family: var(--face-label);
-  font-size: 10.5px;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  line-height: 1.4;
-  color: var(--ink-3);
-}
-
-/* Employers and schools as one citation block. The concept's 12px stack gap
-   between them made three peers out of what is one footnote. */
-.xlab-scale__notes {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.xlab-scale__foot {
-  margin: 0;
-  font-family: var(--face-label);
-  font-size: 11px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  line-height: 1.5;
-  color: var(--ink-2);
-}
-
-/* The schools recede below the employers — same block, second rank. Tracking
-   comes in a notch so the longer of the two ("INTL BUSINESS + CHINESE · UTAH
-   STATE", 36 characters) still sets on one line inside a 293px sheet. */
-.xlab-scale__foot--edu {
-  font-size: 10.5px;
-  letter-spacing: 0.1em;
-  color: var(--ink-4);
-}
-
-.xlab-scale__foot--edu:first-of-type {
-  margin-top: 2px;
-}
 
 /* ---------------------------------------------------------------------------
    05 — LINER NOTES
@@ -1243,26 +1165,6 @@
   .xlab-axes__conclusion,
   .xlab--axes .xlab-actions {
     grid-column: 1 / -1;
-  }
-
-  .xlab-scale__figs {
-    flex-direction: row;
-    gap: 30px;
-  }
-
-  .xlab-scale__fig {
-    flex: 1;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 6px;
-    border-bottom: 0;
-    border-left: 1px solid var(--hair);
-    padding: 0 0 0 16px;
-  }
-
-  .xlab-scale__fig:first-child {
-    border-left: 0;
-    padding-left: 0;
   }
 
   .xlab--liner {

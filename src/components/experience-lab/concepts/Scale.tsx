@@ -1,11 +1,18 @@
 "use client";
 
-// 04 — SCALE. Oversized numbers, employers as the footnote.
+// 04 — SCALE. Oversized numbers, employers as the footnote.  *** SHIPPED ***
 //
-// What the shipped section does today, measured: the M.S. chip wraps to three
-// lines and becomes the largest object on the sheet, while NIKE is a chip the
-// size of a word. The least decisive credential carries the most weight and the
-// most decisive one carries almost none.
+// This direction won the review and is now production: the composition below is
+// `ExperienceRecord` from `src/components/work/ExperienceScreen.tsx`, the real
+// component the Consulting chapter renders, not a copy of it. Concept 04 in
+// this lab therefore cannot show something the site does not.
+//
+// THE ARGUMENT IT WON ON
+//
+// What the shipped section did before, measured: the M.S. chip wrapped to three
+// lines and became the largest object on the sheet, while NIKE was a chip the
+// size of a word. The least decisive credential carried the most weight and the
+// most decisive one carried almost none.
 //
 // This inverts it. Three figures at display scale — and the third figure is a
 // language rather than a number, which is the move: it makes Mandarin a
@@ -17,50 +24,18 @@
 // abbreviation beyond what the source gives — Arizona State carries the M.S.,
 // Utah State is named by its programme — because inventing degree letters is
 // exactly the kind of résumé filler this direction exists to strip out.
+//
+// The lab frame supplies the two actions so all eight concepts end on the same
+// ask; production's own screen supplies them itself.
 
-import { CAREER, EDUCATION, FIGURES } from "@/data/experienceLab";
-import { ConceptActions, Rule } from "./parts";
+import { ExperienceRecord } from "@/components/work/ExperienceScreen";
+import { ConceptActions } from "./parts";
 
 export default function Scale() {
   return (
-    <div className="xlab xlab--scale">
-      <dl className="xlab-scale__figs">
-        {FIGURES.map((f) => (
-          <div key={f.id} className="xlab-scale__fig" data-fig={f.id}>
-            <dt className="xlab-scale__num" lang={f.id === "language" ? "zh" : undefined}>
-              {f.figure}
-            </dt>
-            <dd className="xlab-scale__cap">{f.caption}</dd>
-          </div>
-        ))}
-      </dl>
-
-      <Rule />
-
-      {/* The footnote is ONE block, not three siblings. Both schools are named
-          here now, and three lines spaced by the concept's 12px stack gap read
-          as a list of unrelated facts; held together at 4px they read as the
-          single citation the figures rest on. It also buys back most of the
-          height the second school costs. */}
-      <div className="xlab-scale__notes">
-        <p className="xlab-scale__foot">
-          {CAREER.map((s, i) => (
-            <span key={s.id}>
-              {i > 0 && <span className="xlab-dot" aria-hidden="true" />}
-              {s.company}
-            </span>
-          ))}
-        </p>
-        {EDUCATION.map((e) => (
-          <p key={e.id} className="xlab-scale__foot xlab-scale__foot--edu">
-            {e.programShort}
-            <span className="xlab-dot" aria-hidden="true" />
-            {e.schoolShort}
-          </p>
-        ))}
-      </div>
-
+    <>
+      <ExperienceRecord />
       <ConceptActions />
-    </div>
+    </>
   );
 }

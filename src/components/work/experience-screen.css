@@ -1,0 +1,383 @@
+/* ===========================================================================
+   "Review My Experience" — the operating record
+   ===========================================================================
+
+   Scoped under `.xp-`. Inherits the paper sheet's tokens from `.cpp-screen`
+   and the brass accent from `.cpp-path[data-path="supply"]` in
+   consulting-paths.css, so this file introduces no colour and no typeface of
+   its own — a section that needed either would not survive inside the chapter.
+
+   THE CONTAINER, AND WHY IT IS NOT `wt`
+   -------------------------------------
+   Measured on the running site, the Consulting card and the sheet inside it do
+   NOT grow together:
+
+     viewport      .wt (card)     sheet
+     1280x800      1249           1145
+     1440x900      1409           1301
+     1920x1080     1889           1694   <- sheet caps here
+     2560x1440     2529           1694
+     3440x1440     3409           1694
+
+   The sheet stops at 1696px (`--shell-consulting`) while the card runs on past
+   3400px. Every `cqw` in the rest of the chapter reads against `wt`, which is
+   right for the headline sitting on the photograph and wrong for anything
+   inside the sheet: past ~1920px it keeps scaling type in a column that has
+   stopped growing. `.xp` establishes its own inline-size container, so each
+   ramp below is a share of the SHEET and saturates exactly when the sheet does.
+
+   THE RAMP
+   --------
+   One continuous clamp per role rather than breakpoint steps, because the sheet
+   width moves continuously between 293px (a 375px phone) and 1694px. The floors
+   are the phone values the design was solved at; the ceilings are set where the
+   1694px sheet stops.
+   ======================================================================== */
+
+.xp {
+  container-type: inline-size;
+  container-name: xp;
+
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-top: 4px;
+}
+
+/* ---------------------------------------------------------------------------
+   The figures
+   ------------------------------------------------------------------------ */
+
+.xp__figs {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.xp__fig {
+  display: grid;
+  grid-template-columns: 108px 1fr;
+  align-items: baseline;
+  gap: 12px;
+  padding: 7px 0;
+  border-bottom: 1px solid var(--hair);
+}
+
+.xp__fig:first-child {
+  padding-top: 0;
+}
+
+/* The numeral column is fixed so the three captions start on one axis. Sized to
+   hold "100+", the widest figure, at the ceiling of the phone ramp — left to
+   size themselves the three set three different widths and the captions step. */
+.xp__num {
+  font-family: var(--face-display);
+  font-size: clamp(36px, 12cqw, 46px);
+  line-height: 0.9;
+  letter-spacing: -0.03em;
+  color: var(--ink-1);
+  font-variant-numeric: tabular-nums;
+}
+
+/* The CJK face has no -0.03em to give and sits on a different optical centre
+   than the Latin numerals, so it takes its own tracking and a smaller step. */
+.xp__fig[data-fig="language"] .xp__num {
+  letter-spacing: 0;
+  font-size: clamp(31px, 10.4cqw, 40px);
+  color: var(--accent-ink);
+}
+
+/* The site's own label step (11.5 -> 14.5px), not a hardcoded px: this file
+   ships on a public route, and `scripts/check-scale.mjs` exists because a
+   route-scoped stylesheet once kept an 11.52px eyebrow on a public page
+   indefinitely. The container ramp below takes over above 601px of sheet. */
+.xp__cap {
+  margin: 0;
+  font-family: var(--face-label);
+  font-size: var(--text-label);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  line-height: 1.4;
+  color: var(--ink-3);
+}
+
+/* ---------------------------------------------------------------------------
+   The footnote
+   ------------------------------------------------------------------------ */
+
+.xp__notes {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.xp__schools {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.xp__foot {
+  margin: 0;
+  font-family: var(--face-label);
+  /* --text-meta (12 -> 15.5px). The employers are the harder proof, so they
+     take the larger of the two label steps. */
+  font-size: var(--text-meta);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  line-height: 1.5;
+  color: var(--ink-2);
+}
+
+/* Second rank: same block, quieter voice.
+   The recession is SIZE AND TRACKING, not alpha. `--ink-4` is the obvious
+   choice for a footnote's footnote and it is the wrong one: consulting-paths
+   .css already measured 40% ink over #f5f4f1 at 2.9:1 and rejected it for
+   exactly this — small uppercase mono. `--ink-3` reads as the quieter rank
+   without dropping the schools below the panel's own floor.
+
+   One label step down from the employers (--text-label against --text-meta),
+   which is the whole size difference: both stay on the ramp. */
+.xp__foot--edu {
+  font-size: var(--text-label);
+  letter-spacing: 0.1em;
+  color: var(--ink-3);
+}
+
+.xp__schools .xp__foot--edu:first-child {
+  margin-top: 2px;
+}
+
+/* The separator belongs to the item BEFORE it, tied on with a non-breaking
+   space — as a ::before on the following item it wraps with that item and every
+   continuation line opens with a stray middot. Same fix consulting-paths.css
+   already makes for its credits line. */
+.xp__dot::before {
+  content: "\00a0·\00a0";
+  opacity: 0.45;
+}
+
+.xp__actions {
+  margin-top: auto;
+  padding-top: 10px;
+}
+
+/* The sheet body is a flex column so the actions can sit on its floor. */
+.xp-screen__body {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  border: 0;
+  background: none;
+  box-shadow: none;
+}
+
+.xp-screen__body .xp {
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+/* ===========================================================================
+   SHORT PHONES — a height constraint, so a height query answers it
+   ===========================================================================
+
+   The iPhone SE is 375x667, and it is the height that bites: the card is only
+   667px tall, which leaves the sheet 302px against the 416px a 390x844 phone
+   gives it. Solved at 390 and left alone, the record ran 48px past the fold on
+   the SE and took both actions with it.
+
+   `.xp` is an inline-size container, so it cannot query its own height — and
+   the height it is short of comes from the viewport rather than from the
+   composition. A viewport query is the honest instrument here. Guarded on width
+   too, so a short desktop WINDOW (which has the room to lay out in a row) never
+   picks up phone tightening.
+   ======================================================================== */
+
+@media (max-width: 700px) and (max-height: 720px) {
+  .xp {
+    gap: 8px;
+  }
+
+  .xp__fig {
+    padding: 2px 0;
+  }
+
+  .xp__num {
+    font-size: clamp(32px, 11cqw, 42px);
+  }
+
+  /* Leading only — the type steps stay on their tokens, because the SE is a
+     small screen and not an excuse to drop under the readability floor. */
+  .xp__foot {
+    line-height: 1.35;
+  }
+
+  .xp__fig[data-fig="language"] .xp__num {
+    font-size: clamp(28px, 9.6cqw, 38px);
+  }
+
+  .xp__cap {
+    line-height: 1.3;
+  }
+
+  .xp__notes {
+    gap: 2px;
+  }
+
+  .xp__schools .xp__foot--edu:first-child {
+    margin-top: 0;
+  }
+
+  .xp__actions {
+    padding-top: 6px;
+  }
+}
+
+/* ===========================================================================
+   WIDENING — against the sheet, not the card
+   ===========================================================================
+
+   601px of sheet is roughly a 700px card, which is where the chapter's own
+   narrow/wide hinge sits. Past it the three figures become a row: the sheet is
+   a wide, short letterbox at every desktop size (1694x~500 at 1920 and above),
+   and three columns is the only arrangement that uses that proportion.
+   ======================================================================== */
+
+@container xp (min-width: 601px) {
+  .xp {
+    gap: clamp(14px, 1.6cqw, 30px);
+  }
+
+  .xp__figs {
+    flex-direction: row;
+    gap: clamp(24px, 3cqw, 64px);
+  }
+
+  /* Each figure becomes a column with the caption UNDER the numeral rather
+     than beside it. Beside it, a 1694px sheet gives each figure a ~550px track
+     and the caption strands halfway across it.
+
+     Two grid rows, numeral bottom-aligned in the first: the three numerals are
+     NOT the same font-size — 中文 is set smaller because CJK glyphs are
+     full-width — so in plain flow the shorter glyph box pushed its caption up
+     and the three captions stopped sharing a line. The row stretches all three
+     columns to equal height, and `align-self: end` drops each numeral onto a
+     common floor, so the captions start together whatever the figure is. */
+  .xp__fig {
+    flex: 1;
+    display: grid;
+    /* Reset the phone layout's two columns. Left in place, the numeral stayed
+       in a 108px column and the caption rendered BESIDE it in column two — the
+       two ended up on a diagonal rather than stacked. */
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr auto;
+    justify-items: start;
+    align-items: initial;
+    gap: clamp(6px, 0.7cqw, 14px);
+    padding: 0 0 0 clamp(16px, 1.6cqw, 34px);
+    border-bottom: 0;
+    border-left: 1px solid var(--hair);
+  }
+
+  .xp__num {
+    align-self: end;
+  }
+
+  .xp__fig:first-child {
+    border-left: 0;
+    padding-left: 0;
+  }
+
+  /* The display ramp. At a 601px sheet this is 54px; at the 1694px cap it is
+     150px, which is the scale the site's own --text-display reaches on a large
+     display. Saturating at the cap is deliberate: the sheet stops growing
+     there, so the type has to as well. */
+  .xp__num {
+    font-size: clamp(48px, 9cqw, 150px);
+  }
+
+  .xp__fig[data-fig="language"] .xp__num {
+    /* CJK glyphs are full-width, so the same optical size is a smaller em. */
+    font-size: clamp(42px, 7.8cqw, 128px);
+  }
+
+  /* Two lines' worth, reserved. Each figure is its own grid, so the `1fr`
+     numeral row resolves against THAT column's caption height — a one-line
+     caption left a taller numeral row and dropped its own baseline a line below
+     the other two. Reserving the height makes the three auto rows identical, so
+     every caption starts on the same line whatever it says. */
+  .xp__cap {
+    font-size: clamp(11px, 1.05cqw, 17px);
+    letter-spacing: clamp(0.1em, 0.16em - 0.06cqw, 0.16em);
+    max-width: 22ch;
+    min-height: calc(2 * 1.4em);
+  }
+
+  .xp__foot {
+    font-size: clamp(11.5px, 0.95cqw, 16px);
+  }
+
+  .xp__foot--edu {
+    font-size: clamp(11px, 0.88cqw, 15px);
+  }
+
+  .xp__actions {
+    padding-top: clamp(12px, 1.2cqw, 26px);
+  }
+
+  /* `.cpp-action--primary` carries `flex: 1 1 auto` so the ask fills the width
+     of a phone sheet, which is right at 293px and absurd at 1694px — it drew a
+     1400px-wide pill that read as a banner rather than a button. Content-sized
+     from here up; the row still starts at the left margin with the ghost beside
+     it, so the pair reads as one ask rather than two. */
+  .xp__actions .cpp-action--primary {
+    flex: 0 0 auto;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   901px of sheet and up — the footnote stops being a stack.
+
+   Three mono lines across a 1694px sheet is three 1694px-long lines, which is
+   exactly the measure problem `scale.css` exists to prevent. The employers take
+   the left, the schools the right, and neither runs past a readable length.
+   ------------------------------------------------------------------------ */
+
+@container xp (min-width: 901px) {
+  .xp__notes {
+    flex-direction: row;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: clamp(24px, 4cqw, 90px);
+    padding-top: clamp(10px, 1cqw, 22px);
+    border-top: 1px solid var(--hair);
+  }
+
+  .xp__schools {
+    text-align: right;
+    flex: 0 0 auto;
+  }
+
+  .xp__schools .xp__foot--edu:first-child {
+    margin-top: 0;
+  }
+}
+
+/* ===========================================================================
+   REDUCED MOTION
+   ===========================================================================
+   Nothing here animates on its own — the sheet's entrance belongs to
+   `.wt__unfurl` and consulting-paths.css already answers `prefers-reduced-
+   motion` for the whole chapter. This block exists so a future addition here
+   cannot quietly skip it.
+   ======================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .xp,
+  .xp * {
+    animation: none !important;
+    transition: none !important;
+  }
+}

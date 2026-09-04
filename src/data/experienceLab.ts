@@ -1,142 +1,30 @@
-// "My Experience" — design lab source of truth.
+// "My Experience" — design lab.
 //
-// WHAT IS UNDER REVIEW
+// The eight directions explored for path 03 of the Consulting chapter, and the
+// record of why 04 was chosen. Direction 04 SHIPPED: it is now
+// `src/components/work/ExperienceScreen.tsx`, and concept 04 in this lab
+// renders that same component, so the lab cannot show something the site does
+// not.
 //
-// Path 03 of the Consulting chapter ("Review My Experience"). In production it
-// is `WorkTogetherSolo` rendering `workTogether.ts → EXPERIENCE.destination`
-// into the paper sheet that unfurls beneath the three track rows. Nothing in
-// this file is wired to that; the lab is additive and removable.
+// THE FACTS LIVE IN PRODUCTION
 //
-// WHAT THE FACTS ARE
-//
-// Career, scale, language and education below are the source material Hayden
-// supplied for the review. Two of them do NOT exist anywhere else in the repo
-// yet — "100+ factories" and both universities — so they are NOT carried into
-// production by this file. It is read only by `/experience-lab`.
-//
-// Everything else is already claimed on the site and is repeated here so a
-// concept can be read without cross-referencing:
-//   Nike / Disney / Aosom       siteContent.ts → brands.logos
-//   Founder at WorldPulse       work.ts → WORK_SCREENS[0].full.caption
-//   8+ years, fluent Mandarin   about.ts → intro
-//   M.S. AI in Business (ASU)   workTogether.ts → EXPERIENCE.signals
-//
-// NOTHING HERE IS INVENTED. No dates, no titles, no metrics, no clients beyond
-// what was given. Where a fact was supplied without a qualifier — Utah State
-// has no degree letters attached — none is added.
+// Career, figures, education and the positioning line are re-exported from
+// `src/data/experience.ts` rather than restated — the same relationship
+// `ctaLab.ts` has with `workTogether.ts`. A lab that kept its own copy would
+// drift the moment either side was edited, and the sourcing notes that justify
+// each fact live with the production data where they are enforceable.
 
-/* ---------------------------------------------------------------------------
-   Career
-   ------------------------------------------------------------------------ */
+export {
+  CAREER,
+  CAREER_RECENT,
+  PHASE_LABEL,
+  FIGURES,
+  EDUCATION,
+  CAPABILITIES,
+  PERSPECTIVE,
+} from "@/data/experience";
 
-export interface CareerStop {
-  id: string;
-  company: string;
-  role: string;
-  /** Chronological position, 01 = earliest. */
-  index: string;
-  /** Which half of the operating perspective this stop sits in. A framing of
-      the same four facts, not an additional claim about any employer. */
-  phase: "operations" | "technology";
-}
-
-/** Chronological. Aosom → Disney → Nike → WorldPulse. */
-export const CAREER: CareerStop[] = [
-  { id: "aosom", company: "Aosom", role: "Supply Chain", index: "01", phase: "operations" },
-  { id: "disney", company: "Disney", role: "Procurement", index: "02", phase: "operations" },
-  { id: "nike", company: "Nike", role: "Sourcing Lead", index: "03", phase: "operations" },
-  { id: "worldpulse", company: "WorldPulse", role: "Founder", index: "04", phase: "technology" },
-];
-
-/** Newest first — the order a record is read in, not the order it happened. */
-export const CAREER_RECENT: CareerStop[] = [...CAREER].reverse();
-
-export const PHASE_LABEL: Record<CareerStop["phase"], string> = {
-  operations: "Global operations",
-  technology: "Emerging technology",
-};
-
-/* ---------------------------------------------------------------------------
-   Scale, language, education
-   ------------------------------------------------------------------------ */
-
-export interface Figure {
-  id: string;
-  figure: string;
-  caption: string;
-  /** The same fact set as one mono line, for concepts that run them together. */
-  inline: string;
-}
-
-export const FIGURES: Figure[] = [
-  {
-    id: "years",
-    figure: "8+",
-    caption: "Years in global supply chain",
-    inline: "8+ years",
-  },
-  {
-    id: "factories",
-    figure: "100+",
-    caption: "Factories supported",
-    inline: "100+ factories",
-  },
-  {
-    id: "language",
-    figure: "中文",
-    caption: "Fluent Mandarin",
-    inline: "Mandarin",
-  },
-];
-
-export interface Education {
-  id: string;
-  school: string;
-  /** Short form for tight columns. */
-  schoolShort: string;
-  program: string;
-  /** Mono, uppercase-safe short form. */
-  programShort: string;
-}
-
-export const EDUCATION: Education[] = [
-  {
-    id: "asu",
-    school: "Arizona State University",
-    schoolShort: "Arizona State",
-    program: "M.S. Artificial Intelligence in Business",
-    programShort: "M.S. AI in Business",
-  },
-  {
-    id: "usu",
-    school: "Utah State University",
-    schoolShort: "Utah State",
-    program: "International Business + Chinese",
-    programShort: "Intl Business + Chinese",
-  },
-];
-
-/** The capability set, in the order that reads operations → technology. */
-export const CAPABILITIES = [
-  "Global sourcing",
-  "Procurement",
-  "Supplier governance",
-  "Logistics",
-  "Traceability",
-  "Digital Product Passports",
-  "AI product development",
-  "Cross-cultural operations",
-];
-
-/* ---------------------------------------------------------------------------
-   The positioning line
-   ------------------------------------------------------------------------ */
-
-export const PERSPECTIVE = {
-  axisA: "Global operations",
-  axisB: "Emerging technology",
-  join: "One operating perspective.",
-};
+export type { CareerStop, Figure, Education } from "@/data/experience";
 
 /* ---------------------------------------------------------------------------
    Concepts

@@ -40,6 +40,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { CTA_HINT, CTA_LABEL, PATHS, getPath, type PathId } from "@/data/workTogether";
 import ConsultingPathsScreen from "@/components/work/ConsultingPathsScreen";
+import ExperienceScreen from "@/components/work/ExperienceScreen";
 import WorkTogetherSolo from "@/components/work/WorkTogetherSolo";
 import "@/components/work/work-together.css";
 // The three bars are styled by the shipped scheme too, and they exist before
@@ -186,12 +187,18 @@ export default function WorkTogether({ media, isActive, className = "" }: Props)
 
         {path && (
           <div className="wt__unfurl">
-            {/* Consulting is the one being answered differently: two named
-                paths, each with its own detail and its own ask. The other two
-                keep production's information architecture exactly and only
-                take the same skin, so the three tabs read as one section. */}
+            {/* Two of the three are now answered in their own terms.
+                Consulting is two named paths, each with its own detail and its
+                own ask. Experience is the operating record — three figures at
+                display scale over one footnote — out of the lab at
+                /experience-lab. WorldPulse keeps the solo sheet, which is still
+                the right shape for it: a venture with two titled blocks to
+                describe, not a record to weigh. All three take the same skin,
+                so the section still reads as one. */}
             {openId === "consulting" ? (
               <ConsultingPathsScreen onBack={close} />
+            ) : openId === "experience" ? (
+              <ExperienceScreen onBack={close} />
             ) : (
               <WorkTogetherSolo path={path} onBack={close} />
             )}

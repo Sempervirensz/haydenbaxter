@@ -40,6 +40,8 @@ const PUBLIC_CSS = [
   "src/components/site-footer.css",
   "src/components/work/cinematic-work-stack.css",
   "src/components/work/work-together.css",
+  // Ships on "/" inside the Consulting chapter's Experience screen.
+  "src/components/work/experience-screen.css",
   "src/components/design-lab/design-lab.css",
   // Route-scoped stylesheet. It was missing from this list, which is exactly
   // how it kept an 11.52px eyebrow on a public page indefinitely — the guard
