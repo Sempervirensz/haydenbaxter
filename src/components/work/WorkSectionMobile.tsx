@@ -8,7 +8,9 @@
 // the site is reused verbatim from the legacy WorkSection:
 //
 //   • the same `#work` anchor + `useWorkScroll` hook  → CD scroll + chapter
-//     state on tablets, and the same ≤640px touch short-circuit on phones
+//     state on tablets; on phones the hook drops the chapter mapping (no
+//     scroll-lock there) but still spins the disc off the CD's own travel
+//     through the viewport
 //   • the same landing chapter markup (CD player + `.cd-disc` + TOC list)
 //   • the same `.work__chapter--detail` scroll tracks (300vh tablet / auto
 //     phone) and the same sticky `.work__screen` positioning
@@ -48,8 +50,8 @@ export default function WorkSectionMobile() {
   return (
     <section id="work" ref={ref} className="work work--mobile">
       {/* Landing chapter — copied verbatim from WorkSection so the CD player,
-          `.cd-disc` (which useWorkScroll spins on tablet), and the TOC list all
-          behave identically. */}
+          `.cd-disc` (which useWorkScroll spins on both tablet and phone), and
+          the TOC list all behave identically. */}
       <div className="work__chapter work__chapter--landing" style={{ zIndex: 1 }}>
         <article className="work__screen work__screen--landing">
           <ol className="wl-c2__list" aria-label={WORK_LANDING.title}>
