@@ -4,7 +4,10 @@
     {
       "name": "next-dev",
       "runtimeExecutable": "/Users/haydenbaxter/.nvm/versions/node/v20.19.6/bin/node",
-      "runtimeArgs": ["node_modules/.bin/next", "dev"],
+      "runtimeArgs": [
+        "node_modules/.bin/next",
+        "dev"
+      ],
       "port": 3000,
       "autoPort": true
     },
@@ -19,28 +22,68 @@
       "port": 3007
     },
     {
+      "//": "Third isolated dev server (own port AND own dist dir) for when 3000 and 3007 are both taken by other chats.",
+      "name": "next-dev-motion",
+      "runtimeExecutable": "/bin/sh",
+      "runtimeArgs": [
+        "-c",
+        "NEXT_DIST_DIR=.next-motion exec /Users/haydenbaxter/.nvm/versions/node/v20.19.6/bin/node node_modules/.bin/next dev -p 3011"
+      ],
+      "port": 3011
+    },
+    {
+      "//": "Fourth isolated dev server (own port AND own dist dir) for the WorldPulse panel copy pass; 3000/3007/3011 are all taken by other chats.",
+      "name": "next-dev-wp",
+      "runtimeExecutable": "/bin/sh",
+      "runtimeArgs": [
+        "-c",
+        "NEXT_DIST_DIR=.next-wp exec /Users/haydenbaxter/.nvm/versions/node/v20.19.6/bin/node node_modules/.bin/next dev -p 3013"
+      ],
+      "port": 3013
+    },
+    {
       "name": "static-export",
       "runtimeExecutable": "npx",
-      "runtimeArgs": ["--yes", "serve", "out"],
+      "runtimeArgs": [
+        "--yes",
+        "serve",
+        "out"
+      ],
       "port": 3000,
       "autoPort": true
     },
     {
       "name": "design-inspo",
       "runtimeExecutable": "python3",
-      "runtimeArgs": ["-m", "http.server", "8002", "--directory", "legacy/design-inspo"],
+      "runtimeArgs": [
+        "-m",
+        "http.server",
+        "8002",
+        "--directory",
+        "legacy/design-inspo"
+      ],
       "port": 8002
     },
     {
       "name": "particle-globe-lab",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "dev", "--prefix", "legacy/design-inspo/experiments/particle-globe-lab"],
+      "runtimeArgs": [
+        "run",
+        "dev",
+        "--prefix",
+        "legacy/design-inspo/experiments/particle-globe-lab"
+      ],
       "port": 5173
     },
     {
       "name": "supply-chain-hero",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "dev", "--prefix", "legacy/design-inspo/experiments/supply-chain-hero"],
+      "runtimeArgs": [
+        "run",
+        "dev",
+        "--prefix",
+        "legacy/design-inspo/experiments/supply-chain-hero"
+      ],
       "port": 5174
     }
   ]

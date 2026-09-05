@@ -2,11 +2,17 @@
 
 import { useEffect, useRef, useState } from "react";
 
-export function useScrollProgress() {
+// `enabled` defaults to true, so every existing caller behaves as before. The
+// homepage now passes false: the entry gate drives the spread from its own
+// pinned-scene runway, and leaving this hook's listener attached would put a
+// second scroll handler on the page computing a value nobody reads — against
+// this repo's own perf rule about scroll handlers.
+export function useScrollProgress(enabled: boolean = true) {
   const ref = useRef<HTMLDivElement>(null);
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
+    if (!enabled) return;
     const el = ref.current;
     if (!el) return;
 
@@ -59,7 +65,7 @@ export function useScrollProgress() {
 
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+  }, [enabled]);
 
   return { ref, progress };
 }
