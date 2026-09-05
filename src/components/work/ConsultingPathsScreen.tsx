@@ -46,6 +46,12 @@ export default function ConsultingPathsScreen({ onBack }: { onBack: () => void }
       data-surface="paper"
       data-type="house"
       data-button="cue"
+      // Promoted from /consulting-color-lab. `data-system` carries the
+      // readability floor, the metadata colour and the button ranks — the part
+      // that ports to all three destination screens. `data-actions` carries
+      // the button row alone, so the row can change without the system.
+      data-system="drafting"
+      data-actions="rule"
     >
       <header className="cpp-screen__head">
         <span className="cpp-screen__eyebrow">{CONSULTING_SCREEN.eyebrow}</span>

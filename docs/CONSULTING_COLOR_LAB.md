@@ -3,8 +3,9 @@
 **Route:** `/consulting-color-lab` (dev only — `page.dev.tsx`, noindexed via
 `NON_PUBLIC_PREFIXES`, listed in `/admin/labs`)
 **Branch:** `codex/feat-consulting-color-lab`
-**Status:** exploration. **Nothing is promoted.** `src/components/work/**` is
-untouched; the shipped Consulting screen renders exactly as it did.
+**Status:** **PROMOTED.** Portable now ships on all three destination screens.
+See *Promotion* at the end. The lab remains as the record of the exploration —
+its Control stage is the panel as it looked *before* promotion.
 
 ---
 
@@ -423,3 +424,91 @@ The merge is small and mechanical:
    untouched during the exploration.
 3. The shared ramp and the un-dimmed names should go in **whichever** direction
    wins, including none of them: they are a defect fix on their own.
+
+
+---
+
+# Promotion
+
+**Portable + Rule shipped to all three destination screens** — Consulting,
+WorldPulse and Experience.
+
+## How it was done
+
+The shipped `consulting-paths.css` is generated. The change went into the
+source and the file was regenerated, never hand-edited:
+
+1. `src/components/consulting-paths-lab/consulting-paths-lab.css` — the system
+   appended as section 10, gated on two new axes.
+2. `scripts/extract-consulting-scheme.mjs` — `data-system` and `data-actions`
+   added to `AXIS_ATTR` and to `SCHEME`.
+3. `node scripts/extract-consulting-scheme.mjs` — regenerated.
+4. `ConsultingPathsScreen.tsx` and `WorkTogetherSolo.tsx` — both now render
+   `data-system="drafting" data-actions="rule"`.
+
+The two axes stay separate on purpose: `data-system` is everything that ports
+to all three screens, `data-actions` is the button row alone. Changing the row
+later is one attribute value and a regenerate.
+
+## What the solo screens needed
+
+WorldPulse and Experience share `.cpp-screen` but not its shape, and two rules
+had to be scoped away from them:
+
+- **The gutter rule** (`:not([data-solo])`) — on a single column it would draw
+  a vertical line down the middle of the copy.
+- **The registration tick** (`:not([data-solo])`) — those screens render a
+  kicker per *block*, not per path, so one identity mark became a bullet list.
+
+Excluding the tick left both solo screens with no per-path colour at all, and
+Experience lost brass entirely — its only differentiation from WorldPulse. So
+the **numeral** carries the hue there instead: one per screen, which is exactly
+why the tick was wrong and the numeral is right. Every screen now keeps one
+mark in its own hue.
+
+## A pre-existing bug this surfaced
+
+Regenerating dropped two rules that were live in production:
+
+```css
+.cpp-screen[data-open="none"] .cpp-path:not([data-solo]) .cpp-path__base { flex-grow: 1; }
+.cpp-screen[data-open="none"] .cpp-path:not([data-solo]) .cpp-path__actions { margin-top: auto; }
+```
+
+They existed **only** in the generated file — a hand-edit to the file whose
+header forbids hand-edits — and were absent from the lab source the generator
+reads. Confirmed independent of this work: running the script on an otherwise
+clean checkout deletes the same 28 lines. They keep both columns' CTA rows on
+one floor, so any future regenerate would have silently broken that alignment.
+Now restored to the lab source.
+
+## Verified in production
+
+Driven through the real `WorkTogether` component (not the lab), all three tabs:
+
+| | Consulting | WorldPulse | Experience |
+|---|---|---|---|
+| `data-system` / `data-actions` | applied | applied | applied |
+| Sheet | `rgb(245,244,241)` — unchanged | same | same |
+| Eyebrow · kicker | 6.96:1 (was 2.6) | 6.96:1 | 6.96:1 |
+| Summary | 10.32:1 (was 4.2) | 10.32:1 | 10.32:1 |
+| Serif name opacity | 1 (was 0.78) | n/a | n/a |
+| Gutter rule | drawn | correctly absent | correctly absent |
+| Registration ticks | 2 | 0 | 0 |
+| Numeral hue | system blue | `#1e4ebe` cobalt | `#8a6a1f` brass |
+| Primary fill (rest) | `#1b4bb8` | `#1b4bb8` | `#1b4bb8` |
+
+- `npx tsc --noEmit` — clean.
+- `npm run check:assets` — clean.
+- `npm run check:scale` — the two pre-existing `globals.css` perf-probe
+  failures, present on `main`, untouched here.
+- `npm run build` — passes; 35 `data-system` rules and the `data-actions` rule
+  ship in the Work chunk, and both `--hair-2` values resolve.
+- No console errors on any tab.
+
+## To change the button row later
+
+Set `data-actions` in `SCHEME` (`scripts/extract-consulting-scheme.mjs`) to
+`stack`, `equal` or `split`, add that variant to section 10b of the lab
+stylesheet if it is not there yet, regenerate, and update the attribute on the
+two components. Only `rule` was promoted.
