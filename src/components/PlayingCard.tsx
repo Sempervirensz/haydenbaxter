@@ -2,11 +2,13 @@
 
 import { useEffect, useRef, useState } from "react";
 import type { CardData } from "@/data/cards";
+import { DESKTOP_CARD_WIDTH, resolveDealScale } from "@/data/entryMotion";
 import CardBack from "./CardBack";
 import CardFront from "./CardFront";
 import Tooltip from "./Tooltip";
 
-const DESKTOP_CARD_WIDTH = 280;
+// Card width the bunched pose is authored against, and the throw floor that
+// keeps that pose legible once the card shrinks — both in src/data/entryMotion.ts.
 
 interface PlayingCardProps {
   card: CardData;
@@ -26,8 +28,10 @@ function computeUnveilTransform(
   scale: number
 ): string {
   const t = easeOutCubic(Math.min(Math.max(progress, 0), 1));
-  const tx = bunched.translateX * scale * (1 - t);
-  const ty = bunched.translateY * scale * (1 - t);
+  // Floored: a phone-sized card would otherwise scale the throw down to nothing.
+  const throwScale = resolveDealScale(scale * DESKTOP_CARD_WIDTH);
+  const tx = bunched.translateX * throwScale * (1 - t);
+  const ty = bunched.translateY * throwScale * (1 - t);
   const rot = bunched.rotate * (1 - t);
   const sc = bunched.scale + (1 - bunched.scale) * t;
   return `translateX(${tx}px) translateY(${ty}px) rotate(${rot}deg) scale(${sc})`;

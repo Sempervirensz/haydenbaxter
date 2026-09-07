@@ -34,3 +34,6 @@ public/Personal Photos/
 # them into the deployed build (ETB-P1-04b); still here if ever needed.
 archive/
 .next-labs/
+
+# Sibling dev dist dirs from next.config.ts NEXT_DIST_DIR escape hatch
+.next-*

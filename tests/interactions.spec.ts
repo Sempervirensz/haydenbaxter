@@ -91,41 +91,60 @@ test.describe("Emerging Tech accordion + dossier", () => {
   });
 });
 
+/* These three were written against a flow that no longer exists. `.wt__cta`
+   and `.wt__rowBtn` appear in ZERO source files, and the intermediate "paths"
+   step they walk through was removed: `WorkTogether` now has two states, not
+   three — `data-step` is "destination" when a path is open and "intro"
+   otherwise, with the three rows visible from the start rather than behind a
+   CTA. The screen itself is `.cpp-screen`, not `.wt-screen`.
+
+   They failed on every run for however long that has been true, which is the
+   worst kind of test: red for a reason nobody reads, so a real regression in
+   the same file would have looked like more of the same noise. Rewritten
+   against the markup that ships. */
 test.describe("Consulting — Work Together flow", () => {
   test.skip(({ viewport }) => (viewport?.width ?? 0) < 1024, "cinematic stack only");
 
-  test("intro to paths to destination, and back again", async ({ page }) => {
+  test("intro to destination, and back again", async ({ page }) => {
     await openSite(page, "/");
     await gotoCard(page, 4);
 
     const wt = page.locator(".wt");
     await expect(wt).toHaveAttribute("data-step", "intro");
 
-    await page.locator(".wt__cta").click();
-    await expect(wt).toHaveAttribute("data-step", "paths");
-
-    await page.locator(".wt__rowBtn").first().click();
+    // The three rows are the entry point — there is no CTA in front of them.
+    await page.locator('[data-wt-row="consulting"]').click();
     await expect(wt).toHaveAttribute("data-step", "destination");
-    await expect(page.locator(".wt-screen")).toBeVisible();
+    await expect(page.locator(".cpp-screen")).toBeVisible();
 
-    // Back out of the destination screen
-    await page.locator(".wt-screen__back").click();
-    await expect(wt).toHaveAttribute("data-step", "paths");
-
-    // And back to the intro
-    await page.locator(".wt__back").click();
+    await page.locator(".cpp-screen__back").click();
     await expect(wt).toHaveAttribute("data-step", "intro");
+  });
+
+  test("every destination opens and carries the promoted system", async ({ page }) => {
+    await openSite(page, "/");
+    await gotoCard(page, 4);
+
+    for (const id of ["consulting", "worldpulse", "experience"]) {
+      await page.locator(`[data-wt-row="${id}"]`).click();
+      const screen = page.locator(".cpp-screen");
+      await expect(screen, `${id} did not open`).toBeVisible();
+      // Promoted from /consulting-color-lab; all three screens carry it.
+      await expect(screen).toHaveAttribute("data-system", "drafting");
+      await expect(screen).toHaveAttribute("data-actions", "rule");
+      await page.locator(".cpp-screen__back").click();
+      await expect(page.locator(".wt")).toHaveAttribute("data-step", "intro");
+    }
   });
 
   test("the proof sheet fits its card and needs no inner scroll", async ({ page }) => {
     await openSite(page, "/");
     await gotoCard(page, 4);
-    await page.locator(".wt__cta").click();
-    await page.locator(".wt__rowBtn").first().click();
-    await expect(page.locator(".wt-screen")).toBeVisible();
+    await page.locator('[data-wt-row="consulting"]').click();
+    await expect(page.locator(".cpp-screen")).toBeVisible();
     await page.waitForTimeout(500);
 
-    const sheet = await box(page, ".wt-screen");
+    const sheet = await box(page, ".cpp-screen");
     const card = await box(page, ".cstack__card--4");
     expect(sheet!.bottom, "proof sheet spills past the card").toBeLessThanOrEqual(card!.bottom + 1);
     expect(sheet!.right).toBeLessThanOrEqual(card!.right + 1);
@@ -135,14 +154,17 @@ test.describe("Consulting — Work Together flow", () => {
   test("rows are keyboard operable", async ({ page }) => {
     await openSite(page, "/");
     await gotoCard(page, 4);
-    await page.locator(".wt__cta").focus();
-    await page.keyboard.press("Enter");
-    await expect(page.locator(".wt")).toHaveAttribute("data-step", "paths");
-    const row = page.locator(".wt__rowBtn").first();
+
+    const row = page.locator('[data-wt-row="consulting"]');
     await row.focus();
     await expect(row).toBeFocused();
     await page.keyboard.press("Enter");
     await expect(page.locator(".wt")).toHaveAttribute("data-step", "destination");
+
+    // And back out from the keyboard alone.
+    await page.locator(".cpp-screen__back").focus();
+    await page.keyboard.press("Enter");
+    await expect(page.locator(".wt")).toHaveAttribute("data-step", "intro");
   });
 });
 
@@ -185,5 +207,76 @@ test.describe("navigation", () => {
     if (!(await about.count())) test.skip(true, "no #about link at this width");
     await about.click();
     await expect(page.locator("#about")).toBeInViewport({ ratio: 0.05, timeout: 8000 });
+  });
+});
+
+test.describe("Work landing — CD disc on phones", () => {
+  /* Emulate a real phone explicitly.
+   *
+   * Every project in playwright.config.ts is `devices["Desktop Chrome"]` with a
+   * narrow viewport, so even the 375px `mobile` project reports `hover: hover`
+   * and `pointer: fine`. useWorkScroll's phone branch keys off
+   * `(max-width: 640px) and (hover: none), (max-width: 640px) and (pointer: coarse)`
+   * — which NO project reaches. Without this override the test would exercise
+   * the tablet code path at a phone width and prove nothing about phones. */
+  test.use({ viewport: { width: 390, height: 844 }, hasTouch: true, isMobile: true });
+
+  test("the disc turns as the CD travels through the viewport", async ({ page }, testInfo) => {
+    // The context above replaces the project viewport, so all eight projects
+    // would run a byte-identical test. Once is enough.
+    test.skip(
+      testInfo.project.name !== "mobile",
+      "phone-emulated — runs once, under the mobile project"
+    );
+
+    await openSite(page, "/");
+
+    const geom = await page.evaluate(() => {
+      const el = document.querySelector<HTMLElement>(".cd-player-wrap");
+      if (!el) return null;
+      let top = 0;
+      let n: HTMLElement | null = el;
+      while (n) {
+        top += n.offsetTop;
+        n = n.offsetParent as HTMLElement | null;
+      }
+      return { top, h: el.getBoundingClientRect().height, vh: window.innerHeight };
+    });
+    expect(geom, "CD player missing from the Work landing").not.toBeNull();
+
+    /* The phone mapping runs 0 → 1 across the CD's OWN pass through the
+       viewport: 0 as its top edge enters at the bottom, 1 as its bottom edge
+       leaves at the top. Sampling any other window reads the holds instead of
+       the sweep and understates the movement. */
+    const from = Math.max(0, geom!.top - geom!.vh);
+    const to = geom!.top + geom!.h;
+
+    const seen: string[] = [];
+    for (let i = 0; i <= 5; i++) {
+      await page.evaluate(
+        (y) => window.scrollTo(0, y),
+        Math.round(from + ((to - from) * i) / 5)
+      );
+      // The lerp converges at 0.08/frame, so a settle beat is not optional —
+      // sampling immediately reads the previous target and flattens the spread.
+      await page.waitForTimeout(1200);
+      seen.push(
+        await page.evaluate(
+          () => (document.querySelector(".cd-disc") as HTMLElement).style.transform
+        )
+      );
+    }
+
+    /* An EMPTY inline transform is the actual regression this guards: it means
+       useWorkScroll returned before it ever reached `.cd-disc`, which is how the
+       disc sat frozen at 0deg on phones while spinning fine on tablet. */
+    for (const t of seen) {
+      expect(t, `disc carries no JS-written rotation (got "${t}")`).toContain("rotate(");
+    }
+
+    expect(
+      new Set(seen).size,
+      `disc did not turn across its travel: ${seen.join(" | ")}`
+    ).toBeGreaterThan(3);
   });
 });

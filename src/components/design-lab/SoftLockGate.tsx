@@ -15,8 +15,9 @@
 // The old "Skip the intro" button is gone; the second line replaces it. Nav
 // links still release the gate via SOFT_LOCK_RELEASE, as before.
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import CardDeck from "@/components/CardDeck";
+import { resolveRunway, resolveSceneTop } from "@/data/entryMotion";
 import {
   CONSULTING_TARGET,
   DECK_SIZE,
@@ -30,7 +31,31 @@ import {
 } from "./softLockEvents";
 import "./design-lab.css";
 
-export default function SoftLockGate({ children }: { children: React.ReactNode }) {
+// The three optional props exist for /lab/card-entry-motion and are inert when
+// omitted, which is how the homepage renders it. `deckProgress` is forwarded
+// straight to CardDeck's own optional override; `onRevealedChange` and
+// `onOpenChange` are read-only observers. There is still exactly one source of
+// truth for flip state and gate state — this component — and none of these props
+// can change it.
+export default function SoftLockGate({
+  children,
+  scene,
+  deckProgress,
+  onRevealedChange,
+  onOpenChange,
+}: {
+  children: React.ReactNode;
+  /**
+   * Rendered at the top of the pinned scene, above the deck. The homepage passes
+   * its hero here rather than as a sibling, because the hero, the deck and the
+   * guidance have to pin as ONE object — pinning the deck alone would let the
+   * headline slide out from over it while the cards spread.
+   */
+  scene?: React.ReactNode;
+  deckProgress?: number | readonly number[] | null;
+  onRevealedChange?: (count: number, flipped: ReadonlySet<number>) => void;
+  onOpenChange?: (open: boolean) => void;
+}) {
   // Which cards are face-up, straight from CardDeck. The indicator renders this
   // set; nothing else counts flips independently.
   const [flipped, setFlipped] = useState<ReadonlySet<number>>(() => new Set());
@@ -38,9 +63,16 @@ export default function SoftLockGate({ children }: { children: React.ReactNode }
   const [skipped, setSkipped] = useState(false);
 
 
+  // Held in a ref so `handleRevealed` keeps a stable identity: CardDeck lists it
+  // in an effect's dependencies, and a new function every render would re-run
+  // that effect on every commit.
+  const observerRef = useRef(onRevealedChange);
+  observerRef.current = onRevealedChange;
+
   const handleRevealed = useCallback((count: number, ids: ReadonlySet<number>) => {
     setFlipped(ids);
     if (count >= DECK_SIZE) setReleased(true);
+    observerRef.current?.(count, ids);
   }, []);
 
   // A nav link to a gated section counts as engaging with the entry — without
@@ -57,7 +89,84 @@ export default function SoftLockGate({ children }: { children: React.ReactNode }
     return () => window.removeEventListener(SOFT_LOCK_RELEASE, onRelease);
   }, []);
 
+  /* ---- Scroll-dealt entrance -------------------------------------------
+     The composition is pinned and the scroll distance runs BEHIND it, so the
+     cards spread without the entry moving and without costing it any vertical
+     space. `deckProgress` from a caller (the lab) always wins; the homepage
+     passes nothing and gets this.
+
+     Progress latches once the cards reach settled. Scrubbing back would re-bunch
+     cards the visitor has already been invited to flip — and once one is face-up
+     it would drag a revealed card back under its neighbours. */
+  const sceneRef = useRef<HTMLDivElement>(null);
+  const [dealProgress, setDealProgress] = useState(0);
+  const [reduced, setReduced] = useState(false);
+  const [metrics, setMetrics] = useState({ viewportH: 0, sceneH: 0 });
+  const settledRef = useRef(false);
+
+  useEffect(() => {
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const sync = () => setReduced(mq.matches);
+    sync();
+    mq.addEventListener("change", sync);
+    return () => mq.removeEventListener("change", sync);
+  }, []);
+
+  useEffect(() => {
+    const measure = () => {
+      setMetrics({
+        viewportH: window.innerHeight,
+        sceneH: sceneRef.current?.offsetHeight ?? 0,
+      });
+    };
+    measure();
+    window.addEventListener("resize", measure);
+    // The scene's height moves with the fluid type scale and with font loading,
+    // so a resize listener alone would measure it once, too early.
+    const ro = new ResizeObserver(measure);
+    if (sceneRef.current) ro.observe(sceneRef.current);
+    return () => {
+      window.removeEventListener("resize", measure);
+      ro.disconnect();
+    };
+  }, []);
+
+  const runway = reduced ? 0 : resolveRunway(metrics.viewportH);
+
+  useEffect(() => {
+    if (reduced || runway <= 0) {
+      setDealProgress(1);
+      settledRef.current = true;
+      return;
+    }
+    let ticking = false;
+    const update = () => {
+      ticking = false;
+      if (settledRef.current) return;
+      const next = Math.min(Math.max(window.scrollY / runway, 0), 1);
+      if (next >= 1) settledRef.current = true;
+      setDealProgress(next);
+    };
+    const onScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(update);
+    };
+    update();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, [reduced, runway]);
+
+  const pinned = !reduced && runway > 0;
+  const sceneTop = resolveSceneTop(metrics.viewportH, metrics.sceneH);
+
   const open = released || skipped;
+
+  const openObserverRef = useRef(onOpenChange);
+  openObserverRef.current = onOpenChange;
+  useEffect(() => {
+    openObserverRef.current?.(open);
+  }, [open]);
 
   // Runs after the commit that removes `display: none`, so the target is laid
   // out and scrollable — no polling or rAF needed (rAF wouldn't fire at all if
@@ -134,6 +243,21 @@ export default function SoftLockGate({ children }: { children: React.ReactNode }
 
   return (
     <>
+      {/* The track owns the scroll distance; the scene rides it without moving.
+          Both stay in place after the gate opens — collapsing the track at that
+          moment would reflow the document under a visitor who is already
+          scrolled into it, and jump the viewport. Left alone, the runway simply
+          becomes the last stretch of the entry and the site follows below it. */}
+      <div
+        className="entry-track"
+        style={pinned ? { height: `calc(100svh + ${runway}px)` } : undefined}
+      >
+        <div
+          ref={sceneRef}
+          className={`entry-scene ${pinned ? "is-pinned" : ""}`}
+          style={pinned ? { top: `${sceneTop}px` } : undefined}
+        >
+          {scene}
       {/* Real homepage card-deck section.
           pb-2, not pb-8: that stacked with the card row's own pb-8 for ~80px of
           dead space between the captions and the flip indicator. Reclaiming it
@@ -143,7 +267,10 @@ export default function SoftLockGate({ children }: { children: React.ReactNode }
           className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] max-w-full h-[400px] rounded-full opacity-20 blur-[120px] pointer-events-none"
           style={{ background: "radial-gradient(ellipse, rgba(255,255,255,0.15), transparent)" }}
         />
-        <CardDeck onRevealedChange={handleRevealed} />
+        <CardDeck
+          onRevealedChange={handleRevealed}
+          progressOverride={deckProgress ?? dealProgress}
+        />
       </section>
 
       {/* Soft lock — instructions in the black space right under the cards. */}
@@ -180,6 +307,9 @@ export default function SoftLockGate({ children }: { children: React.ReactNode }
             </span>
           </>
         )}
+      </div>
+
+        </div>
       </div>
 
       {/* SEO-safe lock: the rest of the site is ALWAYS rendered (so it's in the

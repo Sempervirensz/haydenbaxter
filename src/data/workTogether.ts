@@ -45,16 +45,8 @@ const LINKEDIN_HREF =
 const WORLDPULSE_HREF =
   CONNECT_LINKS.find((l) => l.id === "worldpulse")?.href ?? "https://worldxpulse.com";
 
-/**
- * Hayden's resume / CV.
- *
- * No such asset exists in `public/` yet — `git ls-files` has no PDF anywhere in
- * the repo — so the Experience screen asks for it rather than linking a file
- * that would 404. Commit the document under `public/` and set this to its path
- * (e.g. "/hayden-baxter-resume.pdf"); the primary action switches from
- * "Request the resume" to "View resume" on its own.
- */
-export const RESUME_HREF: string | null = null;
+/** Hayden's resume / CV, served from the public documents directory. */
+export const RESUME_HREF = "/documents/Hayden-Baxter-Resume.pdf";
 
 const RESUME_REQUEST_HREF = `${EMAIL_HREF}?subject=${encodeURIComponent("Resume request")}`;
 
@@ -286,7 +278,7 @@ const EXPERIENCE: PathDef = {
     ],
     note: "Design × Domain knowledge × AI × Systems thinking — shared for consulting, partnership, and venture conversations.",
     primary: RESUME_HREF
-      ? { label: "View resume", href: RESUME_HREF }
+      ? { label: "View resume", href: RESUME_HREF, external: true }
       : { label: "Request the resume", href: RESUME_REQUEST_HREF },
     secondary: { label: "LinkedIn", href: LINKEDIN_HREF, external: true },
   },

@@ -36,6 +36,11 @@ const SCHEME = {
   "data-track": "player",
   "data-key": "plain",
   "data-rows": "skin",
+  // Promoted from /consulting-color-lab. `data-system` is everything that
+  // ports to all three destination screens; `data-actions` is the button row
+  // alone, so the row can change without touching the system.
+  "data-system": "drafting",
+  "data-actions": "rule",
 };
 
 /** Lab chrome — the control panel and the framing around the stage. */
@@ -124,7 +129,8 @@ function splitSelectors(list) {
   return out.map((s) => s.trim()).filter(Boolean);
 }
 
-const AXIS_ATTR = /\[(data-(?:layout|palette|surface|type|button|row-button|track|key|rows))="([^"]+)"\]/g;
+const AXIS_ATTR =
+  /\[(data-(?:layout|palette|surface|type|button|row-button|track|key|rows|system|actions))="([^"]+)"\]/g;
 
 function keepSelector(sel) {
   if (LAB_ONLY.test(sel)) return null;

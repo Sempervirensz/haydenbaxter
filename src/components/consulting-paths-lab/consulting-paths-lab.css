@@ -546,6 +546,40 @@
   .cpp-screen[data-open="none"] .cpp-paths {
     align-items: stretch;
   }
+
+  /* …and the CONTENT has to look it too, which stretching the boxes alone does
+     not buy. `justify-content: flex-end` on `.cpp-path` drops the shorter
+     panel's whole identity block to the floor of the stretched box, so a pair
+     whose content heights differ shows its two kickers and two names 60–120px
+     apart with an empty band above the shorter one's title — legible as a
+     rendering fault rather than as an alignment.
+
+     Letting the base grow into the panel and pinning the actions to the bottom
+     of it holds BOTH ends: kickers and names on one line at the top, the two
+     CTA rows on one floor. The slack lands in the middle of the shorter card,
+     above its own hairline, where a section rule sitting lower reads as
+     spacing rather than as a gap.
+
+     `flex-grow` only — never shrink. The base overflowing a short row is
+     existing behaviour (the taller panel does it at 1280×800 today); allowing
+     it to shrink instead would start compressing that panel's content, which
+     is a different change than this one.
+
+     `:not([data-solo])` keeps it off the WorldPulse and Experience panels,
+     which share these classes but are a lone panel with nothing to align to.
+
+     NOTE: this block lived only in the GENERATED `consulting-paths.css` until
+     now — a hand-edit to the file whose header forbids hand-edits. Any
+     re-run of scripts/extract-consulting-scheme.mjs silently deleted it, and
+     the two columns' CTA rows came off one floor. It belongs here, in the
+     source the generator actually reads. */
+  .cpp-screen[data-open="none"] .cpp-path:not([data-solo]) .cpp-path__base {
+    flex-grow: 1;
+  }
+
+  .cpp-screen[data-open="none"] .cpp-path:not([data-solo]) .cpp-path__actions {
+    margin-top: auto;
+  }
 }
 
 /* ---- One path ---------------------------------------------------------- */
@@ -4749,5 +4783,342 @@
   .cpl-stage[data-rows="skin"] .wt__rowMain::after {
     animation: none !important;
     transition: none !important;
+  }
+}
+
+/* ===========================================================================
+   10. DRAFTING — the promoted system  `[data-system]` / `[data-actions]`
+   ===========================================================================
+
+   Promoted from /consulting-color-lab, where it was compared against the
+   shipped panel and two other directions over identical copy. This is the
+   "Portable" variant of that exploration: everything Drafting did EXCEPT its
+   cool sheet, because the sheet is the one part that could not ship.
+
+   WHY THE SHEET STAYED
+
+   `WorkTogetherSolo` — the WorldPulse and Experience screens — renders the
+   same `.cpp-screen` and hard-codes the same `data-surface="paper"`. Moving
+   `--sheet-bg` is therefore a change to all three screens or to none; on
+   Consulting alone it puts two paper colours one click apart in the same card.
+   The hierarchy win comes from the ramp and the filled-vs-link button rank,
+   and neither needs the surface to move, so the surface did not.
+
+   WHY TWO AXES
+
+   `data-system` carries everything that ports to all three screens.
+   `data-actions` carries the button row alone, so the row can be changed
+   without touching the system. Both are filtered by
+   scripts/extract-consulting-scheme.mjs like every other axis here.
+
+   WHAT IT FIXES — measured against #f5f4f1, the sheet it sits on:
+
+       --ink-3   4.2:1 → 6.3:1    lede, both summaries, secondary button
+       --ink-4   2.6:1 → 5.1:1    eyebrow, kickers, track numerals
+       kicker    2.6:1 → 7.0:1    moved off grey and onto the system hue
+       name      held at 78% opacity → 1
+
+   That last one is not a taste change. `tracklist` dims `.cpp-path__name` and
+   restores it on `:hover` or `[data-state="open"]`; production ships with
+   nothing openable, so the restore could only ever fire on hover and both
+   serif names rendered at 78% the entire time the panel was on screen.
+   ======================================================================== */
+
+/* The system hue. A separate token from `--rgb` on purpose: `--rgb` is
+   per-path identity and still varies, this does not. 7.0:1 on the sheet. */
+.cpp-screen[data-system="drafting"] {
+  --sys-rgb: 27, 75, 184;
+  --sys-ink: #1b4bb8;
+  --sys-on: #f5f8fd; /* 7.6:1 on the fill */
+
+  /* The readability floor. */
+  --ink-2: rgba(17, 17, 22, 0.82); /* 10.3:1 */
+  --ink-3: rgba(17, 17, 22, 0.68); /*  6.3:1 — was 4.2:1 */
+  --ink-4: rgba(17, 17, 22, 0.62); /*  5.1:1 — was 2.6:1 */
+
+  /* The shipped 0.18 is a 1.3:1 edge. The spec row's vertical dividers and
+     the secondary's rule both disappear into it on this warm ground — the
+     cool sheet this direction was designed on had slate hairlines carrying
+     that legibility for free. */
+  --hair-2: rgba(17, 17, 22, 0.24);
+}
+
+/* "01 /" is wider than the bare numeral tracklist sizes the gutter for. */
+.cpp-screen[data-system="drafting"][data-layout="tracklist"] {
+  --track-gutter: clamp(2.9rem, 3.6cqw, 4.5rem);
+}
+
+/* ---- The names come off the permanent hold ---------------------------- */
+
+.cpp-screen[data-system="drafting"][data-layout="tracklist"] .cpp-path__name {
+  opacity: 1;
+}
+
+/* Dimming keeps a job — it just becomes a hover signal instead of a resting
+   state. When one column is hovered the OTHER recedes, so hovering does
+   something rather than merely undoing a default. A lone `[data-solo]` path
+   has no sibling, so this is inert on WorldPulse and Experience. */
+.cpp-screen[data-system="drafting"] .cpp-paths:has(.cpp-path:hover) .cpp-path:not(:hover) {
+  opacity: 0.62;
+}
+
+.cpp-screen[data-system="drafting"] .cpp-path {
+  transition: opacity 220ms ease, background 260ms ease, border-color 260ms ease;
+}
+
+/* ---- Metadata moves off grey and onto the system hue ------------------ */
+
+.cpp-screen[data-system="drafting"][data-layout="tracklist"] .cpp-path__kicker {
+  color: var(--sys-ink);
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.cpp-screen[data-system="drafting"] .cpp-screen__eyebrow {
+  color: var(--sys-ink);
+}
+
+/* The registration tick — a filled square in the PATH's hue, the only place
+   the two columns differ chromatically.
+
+   Scoped away from `[data-solo]`: the solo screens render one kicker PER
+   BLOCK rather than one per path, so the tick would stop being an identity
+   mark and become a bullet on a list of three or four. Their kickers still
+   take the system hue above, which is the part that was failing contrast. */
+.cpp-screen[data-system="drafting"][data-layout="tracklist"]
+  .cpp-path:not([data-solo]) .cpp-path__kicker::before {
+  content: "";
+  flex: 0 0 auto;
+  width: 7px;
+  height: 7px;
+  background: var(--accent-ink);
+  transition: transform 220ms ease, background 220ms ease;
+}
+
+.cpp-screen[data-system="drafting"]
+  .cpp-path:not([data-solo]):hover .cpp-path__kicker::before {
+  transform: scale(1.35);
+}
+
+/* The numeral becomes a drawing callout. */
+.cpp-screen[data-system="drafting"][data-layout="tracklist"] .cpp-path__ghost {
+  color: var(--sys-ink);
+  font-weight: 500;
+}
+
+/* …except on a solo screen, where it takes the PATH's hue instead.
+
+   The tick above is scoped away from `[data-solo]` because those screens
+   render a kicker per block, and one identity mark became a bullet list. But
+   that left WorldPulse and Experience with no per-path colour at all — both
+   resolved to the same system blue, and Experience lost brass entirely, which
+   is its only differentiation from WorldPulse.
+
+   The numeral is the right carrier there for the same reason the tick was
+   wrong: there is exactly one per screen. So every screen keeps one mark in
+   its own hue — the tick where paths are paired, the numeral where one
+   stands alone. */
+.cpp-screen[data-system="drafting"][data-layout="tracklist"]
+  .cpp-path[data-solo] .cpp-path__ghost {
+  color: var(--accent-ink);
+}
+
+.cpp-screen[data-system="drafting"][data-layout="tracklist"] .cpp-path__ghost::after {
+  content: " /";
+  opacity: 0.45;
+}
+
+/* ---- The gutter rule --------------------------------------------------
+   The shipped pair is separated by nothing but whitespace, which is why the
+   eye reads the sheet as one wide block of grey rather than as two columns to
+   choose between.
+
+   `:not([data-solo])` is load-bearing, not tidiness: on a solo screen this
+   would draw a vertical line down the middle of a single column of copy. */
+.cpp-screen[data-system="drafting"][data-layout="tracklist"] .cpp-paths {
+  position: relative;
+}
+
+@container wt (min-width: 701px) {
+  .cpp-screen[data-system="drafting"][data-layout="tracklist"]
+    .cpp-paths:not([data-solo])::after {
+    content: "";
+    position: absolute;
+    top: 12px;
+    bottom: 0;
+    left: 50%;
+    width: 1px;
+    background: linear-gradient(
+      to bottom,
+      rgba(var(--sys-rgb), 0.22),
+      rgba(var(--sys-rgb), 0.04)
+    );
+    pointer-events: none;
+  }
+}
+
+/* ---- The spec row ----------------------------------------------------
+   Hairline dividers instead of middots, which is how a drawing lists
+   tolerances. */
+
+.cpp-screen[data-system="drafting"][data-layout="tracklist"] .cpp-path__cap {
+  color: var(--ink-2);
+  padding-right: 9px;
+  margin-right: 3px;
+  border-right: 1px solid var(--hair-2);
+}
+
+.cpp-screen[data-system="drafting"][data-layout="tracklist"] .cpp-path__cap:last-child {
+  border-right: 0;
+}
+
+.cpp-screen[data-system="drafting"][data-layout="tracklist"]
+  .cpp-path__cap:not(:last-child)::after {
+  content: none;
+}
+
+.cpp-screen[data-system="drafting"] .cpp-path__summary {
+  color: var(--ink-2);
+  max-width: 42ch;
+}
+
+/* ===========================================================================
+   10b. THE BUTTON ROW — `[data-actions]`
+   ===========================================================================
+
+   Measured on a 1180px card, the shipped row is already aligned on every axis
+   that can be checked: both primaries on one y, both secondaries on one y,
+   primary boxes identical across columns, left edges flush. One thing was not
+   equal — the secondary's rule ran the length of its LABEL, and "View Selected
+   AI Work" is 69px shorter than "View Supply Chain Experience". `rule` makes
+   that edge span the column instead, so the two columns end on one line.
+   ======================================================================== */
+
+/* The two ranks stack, and the primary is sized by its label.
+
+   `.cpp-path__actions` is a wrapping flex row and `.cpp-action--primary` is
+   `flex: 1 1 auto`, so whether the secondary fits beside the primary depends
+   on how long that path's secondary label happens to be. It does. Production
+   wears that as two pills at slightly different widths and it passes
+   unnoticed; with a filled control on one side of the row and a text link on
+   the other, the same wrap drew one column as a small button beside a link
+   and the other as a full-bleed button above one. Two paths meant to read as
+   equals cannot be drawn two different ways by an accident of string length.
+
+   Stacking also keeps the primary at its label's width rather than stretched
+   to the column — a full-width saturated bar is the single biggest thing
+   separating "an accent system" from "a product page". */
+.cpp-screen[data-system="drafting"] .cpp-path__actions {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+}
+
+.cpp-screen[data-system="drafting"] .cpp-action--primary {
+  flex: 0 0 auto;
+}
+
+/* PRIMARY — the one saturated element in the column. A filled control against
+   a text link cannot be misread as a pair of equals, which is exactly what
+   two outlined pills of the same size were. */
+.cpp-screen[data-system="drafting"][data-button="cue"] .cpp-action--primary {
+  border: 1px solid var(--sys-ink);
+  border-radius: 7px;
+  background: var(--sys-ink);
+  color: var(--sys-on);
+  padding: 10px 18px 10px 10px;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.18) inset,
+    0 6px 16px rgba(var(--sys-rgb), 0.22);
+}
+
+.cpp-screen[data-system="drafting"][data-button="cue"] .cpp-action--primary::before {
+  border-color: rgba(255, 255, 255, 0.45);
+  color: var(--sys-on);
+  margin-right: 10px;
+}
+
+.cpp-screen[data-system="drafting"][data-button="cue"] .cpp-action--primary:hover,
+.cpp-screen[data-system="drafting"][data-button="cue"] .cpp-action--primary:focus-visible {
+  background: #14389a;
+  border-color: #14389a;
+  color: #fff;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.2) inset,
+    0 8px 20px rgba(var(--sys-rgb), 0.3);
+}
+
+.cpp-screen[data-system="drafting"][data-button="cue"] .cpp-action--primary:hover::before,
+.cpp-screen[data-system="drafting"][data-button="cue"]
+  .cpp-action--primary:focus-visible::before {
+  background: #fff;
+  color: #14389a;
+}
+
+/* SECONDARY — no pill at all. A bordered box next to a filled box still reads
+   as two buttons; a ruled text link reads as an aside. The rule thickens AND
+   turns blue on hover, so the affordance survives reduced motion. */
+.cpp-screen[data-system="drafting"][data-button="cue"] .cpp-action--ghost {
+  padding: 10px 2px;
+  border: 0;
+  border-bottom: 1px solid var(--hair-2);
+  border-radius: 0;
+  background: none;
+  color: var(--ink-2);
+}
+
+.cpp-screen[data-system="drafting"][data-button="cue"] .cpp-action--ghost:hover,
+.cpp-screen[data-system="drafting"][data-button="cue"] .cpp-action--ghost:focus-visible {
+  color: var(--sys-ink);
+  border-bottom: 2px solid var(--sys-ink);
+  padding-bottom: 9px;
+}
+
+.cpp-screen[data-system="drafting"] .cpp-action:focus-visible {
+  outline: 2px solid var(--sys-ink);
+  outline-offset: 3px;
+}
+
+/* RULE — the secondary's underline spans the column instead of its label, so
+   both columns end on one line.
+
+   `align-self` rather than `align-items: stretch` on the row: that row is a
+   COLUMN flex, so its cross axis is horizontal and stretch is a width
+   instruction — it widened the PRIMARY to the full column as well, which is
+   the full-bleed saturated bar this direction is specifically trying not to
+   be. Only the secondary is asked to stretch, and it asks for itself. */
+.cpp-screen[data-system="drafting"][data-actions="rule"][data-button="cue"]
+  .cpp-action--ghost {
+  align-self: stretch;
+  justify-content: flex-start;
+}
+
+/* ---- Narrow ----------------------------------------------------------- */
+
+@container wt (max-width: 700px) {
+  /* Both actions go full width when stacked: a text-link secondary sharing a
+     row with a filled primary is fine at 1600px and cramped at 390px. */
+  .cpp-screen[data-system="drafting"] .cpp-path__actions {
+    align-items: stretch;
+  }
+
+  .cpp-screen[data-system="drafting"] .cpp-action {
+    justify-content: flex-start;
+  }
+
+  /* Stacked, the spec row wraps to one item per line and every line ends on a
+     divider that divides nothing — the same fault the middot had before it
+     was tied to the item BEFORE it. A vertical rule cannot be tied that way
+     once the row is a column, so the divider is dropped and the shipped
+     middot comes back. */
+  .cpp-screen[data-system="drafting"][data-layout="tracklist"] .cpp-path__cap {
+    padding-right: 0;
+    margin-right: 0;
+    border-right: 0;
+  }
+
+  .cpp-screen[data-system="drafting"][data-layout="tracklist"]
+    .cpp-path__cap:not(:last-child)::after {
+    content: "\00a0\00b7";
+    opacity: 0.5;
   }
 }

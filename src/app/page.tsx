@@ -29,10 +29,13 @@ export default function Home() {
       <StructuredData />
       {/* Renders nothing unless ?perf=1 — see PerfProbe. */}
       <PerfProbe />
-      <HeroSection />
       {/* Soft lock: the card deck + entry prompt. Holds the rest of the page
-          until all four cards are flipped or Skip is pressed. */}
-      <SoftLockGate>
+          until all four cards are flipped or Skip is pressed.
+
+          The hero is passed IN as `scene` rather than rendered beside the gate:
+          the entry now pins as one object while the cards deal, and a hero left
+          outside the scene would slide out from over the deck. */}
+      <SoftLockGate scene={<HeroSection />}>
         <BrandsCarousel />
         <WorkSection />
         {/* Directly below the Work section's closing "Let's work together"
