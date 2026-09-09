@@ -31,11 +31,19 @@
 //                            would draw a vertical rule down the middle of one
 //                            column and turn the tick into a bullet.
 //
-// The `.cpp-path__ghost` numeral is there for the same reason. Drafting scopes
-// the tick away from solo screens and hands the path's own hue to the numeral
-// instead — "the tick where paths are paired, the numeral where one stands
-// alone" — so dropping it is what would cost Experience its brass, which is its
-// only chromatic difference from WorldPulse.
+// `.cpp-path__ghost` is NOT rendered, and that is a change from the version
+// this comment used to describe. Drafting scopes the registration tick away
+// from solo screens and hands the path's hue to the numeral instead — "the tick
+// where paths are paired, the numeral where one stands alone" — which was
+// written when Experience was still `WorkTogetherSolo`'s two-block sheet with
+// no other brass in it.
+//
+// This composition does have other brass: `.xp__num` on the 中文 figure is
+// `--accent-ink` at display scale, and it is the only other non-neutral colour
+// in the sheet. So the hue survives the numeral's removal, on a mark two orders
+// of magnitude larger than a 9px callout in the gutter. Numbers here name the
+// three top-level destinations only; this screen IS destination 03 and does not
+// also need to say so.
 //
 // WHY THE BODY IS SPLIT OUT
 //
@@ -141,10 +149,6 @@ export default function ExperienceScreen({ onBack }: { onBack: () => void }) {
           data-state="closed"
           data-solo="true"
         >
-          <span className="cpp-path__ghost" aria-hidden="true">
-            {path.index}
-          </span>
-
           <ExperienceRecord />
 
           <div className="cpp-path__actions xp__actions">

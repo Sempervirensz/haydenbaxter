@@ -91,16 +91,23 @@ export default function WorkTogetherSolo({
         <div className="cpp-paths" data-solo="true">
           <article className="cpp-path" data-path={accent} data-state="closed" data-solo="true">
             <div className="cpp-path__base">
-              <span className="cpp-path__ghost" aria-hidden="true">
-                {path.index}
-              </span>
+              {/* NO NUMERALS — neither the screen's own nor one per block. The
+                  three top-level choices are the numbered destinations; these
+                  blocks are parts of one screen, not further choices. The
+                  screen numeral was worse than redundant: `.cpp-path__ghost` is
+                  absolutely positioned at the top of the panel, so it read as a
+                  number ON the first block — "02  What we build".
+
+                  Drafting hands a solo screen's hue to that numeral (the tick
+                  is scoped to paired screens), but WorldPulse's `ai` accent
+                  #1e4ebe is the system hue #1b4bb8 to the eye, so this screen
+                  reads the same without it. */}
 
               <div className="cpp-solo__blocks">
-                {d.blocks.map((block, i) => (
+                {d.blocks.map((block) => (
                   <div key={block.label} className="cpp-solo__block">
                     <span className="cpp-path__rule" aria-hidden="true" />
                     <span className="cpp-path__kicker">
-                      <span className="cpp-path__index">{`0${i + 1}`}</span>
                       <span className="cpp-path__kickerText">{block.label}</span>
                     </span>
                     <span className="cpp-path__summary">{block.descriptor}</span>

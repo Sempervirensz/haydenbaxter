@@ -92,12 +92,15 @@ function PathPanel({ path }: { path: ConsultingPath }) {
   return (
     <article className="cpp-path" data-path={path.id} data-state="closed">
       <div className="cpp-path__base">
-        {/* Decorative, and only some directions draw it: the index at poster
-            scale behind the name. Ledger outlines it, Marquee fills it faintly,
-            everything else hides it. */}
-        <span className="cpp-path__ghost" aria-hidden="true">
-          {path.index}
-        </span>
+        {/* NO TRACK NUMERAL. A number names a destination, and the three
+            top-level choices are the destinations — numbering the two paths
+            inside one of them put a second 01/02 on screen right under the
+            first, meaning something else.
+
+            Nothing chromatic is lost here: Drafting's per-path hue on a PAIRED
+            screen is the registration tick on `.cpp-path__kicker::before`, not
+            the numeral. `.cpp-path__ghost` stays in the lab stylesheet for the
+            directions that draw it. */}
 
         {/* The identity block. Not a control: it discloses nothing, so it is
             not a button — a focusable element that does nothing on Enter is a
@@ -105,7 +108,6 @@ function PathPanel({ path }: { path: ConsultingPath }) {
         <div className="cpp-path__head" data-cpp-head={path.id}>
           <span className="cpp-path__rule" aria-hidden="true" />
           <span className="cpp-path__kicker">
-            <span className="cpp-path__index">{path.index}</span>
             <span className="cpp-path__kickerText">{path.kicker}</span>
           </span>
           <span className="cpp-path__name">{path.name}</span>

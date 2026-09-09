@@ -41,15 +41,6 @@
   display: flex;
   flex-direction: column;
   gap: 12px;
-
-  /* Room for the drawing callout. `.cpp-path__ghost` is absolutely positioned
-     at `top: 15px; left: 0` of the panel, and Drafting hands it the path's hue
-     on a solo screen — it is the ONE mark that keeps Experience brass rather
-     than system blue, so it has to be legible rather than tucked behind the
-     first figure. The shipped pair clears it with `--track-gutter` on the
-     left; this composition runs edge to edge and has width to lose but not
-     height, so it clears the callout above instead of beside. */
-  padding-top: 30px;
 }
 
 /* ---------------------------------------------------------------------------
