@@ -15,16 +15,34 @@
 // the page — down here they are corroboration, not news, and they are sized
 // accordingly.
 //
+// IT IS A DRAFTING SCREEN, AND IT IS A SOLO ONE
+//
+// The sheet chrome is `WorkTogetherSolo`'s, attribute for attribute, because
+// the Drafting system reads those attributes and this screen has to be one of
+// the three rather than an exception among them:
+//
+//   data-system="drafting"   the readability floor (--ink-2/3/4 and --hair-2),
+//                            metadata on the system hue, the button ranks
+//   data-actions="rule"      the button row: filled primary, ruled secondary
+//   data-solo="true"         on BOTH `.cpp-paths` and `.cpp-path`, and it is
+//                            load-bearing, not decoration. Drafting guards its
+//                            gutter rule and its registration tick with
+//                            `:not([data-solo])`; without the flag this screen
+//                            would draw a vertical rule down the middle of one
+//                            column and turn the tick into a bullet.
+//
+// The `.cpp-path__ghost` numeral is there for the same reason. Drafting scopes
+// the tick away from solo screens and hands the path's own hue to the numeral
+// instead — "the tick where paths are paired, the numeral where one stands
+// alone" — so dropping it is what would cost Experience its brass, which is its
+// only chromatic difference from WorldPulse.
+//
 // WHY THE BODY IS SPLIT OUT
 //
 // `ExperienceRecord` is the composition; `ExperienceScreen` is that composition
 // inside the paper sheet the chapter opens. The lab renders the record alone,
 // inside its own frame, so the two cannot drift into different designs the way
 // a copied JSX block would.
-//
-// The sheet chrome, the accent and the two actions are unchanged from what
-// shipped: `data-path="supply"` is what production's ACCENT_FOR map already
-// resolved Experience to, so this keeps the brass hue and its grooves.
 
 import { CAREER, EDUCATION, FIGURES } from "@/data/experience";
 import { getPath, type PathDef } from "@/data/workTogether";
@@ -58,12 +76,15 @@ export function ExperienceRecord() {
       {/* One citation block, not three peers. Spaced apart they read as three
           unrelated facts; held together they read as the evidence the figures
           rest on. The schools sit a rank below the employers in size and ink —
-          the employers are the harder proof and still lead. */}
+          the employers are the harder proof and still lead.
+
+          Each entry is its own element rather than a run of text with
+          separators between: Drafting sets a spec row with hairline dividers
+          instead of middots, and a rule can only hang off an element. */}
       <div className="xp__notes">
         <p className="xp__foot">
-          {CAREER.map((s, i) => (
-            <span key={s.id}>
-              {i > 0 && <span className="xp__dot" aria-hidden="true" />}
+          {CAREER.map((s) => (
+            <span key={s.id} className="xp__item">
               {s.company}
             </span>
           ))}
@@ -71,9 +92,8 @@ export function ExperienceRecord() {
         <div className="xp__schools">
           {EDUCATION.map((e) => (
             <p key={e.id} className="xp__foot xp__foot--edu">
-              {e.programShort}
-              <span className="xp__dot" aria-hidden="true" />
-              {e.schoolShort}
+              <span className="xp__item">{e.programShort}</span>
+              <span className="xp__item">{e.schoolShort}</span>
             </p>
           ))}
         </div>
@@ -96,6 +116,8 @@ export default function ExperienceScreen({ onBack }: { onBack: () => void }) {
       data-surface="paper"
       data-type="house"
       data-button="cue"
+      data-system="drafting"
+      data-actions="rule"
     >
       <header className="cpp-screen__head">
         <span className="cpp-screen__eyebrow">{d.eyebrow}</span>
@@ -109,15 +131,27 @@ export default function ExperienceScreen({ onBack }: { onBack: () => void }) {
         </button>
       </header>
 
-      {/* Carries the brass accent and the sleeve grooves the rest of the
-          chapter draws, exactly as WorkTogetherSolo did for this path. */}
-      <div className="cpp-path xp-screen__body" data-path="supply" data-state="closed">
-        <ExperienceRecord />
+      {/* `data-path="supply"` is what production's ACCENT_FOR map already
+          resolved Experience to, so the brass hue and its grooves are the ones
+          the section ships with. */}
+      <div className="cpp-paths xp-screen__paths" data-solo="true">
+        <article
+          className="cpp-path xp-screen__body"
+          data-path="supply"
+          data-state="closed"
+          data-solo="true"
+        >
+          <span className="cpp-path__ghost" aria-hidden="true">
+            {path.index}
+          </span>
 
-        <div className="cpp-path__actions xp__actions">
-          <Action action={d.primary} kind="primary" />
-          {d.secondary && <Action action={d.secondary} kind="ghost" />}
-        </div>
+          <ExperienceRecord />
+
+          <div className="cpp-path__actions xp__actions">
+            <Action action={d.primary} kind="primary" />
+            {d.secondary && <Action action={d.secondary} kind="ghost" />}
+          </div>
+        </article>
       </div>
     </section>
   );
