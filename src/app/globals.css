@@ -3787,10 +3787,10 @@ html.is-safari body {
   border-radius: 10px;
   background: rgba(8, 10, 10, 0.95);
   font-family: var(--font-mono), ui-monospace, monospace;
-  font-size: 12px;
+  font-size: 12px; /* scale-ok: ?perf=1 instrument, absent from the DOM for visitors */
   color: rgba(255, 255, 255, 0.72);
 }
-.perf-probe b { color: #7fd6c2; font-size: 12px; }
+.perf-probe b { color: #7fd6c2; font-size: 12px; } /* scale-ok: ?perf=1 instrument, absent from the DOM for visitors */
 .perf-probe em { font-style: normal; color: #7fd6c2; font-variant-numeric: tabular-nums; }
 .perf-probe button {
   margin-left: auto;
