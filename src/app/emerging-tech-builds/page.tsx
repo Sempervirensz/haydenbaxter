@@ -41,17 +41,27 @@ export default function EmergingTechBuildsPage() {
       />
       {/* Rail carries the shell's measure so the back link stays flush with the
           accordion's left edge once the shell stops filling the viewport. */}
-      {/* The design has no visible title slot, so this is visually hidden rather
-          than added to the composition — it still gives Google its primary
-          relevance signal and gives screen-reader users an entry point
-          (WCAG 2.4.6). Route had zero h1 elements before this. */}
-      <h1 className="visually-hidden">Selected AI Work</h1>
       <div className="etb-gallery__rail">
         <Link href="/" className="etb-gallery__back">
           <span aria-hidden="true">&larr;</span>
           <span>Back to home</span>
         </Link>
       </div>
+
+      {/* The h1 was `visually-hidden` because the design had no title slot, so
+          the loudest thing on the route was five identical rows and someone
+          arriving from a link had nothing telling them what they were looking
+          at. It is visible now, which is also the better answer for WCAG 2.4.6
+          than a hidden heading.
+
+          It lives HERE and not in `ETBDetail`: the homepage card mounts that
+          same component and supplies its own chapter header, so a title inside
+          it would render twice there. Both strings come from the screen's own
+          data rather than being retyped. */}
+      <header className="etb-gallery__masthead">
+        <p className="etb-gallery__kicker">{screen.etb.credibilityLine}</p>
+        <h1 className="etb-gallery__title">{screen.etb.title}</h1>
+      </header>
       <div className="etb-gallery__shell">
         <ETBDetail data={screen.etb} />
       </div>

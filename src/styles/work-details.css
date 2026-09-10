@@ -259,9 +259,17 @@
 .etb {
   --etb-surface: #f2f0ec;
   --etb-surface-2: #faf9f6;
+
+  /* The ink ramp, shared with the consulting sheet.
+     `consulting-paths.css` raised its ramp in the drafting pass and annotated
+     each step with the ratio it clears — --ink-2 0.82 at 10.3:1, --ink-3 0.68
+     at 6.3:1, --ink-4 0.62 at 5.1:1. These are those steps, so the gallery and
+     the sheet recede at the same rate instead of each having their own idea of
+     "muted". Measured on the plate's darker stop (#f6f5f2), which is the worst
+     case: 0.68 lands at 6.31:1 against the 0.62 it replaces at 5.12:1. */
   --etb-text: #111116;
-  --etb-muted: rgba(17, 17, 22, 0.62);
-  --etb-dim: rgba(17, 17, 22, 0.38);
+  --etb-muted: rgba(17, 17, 22, 0.68);
+  --etb-dim: rgba(17, 17, 22, 0.62);
   --etb-accent: #6882d8;
 
   position: relative;
@@ -411,7 +419,7 @@
    outline would be cut off. Accent rather than white: these bars are a
    near-white candy surface, where a white ring is invisible. */
 .etb-bar__head:focus-visible {
-  outline: 2px solid var(--etb-accent);
+  outline: 2px solid var(--accent-ink, var(--etb-accent));
   outline-offset: -4px;
   border-radius: 12px;
 }
@@ -455,13 +463,19 @@
   max-width: 100%;
 }
 
+/* Sans, not mono. The NAME above stays mono uppercase because that is a DYMO
+   label and labels are mono's job; this is a sentence, and the site's own rule
+   (`.claude/rules/design-language.md`) gives sentences to the sans. It also
+   buys back roughly four words on the desktop row, which clamps to one line —
+   sans sets narrower than mono at the same step. */
 .etb-bar__summary {
-  font-family: var(--font-mono);
+  font-family: var(--font-sans);
   font-size: var(--text-sm);
   font-weight: 400;
   line-height: 1.35;
-  letter-spacing: 0.02em;
-  color: rgba(17, 17, 22, 0.62);
+  /* Mono carried 0.02em to open up an already-wide fit. Sans does not want it. */
+  letter-spacing: 0;
+  color: var(--etb-muted);
   text-align: left;
   display: -webkit-box;
   /* One line fits on a desktop row and truncates nothing there. On a phone the
@@ -501,35 +515,76 @@
   transition: color 200ms ease, transform 200ms ease;
 }
 
-/* Cobalt Select — blue fill on hover/focus */
+/* ---- Discipline hues -----------------------------------------------------
+
+   The consulting sheet says cobalt for AI/systems work and brass for supply
+   chain, and a visitor who learned that code there should find it holding
+   here. `data-discipline` comes off the project's own `category` (see
+   `disciplineOf` in src/data/work.ts).
+
+   The tokens are declared ON the element that carries the attribute, not
+   inherited from `.etb`, and that is load-bearing: `ETBDetail` portals its
+   mobile dossier to `document.body`, outside `.etb` entirely. Declaring them
+   here means the phone card resolves its own hue instead of falling back to
+   whatever `var()` does with an undefined custom property.
+
+   The two hues are NOT interchangeable. White measures 2.90:1 on
+   rgb(184,146,74), so a brass fill takes near-black type where cobalt takes
+   white — which is why `--accent-on` exists rather than a hardcoded #fff.
+   `consulting-paths.css` arrived at the same split independently as
+   `--sup-on: #17150e`. */
+
+[data-discipline="ai"] {
+  --accent-rgb: 37, 99, 235;
+  --accent-fill-a: #2563eb;
+  --accent-fill-b: #1d4ed8;
+  /* Text-safe on the light card. */
+  --accent-ink: #2563eb;
+  /* Type on the fill. */
+  --accent-on: #ffffff;
+  --accent-on-soft: rgba(255, 255, 255, 0.72);
+  --accent-on-chev: rgba(255, 255, 255, 0.8);
+}
+
+[data-discipline="supply"] {
+  --accent-rgb: 184, 146, 74;
+  --accent-fill-a: #b8924a;
+  --accent-fill-b: #a07c34;
+  --accent-ink: #8a6a1f;
+  --accent-on: #17150e;
+  --accent-on-soft: rgba(23, 21, 14, 0.74);
+  --accent-on-chev: rgba(23, 21, 14, 0.78);
+}
+
+/* Select — the discipline's fill on hover/focus */
 .etb-bar:hover,
 .etb-bar.is-hovered,
 .etb-bar:focus-within {
-  background: linear-gradient(180deg, #2563eb 0%, #1d4ed8 100%);
-  border-color: rgba(37, 99, 235, 0.6);
+  background: linear-gradient(180deg, var(--accent-fill-a) 0%, var(--accent-fill-b) 100%);
+  border-color: rgba(var(--accent-rgb), 0.6);
   box-shadow:
     0 1px 0 rgba(255, 255, 255, 0.2) inset,
     0 -1px 0 rgba(0, 0, 0, 0.15) inset,
-    0 6px 24px rgba(29, 78, 216, 0.25),
+    0 6px 24px rgba(var(--accent-rgb), 0.25),
     0 2px 6px rgba(0, 0, 0, 0.4);
 }
 
 .etb-bar:hover .etb-bar__name,
 .etb-bar.is-hovered .etb-bar__name,
 .etb-bar:focus-within .etb-bar__name {
-  color: #fff;
+  color: var(--accent-on);
 }
 
 .etb-bar:hover .etb-bar__summary,
 .etb-bar.is-hovered .etb-bar__summary,
 .etb-bar:focus-within .etb-bar__summary {
-  color: rgba(255, 255, 255, 0.72);
+  color: var(--accent-on-soft);
 }
 
 .etb-bar:hover .etb-bar__chevron,
 .etb-bar.is-hovered .etb-bar__chevron,
 .etb-bar:focus-within .etb-bar__chevron {
-  color: rgba(255, 255, 255, 0.8);
+  color: var(--accent-on-chev);
   transform: translateX(2px);
 }
 
@@ -537,6 +592,16 @@
 .etb-bar.is-hovered .etb-bar__sheen,
 .etb-bar:focus-within .etb-bar__sheen {
   background: linear-gradient(105deg, transparent 32%, rgba(255, 255, 255, 0.18) 46%, rgba(255, 255, 255, 0.04) 54%, transparent 66%);
+}
+
+/* At rest the sheen sweeps a near-white plate, where white is right. Over the
+   brass fill a white sweep reads as a grey wash rather than a highlight, so it
+   takes the hue's own warmth. Only the supply side needs it — cobalt is cool
+   enough that white still reads as light on it. */
+.etb-bar[data-discipline="supply"]:hover .etb-bar__sheen,
+.etb-bar[data-discipline="supply"].is-hovered .etb-bar__sheen,
+.etb-bar[data-discipline="supply"]:focus-within .etb-bar__sheen {
+  background: linear-gradient(105deg, transparent 32%, rgba(255, 246, 224, 0.24) 46%, rgba(255, 246, 224, 0.06) 54%, transparent 66%);
 }
 
 .etb-barStack.has-hover:not(.has-expanded) .etb-bar.is-hovered {
@@ -550,12 +615,15 @@
   filter: saturate(0.85) brightness(0.97);
 }
 
-/* Cobalt Select — blue persists when expanded */
+/* Select persists when expanded.
+   `is-expanded` is not set by `ETBDetail` today — it is left from the inline
+   accordion that preceded the slide-in dossier. Tokenised anyway so it cannot
+   come back as the one cobalt island in a two-hue system. */
 .etb-bar.is-expanded {
   flex: 3.8 1 0;
   z-index: 3;
-  background: linear-gradient(180deg, #2563eb 0%, #1d4ed8 100%);
-  border-color: rgba(37, 99, 235, 0.6);
+  background: linear-gradient(180deg, var(--accent-fill-a) 0%, var(--accent-fill-b) 100%);
+  border-color: rgba(var(--accent-rgb), 0.6);
 }
 
 .etb-bar.is-expanded .etb-bar__head { height: auto; }
@@ -578,18 +646,18 @@
 /* Overlay mode — active bar stays cobalt, no flex change */
 .etb-bar.is-active {
   z-index: 3;
-  background: linear-gradient(180deg, #2563eb 0%, #1d4ed8 100%);
-  border-color: rgba(37, 99, 235, 0.6);
+  background: linear-gradient(180deg, var(--accent-fill-a) 0%, var(--accent-fill-b) 100%);
+  border-color: rgba(var(--accent-rgb), 0.6);
   box-shadow:
     0 1px 0 rgba(255, 255, 255, 0.2) inset,
     0 -1px 0 rgba(0, 0, 0, 0.15) inset,
-    0 6px 24px rgba(29, 78, 216, 0.25),
+    0 6px 24px rgba(var(--accent-rgb), 0.25),
     0 2px 6px rgba(0, 0, 0, 0.4);
 }
 
-.etb-bar.is-active .etb-bar__name { color: #fff; }
-.etb-bar.is-active .etb-bar__summary { color: rgba(255, 255, 255, 0.65); }
-.etb-bar.is-active .etb-bar__chevron { color: rgba(255, 255, 255, 0.7); }
+.etb-bar.is-active .etb-bar__name { color: var(--accent-on); }
+.etb-bar.is-active .etb-bar__summary { color: var(--accent-on-soft); }
+.etb-bar.is-active .etb-bar__chevron { color: var(--accent-on-chev); }
 
 .etb-barStack.has-active .etb-bar:not(.is-active):not(.is-hovered) {
   opacity: 0.72;
@@ -694,18 +762,25 @@
 }
 
 .etb-dos__close:focus-visible {
-  outline: 2px solid rgba(37, 99, 235, 0.6);
+  outline: 2px solid var(--etb-accent);
   outline-offset: 2px;
 }
 
 /* Off-white dossier card */
+/* Radius and shadow are the consulting sheet's `--sheet-shadow`, so the two
+   pieces of paper on this site are lit the same way rather than one being a
+   flat panel and the other a lifted sheet. */
 .etb-dos__card {
   position: relative;
   margin: 12px;
   padding: 20px 18px 18px;
-  border-radius: 12px;
+  border-radius: 14px;
   background: #f5f4f1;
   border: 1px solid rgba(17, 17, 22, 0.08);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.55) inset,
+    0 28px 72px rgba(0, 0, 0, 0.45),
+    0 6px 18px rgba(0, 0, 0, 0.28);
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -750,6 +825,14 @@
   gap: 8px;
 }
 
+/* Status is not the accent.
+
+   These five were cobalt-tinted, which made the hue mean four things at once
+   on this page — selected row, status, tag, focus ring. Colour now says one
+   thing (which discipline), and status carries its distinction the way the
+   consulting sheet carries recession: on the ink ramp, not on alpha-thinned
+   hue. Production reads as live because it is darker and its edge is solid,
+   not because it is blue. */
 .etb-dos__status {
   font-family: var(--font-mono);
   font-size: var(--text-label);
@@ -758,55 +841,45 @@
   text-transform: uppercase;
   padding: 3px 8px;
   border-radius: 999px;
-  border: 1px solid rgba(17, 17, 22, 0.1);
-  color: rgba(17, 17, 22, 0.55);
-  background: rgba(17, 17, 22, 0.03);
-}
-
-.etb-dos__status--stealth {
-  border-color: rgba(37, 99, 235, 0.28);
-  color: rgba(37, 99, 235, 0.82);
-  background: rgba(37, 99, 235, 0.06);
-}
-
-.etb-dos__status--prototype {
-  border-color: rgba(37, 99, 235, 0.22);
-  color: rgba(37, 99, 235, 0.7);
-  background: rgba(37, 99, 235, 0.04);
-}
-
-.etb-dos__status--r-d {
-  border-color: rgba(37, 99, 235, 0.2);
-  color: rgba(37, 99, 235, 0.65);
-  background: rgba(37, 99, 235, 0.04);
+  border: 1px solid rgba(17, 17, 22, 0.14);
+  /* Was 0.55 — 4.3:1, under the minimum for a label this size. */
+  color: var(--etb-muted);
+  background: rgba(17, 17, 22, 0.035);
 }
 
 .etb-dos__status--production {
-  border-color: rgba(37, 99, 235, 0.3);
-  color: rgba(37, 99, 235, 0.86);
-  background: rgba(37, 99, 235, 0.08);
+  border-color: rgba(17, 17, 22, 0.26);
+  color: var(--etb-text);
+  background: rgba(17, 17, 22, 0.06);
 }
 
-.etb-dos__status--in-development {
-  border-color: rgba(17, 17, 22, 0.18);
-  color: rgba(17, 17, 22, 0.56);
-  background: rgba(17, 17, 22, 0.04);
-}
-
+/* 0.42 measured 2.9:1. The consulting sheet hit the same wall and answered it
+   by raising --ink-4 to 0.62 with the note "5.1:1 — was 2.6:1"; this is that
+   step, reached through --etb-dim. */
 .etb-dos__category {
   font-family: var(--font-mono);
   font-size: var(--text-label);
   font-weight: 400;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: rgba(17, 17, 22, 0.42);
+  color: var(--etb-dim);
 }
 
-/* Title */
+/* Title.
+
+   Serif, so a project's name is set in the same face at every step of the
+   route: mono label on the bar, serif here at 20–26px, serif again at 40–72px
+   on `.etb-page__title`. It had no font-family at all and inherited DM Sans,
+   which made the name change identity on the second click.
+
+   Weight 400 is not a preference. DM Serif Display ships 400 only (see
+   app/layout.tsx), so the 500 this asked for was answered with a synthesised
+   bold — smeared stems at exactly this size. */
 .etb-dos__title {
   margin: 0;
+  font-family: var(--font-serif);
   font-size: clamp(20px, 2.2vw, 26px);
-  font-weight: 500;
+  font-weight: 400;
   letter-spacing: -0.02em;
   line-height: 1.1;
   color: var(--etb-text);
@@ -869,9 +942,11 @@
   text-transform: uppercase;
   padding: 3px 7px 2px;
   border-radius: 999px;
-  color: rgba(37, 99, 235, 0.72);
-  background: rgba(37, 99, 235, 0.06);
-  border: 1px solid rgba(37, 99, 235, 0.18);
+  /* Full-strength accent ink rather than the hue at 72%: alpha-thinning a
+     coloured label is what put these at 3.4:1. */
+  color: var(--accent-ink);
+  background: rgba(var(--accent-rgb), 0.08);
+  border: 1px solid rgba(var(--accent-rgb), 0.28);
 }
 
 /* System notes */
@@ -940,22 +1015,22 @@
   padding: 8px 18px 7px;
   border-radius: 999px;
   cursor: pointer;
-  color: #2563eb;
-  border: 1px solid rgba(37, 99, 235, 0.25);
+  color: var(--accent-ink);
+  border: 1px solid rgba(var(--accent-rgb), 0.3);
   background:
     linear-gradient(180deg, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.15) 14%, transparent 40%),
-    rgba(37, 99, 235, 0.05);
+    rgba(var(--accent-rgb), 0.06);
   transition: border-color 180ms ease, transform 180ms ease;
 }
 
 .etb-dos__cta:hover,
 .etb-dos__cta:focus-visible {
-  border-color: rgba(37, 99, 235, 0.45);
+  border-color: rgba(var(--accent-rgb), 0.5);
   transform: translateY(-1px);
 }
 
 .etb-dos__cta:focus-visible {
-  outline: 2px solid rgba(37, 99, 235, 0.6);
+  outline: 2px solid var(--accent-ink);
   outline-offset: 2px;
 }
 

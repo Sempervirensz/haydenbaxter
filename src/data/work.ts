@@ -147,6 +147,24 @@ interface ETBGraduateCard {
   tags: string[];
 }
 
+/** Which of the two consulting disciplines a build belongs to.
+ *
+ *  The consulting sheet colours its two paths cobalt for AI/systems and brass
+ *  for supply chain (`--ai-rgb` / `--sup-rgb` in consulting-paths.css). A
+ *  visitor who learns that code on the sheet should find it holding on the
+ *  gallery, so the gallery reads its hue from the same distinction rather than
+ *  painting every project the one blue.
+ *
+ *  Derived from `category` rather than stored per project: the category is
+ *  already the field that says what kind of work a build is, and a second
+ *  hand-maintained field would be a second thing to forget to update.
+ */
+export type Discipline = "ai" | "supply";
+
+export function disciplineOf(project: ETBProject): Discipline {
+  return project.category === "Supply Chain Apps" ? "supply" : "ai";
+}
+
 export interface ETBData {
   title: string;
   credibilityLine: string;

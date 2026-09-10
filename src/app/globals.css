@@ -1442,7 +1442,47 @@ html.is-safari body {
   display: flex;
 }
 
+/* The route's top of hierarchy. Borrows the middle of the consulting section's
+   descent — a mono kicker on a hairline, then the name in the serif — so the
+   two entry points into the work read as the same site talking. */
+.etb-gallery__masthead {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.etb-gallery__kicker {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  font-weight: 500;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+/* `.wt__hint`'s rule, exactly: the hairline spanning the column under the mono
+   line is the piece of that descent this is actually borrowing. */
+.etb-gallery__kicker::after {
+  content: "";
+  display: block;
+  height: 1px;
+  margin-top: 12px;
+  background: rgba(255, 255, 255, 0.16);
+}
+
+.etb-gallery__title {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-size: clamp(30px, 3.6vw, 56px);
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+
 .etb-gallery__rail,
+.etb-gallery__masthead,
 .etb-gallery__shell {
   /* Same working width as the cinematic card's ETB panel — this route mounts
      the same accordion, so it gets the same measure instead of running the

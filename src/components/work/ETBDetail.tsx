@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import type { ETBData, ETBProject } from "@/data/work";
+import { disciplineOf, type ETBData, type ETBProject } from "@/data/work";
 import DetailModal from "@/components/work/DetailModal";
 import TagPills from "@/components/work/TagPills";
 
@@ -52,7 +52,12 @@ function ProjectCTA({ project, label }: { project: ETBProject; label?: string })
 function DossierCard({ project }: { project: ETBProject }) {
   const panel = project.panel;
   return (
-    <div className="etb-dos__card">
+    /* `data-discipline` rather than a class, and on the CARD rather than on a
+       wrapper, because this element is portalled to `document.body` on mobile
+       (see the createPortal at the bottom of this file). The hue tokens are
+       declared on the attribute itself in work-details.css, so the card
+       resolves its own colour wherever it is mounted. */
+    <div className="etb-dos__card" data-discipline={disciplineOf(project)}>
       {project.mark ? (
         /* eslint-disable-next-line @next/next/no-img-element */
         <img
@@ -397,6 +402,7 @@ export default function ETBDetail({ data }: ETBDetailProps) {
                 isActive ? "is-active" : ""
               }`}
               data-etb-bar={project.id}
+              data-discipline={disciplineOf(project)}
               role="listitem"
               onMouseEnter={() => setHoveredId(project.id)}
             >
