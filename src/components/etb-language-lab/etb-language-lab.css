@@ -1,0 +1,521 @@
+/* ===========================================================================
+   ETB language lab
+   ===========================================================================
+
+   Two halves, and the order matters when reading this file:
+
+     1. THE PROPOSALS — ancestor-selector overrides on the real gallery's
+        classes. This is the lab's output. Approving a direction means lifting
+        these declarations into `src/styles/work-details.css` and deleting the
+        `[data-etb-*]` prefix.
+
+     2. LAB CHROME — the panel and the masthead stand-in. Tooling. Never ships.
+
+   The axis attributes live on <html>, not on a wrapper, because `ETBDetail`
+   portals its mobile dossier to `document.body` and a wrapper cannot reach it.
+   That is also why every selector here is written as a DESCENDANT of the
+   attribute rather than a compound with it.
+
+   SPECIFICITY. `work-details.css` styles these with a single class, so one
+   attribute plus the class (0,2,0) is enough to win everywhere. Nothing here
+   uses `!important`, and nothing here should need to — if a rule below stops
+   applying, the shipped rule gained a class, and the fix is to match it rather
+   than to escalate.
+   ======================================================================== */
+
+/* ---------------------------------------------------------------------------
+   AXIS 1 — TYPE TRIAD
+   ---------------------------------------------------------------------------
+   Serif names, sans argues, mono labels. Two declarations.
+
+   The bar NAME stays mono uppercase on purpose: that is a DYMO label and mono
+   is exactly right for it. What changes is the SENTENCE under it, which is
+   body copy set in a typewriter face for no reason the design gives.
+
+   Sans is narrower than mono at the same size, so the desktop row's
+   `-webkit-line-clamp: 1` recovers roughly four more words per summary. That
+   is a side effect worth looking at, not a reason on its own.
+   ------------------------------------------------------------------------ */
+
+[data-etb-type="triad"] .etb-bar__summary {
+  font-family: var(--font-sans);
+  /* Mono carried 0.02em to open up its already-wide fit. Sans does not want
+     it — at --text-sm the same tracking reads as a spaced-out caption. */
+  letter-spacing: 0;
+}
+
+/* DM Serif Display ships at weight 400 ONLY (see app/layout.tsx). The shipped
+   rule asks for 500, which a 400-only family answers with a synthesised bold —
+   smeared stems at exactly the size this title renders. Setting 400 explicitly
+   is not a style preference, it is the condition of using the face at all. */
+[data-etb-type="triad"] .etb-dos__title {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  /* Matches `.cpp-path__name` and `.etb-page__title`, so the same name set at
+     three sizes across the route sits on one optical setting. */
+  letter-spacing: -0.02em;
+}
+
+/* ---------------------------------------------------------------------------
+   AXIS 2a — ACCENT: SELECTION ONLY
+   ---------------------------------------------------------------------------
+   Cobalt keeps the two things it is genuinely saying — this row is selected,
+   this control has focus — and hands status, category and tags back to the ink
+   ramp. The recession then comes from size and tracking, which is where the
+   consulting sheet already gets it.
+   ------------------------------------------------------------------------ */
+
+[data-etb-accent="selection"] .etb-dos__tag {
+  color: rgba(17, 17, 22, 0.62);
+  background: rgba(17, 17, 22, 0.04);
+  border-color: rgba(17, 17, 22, 0.1);
+}
+
+[data-etb-accent="selection"] .etb-dos__status,
+[data-etb-accent="selection"] .etb-dos__status--stealth,
+[data-etb-accent="selection"] .etb-dos__status--prototype,
+[data-etb-accent="selection"] .etb-dos__status--r-d,
+[data-etb-accent="selection"] .etb-dos__status--production,
+[data-etb-accent="selection"] .etb-dos__status--in-development {
+  border-color: rgba(17, 17, 22, 0.14);
+  color: rgba(17, 17, 22, 0.56);
+  background: rgba(17, 17, 22, 0.035);
+}
+
+/* The CTA is the one cobalt element that stays. It is the ask, and the ask is
+   allowed to be the loudest thing on a card that has already been chosen. */
+
+/* ---------------------------------------------------------------------------
+   AXIS 2b — ACCENT: DISCIPLINE
+   ---------------------------------------------------------------------------
+   The consulting palette promoted to a site-wide semantic: cobalt is AI and
+   systems work, brass is supply chain. A visitor learns the code once on the
+   consulting sheet and it holds here.
+
+   The two hues are NOT interchangeable and the palette already knows it. Brass
+   at rgb(184,146,74) measures 2.90:1 against white, so a brass fill takes dark
+   ink where cobalt takes white. That asymmetry is inherent to the hue, not a
+   compromise — `--sup-on: #17150e` in `consulting-paths.css` is the same
+   answer arrived at independently.
+
+   `[data-supply]` is written onto the matching bars by the lab shell from the
+   real `category` field. Shipping this needs the attribute to come from
+   `ETBDetail` instead — one on each `.etb-bar`, one on `.etb-dos`.
+   ------------------------------------------------------------------------ */
+
+[data-etb-accent="discipline"] {
+  --etl-brass: 184, 146, 74;
+  /* Text-safe on light paper. */
+  --etl-brass-ink: #8a6a1f;
+  /* Type on a brass fill. */
+  --etl-brass-on: #17150e;
+}
+
+[data-etb-accent="discipline"] .etb-bar[data-supply]:hover,
+[data-etb-accent="discipline"] .etb-bar[data-supply].is-hovered,
+[data-etb-accent="discipline"] .etb-bar[data-supply]:focus-within,
+[data-etb-accent="discipline"] .etb-bar[data-supply].is-active {
+  background: linear-gradient(180deg, #b8924a 0%, #a07c34 100%);
+  border-color: rgba(var(--etl-brass), 0.6);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.2) inset,
+    0 -1px 0 rgba(0, 0, 0, 0.15) inset,
+    0 6px 24px rgba(var(--etl-brass), 0.25),
+    0 2px 6px rgba(0, 0, 0, 0.4);
+}
+
+/* Dark ink on the fill — see the note above. Written against the same four
+   states as the fill so the type never lags the plate by a frame. */
+[data-etb-accent="discipline"] .etb-bar[data-supply]:hover .etb-bar__name,
+[data-etb-accent="discipline"] .etb-bar[data-supply].is-hovered .etb-bar__name,
+[data-etb-accent="discipline"] .etb-bar[data-supply]:focus-within .etb-bar__name,
+[data-etb-accent="discipline"] .etb-bar[data-supply].is-active .etb-bar__name {
+  color: var(--etl-brass-on);
+}
+
+[data-etb-accent="discipline"] .etb-bar[data-supply]:hover .etb-bar__summary,
+[data-etb-accent="discipline"] .etb-bar[data-supply].is-hovered .etb-bar__summary,
+[data-etb-accent="discipline"] .etb-bar[data-supply]:focus-within .etb-bar__summary,
+[data-etb-accent="discipline"] .etb-bar[data-supply].is-active .etb-bar__summary,
+[data-etb-accent="discipline"] .etb-bar[data-supply]:hover .etb-bar__chevron,
+[data-etb-accent="discipline"] .etb-bar[data-supply].is-hovered .etb-bar__chevron,
+[data-etb-accent="discipline"] .etb-bar[data-supply]:focus-within .etb-bar__chevron,
+[data-etb-accent="discipline"] .etb-bar[data-supply].is-active .etb-bar__chevron {
+  color: rgba(23, 21, 14, 0.74);
+}
+
+/* The sheen is a white sweep over a near-white plate. Over brass it reads as a
+   grey wash rather than a highlight, so it warms with the hue. */
+[data-etb-accent="discipline"] .etb-bar[data-supply] .etb-bar__sheen {
+  background: linear-gradient(
+    105deg,
+    transparent 32%,
+    rgba(255, 246, 224, 0.7) 46%,
+    rgba(255, 246, 224, 0.15) 54%,
+    transparent 66%
+  );
+}
+
+[data-etb-accent="discipline"] .etb-bar[data-supply] .etb-bar__head:focus-visible {
+  outline-color: var(--etl-brass-ink);
+}
+
+/* The dossier follows whichever bar is open. Both attributes sit on <html>, so
+   this is a compound on the root element and a descendant selector after it —
+   it reaches the portalled mobile card as well as the desktop panel. */
+[data-etb-accent="discipline"][data-etb-open="supply"] .etb-dos__tag {
+  color: rgba(138, 106, 31, 0.9);
+  background: rgba(var(--etl-brass), 0.09);
+  border-color: rgba(var(--etl-brass), 0.3);
+}
+
+[data-etb-accent="discipline"][data-etb-open="supply"] .etb-dos__status,
+[data-etb-accent="discipline"][data-etb-open="supply"] .etb-dos__status--in-development {
+  color: rgba(138, 106, 31, 0.92);
+  background: rgba(var(--etl-brass), 0.07);
+  border-color: rgba(var(--etl-brass), 0.3);
+}
+
+[data-etb-accent="discipline"][data-etb-open="supply"] .etb-dos__cta {
+  color: var(--etl-brass-ink);
+  border-color: rgba(var(--etl-brass), 0.35);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.15) 14%, transparent 40%),
+    rgba(var(--etl-brass), 0.07);
+}
+
+[data-etb-accent="discipline"][data-etb-open="supply"] .etb-dos__cta:hover,
+[data-etb-accent="discipline"][data-etb-open="supply"] .etb-dos__cta:focus-visible {
+  border-color: rgba(var(--etl-brass), 0.55);
+}
+
+/* ---------------------------------------------------------------------------
+   AXIS 4 — INK RAMP
+   ---------------------------------------------------------------------------
+   The consulting sheet ships a `data-system="drafting"` layer (promoted from
+   /consulting-color-lab) that raises its whole ink ramp for readability:
+
+       --ink-2   0.74 -> 0.82     10.3:1
+       --ink-3   0.56 -> 0.68      6.3:1   (was 4.2:1)
+       --ink-4   0.40 -> 0.62      5.1:1   (was 2.6:1)
+
+   Those are the values to unify ON. The pre-drafting 0.56 is dead — it still
+   sits in the base `.cpp-screen` block and in the stale lab stylesheet, and
+   measuring either of those instead of the live sheet is how this axis first
+   got written backwards.
+
+   So the move is 0.62 -> 0.68, which is a contrast INCREASE:
+
+       .etb-bar__summary   0.62   5.12:1   ->   0.68   ~6.3:1
+
+   The gallery inherits the accessibility pass the consulting sheet already
+   had, and both surfaces end on one ramp. `.etb-bar__summary` hardcodes its
+   colour rather than reading `--etb-muted`, so the second rule is what
+   actually moves it.
+   ------------------------------------------------------------------------ */
+
+[data-etb-paper="unified"] .etb {
+  --etb-muted: rgba(17, 17, 22, 0.68);
+  --etb-dim: rgba(17, 17, 22, 0.62);
+}
+
+[data-etb-paper="unified"] .etb-bar__summary {
+  color: rgba(17, 17, 22, 0.68);
+}
+
+[data-etb-paper="unified"] .etb-dos__card {
+  border-radius: 14px;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.55) inset,
+    0 28px 72px rgba(0, 0, 0, 0.45),
+    0 6px 18px rgba(0, 0, 0, 0.28);
+}
+
+/* ===========================================================================
+   LAB CHROME — tooling below this line. None of it ships.
+   ======================================================================== */
+
+.etl {
+  position: relative;
+  min-height: 100vh;
+}
+
+/* The dossier slides in from the RIGHT, which is where the panel is. Without a
+   gutter the lab hides the exact surface three of the four axes change — so
+   the page yields the panel's width rather than sitting under it.
+
+   Below 1180px the panel starts collapsed anyway (see the effect in the
+   shell), so there is nothing to reserve and the gallery keeps its own gutter.
+   `--shell-etb` still caps the content, so on a display wide enough for both
+   this costs the gallery nothing at all. */
+@media (min-width: 1180px) {
+  .etl[data-panel="open"] .etb-gallery {
+    padding-right: calc(370px + 32px);
+  }
+}
+
+/* ---- Axis 3's stand-in: the masthead the ROUTE would render ----
+   Kept in the lab's frame rather than inside `ETBDetail`, because the homepage
+   card mounts the same component with its own chapter header and would render
+   two titles. Hidden rather than unmounted so toggling the axis does not
+   reflow the gallery under the pointer. */
+
+.etl-masthead {
+  width: 100%;
+  max-width: min(100%, var(--shell-etb));
+  margin-inline: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  /* Collapses to nothing when the axis is off, including the parent's flex
+     gap — `.etb-gallery` is a flex column, so a hidden-but-present child
+     still costs a full gap of empty page. */
+  margin-block: 0;
+}
+
+.etl-masthead[aria-hidden="true"] {
+  display: none;
+}
+
+.etl-masthead__kicker {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  font-weight: 500;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+/* `.wt__hint`'s hairline, exactly — the rule that spans the column under the
+   mono line is the piece of the consulting descent this axis is borrowing. */
+.etl-masthead__kicker::after {
+  content: "";
+  display: block;
+  height: 1px;
+  margin-top: 12px;
+  background: rgba(255, 255, 255, 0.16);
+}
+
+.etl-masthead__title {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-size: clamp(28px, 3.4vw, 52px);
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+  color: rgba(246, 245, 240, 0.96);
+}
+
+/* ---- Control panel ---- */
+
+.etl-panel {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  z-index: 60;
+  width: min(370px, calc(100vw - 32px));
+  max-height: calc(100vh - 32px);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(10, 11, 15, 0.94);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.6);
+}
+
+.etl-panel[data-open="false"] {
+  width: auto;
+}
+
+.etl-panel__toggle {
+  all: unset;
+  box-sizing: border-box;
+  cursor: pointer;
+  align-self: flex-end;
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.6);
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+}
+
+.etl-panel__toggle:hover,
+.etl-panel__toggle:focus-visible {
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.4);
+  outline: none;
+}
+
+.etl-panel__body {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding-right: 2px;
+}
+
+.etl-panel__title {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.82);
+}
+
+.etl-panel__blurb,
+.etl-axis__premise,
+.etl-axis__note {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.52);
+}
+
+.etl-axis__note {
+  color: rgba(255, 255, 255, 0.42);
+}
+
+.etl-presets {
+  display: flex;
+  gap: 8px;
+}
+
+.etl-preset,
+.etl-opt {
+  all: unset;
+  box-sizing: border-box;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.62);
+  padding: 7px 11px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  transition: color 150ms ease, border-color 150ms ease, background 150ms ease;
+}
+
+.etl-preset {
+  flex: 1 1 0;
+  justify-content: center;
+}
+
+.etl-preset:hover,
+.etl-opt:hover,
+.etl-preset:focus-visible,
+.etl-opt:focus-visible {
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.38);
+  outline: none;
+}
+
+.etl-preset[data-active="true"],
+.etl-opt[data-active="true"] {
+  color: #fff;
+  border-color: rgba(37, 99, 235, 0.7);
+  background: rgba(37, 99, 235, 0.18);
+}
+
+.etl-preset__key,
+.etl-axis__key {
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.etl-axis {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.09);
+}
+
+.etl-axis__title {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.etl-axis__set {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+/* ---- Contrast readout ---- */
+
+.etl-readout__row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  letter-spacing: 0.04em;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.etl-readout__row [data-pass="true"] {
+  color: #7fd1a0;
+}
+
+.etl-readout__row [data-pass="false"] {
+  color: #ff8f8f;
+}
+
+.etl-readout__na {
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.etl-panel__keys {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+  margin: 0;
+  padding-top: 10px;
+  border-top: 1px solid rgba(255, 255, 255, 0.09);
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.38);
+}
+
+.etl-panel__keys kbd {
+  font-family: inherit;
+  color: rgba(255, 255, 255, 0.66);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .etl-preset,
+  .etl-opt,
+  .etl-panel__toggle {
+    transition: none;
+  }
+}

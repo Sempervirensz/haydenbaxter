@@ -128,6 +128,11 @@ export const LAB_GROUPS: LabGroup[] = [
   {
     title: "Emerging tech",
     items: [
+      {
+        label: "ETB language lab",
+        path: "/etb-language-lab",
+        note: "Should the gallery speak the consulting sheet's language? 4 axes — type triad / accent meaning / top of hierarchy / ink ramp — over the real page, with a live contrast readout",
+      },
       { label: "ETB lab", path: "/etb-lab" },
       { label: "ETB overlay sandbox", path: "/etb-overlay-sandbox" },
       {
