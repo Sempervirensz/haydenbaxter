@@ -38,9 +38,17 @@ Three structural faults follow from that:
 where Connect currently separates them. A redrawn baseline would hide the exact
 thing under review.
 
-`01 Plain` and `02 Ground` are **one format in two treatments over identical
-copy**. The words do not change between them, so the comparison can only ever be
-about whether the photograph earns its place.
+Three treatments over **identical copy**, so each comparison isolates one
+variable:
+
+| | Treatment | What changes |
+|---|---|---|
+| 01 | **Plain** | Bolded emphasis only. No interaction. |
+| 02 | **Deep** | Same words; five terms open one supporting detail each. |
+| 03 | **Ground** | Treatment 02 over a photograph. |
+
+01 → 02 is emphasis alone. 02 → 03 is material alone. A test asserts all three
+render the same paragraphs.
 
 ## The format, and where it comes from
 
@@ -50,33 +58,60 @@ Research into the sites that share Hayden's shape says none of them has one:
 | Site | Identity length | How range is handled |
 |------|-----------------|----------------------|
 | [rauno.me](https://rauno.me) | 1 sentence | An index of work types below it. The index is the About. |
-| [vanschneider.com](https://vanschneider.com) | 2–3 sentences | Closest structural twin — one person, a studio, three ventures. Ventures named inline; full-bleed galleries carry the rest. |
+| [vanschneider.com](https://vanschneider.com) | 2–3 sentences | Closest structural twin — one person, a studio, three ventures. Ventures named inline; galleries carry the rest. |
 | [brianlovin.com/about](https://brianlovin.com/about) | ~180 words | Reverse-chronological prose. "Before that…" turns range into an arc. |
 | [nadia.xyz](https://nadia.xyz) | ~25 words | A method statement, no titles at all. |
 | [stephango.com](https://stephango.com) | no job titles | Credibility from the archive alone. |
 
 Brian Lovin's is the format built here, because **Hayden's credibility is the
 order**: Mandarin, then the factory floor, then Fortune 100 operations, then AI.
-Prose carries an order. A grid of cards turns the same facts into a résumé.
+Prose carries an order; a grid of cards turns the same facts into a résumé.
 
-The arc is four beats — now, before, how he got there, and what it means for the
-work today. It deliberately returns to the present at the end: a pure reverse
-chronology reads as a job history, and the return is what makes it an argument
-about how he works.
+Four beats — triage, origin, the AI turn, the thesis. It returns to the present
+at the end on purpose: a pure reverse chronology reads as a job history, and the
+return makes it an argument about how he works. **~150 words** against
+production's 216, measured live in the switcher.
 
-**145 words**, against production's 216. The lab measures the rendered count
-live, in the switcher.
+## Paragraph one triages three audiences
 
-## What is deliberately absent
+A recruiter, a consulting buyer, and a WorldPulse customer each need to
+recognise themselves in the first four seconds. Paragraph one names all three
+surfaces — founder of WorldPulse, consultant, eight years with Nike, Converse,
+Disney and Aosom — and the five term details are each addressed to one of them,
+labelled on screen so a sixth term cannot quietly be added that serves nobody.
 
-- **No section heading.** The first three words are "I'm Hayden."
-- **No DYMO fact strip.** Rounds one and two hung Mandarin / Nike / Disney under
-  everything. Here the prose names them in sequence, so a strip would repeat the
-  section's own sentences three lines later — the exact habit this lab exists to
-  break. A test asserts each name appears *exactly once*.
-- **No cards, no grid, no disclosure, no interaction.**
+**Positioning guardrail** (from `workTogether.ts`): Hayden is a founder who
+takes selective consulting work. "Targeting recruiters" therefore means making
+the *record* legible to someone evaluating him — never signalling availability.
+A test asserts the copy contains no job-seeking language.
 
-Rounds one and two are preserved in `a3bf704` and `9e604c8`.
+## Two tiers of emphasis
+
+- **`em`** — a phrase a scanner needs. Renders `<strong>`. Never interactive.
+- **`term`** — a phrase worth going deeper on. Renders a button that opens one
+  detail.
+
+`em` is only usable in the **sans** paragraphs. DM Serif Display is loaded at
+weight 400 and nothing else, so `<strong>` in the serif lead resolves to a face
+that does not exist and renders as faux bold or as nothing — measured, not
+assumed. The lead marks its phrases with terms instead.
+
+## The reveal
+
+The passage makes its full argument **before anything is opened**. A term reveals
+supplementary depth for one named audience, never a load-bearing claim — so this
+is a standard disclosure (`aria-expanded` + `aria-controls`, collapsed panels
+`hidden`), correctly announced and openable by a screen reader, rather than the
+visually-held-back pattern `PersonasSection` needs. That distinction is the whole
+point: Personas hid its actual content behind hover, which is what made it a bad
+widget.
+
+All five details are in the markup together — nothing is fetched or generated on
+demand. The slot is height-reserved, and a test asserts the prose above it does
+not move by more than 1px when a detail opens. ESC closes.
+
+Rounds one and two are preserved in `a3bf704` and `9e604c8`; the un-annotated
+prose in `e54210e`.
 
 ## Facts
 
@@ -100,7 +135,7 @@ src/components/identity-lab/
   identity-lab.css                          lab chrome + the reading column
   concepts/
     parts.tsx                               full-bleed art + scrim (all that is left)
-    Prose.tsx                                the arc; `ground` prop selects the treatment
+    Prose.tsx                                the arc; `deep` / `ground` props select the treatment
 src/app/identity-lab/page.dev.tsx           dev-only route
 ```
 
@@ -115,8 +150,9 @@ and reverting those two entries removes the experiment completely.
 
 ## Keyboard
 
-`0` selects the baseline, `1`–`2` select a treatment. Neither treatment has any
-interaction at all. The switcher is a toolbar of
+`0` selects the baseline, `1`–`3` select a treatment. In **Deep** and **Ground**
+each marked term is a real `<button>`: Tab reaches it, Enter or Space opens it,
+ESC closes it, and `aria-expanded` tracks state. The switcher is a toolbar of
 `aria-pressed` buttons, not a tablist — the stage below is a page region, not a
 tabpanel, and labelling it as one would promise a keyboard model this does not
 implement. Every control clears the 44px tap floor. Nothing animates under

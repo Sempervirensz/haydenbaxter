@@ -320,6 +320,122 @@
   border-top: 1px solid var(--line-soft);
 }
 
+/* ---- Two tiers of emphasis --------------------------------------------- */
+
+/* Tier 1. A phrase a scanner needs. Weight and brightness only — no colour,
+   because five gold runs in one paragraph turns prose into a Christmas tree
+   and nothing reads as emphasised any more.
+   
+   ONLY USABLE IN THE SANS PARAGRAPHS. DM Serif Display is loaded at weight 400
+   and nothing else (see layout.tsx), so <strong> in the serif lead resolves to
+   a face that does not exist and renders as faux bold or as nothing at all.
+   The lead marks its phrases with terms instead. */
+.ilab-em {
+  font-weight: 500;
+  color: var(--ink);
+}
+
+/* Tier 2. Operable, and it has to look it at rest: an affordance that only
+   appears on hover does not exist on a phone. The dotted rule is the tell. */
+.ilab-term {
+  font: inherit;
+  color: var(--ink);
+  font-weight: 500;
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  text-decoration: underline;
+  text-decoration-style: dotted;
+  text-decoration-color: var(--accent);
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 0.22em;
+  transition: color 160ms ease, text-decoration-color 160ms ease;
+}
+
+.ilab-term:hover {
+  color: var(--accent);
+}
+
+.ilab-term[data-on] {
+  color: var(--accent);
+  text-decoration-style: solid;
+}
+
+.ilab-term:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.7);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* ---- The detail slot ---------------------------------------------------- */
+
+/* Height-reserved on purpose. Without a floor, opening a detail pushes the
+   sign-off down and the paragraph you were reading moves under your eye —
+   which is the thing that makes most inline disclosures feel broken. */
+.ilab-detail {
+  margin-top: var(--block-gap);
+  padding: 1.15rem 1.25rem;
+  /* Narrow default. On a phone the reserved slot is a full-width empty box
+     holding one line of prompt, and 9.5rem of that is a real chunk of screen
+     spent on nothing. Details wrap taller here, so the sign-off below may
+     shift a little when one opens — the prose above never does, which is the
+     part that matters. */
+  min-height: 6rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border-left: 2px solid var(--line);
+  background: rgba(255, 255, 255, 0.022);
+  border-radius: 0 var(--card-radius) var(--card-radius) 0;
+  transition: border-color 200ms ease, background-color 200ms ease;
+}
+
+.ilab-detail[data-on] {
+  border-left-color: var(--accent);
+  background: rgba(216, 177, 90, 0.05);
+}
+
+/* Wide enough for the details to fit the reserve, so nothing moves at all. */
+@container ilab (min-width: 48rem) {
+  .ilab-detail {
+    min-height: 9.5rem;
+  }
+}
+
+.ilab-detail__rest {
+  font-family: var(--font-mono);
+  font-size: var(--text-meta);
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.ilab-detail__label {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.4rem 0.9rem;
+  font-family: var(--font-mono);
+  font-size: var(--text-meta);
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 0.6rem;
+}
+
+/* Who this depth is for. Recorded on screen so a sixth term cannot quietly be
+   added that serves nobody. */
+.ilab-detail__audience {
+  color: var(--ink-faint);
+}
+
+.ilab-detail__body {
+  font-size: var(--text-body-sm);
+  line-height: var(--leading-body);
+  color: var(--ink-body);
+}
+
 /* ---- 02 Ground --------------------------------------------------------- */
 
 .ilab-prose--ground {

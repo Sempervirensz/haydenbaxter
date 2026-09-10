@@ -128,57 +128,162 @@ export const FACTS = {
 } as const;
 
 /* ---------------------------------------------------------------------------
-   Round three — the career arc, in prose
+   The arc — segmented, so emphasis and depth are data rather than markup
 
-   Rounds one and two both designed a SECTION: a heading, a composition, a
-   grid. Research into the sites that share Hayden's shape says none of them
-   has one. rauno.me states identity in a single sentence and lets an index
-   carry the range. vanschneider.com — the closest structural twin, one person
-   with a studio and three ventures — names the ventures inline in a two
-   sentence bio and lets full-bleed project galleries do the rest.
-   brianlovin.com/about runs ~180 words of plain reverse-chronological prose,
-   where "Before that…" turns range into an arc instead of a list.
+   FORMAT (unchanged): brianlovin.com/about. Plain first-person prose where
+   "I got here by…" turns a range of work into a trajectory. Hayden's
+   credibility IS the order — Mandarin, then the factory floor, then Fortune
+   100 operations, then AI — and prose is the only form that carries an order
+   without becoming a résumé.
 
-   That last one is the format here, chosen because Hayden's credibility IS the
-   order: Mandarin, then the factory floor, then Fortune 100 operations, then
-   AI. Prose makes that a trajectory. A grid of cards makes it a résumé.
+   WHAT CHANGED
+   1. Paragraph one now triages three audiences. A recruiter, a consulting
+      buyer, and a WorldPulse customer each need to recognise themselves in the
+      first four seconds; the previous opening spoke only to the third.
+   2. Two tiers of emphasis, because 145 words of unbroken prose is
+      unscannable — the honest weakness of the format as first built.
+        · `em`   — a phrase a scanner needs. Renders <strong>. Not interactive.
+        · `term` — a phrase worth going deeper on. Renders a button that opens
+                   one supporting detail.
+   3. The details are SUPPLEMENTARY. The passage is complete and makes its full
+      argument before anything is opened, and every detail is in the DOM at all
+      times. A disclosure that hid the answer would be the live Personas cards
+      again in a new costume.
 
-   NO FACT STRIP. Rounds one and two hung a DYMO strip of Mandarin / Nike /
-   Disney under everything. Here the prose names them in sequence, so a strip
-   would repeat the section's own sentences three lines later — which is the
-   exact habit this whole lab exists to break.
+   POSITIONING GUARDRAIL (from workTogether.ts, and it governs paragraph one)
+   Hayden is a founder running WorldPulse who takes selective consulting work.
+   "Targeting recruiters" therefore means making the RECORD legible to someone
+   evaluating him — brands, years, languages, degree — never signalling
+   availability. Nothing here says hire me, open to work, or looking.
    ------------------------------------------------------------------------ */
 
+/** A run of prose. A bare string is plain text. */
+export type Segment =
+  | string
+  | { text: string; em: true }
+  | { text: string; term: TermId };
+
+export type TermId =
+  | "worldpulse"
+  | "consulting"
+  | "brands"
+  | "mandarin"
+  | "builds";
+
 /**
- * The arc. Four beats: now, before, how he got there, and what it means for
- * the work today.
- *
- * The shape is deliberately now → back → back → now. A purely reverse
- * chronology reads as a job history; returning to the present at the end is
- * what makes it an argument about how he works rather than a record of where
- * he has been.
- *
- * Every fact is already on the site — WorldPulse and Digital Product Passports
- * from work.ts, the brands from siteContent.ts and personas.ts, Taiwan 2012
- * from the Supply Chain timeline, the builds and the degree from work.ts. The
- * interpretive clauses are new; they are the deliverable.
+ * One detail per term. Every fact is already elsewhere in the repo, cited
+ * inline. `audience` is the reason the term is marked at all — it records
+ * which visitor this depth is for, so a future edit cannot quietly add a
+ * sixth term that serves nobody.
  */
-export const PROSE: string[] = [
-  "I’m Hayden. I run WorldPulse, where we build Digital Product Passports — a way to make where a product came from legible to the person holding it, rather than only to a compliance team.",
-  "Before that I spent eight years in global sourcing and supply chain operations: procurement, supplier onboarding, compliance and traceability for Nike, Converse, Disney and Aosom, across China, Vietnam and Indonesia.",
-  "I got there by moving to Taiwan in 2012 and learning Mandarin first — which is the reason a supplier tells you what is actually going wrong, instead of what is on the report.",
-  "I build with AI now; five shipped products, and a master’s in it. But I start where I always started. What counts as a record here, who owns it, and which decision it changes. Automation is worth very little until it has something true to stand on.",
+export interface TermDetail {
+  id: TermId;
+  /** Mono label above the detail. */
+  label: string;
+  /** Who this depth is for. */
+  audience: string;
+  body: string;
+}
+
+export const TERMS: TermDetail[] = [
+  {
+    id: "worldpulse",
+    label: "WorldPulse",
+    audience: "WorldPulse customers and partners",
+    // work.ts → WORK_SCREENS[0].full.caption; consultingOffers.ts → worldpulse
+    body: "Design-driven Digital Product Passports: product origin, compliance, and traceability made legible to whoever is holding the product, not just to an auditor. Open to pilots, customers, and commercial partners at worldxpulse.com.",
+  },
+  {
+    id: "consulting",
+    label: "Consulting",
+    audience: "Consulting buyers",
+    // work.ts → consulting.offers + supplyChain.bridgeLine
+    body: "Two ways in: an AI Roadmap Sprint that turns a broad opportunity into a scoped plan, or an MVP Prototype Sprint that puts a working build in front of real users. AI fits best after the operating model is clear, so I design the workflow and data shape first.",
+  },
+  {
+    id: "brands",
+    label: "The record",
+    audience: "Recruiters and hiring teams",
+    // personas.ts → supply bullets; work.ts → supplyChain.featured.roleLine
+    body: "Global sourcing initiatives including factory onboarding, compliance, supplier performance, and end-to-end operational management. Across Aosom, Disney, and Three Tree: procurement execution, supplier coordination, data integrity, and reporting discipline.",
+  },
+  {
+    id: "mandarin",
+    label: "Why the language matters",
+    audience: "Recruiters and consulting buyers",
+    // personas.ts → supply bullet 2
+    body: "It bridges English-speaking and Chinese-speaking teams across APAC and U.S. markets — the difference between alignment on paper and alignment that survives the time zone.",
+  },
+  {
+    id: "builds",
+    label: "The builds",
+    audience: "Recruiters and consulting buyers",
+    // work.ts → etb.projects + etb.credibilityLine
+    body: "AtomicOS, CaseBrief, Cortex, ProcureBridge, and OpenClaw — products and internal tools, not demos. Alongside an M.S. in Artificial Intelligence in Business from ASU.",
+  },
+];
+
+export function getTerm(id: TermId): TermDetail {
+  return TERMS.find((t) => t.id === id) ?? TERMS[0];
+}
+
+/**
+ * The arc, in four beats: triage, origin, the AI turn, and the thesis.
+ *
+ * It returns to the present at the end on purpose. A pure reverse chronology
+ * reads as a job history; the return is what makes it an argument about how he
+ * works rather than a record of where he has been.
+ */
+export const ARC: Segment[][] = [
+  /* No `em` in this paragraph, and it is not an oversight: DM Serif Display
+     ships weight 400 only, so <strong> here renders as faux bold at best and
+     as nothing at worst — measured, not assumed. The three terms carry the
+     marking instead, and an underline renders fine in the serif. */
+  [
+    "I’m Hayden. I work where global supply chains meet applied AI — as founder of ",
+    { text: "WorldPulse", term: "worldpulse" },
+    ", as a ",
+    { text: "consultant", term: "consulting" },
+    " to teams putting AI into real operations, and on the back of eight years running sourcing and traceability for ",
+    { text: "Nike, Converse, Disney and Aosom", term: "brands" },
+    " across Asia.",
+  ],
+  [
+    "I got here by moving to ",
+    { text: "Taiwan in 2012", em: true },
+    " and learning ",
+    { text: "Mandarin", term: "mandarin" },
+    " first — which is the reason a supplier tells you what is actually going wrong, instead of what is on the report.",
+  ],
+  [
+    "I build with AI now: ",
+    { text: "five shipped products", term: "builds" },
+    " and ",
+    { text: "a master’s in it", em: true },
+    ". But I start where I always started. What counts as a record here, who owns it, and which decision it changes.",
+  ],
+  [
+    { text: "Automation is worth very little until it has something true to stand on.", em: true },
+    " That is the whole job, and it has looked like sourcing, like traceability, and like AI.",
+  ],
 ];
 
 /** Sits under the prose in place of a heading. The only label in the section. */
 export const PROSE_SIGNOFF = "Between the U.S. and Asia.";
+
+/** Plain text of the arc — used by the word count and by tests. */
+export function arcText(): string {
+  return ARC.map((para) =>
+    para.map((seg) => (typeof seg === "string" ? seg : seg.text)).join("")
+  ).join("\n\n");
+}
 
 /* ---------------------------------------------------------------------------
    Concepts
 
    ------------------------------------------------------------------------ */
 
-export type ConceptId = "plain" | "ground";
+export type ConceptId = "plain" | "deep" | "ground";
 
 export interface SiteMove {
   section: string;
@@ -250,11 +355,52 @@ export const CONCEPTS: ConceptMeta[] = [
     },
   },
   {
-    id: "ground",
+    id: "deep",
     index: "02",
+    name: "Deep",
+    thesis:
+      "The identical words, with five terms that open one supporting detail each — one per audience.",
+    shape:
+      "Two tiers of emphasis. Bold marks what a scanner needs; a dotted gold rule marks the five terms that go deeper. The detail slot is height-reserved, so opening one never moves the paragraph you were reading.",
+    reference:
+      "Standard disclosure, not a portfolio pattern — the reference sites have nothing like it. This is the answer to prose's one real weakness: 145 words is unscannable, and a recruiter and a WorldPulse buyer want different depth from the same sentence.",
+    strengths: [
+      "Solves the format's honest weakness. The bold gives a skimmer a path through 145 words in about four seconds.",
+      "Each of the three audiences gets depth aimed at them without the other two having to read it — the section serves a recruiter, a consulting buyer and a WorldPulse customer from one passage.",
+      "Nothing load-bearing is inside a disclosure. The argument is complete before anything is opened, which is the line the live Personas cards crossed.",
+      "The detail bodies are pulled from copy that already exists elsewhere on the site, so this is consolidation rather than more writing.",
+    ],
+    weaknesses: [
+      "Five operable terms inside four paragraphs is a lot of affordance in a small space; it can read as a page that wants to be clicked rather than read.",
+      "The reserved slot is ~9.5rem of mostly empty space at rest, which is real vertical cost for a prompt.",
+      "A visitor who never opens anything sees treatment 01 plus some dotted underlines — so the mechanism has to justify itself to the majority who ignore it.",
+      "Two tiers of emphasis is a system, and systems drift: a sixth term, then a seventh, and the prose is a link farm.",
+    ],
+    moves: [
+      { section: "Personas", verb: "drops", detail: "Deleted — and its actual content survives here, inside the term details, where it is asked for rather than asserted." },
+      { section: "About", verb: "moves", detail: "Becomes this passage, above Connect." },
+      { section: "About gallery", verb: "drops", detail: "Five unattached travel photos, replaced by depth that is about something." },
+      { section: "Brands carousel", verb: "drops", detail: "Named in paragraph one; the record behind them is one click away." },
+      { section: "Consulting chapter", verb: "owns", detail: "Still owns the offers in full. The `consultant` term is a pointer, not a second sales pitch." },
+      { section: "Let’s work together", verb: "owns", detail: "Owns routing. This section now qualifies the visitor before they reach it." },
+    ],
+    seo: {
+      title: "Hayden Baxter | Supply Chain, Applied AI, and WorldPulse",
+      description:
+        "I work where global supply chains meet applied AI — founder of WorldPulse, consultant, and eight years of sourcing and traceability for Nike, Converse, Disney and Aosom across Asia.",
+      schema: [
+        "All five details render into the markup together — nothing is fetched or generated on demand — so a crawler reads every word from the initial payload.",
+        "Adds ~120 words of topical prose over treatment 01 — more support for knowsAbout, still natural language.",
+        "Collapsed panels use `hidden`, which is correct for supplementary detail and is not cloaking: the text is identical for crawler and visitor.",
+      ],
+    },
+  },
+  {
+    id: "ground",
+    index: "03",
     name: "Ground",
     thesis:
-      "The identical 145 words, set over a photograph. The only question is whether the image earns its place.",
+      "Treatment 02 exactly — same words, same five terms — set over a photograph. The only variable is the image.",
     shape:
       "Same four paragraphs, same order, same type. A full-bleed photographic ground with a directional scrim behind them, and the reading column held left so the copy never crosses the busy half of the frame.",
     reference:

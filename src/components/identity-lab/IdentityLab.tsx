@@ -45,11 +45,13 @@ import PersonasSection from "@/components/PersonasSection";
 import Prose from "./concepts/Prose";
 import "./identity-lab.css";
 
-// One component, two treatments. The copy is identical in both by
-// construction, so the comparison can only ever be about the material.
+// One component, three treatments. The copy is identical in all three by
+// construction, so each comparison isolates exactly one variable: 01 vs 02 is
+// emphasis alone, 02 vs 03 is material alone.
 const BODIES: Record<ConceptId, () => React.ReactElement> = {
   plain: () => <Prose />,
-  ground: () => <Prose ground />,
+  deep: () => <Prose deep />,
+  ground: () => <Prose deep ground />,
 };
 
 /**
@@ -251,10 +253,11 @@ export default function IdentityLab() {
         </h1>
         <p className="ilab-head__lede">
           One format — the career arc in prose, after{" "}
-          <span className="ilab-head__ref">brianlovin.com/about</span> — in two
-          treatments over identical copy. <strong>0</strong> shows what ships
-          today: production’s real components, not a redraw. <strong>1</strong>{" "}
-          is plain, <strong>2</strong> sets the same words over a photograph.
+          <span className="ilab-head__ref">brianlovin.com/about</span> — in three
+          treatments over identical copy. <strong>0</strong> is what ships today.{" "}
+          <strong>1</strong> is bolded only. <strong>2</strong> makes five terms
+          open a detail. <strong>3</strong> sets the same words over a
+          photograph. Paragraph one triages all three audiences.
         </p>
       </header>
 
