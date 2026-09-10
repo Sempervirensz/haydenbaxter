@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import dynamic from "next/dynamic";
 import HeroSection from "@/components/HeroSection";
+import Navbar from "@/components/Navbar";
 import BrandsCarousel from "@/components/BrandsCarousel";
 import ConnectSection from "@/components/ConnectSection";
 import AboutSection from "@/components/AboutSection";
@@ -28,6 +29,11 @@ export default function Home() {
       <StructuredData />
       {/* Renders nothing unless ?perf=1 — see PerfProbe. */}
       <PerfProbe />
+      {/* Fixed, so it outlives the hero and stays reachable through the Work
+          section's ~13,600px. Mounted here rather than inside HeroSection
+          because the hero sits in the soft lock's pinned scene, whose z-index
+          would trap the bar's paint order beneath what follows. */}
+      <Navbar />
       {/* Soft lock: the card deck + entry prompt. Holds the rest of the page
           until all four cards are flipped or Skip is pressed.
 
