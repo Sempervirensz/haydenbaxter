@@ -26,12 +26,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import ETBDetail from "@/components/work/ETBDetail";
 import { WORK_SCREENS, type ETBProject } from "@/data/work";
-import {
-  AXES,
-  PROPOSED,
-  SHIPPED,
-  type LabState,
-} from "@/data/etbLanguageLab";
+import { AXES, BEFORE, SHIPPED, type LabState } from "@/data/etbLanguageLab";
 import "./etb-language-lab.css";
 
 /** The plate's darker stop and the dossier card — the worst case each ink sits
@@ -156,7 +151,7 @@ export default function ETBLanguageLab() {
       if (target && /^(INPUT|TEXTAREA|SELECT)$/.test(target.tagName)) return;
 
       if (e.key === "0") return setState(SHIPPED);
-      if (e.key === "9") return setState(PROPOSED);
+      if (e.key === "9") return setState(BEFORE);
 
       const index = Number(e.key) - 1;
       const axis = AXES[index];
@@ -176,14 +171,12 @@ export default function ETBLanguageLab() {
   if (!etb) return null;
 
   const isShipped = matches(state, SHIPPED);
-  const isProposed = matches(state, PROPOSED);
+  const isBefore = matches(state, BEFORE);
 
   return (
     <div className="etl" ref={rootRef} data-panel={panelOpen ? "open" : "closed"}>
       {/* ---- The real page ---- */}
       <main className="etb-gallery">
-        <h1 className="visually-hidden">Selected AI Work</h1>
-
         <div className="etb-gallery__rail">
           <Link href="/emerging-tech-builds" className="etb-gallery__back">
             <span aria-hidden="true">&larr;</span>
@@ -191,13 +184,14 @@ export default function ETBLanguageLab() {
           </Link>
         </div>
 
-        {/* Axis 3. In the ROUTE's frame, never inside ETBDetail — the homepage
-            card mounts the same component with its own chapter header and would
-            render two titles. */}
-        <div className="etl-masthead" aria-hidden={state.masthead === "current"}>
-          <p className="etl-masthead__kicker">Selected AI Work</p>
-          <p className="etl-masthead__title">Proof, not claims.</p>
-        </div>
+        {/* Mirrors the masthead in src/app/emerging-tech-builds/page.tsx, and has
+            to keep mirroring it — this shell is hand-copied from that route so
+            the lab can wrap the real ETBDetail in the real chrome. Axis 3 has
+            nothing to toggle if this drifts. */}
+        <header className="etb-gallery__masthead">
+          <p className="etb-gallery__kicker">{etb.credibilityLine}</p>
+          <h1 className="etb-gallery__title">{etb.title}</h1>
+        </header>
 
         <div className="etb-gallery__shell">
           <ETBDetail data={etb} />
@@ -219,8 +213,8 @@ export default function ETBLanguageLab() {
           <div className="etl-panel__body">
             <p className="etl-panel__title">ETB language lab</p>
             <p className="etl-panel__blurb">
-              Should the gallery speak the consulting sheet&rsquo;s language? Each axis is
-              independent; the decision is whether the combined thing reads better.
+              Direction B shipped. Each axis reverts its half of it on the live page, so the
+              before/after stays checkable rather than being a claim in a commit message.
             </p>
 
             <div className="etl-presets" role="group" aria-label="Presets">
@@ -236,11 +230,11 @@ export default function ETBLanguageLab() {
               <button
                 type="button"
                 className="etl-preset"
-                data-active={isProposed}
-                onClick={() => setState(PROPOSED)}
+                data-active={isBefore}
+                onClick={() => setState(BEFORE)}
               >
                 <span className="etl-preset__key" aria-hidden="true">9</span>
-                Proposed
+                Before B
               </button>
             </div>
 
@@ -261,7 +255,7 @@ export default function ETBLanguageLab() {
                         className="etl-opt"
                         data-active={state[key] === option.id}
                         aria-pressed={state[key] === option.id}
-                        onClick={() => set(key, option.id as never)}
+                        onClick={() => set(key, option.id)}
                       >
                         {option.label}
                       </button>
@@ -281,7 +275,7 @@ export default function ETBLanguageLab() {
                 <kbd>1</kbd>&ndash;<kbd>4</kbd> step an axis
               </span>
               <span>
-                <kbd>0</kbd> shipped <kbd>9</kbd> proposed
+                <kbd>0</kbd> shipped <kbd>9</kbd> before B
               </span>
             </p>
           </div>
