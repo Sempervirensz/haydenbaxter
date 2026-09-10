@@ -32,9 +32,9 @@
     "**/*.ts",
     "**/*.tsx",
     ".next-alt/types/**/*.ts",
+    ".next-labs/types/**/*.ts",
     ".next/types/**/*.ts",
-    "next-env.d.ts",
-    ".next-labs/types/**/*.ts"
+    "next-env.d.ts"
   ],
   /* The e2e suite is checked by tests/tsconfig.json instead. Playwright's
      `test.use()` needs PlaywrightTestOptions in scope, which Next's compiler
