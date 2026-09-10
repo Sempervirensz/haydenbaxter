@@ -44,7 +44,14 @@
    `.cpp-screen__title` directly above it. */
 .wp__claim {
   margin: 0;
-  max-width: 34ch;
+  /* 40ch, not 34. At 34 the claim set THREE lines in 427px — a squarish column
+     standing above two full-width ledger rows, which is most of what read as a
+     lopsided left edge once the rows below it filled the sheet. 40ch sets two
+     lines in 502px, close enough to the widest row (550px) that the block and
+     the ledger share an edge, and still a short measure for a 25px serif.
+     Narrow widths are untouched: below ~700px the container is narrower than
+     40ch, so it clamps first and the value never applies. */
+  max-width: 40ch;
   font-family: var(--face-display);
   font-size: clamp(17px, 5cqw, 25px);
   line-height: 1.28;
@@ -71,6 +78,42 @@
   display: flex;
   flex-direction: column;
   gap: 4px;
+}
+
+/* ---------------------------------------------------------------------------
+   The ledger, at widths where the sheet is wider than the copy
+   ------------------------------------------------------------------------ */
+
+/* Measured on the shipped sheet: at a 1180px card the sheet is 1030px wide and
+   the widest thing in this composition is 550px, so 480px — 47% of the panel —
+   was empty on the right, under masthead rules that run the full width. The
+   copy was not misaligned; there was simply nothing holding the other half,
+   which reads as a lopsided left edge rather than as a deliberate column.
+
+   The fix is the one `ExperienceScreen` already uses: a fixed label column, the
+   content in the rest, and a hairline under each row. Short text then fills the
+   sheet STRUCTURALLY, without padding the copy out to reach the edge.
+
+   Only above 700px. Below it the sheet is barely wider than the copy (30-53px
+   spare, measured), there is no void to solve, and the rows' vertical padding
+   is height this panel does not have — at 375px it fits with 3px to spare. */
+@container wp (min-width: 700px) {
+  .wp__spec {
+    display: grid;
+    /* Sized to hold "What it covers" (132px) with air, the way `.xp__fig`'s
+       108px was sized to hold its widest figure. Fixed rather than `auto` so
+       both rows start their items on ONE axis — sized to content, a 132px and
+       a 66px label step the two rows against each other. */
+    grid-template-columns: 150px 1fr;
+    align-items: baseline;
+    gap: 0 16px;
+    padding-bottom: 9px;
+    border-bottom: 1px solid var(--hair);
+  }
+
+  .wp__specs {
+    gap: 9px;
+  }
 }
 
 /* Hairline dividers, not middots — Drafting sets the panel's spec row that way,
@@ -155,4 +198,14 @@
      invisible to the fit probe for the identical reason. Content starts at the
      top here; `.wp__actions` still takes the floor, on its own `margin-top`. */
   justify-content: flex-start;
+}
+
+/* Tracklist gives every `.cpp-path` a top rule so a column of them reads as a
+   listing. There is only one path here and the sheet head already draws a rule
+   directly above it, so the pair rendered as a doubled hairline 13px apart.
+   Matched on the same attribute the tracklist rule uses, because `border: 0`
+   alone loses to it on specificity — the same fix, for the same reason, as
+   `.xp-screen__body` in experience-screen.css. */
+.cpp-screen[data-layout="tracklist"] .wp-screen__body {
+  border-top: 0;
 }
