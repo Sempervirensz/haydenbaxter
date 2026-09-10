@@ -279,11 +279,68 @@ export function arcText(): string {
 }
 
 /* ---------------------------------------------------------------------------
+   04 — Liner Notes
+
+   "Work is the album. About is the liner notes."
+
+   The Work chapters are the site's ambitious, interactive stretch. This one
+   deliberately contrasts: quiet, editorial, typographic, almost no UI. The
+   visitor has just come out of a pinned cinematic sequence, and the point of
+   this section is that the interface stops asking them to perform.
+
+   THE COPY BELOW IS LOCKED. It was supplied verbatim and must not be
+   rewritten, shortened, expanded, or "corrected". The only change made is
+   typographic: the apostrophe in "doesn’t" is U+2019 to match every other
+   apostrophe on the site. That is rendering, not wording.
+   ------------------------------------------------------------------------ */
+
+export const LINER = {
+  /** Chapter metadata. Work runs 01–04; About continues the numbering. */
+  index: "About / 05",
+
+  /** The dominant visual element — treated as an editorial feature title. */
+  opening: "I like understanding how things became what they are.",
+
+  /**
+   * Given its own typographic role rather than buried in the body. Rendered as
+   * a tracked mono index line — liner-note metadata, inert typography, never
+   * a control.
+   */
+  secondary: ["Products", "Companies", "Systems", "Ideas"],
+
+  body: [
+    "Following that curiosity has taken me across languages, countries, factories, supply chains, data, and emerging technology.",
+    "Somewhere along the way I noticed a lot of that work is translation. Sometimes literally, between Mandarin and English. More often between operations and technology, strategy and execution, data and the people actually living inside it.",
+    "The medium keeps changing. The instinct doesn’t: figure out how the pieces fit together, connect what usually sits apart, and build something better from what I find.",
+  ],
+} as const;
+
+/**
+ * Annotations derived from the locked prose — not new claims, and not a
+ * replacement for it. They sit beside the translation paragraph the way a note
+ * is printed in a booklet margin.
+ *
+ * DATA ↔ PEOPLE IS DELIBERATELY OMITTED. The brief asked for that pair to be
+ * tested rather than assumed, and it does not survive the test: the source
+ * phrase is "data and the people actually living inside it", which is
+ * containment, not a symmetry between two opposed domains. Rendering it as
+ * `DATA ↔ PEOPLE` states the opposite of what the sentence says — the whole
+ * point is that the people are *inside* the data, not across from it. Three
+ * genuinely symmetric pairs also read better as annotation than four, because
+ * four starts to look like a grid.
+ */
+export const LINER_PAIRS: [string, string][] = [
+  ["Mandarin", "English"],
+  ["Operations", "Technology"],
+  ["Strategy", "Execution"],
+];
+
+/* ---------------------------------------------------------------------------
    Concepts
 
    ------------------------------------------------------------------------ */
 
-export type ConceptId = "plain" | "deep" | "ground";
+export type ConceptId = "plain" | "deep" | "ground" | "liner";
 
 export interface SiteMove {
   section: string;
@@ -433,6 +490,47 @@ export const CONCEPTS: ConceptMeta[] = [
         "Identical to 01 — same copy, same entities, same crawlable text.",
         "One extra decorative image with an empty alt, which is correct: it depicts nothing the page is claiming.",
         "Marginal LCP cost the plain treatment does not pay.",
+      ],
+    },
+  },
+  {
+    id: "liner",
+    index: "04",
+    name: "Liner Notes",
+    thesis:
+      "Work is the album. About is the liner notes — quiet, editorial, almost no UI, on its own locked copy.",
+    shape:
+      "An asymmetric editorial field. Mono index and hairline, then the opening statement anchored left at feature-title scale, a tracked mono index line, the body offset right in a 58ch column, three translation annotations hanging in the left margin, and the closing thesis returning to the left edge.",
+    reference:
+      "Not a portfolio reference — a printed object. The contrast with the Work chapters IS the concept: the visitor has just come out of a pinned cinematic sequence, and this section is where the interface stops asking them to perform.",
+    strengths: [
+      "The only treatment that answers the question of what About should feel like rather than only what it should say. Contrast with Work is the idea, not a side effect.",
+      "Carries a point of view — curiosity, and work as translation — instead of a credential list. Nothing in it reads as a résumé.",
+      "Almost nothing to build wrong: no cards, no disclosure, no interaction, no photography. Sophistication is entirely typography, spacing and pacing.",
+      "Concise after an enormous Work experience, and it hands off cleanly to Journal, which is the next quiet reading surface.",
+    ],
+    weaknesses: [
+      "It is the least direct about credibility of anything in this lab. Nike, Disney, Mandarin, WorldPulse and the degree appear nowhere — a recruiter gets a voice, not a record.",
+      "That places the entire credibility burden on the Work chapters and the CTA. If those ever move or shorten, this section is stranded.",
+      "It does not triage audiences the way the arc's opening paragraph did; a consulting buyer is not told what to bring.",
+      "The register is confident to the point of being oblique. “I like understanding how things became what they are” asks the visitor to do the inference.",
+    ],
+    moves: [
+      { section: "Personas", verb: "drops", detail: "Deleted. This section replaces the identity claim entirely and makes no attempt to enumerate areas." },
+      { section: "About", verb: "moves", detail: "Becomes this, and moves above Connect — Work → About → Journal → Connect." },
+      { section: "About gallery", verb: "drops", detail: "No photography at all in this treatment; the available shots are travel snapshots and cannot carry it." },
+      { section: "Work chapters", verb: "owns", detail: "Own ALL proof and all credibility. That dependency is heavier here than in any other treatment." },
+      { section: "Journal", verb: "owns", detail: "Reads as the natural next page of the same booklet, which is an argument for keeping it directly after." },
+      { section: "Connect", verb: "moves", detail: "Moves below Journal so it stops interrupting the introduction." },
+    ],
+    seo: {
+      title: "Hayden Baxter | Products, Companies, Systems, Ideas",
+      description:
+        "I like understanding how things became what they are. Following that curiosity has taken me across languages, countries, factories, supply chains, data, and emerging technology.",
+      schema: [
+        "Weakest entity signal of the four: no brands, no degree, no role names in the copy, so knowsAbout has little on-page support here.",
+        "Person.description becomes voice rather than record — good for a human, thin for a crawler.",
+        "If this ships, the Work chapters and the schema graph must carry the entity work alone. Worth pairing with a stronger `jobTitle` and `alumniOf`.",
       ],
     },
   },

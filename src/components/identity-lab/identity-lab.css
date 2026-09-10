@@ -189,6 +189,32 @@
   opacity: 0.6;
 }
 
+
+/* Neighbour markers for the Context view. Lab chrome — deliberately ugly
+   enough that it can never be mistaken for part of a treatment. */
+.ilab-ctx {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.9rem 1.25rem;
+  background: rgba(255, 255, 255, 0.03);
+  border-block: 1px dashed rgba(255, 255, 255, 0.16);
+}
+
+.ilab-ctx span {
+  font-family: var(--font-mono);
+  font-size: var(--text-meta);
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  text-align: center;
+}
+
+.ilab-ctx--before {
+  /* A little height so the eye actually arrives out of something. */
+  min-height: 8rem;
+}
+
 /* ---- Stage -------------------------------------------------------------- */
 
 .ilab-stage {
@@ -479,6 +505,298 @@
       rgba(6, 10, 16, 0.4) 100%
     ),
     linear-gradient(to top, rgba(6, 10, 16, 0.7), transparent 60%);
+}
+
+/* ===========================================================================
+   04 — LINER NOTES
+
+   Work is the album. About is the liner notes.
+
+   Everything here is type, space and one hairline. No cards, no borders, no
+   panels, no controls. The only non-typographic element is the site's own film
+   grain at a quarter strength, and its job is to stop a very black section from
+   reading as a void.
+
+   LAYOUT LOGIC
+   A four-column asymmetric field on desktop. The opening statement and the
+   closing thesis anchor LEFT; the body sits in a narrower column offset RIGHT;
+   the translation annotations sit in the left margin beside the paragraph they
+   annotate. That left → right → left movement is the composition.
+
+   Container queries, not media queries: the lab frames this at 390px inside a
+   1440px window, and `@media` would render a desktop layout squeezed into a
+   phone-shaped hole.
+   ======================================================================== */
+
+.lnr {
+  --lnr-measure: 58ch;
+  --lnr-gutter: clamp(1.25rem, 0.9rem + 1.6vw, 6rem);
+
+  /* Its own container, deliberately: every rule below queries `lnr` rather
+     than the lab's `ilab` frame, so the composition survives being lifted out
+     of the lab and dropped onto the homepage unchanged. */
+  container-type: inline-size;
+  container-name: lnr;
+
+  position: relative;
+  isolation: isolate;
+  background: #0a0a0a;
+  /* Deliberately generous. The visitor arrives out of a pinned cinematic
+     sequence, and the first thing this section should do is stop. */
+  padding-block: clamp(4rem, 2.6rem + 6.4vw, 9rem);
+  padding-inline: var(--lnr-gutter);
+  overflow: hidden;
+}
+
+/* The site's grain, lifted from work-together.css. A quarter of the strength
+   it runs at there — this section is quiet, and grain that announces itself is
+   the skeuomorphic paper texture the brief rules out. */
+.lnr__grain {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.1;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='0.3'/%3E%3C/svg%3E");
+  background-size: 180px 180px;
+}
+
+.lnr__inner {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: var(--content-wide);
+  margin-inline: auto;
+}
+
+/* ---- Index -------------------------------------------------------------- */
+
+.lnr__index {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  letter-spacing: var(--track-dymo);
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+/* The only rule in the section, and it stops short rather than crossing the
+   full width — a full-bleed rule reads as a divider, which is furniture. */
+.lnr__rule {
+  height: 1px;
+  width: min(34%, 22rem);
+  background: rgba(255, 255, 255, 0.14);
+}
+
+/* ---- Opening statement -------------------------------------------------- */
+
+.lnr__opening {
+  font-family: var(--font-serif);
+  /* Solved against the container rather than the viewport, and fitted to two
+     measured points: 34px at a 347px container and 92px at 1363px. 34px is not
+     arbitrary — it is the largest size at which a 390px phone still falls into
+     the same three-line rag as desktop. Above 44px the phone breaks to five
+     lines with "I like" orphaned and "became what / they are." split across
+     the rag, which is worse than the size gain is worth.
+     Larger than a section heading (44→92), smaller than the hero (54→127). */
+  font-size: clamp(2rem, 0.89rem + 5.71cqi, 6rem);
+  line-height: 0.98;
+  font-weight: 400;
+  color: var(--ink);
+  /* Optical, not structural: at this size the serif's left sidebearing makes
+     the stem sit visibly inboard of the mono index above it. */
+  margin-left: -0.04em;
+  margin-top: clamp(1.5rem, 1rem + 2vw, 3rem);
+}
+
+/* Mobile-first: below this the browser wraps, and at the size above it lands
+   on the same three lines anyway. The authored breaks are only switched on
+   where they provably fit — `nowrap` plus a forced break in a container too
+   narrow to hold the line is a horizontal overflow, not a rag. */
+.lnr__opening br {
+  display: none;
+}
+
+@container lnr (min-width: 40rem) {
+  .lnr__opening {
+    text-wrap: nowrap;
+  }
+
+  .lnr__opening br {
+    display: inline;
+  }
+}
+
+/* ---- Secondary line ----------------------------------------------------- */
+
+.lnr__set {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.35rem 0;
+  margin-top: clamp(1.75rem, 1.2rem + 1.6vw, 3rem);
+  font-family: var(--font-mono);
+  font-size: var(--text-meta);
+  letter-spacing: var(--track-dymo);
+  text-transform: uppercase;
+  color: var(--ink-muted);
+}
+
+.lnr__set-sep {
+  color: var(--ink-faint);
+  margin-inline: 0.9em 0.75em;
+}
+
+/* ---- Body --------------------------------------------------------------- */
+
+.lnr__body {
+  margin-top: clamp(3rem, 2rem + 4.4vw, 6.5rem);
+  /* Zero on a phone, where a single column is the only honest layout. */
+  margin-inline-start: var(--lnr-indent, 0rem);
+}
+
+/* Tablet keeps the editorial movement. Without this, everything between 34rem
+   and 60rem collapsed to one flush-left column and the section read as a plain
+   page — the asymmetry is the concept, so it should not simply switch off
+   between the phone and the desktop composition. */
+@container lnr (min-width: 34rem) {
+  /* Set on the INNER wrapper, not on `.lnr`. A container query styles the
+     container's descendants and never the container element itself, so
+     `.lnr { --lnr-indent }` inside this block silently matched nothing and the
+     tablet stayed flush left. */
+  .lnr__inner {
+    --lnr-indent: clamp(2rem, 8cqi, 6rem);
+  }
+}
+
+/* Offset right. `margin-inline-start: auto` inside a wide container is what
+   creates the asymmetry — the body deliberately does not share the headline's
+   left edge. */
+@container lnr (min-width: 60rem) {
+  .lnr__body {
+    max-width: var(--lnr-measure);
+    margin-inline-start: auto;
+    margin-inline-end: clamp(0rem, 8vw - 4rem, 8rem);
+  }
+}
+
+.lnr__p {
+  font-family: var(--font-sans);
+  font-size: var(--text-body-lg);
+  line-height: 1.72;
+  color: var(--ink-body);
+  max-width: var(--lnr-measure);
+}
+
+.lnr__p + .lnr__p,
+.lnr__translation {
+  margin-top: clamp(2rem, 1.4rem + 2vw, 3.25rem);
+}
+
+/* ---- Translation annotations -------------------------------------------- */
+
+/* On a wide container the pairs hang in the left margin beside the paragraph
+   they annotate, the way a note is printed in a booklet. Absolute, so they
+   cannot disturb the reading column's rhythm. */
+.lnr__translation {
+  position: relative;
+}
+
+.lnr__pairs {
+  list-style: none;
+  margin-top: 1.75rem;
+  display: grid;
+  gap: 0.55rem;
+  /* Hangs back out to the section's left edge, so even where the annotations
+     sit below their paragraph they still read as marginalia rather than as a
+     third paragraph. A rem-based indent rather than a percentage precisely so
+     this negative margin can cancel it exactly. */
+  margin-inline-start: calc(-1 * var(--lnr-indent, 0rem));
+}
+
+@container lnr (min-width: 60rem) {
+  .lnr__pairs {
+    position: absolute;
+    top: 0.4rem;
+    right: calc(100% + clamp(2rem, 5vw, 5.5rem));
+    margin-top: 0;
+    width: max-content;
+    text-align: right;
+    justify-items: end;
+  }
+}
+
+.lnr__pair {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6em;
+  font-family: var(--font-mono);
+  font-size: var(--text-meta);
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+  /* Secondary by construction: never brighter than the prose it annotates. */
+  color: var(--ink-faint);
+  white-space: nowrap;
+}
+
+.lnr__pair-arrow {
+  color: rgba(216, 177, 90, 0.62);
+}
+
+/* ---- Closing thesis ------------------------------------------------------ */
+
+/* Returns to the left edge, which is what makes it read as a conclusion
+   rather than as a fourth body paragraph. */
+.lnr__close {
+  margin-top: clamp(3.5rem, 2.4rem + 4.4vw, 7rem);
+  font-family: var(--font-serif);
+  font-size: clamp(1.3125rem, 1.02rem + 0.95vw, 2.0625rem);
+  line-height: 1.34;
+  color: var(--ink);
+  /* 30ch ran to six lines and read as a second headline. At 44ch it lands on
+     three or four and reads as a conclusion — present, not competing. */
+  max-width: 44ch;
+}
+
+/* ===========================================================================
+   Motion
+
+   Armed from JS, never authored here as a default. Every beat renders visible
+   until `[data-armed]` is set, so a section whose observer never fires shows
+   its content rather than nothing.
+   ======================================================================== */
+
+.lnr[data-armed] [data-beat] {
+  opacity: 0;
+  transform: translateY(10px);
+  transition:
+    opacity 700ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 700ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.lnr[data-armed] [data-beat][data-seen] {
+  opacity: 1;
+  transform: none;
+}
+
+/* Stagger by beat, so the composition resolves in reading order rather than
+   all at once. The annotations trail their paragraph deliberately. */
+.lnr[data-armed] [data-beat="1"] { transition-delay: 60ms; }
+.lnr[data-armed] [data-beat="2"] { transition-delay: 140ms; }
+.lnr[data-armed] [data-beat="3"] { transition-delay: 40ms; }
+.lnr[data-armed] [data-beat="4"] { transition-delay: 40ms; }
+.lnr[data-armed] [data-beat="5"] { transition-delay: 260ms; }
+.lnr[data-armed] [data-beat="6"] { transition-delay: 40ms; }
+
+@media (prefers-reduced-motion: reduce) {
+  .lnr [data-beat] {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
 }
 
 /* ===========================================================================

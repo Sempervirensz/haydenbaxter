@@ -42,7 +42,9 @@ import {
 } from "@/data/identityLab";
 import AboutSection from "@/components/AboutSection";
 import PersonasSection from "@/components/PersonasSection";
+import JournalSection from "@/components/JournalSection";
 import Prose from "./concepts/Prose";
+import LinerNotes from "./concepts/LinerNotes";
 import "./identity-lab.css";
 
 // One component, three treatments. The copy is identical in all three by
@@ -52,6 +54,10 @@ const BODIES: Record<ConceptId, () => React.ReactElement> = {
   plain: () => <Prose />,
   deep: () => <Prose deep />,
   ground: () => <Prose deep ground />,
+  // 04 is a different concept, not a fourth treatment of the arc: its own
+  // copy, its own composition. 01–03 are preserved unchanged so the earlier
+  // comparison still stands.
+  liner: () => <LinerNotes />,
 };
 
 /**
@@ -209,6 +215,10 @@ function Diagnosis() {
 export default function IdentityLab() {
   const [sel, setSel] = useState<Selection>("plain");
   const [width, setWidth] = useState<Width>("page");
+  /* Renders the treatment between its real neighbours. A section like this
+     cannot be judged in isolation: the whole Liner Notes argument is that it
+     contrasts with what precedes it and hands off to what follows. */
+  const [context, setContext] = useState(false);
   const uid = useId();
 
   // Number keys pick a concept, 0 picks the baseline — the lab is a comparison
@@ -257,7 +267,9 @@ export default function IdentityLab() {
           treatments over identical copy. <strong>0</strong> is what ships today.{" "}
           <strong>1</strong> is bolded only. <strong>2</strong> makes five terms
           open a detail. <strong>3</strong> sets the same words over a
-          photograph. Paragraph one triages all three audiences.
+          photograph. <strong>4</strong> is a different concept on different,
+          locked copy — <em>Liner Notes</em>: Work is the album, About is the
+          booklet.
         </p>
       </header>
 
@@ -304,6 +316,16 @@ export default function IdentityLab() {
           </span>
         )}
 
+        <button
+          type="button"
+          className="ilab-switch__btn ilab-switch__btn--w"
+          data-active={context || undefined}
+          aria-pressed={context}
+          onClick={() => setContext((c) => !c)}
+        >
+          Context
+        </button>
+
         <span className="ilab-widths" role="group" aria-label="Frame width">
           {(["page", "phone"] as Width[]).map((w) => (
             <button
@@ -345,7 +367,28 @@ export default function IdentityLab() {
               /* No shared heading wrapper: every concept carries its own
                  chapter rule and owns its full width, because full-bleed art
                  cannot live inside a gutter. */
-              Body && <Body />
+              <>
+                {context && (
+                  /* Standing in for chapter 04/04, which is 420vh of pinned
+                     cinema and cannot usefully be reproduced here. What matters
+                     for the transition is only that Work ends dark and ends
+                     BUSY — the section below has to read as a stop. */
+                  <div className="ilab-ctx ilab-ctx--before" aria-hidden="true">
+                    <span>↑ Work · chapter 04 / 04 ends here — dark, pinned, cinematic</span>
+                  </div>
+                )}
+
+                {Body && <Body />}
+
+                {context && (
+                  <>
+                    <div className="ilab-ctx" aria-hidden="true">
+                      <span>↓ the real Journal section follows</span>
+                    </div>
+                    <JournalSection />
+                  </>
+                )}
+              </>
             )}
           </section>
         </div>
