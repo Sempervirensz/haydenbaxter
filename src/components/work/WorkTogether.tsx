@@ -41,7 +41,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { CTA_HINT, CTA_LABEL, PATHS, getPath, type PathId } from "@/data/workTogether";
 import ConsultingPathsScreen from "@/components/work/ConsultingPathsScreen";
 import ExperienceScreen from "@/components/work/ExperienceScreen";
-import WorkTogetherSolo from "@/components/work/WorkTogetherSolo";
+import WorldPulseScreen from "@/components/work/WorldPulseScreen";
 import "@/components/work/work-together.css";
 // The three bars are styled by the shipped scheme too, and they exist before
 // any screen is opened — so the section depends on this stylesheet directly
@@ -187,20 +187,21 @@ export default function WorkTogether({ media, isActive, className = "" }: Props)
 
         {path && (
           <div className="wt__unfurl">
-            {/* Two of the three are now answered in their own terms.
-                Consulting is two named paths, each with its own detail and its
-                own ask. Experience is the operating record — three figures at
-                display scale over one footnote — out of the lab at
-                /experience-lab. WorldPulse keeps the solo sheet, which is still
-                the right shape for it: a venture with two titled blocks to
-                describe, not a record to weigh. All three take the same skin,
-                so the section still reads as one. */}
+            {/* All three are now answered in their own terms. Consulting is
+                two named paths, each with its own detail and its own ask.
+                Experience is the operating record — three figures at display
+                scale over one footnote — out of the lab at /experience-lab.
+                WorldPulse is one claim at display scale over two mono spec
+                rows, out of /worldpulse-panel-lab; it was the last screen on
+                the generic two-block sheet, where it said the same thing four
+                times and overflowed the card by 361px on a phone. All three
+                take the same skin, so the section still reads as one. */}
             {openId === "consulting" ? (
               <ConsultingPathsScreen onBack={close} />
             ) : openId === "experience" ? (
               <ExperienceScreen onBack={close} />
             ) : (
-              <WorkTogetherSolo path={path} onBack={close} />
+              <WorldPulseScreen onBack={close} />
             )}
           </div>
         )}

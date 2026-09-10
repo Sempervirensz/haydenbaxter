@@ -1,0 +1,133 @@
+/* ===========================================================================
+   WorldPulse panel lab — frame chrome only
+   ===========================================================================
+
+   Lab furniture, and nothing else. Everything INSIDE a frame is production's:
+   `.wt` and its depth ladder from work-together.css, the paper sheet and the
+   solo panel from consulting-paths.css, rendered by the real
+   `WorkTogetherSolo`. This file may not introduce a colour, a typeface or a
+   spacing token that the panel then appears to own.
+
+   WHY FIXED-SIZE FRAMES
+   ---------------------
+   `.wt` is `container-type: size` + `container-name: wt`, and it is
+   `position: absolute; inset: 0`. So it needs a positioned ancestor with a
+   DEFINITE width and height or the container queries inside it resolve against
+   nothing. Each frame is that ancestor, at true device pixels — no transform
+   scaling — so `@container wt (max-width: 700px)` fires exactly when it fires
+   on the real page.
+
+   The widths are chosen around that 700px breakpoint rather than around device
+   marketing names: 375 and 680 sit under it, 701 and 1180 sit over it, so the
+   pair straddling the boundary shows what the rule actually does.
+   ======================================================================== */
+
+/* Its OWN scroller, and not the document's. globals.css puts `overflow: clip`
+   on both `html` and `body` for the scroll-driven Work stack, which leaves a
+   lab route taller than the viewport with no way to reach its own lower half —
+   the page simply refuses to scroll. */
+.wplab {
+  height: 100vh;
+  overflow-y: auto;
+  padding: 40px 28px 96px;
+  background: #0a0a0a;
+  color: rgba(255, 255, 255, 0.82);
+  font-family: var(--font-dm-sans), system-ui, sans-serif;
+}
+
+.wplab__head {
+  max-width: 1180px;
+  margin: 0 auto 36px;
+}
+
+.wplab__title {
+  margin: 0 0 8px;
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+
+.wplab__sub {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.wplab__stage {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 44px 28px;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.wplab__frame {
+  margin: 0;
+}
+
+.wplab__cap {
+  display: flex;
+  gap: 10px;
+  align-items: baseline;
+  margin-bottom: 10px;
+  font-family: var(--font-dm-mono), ui-monospace, monospace;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.wplab__w {
+  color: #e3c47f;
+}
+
+.wplab__note {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+/* The readout the lab exists for: how much taller the sheet's content is than
+   the sheet. Borrows the two inks the panel already owns rather than a green —
+   brass for a fit, the site's cobalt-lift for an overflow, so it reads as
+   information and not as an error state. */
+.wplab__fit[data-over] {
+  color: #93b4ff;
+}
+
+/* The positioned, definite-size ancestor `.wt` requires. `overflow: clip`
+   matches `.work__screen`, so a panel that overflows its card is CLIPPED here
+   the way it is clipped in production instead of spilling and looking fine. */
+.wplab__screen {
+  position: relative;
+  overflow: clip;
+  border-radius: 18px;
+  background: #06070b;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.7);
+}
+
+/* `display: contents` and not a box. Production's sheet is a DIRECT child of
+   `.wt__unfurl` and its `max-height: 100%` resolves against that; a real
+   wrapper gives the max-height an unconstrained parent, the sheet grows to its
+   full content height, and the frame reports a fit while actually overflowing.
+   The element stays in the tree so the measure effect can still find
+   `.cpp-screen` inside it. Lifted from `.xlab-baseline` in experience-lab.css,
+   where the same trap was found first. */
+.wplab__sheet {
+  display: contents;
+}
+
+/* ---- Before / after sets ---- */
+
+.wplab__set {
+  max-width: 1180px;
+  margin: 0 auto 56px;
+}
+
+.wplab__setTitle {
+  margin: 0 0 18px;
+  font-family: var(--font-dm-mono), ui-monospace, monospace;
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.44);
+}

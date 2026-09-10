@@ -1,0 +1,211 @@
+/* ===========================================================================
+   "Explore WorldPulse" — the active venture
+   ===========================================================================
+
+   Scoped under `.wp-`. Inherits the paper sheet's tokens from `.cpp-screen`
+   and the cobalt accent from `.cpp-path[data-path="ai"]` in
+   consulting-paths.css, so this file introduces no colour and no typeface of
+   its own — a section that needed either would not survive inside the chapter.
+
+   THE CONTAINER, AND WHY IT IS NOT `wt`
+   -------------------------------------
+   Same reason `.xp` establishes its own, measured in experience-screen.css:
+   the Consulting card keeps widening past 3400px while the sheet caps at
+   1696px (`--shell-consulting`), so a `cqw` read against the card over-scales
+   anything inside the sheet on every ultrawide display. `.wp` establishes its
+   own inline-size container, so each ramp below is a share of the SHEET and
+   saturates exactly when the sheet does.
+
+   THE RAMP
+   --------
+   One continuous clamp per role rather than breakpoint steps, because the
+   sheet width moves continuously between 293px (a 375px phone) and 1694px.
+   The floors are the phone values this was solved at; the ceilings are set
+   where the 1694px sheet stops.
+   ======================================================================== */
+
+.wp {
+  container-type: inline-size;
+  container-name: wp;
+
+  display: flex;
+  flex-direction: column;
+  gap: clamp(8px, 3.4cqw, 22px);
+}
+
+/* ---------------------------------------------------------------------------
+   The claim
+   ------------------------------------------------------------------------ */
+
+/* The one object at display scale, and the only serif in the sheet below the
+   title. It is a SENTENCE, so it cannot take `.xp__num`'s ramp — a figure can
+   be 46px in a 293px sheet and a line of prose cannot. The ceiling is set where
+   the line stops being a deck and starts being a headline competing with
+   `.cpp-screen__title` directly above it. */
+.wp__claim {
+  margin: 0;
+  /* 40ch, not 34. At 34 the claim set THREE lines in 427px — a squarish column
+     standing above two full-width ledger rows, which is most of what read as a
+     lopsided left edge once the rows below it filled the sheet. 40ch sets two
+     lines in 502px, close enough to the widest row (550px) that the block and
+     the ledger share an edge, and still a short measure for a 25px serif.
+     Narrow widths are untouched: below ~700px the container is narrower than
+     40ch, so it clamps first and the value never applies. */
+  max-width: 40ch;
+  font-family: var(--face-display);
+  font-size: clamp(17px, 5cqw, 25px);
+  line-height: 1.28;
+  letter-spacing: -0.01em;
+  color: var(--ink-1);
+  text-wrap: balance;
+}
+
+/* ---------------------------------------------------------------------------
+   The spec rows
+   ------------------------------------------------------------------------ */
+
+.wp__specs {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(9px, 2.8cqw, 18px);
+}
+
+/* `.cpp-path__kicker` is production's, reused rather than restyled: Drafting
+   draws the kicker's hue and its registration tick off that class name, and a
+   private copy would drop out of the system the next time a direction is
+   promoted. */
+.wp__spec {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* ---------------------------------------------------------------------------
+   The ledger, at widths where the sheet is wider than the copy
+   ------------------------------------------------------------------------ */
+
+/* Measured on the shipped sheet: at a 1180px card the sheet is 1030px wide and
+   the widest thing in this composition is 550px, so 480px — 47% of the panel —
+   was empty on the right, under masthead rules that run the full width. The
+   copy was not misaligned; there was simply nothing holding the other half,
+   which reads as a lopsided left edge rather than as a deliberate column.
+
+   The fix is the one `ExperienceScreen` already uses: a fixed label column, the
+   content in the rest, and a hairline under each row. Short text then fills the
+   sheet STRUCTURALLY, without padding the copy out to reach the edge.
+
+   Only above 700px. Below it the sheet is barely wider than the copy (30-53px
+   spare, measured), there is no void to solve, and the rows' vertical padding
+   is height this panel does not have — at 375px it fits with 3px to spare. */
+@container wp (min-width: 700px) {
+  .wp__spec {
+    display: grid;
+    /* Sized to hold "What it covers" (132px) with air, the way `.xp__fig`'s
+       108px was sized to hold its widest figure. Fixed rather than `auto` so
+       both rows start their items on ONE axis — sized to content, a 132px and
+       a 66px label step the two rows against each other. */
+    grid-template-columns: 150px 1fr;
+    align-items: baseline;
+    gap: 0 16px;
+    padding-bottom: 9px;
+    border-bottom: 1px solid var(--hair);
+  }
+
+  .wp__specs {
+    gap: 9px;
+  }
+}
+
+/* Hairline dividers, not middots — Drafting sets the panel's spec row that way,
+   "how a drawing lists tolerances". `--hair-2` is the token Drafting thickened
+   to 0.24 for exactly this: at the shipped 0.18 a vertical hairline on warm
+   paper is a 1.3:1 edge and vanishes.
+
+   A wrapping flex with a gap, not a run of inline spans: the rule needs air on
+   BOTH sides. Inline, the divider draws flush against the next word, because
+   padding on the item before it only opens the left half of the gap. */
+.wp__row {
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 12px;
+
+  font-family: var(--face-label);
+  /* --text-meta (12 -> 15.5px). The site's own step and not a hardcoded px:
+     this file ships on a public route, and `scripts/check-scale.mjs` exists
+     because a route-scoped stylesheet once kept an 11.52px eyebrow on a public
+     page indefinitely. */
+  font-size: var(--text-meta);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  line-height: 1.5;
+  color: var(--ink-2);
+}
+
+/* The rule hangs off the item BEFORE the gap and is dropped on the last one, so
+   a wrapped run never opens a line with a leading divider. */
+.wp__item:not(:last-child) {
+  padding-right: 12px;
+  border-right: 1px solid var(--hair-2);
+}
+
+/* ---------------------------------------------------------------------------
+   The sheet
+   ------------------------------------------------------------------------ */
+
+.wp__actions {
+  margin-top: auto;
+  padding-top: clamp(4px, 2.4cqw, 16px);
+}
+
+/* `.cpp-paths` is a grid built for two columns; a solo screen is one. */
+.wp-screen__paths {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+
+  /* `align-items: end` is load-bearing for the PAIR — those panels are anchored
+     to the floor of a fixed card and open upward — and it is actively harmful
+     here. A solo panel taller than the box does not scroll under it, it
+     ESCAPES UPWARD: measured at 375px, `.cpp-path` sat 55px above its own
+     parent and printed the claim through `.cpp-screen__title`. Worse, the
+     sheet's `overflow: auto` cannot scroll overflow in the negative direction,
+     so the fit probe read "fits" while the panel was visibly broken.
+     Stretching puts the panel back on the top edge, where any overflow is
+     downward and therefore both scrollable and measurable. */
+  align-items: stretch;
+}
+
+/* The venture's own frame. `.cpp-path` brings the cobalt tokens and the sleeve
+   grooves; everything it draws for a PAIR of paths — the panel padding, the
+   border, the plate — is reset, because this screen is one column of record
+   rather than a card among cards. */
+.wp-screen__body {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  border: 0;
+  background: none;
+  box-shadow: none;
+
+  /* The same floor-anchoring as `.cpp-paths` above, one level down: `.cpp-path`
+     is `justify-content: flex-end` so a pair's detail grows upward out of the
+     buttons. Measured at 375px, that put `.wp` 68px above its own parent and
+     printed the claim through the sheet's title — the identical failure, and
+     invisible to the fit probe for the identical reason. Content starts at the
+     top here; `.wp__actions` still takes the floor, on its own `margin-top`. */
+  justify-content: flex-start;
+}
+
+/* Tracklist gives every `.cpp-path` a top rule so a column of them reads as a
+   listing. There is only one path here and the sheet head already draws a rule
+   directly above it, so the pair rendered as a doubled hairline 13px apart.
+   Matched on the same attribute the tracklist rule uses, because `border: 0`
+   alone loses to it on specificity — the same fix, for the same reason, as
+   `.xp-screen__body` in experience-screen.css. */
+.cpp-screen[data-layout="tracklist"] .wp-screen__body {
+  border-top: 0;
+}
