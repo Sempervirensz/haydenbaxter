@@ -1,4 +1,4 @@
-# Handoff — Identity Lab (`design/identity-lab`)
+# About + Personas — Handoff (`design/identity-lab`)
 
 Written 2026-09-10. Paste the whole file into a new chat, or read it in place.
 
@@ -197,7 +197,7 @@ src/components/identity-lab/
   IdentityLab.tsx                              shell, switcher, frame, live word meter, readouts
   identity-lab.css                             lab chrome + reading column + emphasis + detail slot
   README.md                                    the design argument
-  HANDOFF.md                                   this file
+  ABOUT_PERSONAS_HANDOFF.md                    this file
   concepts/
     Prose.tsx                                  the arc; `deep` / `ground` props select the treatment
     parts.tsx                                  full-bleed art + scrim
