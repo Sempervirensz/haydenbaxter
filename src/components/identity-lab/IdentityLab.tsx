@@ -42,28 +42,30 @@ import {
 } from "@/data/identityLab";
 import AboutSection from "@/components/AboutSection";
 import PersonasSection from "@/components/PersonasSection";
-import Statement from "./concepts/Statement";
-import Triptych from "./concepts/Triptych";
-import Plate from "./concepts/Plate";
-import Margin from "./concepts/Margin";
-import Reveal from "./concepts/Reveal";
+import Prose from "./concepts/Prose";
 import "./identity-lab.css";
 
+// One component, two treatments. The copy is identical in both by
+// construction, so the comparison can only ever be about the material.
 const BODIES: Record<ConceptId, () => React.ReactElement> = {
-  statement: Statement,
-  triptych: Triptych,
-  plate: Plate,
-  margin: Margin,
-  reveal: Reveal,
+  plain: () => <Prose />,
+  ground: () => <Prose ground />,
 };
 
 /**
  * Production's About + Personas, counted: a 75-word intro plus three titles and
- * nine bullets. Every concept is measured against it live, so "too long" is a
- * number rather than an opinion — round one lost on exactly this and
- * nothing on screen was counting, so it took a human read to catch it.
+ * nine bullets. Every treatment is measured against it live, so length stays a
+ * number rather than an opinion — round one lost on exactly this and nothing on
+ * screen was counting.
+ *
+ * The warn threshold is NOT a target. This format is deliberately ~145 words:
+ * prose that carries an argument is not the same commitment as 216 words of
+ * bullets, and an earlier 108-word threshold (half the baseline) flagged the
+ * intended length as a failure. Warn only when a treatment stops being
+ * meaningfully shorter than what ships today.
  */
 const BASELINE_WORDS = 216;
+const WARN_WORDS = 180;
 
 type Selection = ConceptId | "baseline";
 type Width = "page" | "phone";
@@ -203,7 +205,7 @@ function Diagnosis() {
    ------------------------------------------------------------------------ */
 
 export default function IdentityLab() {
-  const [sel, setSel] = useState<Selection>("statement");
+  const [sel, setSel] = useState<Selection>("plain");
   const [width, setWidth] = useState<Width>("page");
   const uid = useId();
 
@@ -248,10 +250,11 @@ export default function IdentityLab() {
           Who is Hayden, and why is it one person?
         </h1>
         <p className="ilab-head__lede">
-          Five directions for the About + Personas pair, each rendered on the
-          site’s own ground. <strong>0</strong> shows what ships today —
-          production’s real components, not a redraw. <strong>1–5</strong> pick
-          a concept.
+          One format — the career arc in prose, after{" "}
+          <span className="ilab-head__ref">brianlovin.com/about</span> — in two
+          treatments over identical copy. <strong>0</strong> shows what ships
+          today: production’s real components, not a redraw. <strong>1</strong>{" "}
+          is plain, <strong>2</strong> sets the same words over a photograph.
         </p>
       </header>
 
@@ -290,7 +293,7 @@ export default function IdentityLab() {
         {words !== null && (
           <span
             className="ilab-count-meter"
-            data-over={words > BASELINE_WORDS * 0.5 || undefined}
+            data-over={words > WARN_WORDS || undefined}
             title={`${words} words rendered · production's About + Personas is ${BASELINE_WORDS}`}
           >
             <strong>{words}</strong> words

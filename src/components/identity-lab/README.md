@@ -38,39 +38,45 @@ Three structural faults follow from that:
 where Connect currently separates them. A redrawn baseline would hide the exact
 thing under review.
 
-`01`–`05` are five directions, all built to two hard constraints that round one
-failed:
+`01 Plain` and `02 Ground` are **one format in two treatments over identical
+copy**. The words do not change between them, so the comparison can only ever be
+about whether the photograph earns its place.
 
-- **Under 60 words.** Production's About + Personas is **216**. Round one came in
-  at 200–350 per concept — the fix was longer than the problem. The lab now
-  measures the rendered word count live, in the switcher, against 216.
-- **Real material.** Round one was type on flat `#0a0a0a` with hairlines, sitting
-  next to a site whose Work chapters are full-bleed photography and a physical
-  CD player on blue velvet. Every concept below is built on an existing asset.
+## The format, and where it comes from
 
-| | Concept | Words | Material | Thesis |
-|---|---------|-------|----------|--------|
-| 01 | **Statement** | 37 | Consulting night coast, full-bleed | One sentence at scale over a photograph. Nothing else. |
-| 02 | **Triptych** | 36 | Pacific map, the four product marks, the WorldPulse shoot | Show the three rooms instead of describing them. |
-| 03 | **Plate** | 26 | DYMO emboss on the blue velvet | Identity as an object, not a passage. |
-| 04 | **Margin** | 35 | Portrait + the site's Caveat hand | A photograph, annotated. The order is the whole note. |
-| 05 | **Reveal** | 36 | Three grounds, cross-faded | One sentence that assembles itself. |
+Rounds one and two both designed a *section* — a heading, a composition, a grid.
+Research into the sites that share Hayden's shape says none of them has one:
 
-Each carries a readout: thesis, strengths, **honest** weaknesses, the site map
-(what every other homepage section does if this one ships), and the SEO delta.
-The site map is the point — the redundancy being fixed is not inside About.
+| Site | Identity length | How range is handled |
+|------|-----------------|----------------------|
+| [rauno.me](https://rauno.me) | 1 sentence | An index of work types below it. The index is the About. |
+| [vanschneider.com](https://vanschneider.com) | 2–3 sentences | Closest structural twin — one person, a studio, three ventures. Ventures named inline; full-bleed galleries carry the rest. |
+| [brianlovin.com/about](https://brianlovin.com/about) | ~180 words | Reverse-chronological prose. "Before that…" turns range into an arc. |
+| [nadia.xyz](https://nadia.xyz) | ~25 words | A method statement, no titles at all. |
+| [stephango.com](https://stephango.com) | no job titles | Credibility from the archive alone. |
 
-Round one (Throughline · The Route · What to Bring Me · Plain Text · Provenance)
-is preserved in commit `a3bf704` if any of that copy is worth recovering.
+Brian Lovin's is the format built here, because **Hayden's credibility is the
+order**: Mandarin, then the factory floor, then Fortune 100 operations, then AI.
+Prose carries an order. A grid of cards turns the same facts into a résumé.
 
-## The phone frame
+The arc is four beats — now, before, how he got there, and what it means for the
+work today. It deliberately returns to the present at the end: a pure reverse
+chronology reads as a job history, and the return is what makes it an argument
+about how he works.
 
-Concept layout uses `@container` queries against the frame, never `@media`
-queries against the viewport, so the **390px frame is a real narrow-width test**
-rather than a scaled picture of one — the same rules fire in the frame and on a
-phone. The baseline is the exception: production's CSS is viewport-driven, so
-it does not reflow inside the frame, and the lab says so on screen instead of
-pretending otherwise.
+**145 words**, against production's 216. The lab measures the rendered count
+live, in the switcher.
+
+## What is deliberately absent
+
+- **No section heading.** The first three words are "I'm Hayden."
+- **No DYMO fact strip.** Rounds one and two hung Mandarin / Nike / Disney under
+  everything. Here the prose names them in sequence, so a strip would repeat the
+  section's own sentences three lines later — the exact habit this lab exists to
+  break. A test asserts each name appears *exactly once*.
+- **No cards, no grid, no disclosure, no interaction.**
+
+Rounds one and two are preserved in `a3bf704` and `9e604c8`.
 
 ## Facts
 
@@ -80,26 +86,28 @@ metrics, clients, or credentials beyond what the site already says out loud.
 The interpretive sentences (the ones stating what a fact *means*) are new,
 because that is the actual deliverable.
 
-Two deliberate omissions:
-
-- Margin's portrait keeps the repo's own `alt` ("Portrait"). Naming the subject
-  would be an assertion nothing in the repo supports.
-- No photograph is captioned with a claim about what it depicts. The Pacific map
-  is labelled "Global supply chain" because that is the panel's subject, not the
-  image's content.
+`02 Ground`'s photograph carries an empty `alt` and is `aria-hidden`, which is
+correct: it depicts nothing the page is claiming. It is also already the
+Consulting chapter's ground — worth watching for whether reuse reads as a motif
+or as a repeat.
 
 ## Files
 
 ```
-src/data/identityLab.ts                     diagnosis + facts + concept metadata
+src/data/identityLab.ts                     diagnosis + the arc + treatment metadata
 src/components/identity-lab/
   IdentityLab.tsx                           shell, switcher, frame, word meter, readouts
-  identity-lab.css                          lab chrome + all five concepts
+  identity-lab.css                          lab chrome + the reading column
   concepts/
-    parts.tsx                               chapter rule · DYMO fact strip · full-bleed art
-    Statement.tsx  Triptych.tsx  Plate.tsx  Margin.tsx  Reveal.tsx
+    parts.tsx                               full-bleed art + scrim (all that is left)
+    Prose.tsx                                the arc; `ground` prop selects the treatment
 src/app/identity-lab/page.dev.tsx           dev-only route
 ```
+
+The 390px frame is a real narrow-width test: the one container query in the
+concept fires against the frame, not the viewport. The baseline is the
+exception — production's CSS is viewport-driven and does not reflow inside the
+frame, and the lab says so on screen rather than pretending otherwise.
 
 Touched outside the lab: `src/data/site.ts` (noindex prefix) and
 `src/data/labsRegistry.ts` (hub entry). Six lines. Deleting the four paths above
@@ -107,10 +115,8 @@ and reverting those two entries removes the experiment completely.
 
 ## Keyboard
 
-`0` selects the baseline, `1`–`5` select a concept. In **Reveal**, each marked
-phrase is a real `<button>`, so keyboard focus produces the same reveal as
-hover, and all three facts stay in the DOM at all times — nothing is reachable
-by pointer alone. The switcher is a toolbar of
+`0` selects the baseline, `1`–`2` select a treatment. Neither treatment has any
+interaction at all. The switcher is a toolbar of
 `aria-pressed` buttons, not a tablist — the stage below is a page region, not a
 tabpanel, and labelling it as one would promise a keyboard model this does not
 implement. Every control clears the 44px tap floor. Nothing animates under

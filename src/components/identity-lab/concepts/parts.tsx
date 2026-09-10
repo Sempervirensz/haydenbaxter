@@ -1,43 +1,15 @@
-// Shared furniture for the identity concepts.
+// Shared furniture for the identity treatments.
 //
-// This is the Work chapters' own grammar, lifted deliberately: a mono eyebrow
-// with a hairline rule running off to the right (`01 — WORLDPULSE ————`), and
-// a DYMO strip of facts. Round one invented its own furniture and looked like
-// a text document sitting next to the site; these two pieces are what make a
-// section read as native here.
+// There is very little of it, on purpose. Rounds one and two both grew a
+// vocabulary — chapter rules, DYMO fact strips, eyebrows — and every piece of
+// it turned out to be another place to restate what the copy already said. The
+// fact strip in particular repeated Nike / Disney / Mandarin three lines under
+// a sentence that had just named them, which is precisely the redundancy this
+// lab exists to remove. It is gone.
+//
+// What is left is the one thing a photographic treatment genuinely needs.
 
-import { STRIP } from "@/data/identityLab";
-
-/** Mono chapter rule — the `01 — WORLDPULSE ————` device from the Work stack. */
-export function ChapterRule({ label }: { label: string }) {
-  return (
-    <p className="ilab-rule-label">
-      <span>{label}</span>
-      <span className="ilab-rule-label__line" aria-hidden="true" />
-    </p>
-  );
-}
-
-/**
- * The credential strip, as DYMO labels.
- *
- * Facts only, and no sentence in any concept repeats them — that separation is
- * what stops the section from stating its credibility twice, which is the
- * live page's habit.
- */
-export function FactStrip({ className = "" }: { className?: string }) {
-  return (
-    <ul className={`ilab-strip ${className}`.trim()}>
-      {STRIP.map((f) => (
-        <li key={f} className="ilab-strip__tag">
-          {f}
-        </li>
-      ))}
-    </ul>
-  );
-}
-
-/** Full-bleed image plus the scrim that keeps white type legible over it. */
+/** Full-bleed art plus the scrim that keeps 145 words legible over it. */
 export function Bleed({
   src,
   alt,
