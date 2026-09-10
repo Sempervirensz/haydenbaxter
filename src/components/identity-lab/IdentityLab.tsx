@@ -42,20 +42,28 @@ import {
 } from "@/data/identityLab";
 import AboutSection from "@/components/AboutSection";
 import PersonasSection from "@/components/PersonasSection";
-import Throughline from "./concepts/Throughline";
-import Route from "./concepts/Route";
-import Asks from "./concepts/Asks";
-import Plain from "./concepts/Plain";
-import Passport from "./concepts/Passport";
+import Statement from "./concepts/Statement";
+import Triptych from "./concepts/Triptych";
+import Plate from "./concepts/Plate";
+import Margin from "./concepts/Margin";
+import Reveal from "./concepts/Reveal";
 import "./identity-lab.css";
 
 const BODIES: Record<ConceptId, () => React.ReactElement> = {
-  throughline: Throughline,
-  route: Route,
-  asks: Asks,
-  plain: Plain,
-  passport: Passport,
+  statement: Statement,
+  triptych: Triptych,
+  plate: Plate,
+  margin: Margin,
+  reveal: Reveal,
 };
+
+/**
+ * Production's About + Personas, counted: a 75-word intro plus three titles and
+ * nine bullets. Every concept is measured against it live, so "too long" is a
+ * number rather than an opinion — round one lost on exactly this and
+ * nothing on screen was counting, so it took a human read to catch it.
+ */
+const BASELINE_WORDS = 216;
 
 type Selection = ConceptId | "baseline";
 type Width = "page" | "phone";
@@ -195,7 +203,7 @@ function Diagnosis() {
    ------------------------------------------------------------------------ */
 
 export default function IdentityLab() {
-  const [sel, setSel] = useState<Selection>("throughline");
+  const [sel, setSel] = useState<Selection>("statement");
   const [width, setWidth] = useState<Width>("page");
   const uid = useId();
 
@@ -217,6 +225,20 @@ export default function IdentityLab() {
   const isBase = sel === "baseline";
   const meta = isBase ? null : getConcept(sel);
   const Body = isBase ? null : BODIES[sel];
+
+  // Word count, measured off the rendered surface rather than the data file:
+  // it counts what a visitor actually reads. `null` until after paint so the
+  // server and first client render agree.
+  const [words, setWords] = useState<number | null>(null);
+  useEffect(() => {
+    const el = document.querySelector(".ilab-surface");
+    if (!el) return;
+    const id = requestAnimationFrame(() => {
+      const text = (el as HTMLElement).innerText ?? "";
+      setWords(text.split(/\s+/).filter(Boolean).length);
+    });
+    return () => cancelAnimationFrame(id);
+  }, [sel, width]);
 
   return (
     <main className="ilab" id="main" tabIndex={-1}>
@@ -263,6 +285,19 @@ export default function IdentityLab() {
 
         <span className="ilab-switch__spacer" />
 
+        {/* The number round one was missing. Production's About + Personas is
+            216 words; anything at or above that is not a simplification. */}
+        {words !== null && (
+          <span
+            className="ilab-count-meter"
+            data-over={words > BASELINE_WORDS * 0.5 || undefined}
+            title={`${words} words rendered · production's About + Personas is ${BASELINE_WORDS}`}
+          >
+            <strong>{words}</strong> words
+            <span className="ilab-count-meter__vs">/ {BASELINE_WORDS} today</span>
+          </span>
+        )}
+
         <span className="ilab-widths" role="group" aria-label="Frame width">
           {(["page", "phone"] as Width[]).map((w) => (
             <button
@@ -301,10 +336,10 @@ export default function IdentityLab() {
                 <AboutSection />
               </>
             ) : (
-              <div className="ilab-section">
-                <h2 className="ilab-section__heading">{meta?.heading}</h2>
-                {Body && <Body />}
-              </div>
+              /* No shared heading wrapper: every concept carries its own
+                 chapter rule and owns its full width, because full-bleed art
+                 cannot live inside a gutter. */
+              Body && <Body />
             )}
           </section>
         </div>

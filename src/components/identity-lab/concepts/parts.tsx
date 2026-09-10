@@ -1,30 +1,68 @@
-// Shared furniture for the five identity concepts.
+// Shared furniture for the identity concepts.
 //
-// Everything here is the site's own vocabulary — the DYMO `.tag`, the serif
-// heading step, the mono meta step — restated with `ilab-` classes so the lab
-// can never leak a rule back into globals.css.
+// This is the Work chapters' own grammar, lifted deliberately: a mono eyebrow
+// with a hairline rule running off to the right (`01 — WORLDPULSE ————`), and
+// a DYMO strip of facts. Round one invented its own furniture and looked like
+// a text document sitting next to the site; these two pieces are what make a
+// section read as native here.
 
-export function Eyebrow({ children }: { children: React.ReactNode }) {
-  return <p className="ilab-eyebrow">{children}</p>;
-}
+import { STRIP } from "@/data/identityLab";
 
-/** Section heading, matching the serif single-word headings the site uses. */
-export function Heading({ children }: { children: React.ReactNode }) {
-  return <h2 className="ilab-heading">{children}</h2>;
-}
-
-/** A hairline. The site separates blocks with these rather than with boxes. */
-export function Rule() {
-  return <div className="ilab-rule" aria-hidden="true" />;
-}
-
-/** Quiet mono metadata — never body copy, per the readability floors. */
-export function Meta({ items }: { items: readonly string[] }) {
+/** Mono chapter rule — the `01 — WORLDPULSE ————` device from the Work stack. */
+export function ChapterRule({ label }: { label: string }) {
   return (
-    <ul className="ilab-meta">
-      {items.map((item) => (
-        <li key={item}>{item}</li>
+    <p className="ilab-rule-label">
+      <span>{label}</span>
+      <span className="ilab-rule-label__line" aria-hidden="true" />
+    </p>
+  );
+}
+
+/**
+ * The credential strip, as DYMO labels.
+ *
+ * Facts only, and no sentence in any concept repeats them — that separation is
+ * what stops the section from stating its credibility twice, which is the
+ * live page's habit.
+ */
+export function FactStrip({ className = "" }: { className?: string }) {
+  return (
+    <ul className={`ilab-strip ${className}`.trim()}>
+      {STRIP.map((f) => (
+        <li key={f} className="ilab-strip__tag">
+          {f}
+        </li>
       ))}
     </ul>
+  );
+}
+
+/** Full-bleed image plus the scrim that keeps white type legible over it. */
+export function Bleed({
+  src,
+  alt,
+  w,
+  h,
+  position,
+}: {
+  src: string;
+  alt: string;
+  w: number;
+  h: number;
+  position?: string;
+}) {
+  return (
+    <div className="ilab-bleed" aria-hidden={alt === "" || undefined}>
+      <img
+        src={src}
+        alt={alt}
+        width={w}
+        height={h}
+        loading="lazy"
+        decoding="async"
+        style={position ? { objectPosition: position } : undefined}
+      />
+      <span className="ilab-bleed__scrim" />
+    </div>
   );
 }

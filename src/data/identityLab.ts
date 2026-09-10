@@ -127,235 +127,180 @@ export const FACTS = {
     "AI fits best after the operating model is clear. I design the workflow and data shape first, then layer automation where it compounds.",
 } as const;
 
-/** The route, from the live Supply Chain chapter's timeline. */
-export interface Stop {
-  year: string;
-  place: string;
-  /** What happened — carried from the live timeline copy. */
-  fact: string;
-  /** What it made possible for the next stop. New interpretive line. */
-  voice: string;
-}
+/* ---------------------------------------------------------------------------
+   Round-two copy — the whole section, in under 60 words
 
-export const ROUTE: Stop[] = [
-  {
-    year: "2012",
-    place: "Taiwan",
-    fact: "Built Mandarin and cultural fluency — the language skills and adaptability that later strengthened supplier relationships and international operations.",
-    voice:
-      "Not a credential. It is the reason a supplier tells you what is actually going wrong instead of what is on the report.",
-  },
-  {
-    year: "2016",
-    place: "China",
-    fact: "Real-world sourcing experience: practical exposure to supplier management, operations, and procurement processes.",
-    voice:
-      "Procurement stops being an abstraction the first time you are standing on the floor it describes.",
-  },
-  {
-    year: "2022",
-    place: "New York",
-    fact: "Fortune 100 operational experience across procurement, finance, and legal — vendor onboarding, contract coordination, large-scale operational launches.",
-    voice:
-      "Where I learned the difference between a good idea and one a large organisation can actually absorb.",
-  },
-  {
-    year: "2023–24",
-    place: "Southeast Asia",
-    fact: "Supplier data, onboarding, and compliance systems supporting global manufacturing and traceability operations.",
-    voice:
-      "Traceability turns out to be a data-modelling problem wearing a logistics costume.",
-  },
-  {
-    year: "Now",
-    place: "WorldPulse · AI builds",
-    fact: "Founder at WorldPulse building Digital Product Passports, plus an M.S. in Artificial Intelligence in Business and a run of shipped AI products.",
-    voice: "Everything above is the training data. AI came last on purpose.",
-  },
-];
+   Round one wrote five essays. Production's About + Personas is 216 words, and
+   every round-one concept came in at 200–350 — i.e. the fix was longer than the
+   problem. It was also flat: type on #0a0a0a with hairlines, next to a site
+   whose Work chapters are full-bleed photography, a physical CD player on blue
+   velvet, and five-word serif headlines.
 
-/** Problem-first framing — the questions a visitor actually arrives with. */
-export interface Ask {
-  /** In the visitor's voice. */
-  question: string;
-  /** What the problem usually turns out to be. */
-  reframe: string;
-  /** What Hayden does about it, in the site's existing vocabulary. */
-  answer: string;
-  /** Which existing offer or surface it resolves into. */
-  resolves: string;
-}
+   Round two inverts both. Each concept below is capped at 60 words of body copy
+   and is built on real site material — the consulting night coast, the Pacific
+   supply-chain map, the WorldPulse shoot, the DYMO emboss, the media plate.
 
-export const ASKS: Ask[] = [
-  {
-    question: "We have run three AI pilots. None of them reached a workflow.",
-    reframe: "The pilot was rarely the problem. The workflow underneath it was never designed.",
-    answer:
-      "I map where the work actually gets stuck, rank the openings by feasibility against business leverage, and scope one pilot with acceptance criteria you can hold it to.",
-    resolves: "AI Roadmap Sprint",
-  },
-  {
-    question: "We cannot prove where this product came from.",
-    reframe: "Provenance is a data-shape question long before it is a compliance one.",
-    answer:
-      "I build the record — supplier, material, process — so the audit trail is something you verify rather than reconstruct, and so the story is legible to a customer, not just to a regulator.",
-    resolves: "WorldPulse · Digital Product Passports",
-  },
-  {
-    question: "Our supplier data lives in three spreadsheets and a WeChat thread.",
-    reframe: "Two teams mean different things by the same field, and no dashboard reconciles that.",
-    answer:
-      "I settle what each field means and who owns it, standardise the status logic, and make exceptions something reviewed on purpose instead of buried in a snapshot.",
-    resolves: "Supplier ops + data governance",
-  },
-  {
-    question: "Our team in Asia and our team here keep agreeing, and then not agreeing.",
-    reframe: "Alignment usually failed at translation, not at intent.",
-    answer:
-      "Eight-plus years working in Mandarin across China, Vietnam, and Indonesia — I sit in both rooms and make the handoff explicit enough to survive the time zone.",
-    resolves: "International coordination",
-  },
-  {
-    question: "We know what to build. We need it standing up by next quarter.",
-    reframe: "Most prototypes die of scope, not of difficulty.",
-    answer:
-      "I build the smallest version that a real user can hold, in front of the people who have to live with it, and hand it over in a state someone else can carry.",
-    resolves: "MVP Prototype Sprint",
-  },
-];
+   The lab measures the rendered word count live and shows it against 216, so
+   "too long" stays a number rather than an opinion.
+   ------------------------------------------------------------------------ */
 
-/** The three moves, used by Throughline. */
-export const METHOD: { label: string; line: string }[] = [
-  {
-    label: "See the system",
-    line: "Sit inside the operation until the real constraint is obvious. It is usually not the one in the brief.",
-  },
-  {
-    label: "Shape the record",
-    line: "Decide what a record means and who owns it. Every automation downstream inherits that decision.",
-  },
-  {
-    label: "Build the thing",
-    line: "Ship the smallest working version to the people who have to use it, then keep it alive.",
-  },
-];
-
-/** The same job, in three rooms. Used by Throughline. */
-export const ROOMS: {
-  room: string;
-  area: string;
-  line: string;
-  proof: string;
-}[] = [
-  {
-    room: "In a factory",
-    area: "Global supply chain",
-    line: "The constraint is a supplier who will not say the schedule slipped. The record is what “shipped” means to four teams. The thing is the operating rhythm that survives the next disruption.",
-    proof: "Nike · Converse · Disney · Aosom — sourcing, procurement, compliance, traceability",
-  },
-  {
-    room: "In a codebase",
-    area: "Applied AI",
-    line: "The constraint is a workflow nobody mapped. The record is the data shape a model has to stand on. The thing is a tool someone uses on a Tuesday without being asked to.",
-    proof: "AtomicOS · CaseBrief · Cortex · ProcureBridge — and an M.S. in AI in Business",
-  },
-  {
-    room: "In a product",
-    area: "WorldPulse",
-    line: "The constraint is that provenance is invisible. The record is the passport itself. The thing is a product story a customer can read without a compliance background.",
-    proof: "Founder — design-driven Digital Product Passports",
-  },
-];
-
-/** Plain-text concept. First person, no titles. */
-export const PLAIN: string[] = [
-  "I’m Hayden. For about eight years my job was making sure things made a long way away arrived the way they were supposed to. Most of that time was spent in Taiwan, China, and Southeast Asia, in Mandarin, in rooms where the spreadsheet and the factory floor disagreed.",
-  "You learn one specific thing doing that. At the point where an operational problem actually hurts, it is almost never a technology problem. It is a definitions problem. Two teams mean different things by “shipped”, and no dashboard ever built reconciles that for them.",
-  "So when I build with AI now — and I do, mostly products, internal tools, and prototypes — I start where I used to start. What is a record here. Who owns it. Which decision does it change. Automation is worth very little until it has something true to stand on, and it compounds quickly once it does.",
-  "WorldPulse is that argument in product form. Supply chain data is usually cold, hidden, and technical; a Digital Product Passport is an attempt to make the same facts legible to the person holding the product. It is the venture I run, and it is where most of my week goes.",
-  "The rest of the week is consulting — teams who need the operating model made clear before the AI, or a working prototype in front of real users, or both.",
-];
-
-/** The margin index for the plain-text concept. Quiet metadata, not claims. */
-export const MARGIN: string[] = [
+/** The credential strip. Facts only — no sentence ever repeats these. */
+export const STRIP: string[] = [
   "Fluent in Mandarin",
   "8+ years across Asia",
-  "Nike · Converse",
-  "Disney · Aosom",
-  "M.S. AI in Business, ASU",
+  "Nike · Disney",
+  "M.S. AI in Business",
   "Founder, WorldPulse",
 ];
 
-/** Passport concept — the DPP structure applied to a person. */
-export const PASSPORT: {
-  field: string;
-  hint: string;
-  values: { value: string; note?: string }[];
+/** 01 — Statement. One sentence over the night coast. */
+export const STATEMENT = {
+  headline: "I make complicated operations legible.",
+  line: "It has looked like sourcing, like traceability, and like AI. It has been one job.",
+};
+
+/**
+ * 02 — Triptych. Three site images, three labels, one short line each.
+ *
+ * The AI panel carries the four product marks rather than a photograph: the
+ * builds are the evidence, and four real marks in a row say "shipped things"
+ * faster than any stock-feeling image of a screen could.
+ */
+export interface Panel {
+  label: string;
+  line: string;
+  img?: { src: string; alt: string; w: number; h: number; position?: string };
+  /** Product marks, shown instead of a photograph. */
+  marks?: { src: string; alt: string }[];
+}
+
+export const PANELS: Panel[] = [
+  {
+    label: "Global supply chain",
+    line: "Nike and Disney. Eight years, in Mandarin.",
+    img: {
+      src: "/images/supply-chain/pacific-supply-chain-network-map.webp",
+      alt: "Pacific supply chain network map",
+      w: 6336,
+      h: 2688,
+    },
+  },
+  {
+    label: "Applied AI",
+    line: "Five products shipped. A master's in the subject.",
+    marks: [
+      { src: "/assets/atomicos-mark.webp", alt: "AtomicOS" },
+      { src: "/assets/casebrief-mark.webp", alt: "CaseBrief" },
+      { src: "/assets/cortex-mark.webp", alt: "Cortex" },
+      { src: "/assets/procurebridge-mark.webp", alt: "ProcureBridge" },
+    ],
+  },
+  {
+    label: "WorldPulse",
+    line: "Digital Product Passports. Founder.",
+    img: {
+      src: "/WorldPulseCostal3.0.webp",
+      alt: "A WorldPulse Digital Product Passport open on a phone",
+      w: 1600,
+      h: 679,
+      position: "62% 40%",
+    },
+  },
+];
+
+export const TRIPTYCH = {
+  headline: "Same job. Three rooms.",
+  closer: "Operations first. AI last, on purpose.",
+};
+
+/** 03 — Plate. The DYMO material used literally, as an object. */
+export const PLATE = {
+  stamp: "Hayden Baxter",
+  line: "Operations first, software second. One job, three rooms.",
+};
+
+/** 04 — Margin. Handwritten annotations on a portrait. */
+export const MARGIN_NOTES: string[] = [
+  "Mandarin first —",
+  "then the factory floor —",
+  "AI came last, on purpose.",
+];
+
+export const MARGIN = {
+  headline: "The order is the point.",
+};
+
+/**
+ * 05 — Reveal. One sentence; three marked phrases swap the image behind it.
+ *
+ * The sentence is complete before anything is touched: interaction adds a
+ * photograph and one fact, and removes nothing. A disclosure that hides the
+ * answer would be the live Personas cards again, in a new costume.
+ */
+export const REVEAL = {
+  before: "I spent eight years making ",
+  after: ".",
+} as const;
+
+export const REVEAL_PARTS: {
+  id: string;
+  phrase: string;
+  /** Text between this phrase and the next. */
+  joiner: string;
+  fact: string;
+  img: { src: string; alt: string; w: number; h: number };
 }[] = [
   {
-    field: "Origin",
-    hint: "Where the work was formed",
-    values: [
-      { value: "Taiwan, 2012", note: "Mandarin, cultural fluency" },
-      { value: "China, 2016", note: "Sourcing, supplier management" },
-      { value: "New York, 2022", note: "Fortune 100 operations" },
-      { value: "Southeast Asia, 2023–24", note: "Traceability systems" },
-    ],
+    id: "supply",
+    phrase: "supply chains",
+    joiner: " work, learned to ",
+    fact: "Nike, Converse, Disney, Aosom — sourcing across China, Vietnam, Indonesia.",
+    img: {
+      src: "/images/supply-chain/pacific-supply-chain-network-map.webp",
+      alt: "Pacific supply chain network map",
+      w: 6336,
+      h: 2688,
+    },
   },
   {
-    field: "Composition",
-    hint: "What the practice is made of",
-    values: [
-      { value: "Operations" },
-      { value: "Mandarin" },
-      { value: "Systems design" },
-      { value: "Applied AI" },
-      { value: "Product" },
-    ],
+    id: "ai",
+    phrase: "build with AI",
+    joiner: ", and now put both into ",
+    fact: "Five shipped products, and an M.S. in Artificial Intelligence in Business.",
+    img: {
+      src: "/images/portfolio/hayden-baxter-work-portfolio-cd.webp",
+      alt: "Work portfolio disc",
+      w: 1200,
+      h: 1200,
+    },
   },
   {
-    field: "Chain of custody",
-    hint: "Who the work passed through",
-    values: [
-      { value: "Nike · Converse", note: "Global sourcing, factory onboarding, compliance" },
-      { value: "Disney", note: "Procurement, finance, legal coordination" },
-      { value: "Aosom", note: "Procurement execution, data governance" },
-      { value: "WorldPulse", note: "Founder — Digital Product Passports" },
-    ],
-  },
-  {
-    field: "Verified",
-    hint: "Each claim has somewhere to check it",
-    values: [
-      { value: "M.S. Artificial Intelligence in Business, ASU", note: "Resume" },
-      { value: "Five shipped AI builds", note: "Selected AI Work" },
-      { value: "Digital Product Passports in market", note: "worldxpulse.com" },
-      { value: "Sourcing and procurement record", note: "LinkedIn" },
-    ],
-  },
-  {
-    field: "Current state",
-    hint: "What is live right now",
-    values: [
-      { value: "Active — founder-led", note: "WorldPulse is the main build" },
-      { value: "Selective consulting", note: "AI roadmap or prototype work" },
-    ],
+    id: "worldpulse",
+    phrase: "WorldPulse",
+    joiner: "",
+    fact: "Founder. Design-driven Digital Product Passports.",
+    img: {
+      src: "/WorldPulseCostal3.0.webp",
+      alt: "WorldPulse Digital Product Passport on a phone",
+      w: 1600,
+      h: 679,
+    },
   },
 ];
 
 /* ---------------------------------------------------------------------------
    Concepts
+
    ------------------------------------------------------------------------ */
 
 export type ConceptId =
-  | "throughline"
-  | "route"
-  | "asks"
-  | "plain"
-  | "passport";
+  | "statement"
+  | "triptych"
+  | "plate"
+  | "margin"
+  | "reveal";
 
 export interface SiteMove {
-  /** A production section. */
   section: string;
   /** "owns" — keeps or gains this idea. "drops" — gives it up. */
   verb: "owns" | "drops" | "moves";
@@ -370,210 +315,202 @@ export interface ConceptMeta {
   thesis: string;
   /** How it is built. */
   shape: string;
+  /** The material it is built on. Round one had none; that was the problem. */
+  material: string;
   strengths: string[];
   weaknesses: string[];
-  /** What the rest of the homepage does if this one ships. */
   moves: SiteMove[];
   /** Proposed section heading, replacing "About" / "Personas". */
   heading: string;
-  seo: {
-    title: string;
-    description: string;
-    /** Structured-data deltas this concept supports honestly. */
-    schema: string[];
-  };
+  seo: { title: string; description: string; schema: string[] };
 }
 
 export const CONCEPTS: ConceptMeta[] = [
   {
-    id: "throughline",
+    id: "statement",
     index: "01",
-    name: "Throughline",
-    thesis:
-      "It has been one job the whole time. AI, supply chain, and WorldPulse are the same method in three rooms.",
+    name: "Statement",
+    thesis: "One sentence, held at scale, over a photograph. Nothing else.",
     shape:
-      "One statement held large, the method named in three moves, then the three areas demoted from identities to worked examples of that method — each carrying its own credibility inline.",
+      "The Work chapters' own grammar, borrowed exactly: mono rule top-left, a six-word serif headline, one supporting line, a DYMO fact strip. Twenty-two words of prose.",
+    material: "Full-bleed — the consulting night coast (3440×1440).",
     strengths: [
-      "The only concept that answers the question the brief actually asks: why is this one person?",
-      "Kills Personas outright — the three areas appear once, as evidence, not as three job titles.",
-      "Promotes the site’s buried thesis (the supply-chain bridge line) to the position it earns.",
-      "Reads as a point of view rather than a claim, which is what separates it from a résumé.",
+      "Shortest thing on the homepage, and reads as the most confident for exactly that reason.",
+      "Native by construction: it is the WorldPulse chapter's layout applied to a person.",
+      "Nothing to interact with, nothing to mis-tap, identical on a phone and at 4K.",
+      "Answers “why one person” in the sentence itself rather than in a structure around it.",
     ],
     weaknesses: [
-      "The whole section rests on one sentence. If a visitor does not buy it, there is no second door.",
-      "Abstract until the three rooms land — the opening statement is doing a lot of unassisted work.",
-      "Least literal about credentials; Nike and Disney arrive as supporting detail, not as headline.",
+      "Everything rests on one sentence. If it is not the right sentence there is no recovery.",
+      "Credibility is a strip of facts, not a story — a visitor who wants proof has to go to Work.",
+      "Least differentiated visually: portfolio sites open with a photo and a claim constantly.",
     ],
     moves: [
-      { section: "Personas", verb: "drops", detail: "Deleted. Its three areas are the three rooms, stated once." },
-      { section: "About", verb: "moves", detail: "Becomes this section, and moves above Connect." },
-      { section: "Hero", verb: "owns", detail: "Keeps the three-area headline — it is now a promise the identity section pays off, not a duplicate." },
-      { section: "Hero eyebrow", verb: "drops", detail: "“View the work, the supply chain background, and where WorldPulse fits in” is the heading again in navigation grammar." },
-      { section: "Work chapters", verb: "owns", detail: "Own the proof: what was built, where, and what it did." },
-      { section: "Let’s work together", verb: "owns", detail: "Owns routing only. Its three paths stop having to explain who he is." },
-    ],
-    heading: "One job, three rooms",
-    seo: {
-      title: "Hayden Baxter | Systems, Supply Chain, and Applied AI",
-      description:
-        "Hayden Baxter makes complicated operations legible — in factories, in codebases, and in products. Eight-plus years in global sourcing across Asia, now building applied AI and Digital Product Passports at WorldPulse.",
-      schema: [
-        "Person.description rewritten to the throughline rather than the three-title stack.",
-        "Person.jobTitle narrows to “Founder, WorldPulse” — one real role instead of three coined ones.",
-        "Person.knowsAbout keeps its seven topics; they are now supported by prose on the same page.",
-      ],
-    },
-  },
-  {
-    id: "route",
-    index: "02",
-    name: "The Route",
-    thesis:
-      "The order it happened in is the differentiator. Operations first, Mandarin first, AI last — on purpose.",
-    shape:
-      "Five stops, each stating what it made possible for the next. The compounding is the argument; the credential strip is a consequence of the route rather than a list beside it.",
-    strengths: [
-      "Credibility that accumulates instead of repeating — the single hardest thing the live page fails at.",
-      "Genuinely differentiated: plenty of people know AI, far fewer learned a factory floor in Mandarin first.",
-      "Uses copy the site already owns (the Supply Chain timeline), so it consolidates rather than adds.",
-      "Answers “what makes his background credible” without a single coined title.",
-    ],
-    weaknesses: [
-      "Closest of the five to a résumé; it survives only if every stop keeps its interpretive line.",
-      "Duplicates the Supply Chain chapter’s timeline unless production gives that one up — a bigger change than the others require.",
-      "Chronology implies “career so far”, which reads more backward-looking than the other four.",
-    ],
-    moves: [
-      { section: "Personas", verb: "drops", detail: "Deleted. The route carries the same facts with a reason attached." },
-      { section: "Supply Chain timeline", verb: "drops", detail: "Moves here. The chapter keeps the map, the quote lines, and the featured operator story." },
-      { section: "About", verb: "moves", detail: "Becomes this section, above Connect. The paragraph goes." },
-      { section: "Brands carousel", verb: "drops", detail: "Nike / Disney / Aosom appear inside the route with dates and context, which is stronger than a logo belt." },
-      { section: "Let’s work together", verb: "drops", detail: "“Review My Experience” collapses into this section — it is the same content, better told." },
-    ],
-    heading: "How I got here, in order",
-    seo: {
-      title: "Hayden Baxter | Global Sourcing, Mandarin, and Applied AI",
-      description:
-        "Taiwan, China, New York, Southeast Asia — eight-plus years in global sourcing, procurement, and traceability, in Mandarin. Now founder of WorldPulse, building Digital Product Passports and applied AI.",
-      schema: [
-        "Person.alumniOf becomes supportable — ASU appears with the rest of the route on-page.",
-        "Person.workLocation / nationality left alone: the route names cities of work, which is not the same claim.",
-        "Strong entity signal for “Mandarin”, “APAC sourcing”, “traceability” from real surrounding prose.",
-      ],
-    },
-  },
-  {
-    id: "asks",
-    index: "03",
-    name: "What to Bring Me",
-    thesis:
-      "Identity by fit. Do not describe the person — show the problems they can be handed.",
-    shape:
-      "Five problems in the visitor’s own words, each reframed and then answered, resolving into an existing offer. Who is answering arrives last, small.",
-    strengths: [
-      "Directly answers the brief’s hardest requirement: what someone should contact him about.",
-      "Turns identity into recognition — a visitor sees their own situation before they see a title.",
-      "The most natural SEO surface on the site: real long-tail phrasing, no keyword stuffing needed.",
-      "Zero coined titles, zero inflated language; the copy is diagnostic rather than promotional.",
-    ],
-    weaknesses: [
-      "Offer-shaped, so it collides with “Let’s work together” — one of the two must give up ground.",
-      "Says nothing to a visitor who is not in a buying posture: a partner, an investor, or a recruiter gets no read on the person.",
-      "Five problems is a lot of reading; the format tempts a sixth and a seventh until it becomes a services menu.",
-    ],
-    moves: [
-      { section: "Personas", verb: "drops", detail: "Deleted. What each area covers is now stated as a problem someone brings." },
-      { section: "Let’s work together", verb: "moves", detail: "Demotes to a routing row — three destinations, no explanatory copy. This section does the qualifying." },
-      { section: "Consulting chapter", verb: "drops", detail: "The offer bullets duplicate these answers; the chapter keeps the two named sprints only." },
-      { section: "About", verb: "moves", detail: "Becomes this section plus a two-line “who’s answering”, above Connect." },
-      { section: "Connect", verb: "owns", detail: "Gains the strongest hand-off on the page: the visitor arrives having already recognised their problem." },
-    ],
-    heading: "What to bring me",
-    seo: {
-      title: "Hayden Baxter | AI Strategy and Supply Chain Consulting",
-      description:
-        "Stalled AI pilots, unprovable product origins, supplier data spread across three spreadsheets — the problems I take on, and what I do with them. Founder of WorldPulse; eight-plus years in global sourcing.",
-      schema: [
-        "Supports a real FAQPage graph: five question/answer pairs already in the visible copy.",
-        "Person.knowsAbout gains on-page evidence for each topic rather than asserting a list.",
-        "Risk to watch: FAQ markup is only legitimate while these stay genuine questions, not slogans.",
-      ],
-    },
-  },
-  {
-    id: "plain",
-    index: "04",
-    name: "Plain Text",
-    thesis:
-      "Drop every title and just talk. Credentials belong in the margin, not in the sentence.",
-    shape:
-      "One sustained first-person passage in the site’s serif and sans, with the credential strip demoted to a quiet mono index alongside it. No cards, no labels, no disclosure.",
-    strengths: [
-      "The furthest thing on the site from a consulting brochure — which is the stated design goal.",
-      "Voice is the differentiator no competitor can copy; specifics like “the spreadsheet and the factory floor disagreed” do more than any title.",
-      "Best raw SEO material: real prose carrying real terminology in natural language.",
-      "Cheapest to maintain and the only concept with no interaction to get wrong.",
-    ],
-    weaknesses: [
-      "Unscannable by design. A visitor skimming at speed leaves with nothing.",
-      "No hook — nothing on screen rewards a glance, which is most of the traffic.",
-      "Puts all the weight on the writing; it fails quietly and completely if the voice ever drifts.",
-    ],
-    moves: [
-      { section: "Personas", verb: "drops", detail: "Deleted. Everything it asserted is said once, in a sentence, with a reason." },
-      { section: "About", verb: "moves", detail: "Becomes this passage, above Connect." },
-      { section: "Brands carousel", verb: "drops", detail: "Nike / Disney / Aosom move into the margin index, where they read as fact rather than as endorsement." },
-      { section: "Hero eyebrow", verb: "drops", detail: "Redundant against a section that now introduces the person properly." },
-      { section: "Work chapters", verb: "owns", detail: "Carry all the proof. This section deliberately shows none." },
+      { section: "Personas", verb: "drops", detail: "Deleted. The sentence names all three areas once." },
+      { section: "About", verb: "moves", detail: "Becomes this, and moves above Connect. The 75-word paragraph goes." },
+      { section: "Hero eyebrow", verb: "drops", detail: "It is this sentence already, in navigation grammar." },
+      { section: "Work chapters", verb: "owns", detail: "Own every piece of proof. This section deliberately shows none." },
     ],
     heading: "About",
     seo: {
       title: "Hayden Baxter | Supply Chain, Applied AI, and WorldPulse",
       description:
-        "Eight-plus years making sure things built a long way away arrived as promised — in Mandarin, across Taiwan, China, and Southeast Asia. Now building applied AI products and Digital Product Passports at WorldPulse.",
+        "Eight-plus years making global supply chains work, in Mandarin, across Asia. Now building applied AI products and Digital Product Passports as founder of WorldPulse.",
       schema: [
-        "Person.description can finally be a real sentence rather than a title stack.",
-        "Highest natural-language density of the five — strongest passage-level retrieval material.",
-        "No new schema types; this concept improves what exists rather than adding nodes.",
+        "Person.jobTitle narrows to “Founder, WorldPulse” — one real role, not three coined ones.",
+        "Person.description becomes the headline sentence rather than a title stack.",
+        "Thin on-page text is the trade: knowsAbout leans on the Work chapters for support.",
       ],
     },
   },
   {
-    id: "passport",
-    index: "05",
-    name: "Provenance",
-    thesis:
-      "Prove the product by using it. A Digital Product Passport, applied to the person who builds them.",
+    id: "triptych",
+    index: "02",
+    name: "Triptych",
+    thesis: "Show the three rooms instead of describing them. Images do the work.",
     shape:
-      "Origin, composition, chain of custody, verified claims, current state — the DPP fields, each pointing at somewhere the claim can be checked.",
+      "Three site images edge to edge, each with a mono label and one six-word line, under a four-word serif headline. Twenty-seven words of prose.",
+    material: "The Pacific supply-chain map, the portfolio disc, the WorldPulse shoot.",
     strengths: [
-      "Demonstrates WorldPulse instead of describing it — the section is the pitch.",
-      "“Every claim has somewhere to check it” is an unusually honest credibility device, and it is the exact opposite of an inflated title.",
-      "Structurally impossible to mistake for a résumé, which no other concept can fully claim.",
-      "Makes the sustainability and traceability vocabulary native rather than bolted on.",
+      "The triad is finally shown rather than asserted for a sixth time.",
+      "Scans in about two seconds — the only concept that works at a glance.",
+      "Reuses the site's own section imagery, so it reads as a contents page for the Work chapters.",
+      "Each panel carries its credibility inline, so Nike and Disney land as evidence, not as a logo belt.",
     ],
     weaknesses: [
-      "Highest gimmick risk of the five. If the metaphor is not instantly legible it costs comprehension rather than adding it.",
-      "Teaches the visitor what a DPP is at the moment they were trying to learn who Hayden is — two jobs, one section.",
-      "Over-indexes identity on the venture; if WorldPulse ever changes shape, so does the About section.",
-      "A person rendered as a product is a register that will not suit every reader.",
+      "Three panels is structurally the Personas grid again. The improvement is real but the shape rhymes with what it replaces.",
+      "Still does not say why one person does all three — it shows the three and leaves the join implied.",
+      "Depends on three images being equally strong; the disc is a product shot next to two photographs.",
     ],
     moves: [
-      { section: "Personas", verb: "drops", detail: "Deleted. Composition and chain of custody carry the same three areas." },
-      { section: "About", verb: "moves", detail: "Becomes the passport, above Connect." },
-      { section: "WorldPulse chapter", verb: "drops", detail: "Stops having to explain what a Digital Product Passport is — this section already showed one." },
-      { section: "Brands carousel", verb: "drops", detail: "Chain of custody states the same names with the work attached." },
-      { section: "Let’s work together", verb: "owns", detail: "Owns routing. “Current state” hands off to it explicitly." },
+      { section: "Personas", verb: "drops", detail: "Deleted and directly replaced — same three areas, a third of the words, with pictures." },
+      { section: "Brands carousel", verb: "drops", detail: "Nike and Disney are named in panel one with the work attached." },
+      { section: "About", verb: "moves", detail: "Becomes this, above Connect." },
+      { section: "Work chapters", verb: "owns", detail: "Own the depth. This is the index to them." },
     ],
-    heading: "Provenance",
+    heading: "Same job. Three rooms.",
     seo: {
-      title: "Hayden Baxter | Digital Product Passports and Traceable Supply Chains",
+      title: "Hayden Baxter | Global Supply Chain, Applied AI, WorldPulse",
       description:
-        "Founder of WorldPulse, building design-driven Digital Product Passports. Eight-plus years in global sourcing and traceability across Asia, in Mandarin, now applied to AI products and sustainability technology.",
+        "Sourcing for Nike and Disney across Asia, five shipped AI products, and Digital Product Passports at WorldPulse — three applications of one practice.",
       schema: [
-        "Strongest Organization ↔ Person join: WorldPulse is demonstrated, not just linked.",
-        "Every verified-claim row is a real outbound citation — good for entity reconciliation.",
-        "Keep it CreativeWork-free: the passport is a layout, not a product listing, and marking it up as one would be a misrepresentation.",
+        "Three labelled images with real alt text: the strongest image-entity signal of the five.",
+        "knowsAbout gains on-page support for supply chain, applied AI, and DPPs in one view.",
+        "Keep the labels as headings, not as links — this is a summary, not a nav.",
+      ],
+    },
+  },
+  {
+    id: "plate",
+    index: "03",
+    name: "Plate",
+    thesis: "Identity as an object, not a passage. The DYMO material, used literally.",
+    shape:
+      "One embossed plate on the media texture, the way the CD player sits on blue velvet: a stamped name, one serif line, five facts around it. Twenty-four words of prose.",
+    material: "The DYMO emboss on the personas media plate.",
+    strengths: [
+      "The most on-brand object the site could make — its whole design language is embossed labels.",
+      "Physically small: it occupies a fraction of a screen and never becomes a wall of reading.",
+      "Object-like the way the CD player is, which is the site's strongest existing visual idea.",
+      "Impossible to mistake for a résumé or a consulting brochure.",
+    ],
+    weaknesses: [
+      "A label plate is decorative furniture on a site that already has a lot of it — it risks reading as style with nothing underneath.",
+      "Five facts on a plate is a credential list; it states credibility without ever demonstrating it.",
+      "The emboss is a hard material to scale: what looks crisp at 200px looks like a sticker at 900px.",
+    ],
+    moves: [
+      { section: "Personas", verb: "drops", detail: "Deleted. Its media plate is reused as this section's ground." },
+      { section: "About", verb: "moves", detail: "Becomes the plate, above Connect." },
+      { section: "Brands carousel", verb: "drops", detail: "The names sit on the plate instead." },
+      { section: "Let’s work together", verb: "owns", detail: "Owns routing. The plate hands off to it and says nothing about offers." },
+    ],
+    heading: "About",
+    seo: {
+      title: "Hayden Baxter | Founder, WorldPulse",
+      description:
+        "Operations first, software second. Eight-plus years in global sourcing across Asia, in Mandarin, now building Digital Product Passports and applied AI at WorldPulse.",
+      schema: [
+        "Weakest of the five: very little crawlable prose, and facts sit as short fragments.",
+        "Would need the Work chapters to carry knowsAbout support entirely.",
+        "Keep the plate as real text, never an image, or the section becomes invisible to search.",
+      ],
+    },
+  },
+  {
+    id: "margin",
+    index: "04",
+    name: "Margin",
+    thesis: "A photograph, annotated by hand. The order of the career is the whole note.",
+    shape:
+      "A portrait with three handwritten annotations tied to it by hairlines, and one serif line. Uses the site's Caveat face, which is loaded and almost never used. Twenty words of prose.",
+    material: "Portrait photography + the site's handwriting face.",
+    strengths: [
+      "The most human thing the site could put in an About section, and the least corporate.",
+      "Uses a loaded font the site barely touches, so it feels like the same world without repeating any existing section.",
+      "Twenty words. It cannot become long, structurally.",
+      "The annotation form makes the sequence argument without a timeline's résumé grammar.",
+    ],
+    weaknesses: [
+      "Handwriting is the highest-risk register here — a hair too much and the whole site reads as scrapbook.",
+      "Annotations pointing at a portrait can look like a diagram of a person, which is faintly absurd.",
+      "The available portraits are travel snapshots, not a shot made for this; the concept wants a photograph that does not exist yet.",
+      "Handwritten type is a legibility and localisation liability at small sizes.",
+    ],
+    moves: [
+      { section: "Personas", verb: "drops", detail: "Deleted. The annotations carry the sequence instead." },
+      { section: "About", verb: "moves", detail: "Becomes this, above Connect. The gallery collapses to one frame." },
+      { section: "About gallery", verb: "drops", detail: "Five unattached photos become one photograph that is actually about something." },
+      { section: "Supply Chain timeline", verb: "owns", detail: "Keeps the dated version. This is the compressed reading of it." },
+    ],
+    heading: "About",
+    seo: {
+      title: "Hayden Baxter | Mandarin, Global Sourcing, and Applied AI",
+      description:
+        "Mandarin first, then the factory floor, then AI — eight-plus years across Asia in sourcing and traceability, now founder of WorldPulse building Digital Product Passports.",
+      schema: [
+        "Annotations must be real text, not baked into the image, or they index as nothing.",
+        "Person.image finally points at a portrait the page actually features.",
+        "Sparse prose; relies on the Work chapters for topical depth.",
+      ],
+    },
+  },
+  {
+    id: "reveal",
+    index: "05",
+    name: "Reveal",
+    thesis:
+      "One sentence that assembles itself. Touch a phrase and the evidence comes up behind it.",
+    shape:
+      "A single sentence with three marked phrases. Hover, focus, or tap one and the full-bleed image swaps and one fact appears. The sentence is complete before anything is touched.",
+    material: "Three full-bleed site images, cross-faded behind the type.",
+    strengths: [
+      "The only concept where interaction adds instead of hides — the answer is on screen before you touch it.",
+      "One sentence carries the join between the three areas, in the order that makes it credible.",
+      "Cinematic in the way the Work chapters are, without adding a fifth chapter.",
+      "Degrades to concept 01 exactly when motion is reduced, so there is no second design to maintain.",
+    ],
+    weaknesses: [
+      "Hover is not a thing on a phone; the mobile version is three taps most visitors will never make.",
+      "Cross-fading full-bleed imagery is the heaviest thing here — three large images on a section that is mostly one sentence.",
+      "It is a mechanism, and mechanisms invite tuning; this is the concept most likely to grow.",
+      "Someone who never interacts sees concept 01, which raises a fair question about why the mechanism is there.",
+    ],
+    moves: [
+      { section: "Personas", verb: "drops", detail: "Deleted. The three marked phrases are the three areas, in one sentence." },
+      { section: "About", verb: "moves", detail: "Becomes this, above Connect." },
+      { section: "Brands carousel", verb: "drops", detail: "The supply-chain reveal names them with the work attached." },
+      { section: "Work chapters", verb: "owns", detail: "Own the depth. The reveal shows one fact per area and stops." },
+    ],
+    heading: "About",
+    seo: {
+      title: "Hayden Baxter | Supply Chain, Applied AI, and WorldPulse",
+      description:
+        "Eight years making global supply chains work, then building with AI, now both inside WorldPulse — Digital Product Passports for traceable, transparent products.",
+      schema: [
+        "All three facts render in the DOM regardless of interaction, so nothing is hidden from a crawler.",
+        "Person.knowsAbout supported by the sentence plus the three revealed facts.",
+        "Watch image weight: three full-bleed sources on one section is a real LCP risk.",
       ],
     },
   },

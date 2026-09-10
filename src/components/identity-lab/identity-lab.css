@@ -152,6 +152,35 @@
   opacity: 0.7;
 }
 
+
+/* Live word count, sitting in the switcher next to the width control. The
+   number production's About + Personas scores is 216; a concept that lands
+   anywhere near it is not a simplification, whatever it looks like. */
+.ilab-count-meter {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.4rem;
+  font-family: var(--font-mono);
+  font-size: var(--text-control);
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  padding-inline: 0.5rem;
+}
+
+.ilab-count-meter strong {
+  font-weight: 500;
+  color: #9fd0a8;
+}
+
+.ilab-count-meter[data-over] strong {
+  color: #e8a3a3;
+}
+
+.ilab-count-meter__vs {
+  opacity: 0.6;
+}
+
 /* ---- Stage -------------------------------------------------------------- */
 
 .ilab-stage {
@@ -215,626 +244,606 @@
    Shared concept shell
    ======================================================================== */
 
-.ilab-section {
-  padding: var(--section-gap) var(--page-gutter);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
 
 /* The site's serif section heading. */
-.ilab-section__heading {
-  font-family: var(--font-serif);
-  font-size: var(--text-heading);
-  line-height: var(--leading-display);
-  font-weight: 400;
-  color: var(--ink);
-  margin-bottom: var(--block-gap);
-  text-align: center;
-  max-width: 20ch;
-  text-wrap: balance;
-}
 
 .ilab-c {
   width: 100%;
   max-width: var(--content-max);
 }
 
-.ilab-eyebrow {
+
+
+
+
+/* ===========================================================================
+   Shared concept material
+
+   Round one was type on flat #0a0a0a with hairlines, which is why it read as a
+   text document parked next to a site whose Work chapters are full-bleed
+   photography and a physical CD player on blue velvet. Everything below is
+   built on real site material instead.
+   ======================================================================== */
+
+/* The Work stack's chapter device: `ABOUT ————————` */
+.ilab-rule-label {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
   font-family: var(--font-mono);
   font-size: var(--text-label);
   letter-spacing: var(--track-dymo);
   text-transform: uppercase;
-  color: var(--ink-faint);
-  margin-bottom: var(--block-gap);
-  text-align: center;
+  color: rgba(255, 255, 255, 0.72);
 }
 
-.ilab-sub {
-  font-family: var(--font-mono);
-  font-size: var(--text-label);
-  letter-spacing: var(--track-dymo);
-  text-transform: uppercase;
-  color: var(--accent);
-  margin-bottom: 1.25rem;
-}
-
-.ilab-rule {
+.ilab-rule-label__line {
+  flex: 1 1 auto;
   height: 1px;
-  background: var(--line-soft);
-  margin-block: var(--block-gap);
+  background: rgba(255, 255, 255, 0.22);
 }
 
-.ilab-meta {
+/* The credential strip, as DYMO labels. Facts only — no concept's prose ever
+   repeats what is in here. */
+.ilab-strip {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem 1.25rem;
+  gap: 0.5rem;
   list-style: none;
+}
+
+.ilab-strip__tag {
   font-family: var(--font-mono);
-  font-size: var(--text-meta);
+  font-size: var(--text-label);
+  font-weight: 500;
   letter-spacing: var(--track-label);
+  line-height: 1;
   text-transform: uppercase;
-  color: var(--ink-faint);
+  color: rgba(255, 255, 255, 0.82);
+  padding: 0.6rem 0.8rem 0.55rem;
+  border-radius: 3px;
+  background: #1c1c1c;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow:
+    inset 0 2px 4px rgba(0, 0, 0, 0.75),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.05),
+    0 3px 0 #0b0b0b,
+    0 4px 7px rgba(0, 0, 0, 0.85);
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.7);
+}
+
+/* Full-bleed art + the scrim that keeps white type legible over it. */
+.ilab-bleed {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.ilab-bleed img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.ilab-bleed__scrim {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(
+      to right,
+      rgba(6, 10, 16, 0.94) 0%,
+      rgba(6, 10, 16, 0.82) 42%,
+      rgba(6, 10, 16, 0.34) 78%,
+      rgba(6, 10, 16, 0.28) 100%
+    ),
+    linear-gradient(to top, rgba(6, 10, 16, 0.7), transparent 55%);
 }
 
 /* ===========================================================================
-   01 — Throughline
+   01 — Statement
+   The WorldPulse chapter's composition, applied to a person.
    ======================================================================== */
 
-.ilab-through__thesis {
-  font-family: var(--font-serif);
-  /* Was --text-xl at 24ch, which fell to five short ragged lines at 1440. This
-     is the one sentence the rest of the homepage stops repeating, so it gets
-     display sizing and a measure wide enough to hold three lines. */
-  font-size: var(--text-2xl);
-  line-height: 1.18;
-  color: var(--ink);
-  max-width: 30ch;
+.ilab-stmt {
+  position: relative;
+  isolation: isolate;
+  min-height: 30rem;
+  display: flex;
+  align-items: center;
+}
+
+@container ilab (min-width: 60rem) {
+  .ilab-stmt {
+    min-height: 40rem;
+  }
+}
+
+.ilab-stmt__body {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: var(--content-max);
   margin-inline: auto;
-  text-align: center;
+  padding: var(--block-gap) var(--page-gutter);
+}
+
+.ilab-stmt__headline {
+  font-family: var(--font-serif);
+  font-size: var(--text-2xl);
+  line-height: 1.08;
+  font-weight: 400;
+  color: #fff;
+  margin-top: 1.5rem;
+  max-width: 20ch;
   text-wrap: balance;
 }
 
-.ilab-through__sub {
+@container ilab (min-width: 60rem) {
+  .ilab-stmt__headline {
+    font-size: var(--text-heading);
+  }
+}
+
+.ilab-stmt__line {
   font-size: var(--text-body-lg);
   line-height: var(--leading-body);
-  color: var(--ink-muted);
-  max-width: var(--measure-tight);
-  margin: 1.25rem auto 0;
-  text-align: center;
+  color: rgba(255, 255, 255, 0.86);
+  margin-top: 1.15rem;
+  max-width: 46ch;
 }
 
-.ilab-through__moves {
-  list-style: none;
-  display: grid;
-  gap: 1.5rem;
-}
-
-.ilab-through__move {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  gap: 0.35rem 1rem;
-  align-items: baseline;
-  padding-bottom: 1.5rem;
-  border-bottom: 1px solid var(--line-soft);
-}
-
-.ilab-through__move:last-child {
-  border-bottom: 0;
-  padding-bottom: 0;
-}
-
-.ilab-through__num {
-  grid-row: 1 / span 2;
-  font-family: var(--font-mono);
-  font-size: var(--text-meta);
-  color: var(--accent);
-  letter-spacing: var(--track-label);
-}
-
-.ilab-through__move-label {
-  font-family: var(--font-serif);
-  font-size: var(--text-lg);
-  line-height: var(--leading-tight);
-  color: var(--ink);
-}
-
-.ilab-through__move-line {
-  grid-column: 2;
-  font-size: var(--text-body-sm);
-  line-height: var(--leading-body);
-  color: var(--ink-muted);
-  max-width: var(--measure);
-}
-
-/* The site's buried thesis, promoted. */
-.ilab-through__bridge {
+.ilab-stmt__strip {
   margin-top: var(--block-gap);
-  padding-left: 1.25rem;
-  border-left: 2px solid var(--accent);
-  font-family: var(--font-serif);
-  font-style: italic;
-  font-size: var(--text-lg);
-  line-height: 1.42;
-  color: var(--ink-body);
-  max-width: var(--measure);
 }
 
-.ilab-through__grid {
+/* ===========================================================================
+   02 — Triptych
+   ======================================================================== */
+
+.ilab-tri {
+  padding: var(--section-gap) var(--page-gutter);
+  max-width: var(--content-wide);
+  margin-inline: auto;
+}
+
+.ilab-tri__headline {
+  font-family: var(--font-serif);
+  font-size: var(--text-2xl);
+  line-height: var(--leading-display);
+  font-weight: 400;
+  color: var(--ink);
+  margin-top: 1.25rem;
+}
+
+.ilab-tri__grid {
   display: grid;
   gap: var(--grid-gap);
+  margin-top: var(--block-gap);
 }
 
 @container ilab (min-width: 52rem) {
-  .ilab-through__grid {
+  .ilab-tri__grid {
     grid-template-columns: repeat(3, 1fr);
   }
 }
 
-.ilab-room {
-  padding-top: 1.25rem;
-  border-top: 1px solid var(--line);
+/* Grid items must be allowed to shrink below their content's intrinsic width.
+   The Pacific map is 6336px wide, and a `1fr` track resolves to
+   `minmax(auto, 1fr)` — so without this the map's min-content dragged its
+   column to full width and pushed the other two panels onto a second row. */
+.ilab-tri__grid > * {
+  min-width: 0;
 }
 
-.ilab-room__title {
-  font-family: var(--font-serif);
-  font-size: var(--text-lg);
-  line-height: var(--leading-tight);
-  font-weight: 400;
-  color: var(--ink);
-}
-
-.ilab-room__area {
-  font-family: var(--font-mono);
-  font-size: var(--text-meta);
-  letter-spacing: var(--track-label);
-  text-transform: uppercase;
-  color: var(--accent);
-  margin-top: 0.35rem;
-}
-
-.ilab-room__line {
-  font-size: var(--text-body-sm);
-  line-height: var(--leading-body);
-  color: var(--ink-muted);
-  margin-top: 0.85rem;
-}
-
-.ilab-room__proof {
-  font-family: var(--font-mono);
-  font-size: var(--text-meta);
-  line-height: 1.5;
-  color: var(--ink-faint);
-  margin-top: 0.85rem;
-  padding-top: 0.85rem;
-  border-top: 1px solid var(--line-soft);
-}
-
-.ilab-through__closer {
-  margin-top: var(--block-gap);
-  padding-top: var(--block-gap);
-  border-top: 1px solid var(--line-soft);
-  font-family: var(--font-serif);
-  font-size: var(--text-lg);
-  line-height: var(--leading-tight);
-  color: var(--ink);
-  text-align: center;
-  text-wrap: balance;
-}
-
-/* ===========================================================================
-   02 — The Route
-   ======================================================================== */
-
-.ilab-route__lede {
-  font-size: var(--text-body-lg);
-  line-height: var(--leading-body);
-  color: var(--ink-body);
-  max-width: var(--measure);
-  margin: 0 auto var(--block-gap);
-  text-align: center;
-}
-
-.ilab-route__list {
-  list-style: none;
-  max-width: var(--measure);
-  margin-inline: auto;
-}
-
-.ilab-stop {
-  display: grid;
-  grid-template-columns: 1.5rem 1fr;
-  column-gap: 1.25rem;
-}
-
-.ilab-stop__spine {
+.ilab-tri__panel-art {
   position: relative;
-  display: block;
-  justify-self: center;
-  width: 1px;
-  background: var(--line);
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  border-radius: var(--card-radius);
+  background: #0f1319;
+  border: 1px solid var(--line-soft);
 }
 
-/* The first stop's spine starts at the dot rather than above it. */
-.ilab-stop:first-child .ilab-stop__spine {
-  background: linear-gradient(to bottom, transparent 0 0.6rem, var(--line) 0.6rem);
-}
-
-.ilab-stop:last-child .ilab-stop__spine {
-  background: linear-gradient(to bottom, var(--line) 0 0.6rem, transparent 0.6rem);
-}
-
-.ilab-stop__dot {
+/* Absolutely positioned so the image contributes nothing to track sizing at
+   all — the aspect-ratio box is the only thing the grid measures. */
+.ilab-tri__panel-art > img {
   position: absolute;
-  top: 0.45rem;
-  left: 50%;
-  width: 7px;
-  height: 7px;
-  margin-left: -3.5px;
-  border-radius: 50%;
-  background: var(--accent);
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
-.ilab-stop__body {
-  padding-bottom: 0.35rem;
+/* The Pacific map ships as a flat, bright cartographic asset. Dropped in raw
+   it reads as a screenshot of a maps app sitting in the middle of a dark
+   editorial site. The Work chapter treats it heavily (232% scale, masks,
+   seams); this is the cheap equivalent — pull the saturation and brightness
+   down and let the blue ground come through. */
+.ilab-tri__panel-art--map > img {
+  filter: saturate(0.4) brightness(0.66) contrast(1.12);
 }
 
-.ilab-stop__when {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: 0.75rem;
+.ilab-tri__panel-art--map::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(120% 90% at 50% 45%, rgba(31, 58, 92, 0.34), rgba(6, 10, 16, 0.72));
+  mix-blend-mode: screen;
+  pointer-events: none;
 }
 
-.ilab-stop__year {
-  font-family: var(--font-mono);
-  font-size: var(--text-meta);
-  letter-spacing: var(--track-dymo);
-  color: var(--accent);
+.ilab-tri__panel-scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(6, 10, 16, 0.55), transparent 60%);
+  pointer-events: none;
 }
 
-.ilab-stop__place {
-  font-family: var(--font-serif);
-  font-size: var(--text-lg);
-  line-height: var(--leading-tight);
-  color: var(--ink);
+/* The four product marks, in place of a photograph. */
+.ilab-tri__panel-marks {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 6%;
+  place-content: center;
+  width: 100%;
+  height: 100%;
+  padding: 12%;
+  list-style: none;
 }
 
-.ilab-stop__fact {
-  font-size: var(--text-body-sm);
-  line-height: var(--leading-body);
-  color: var(--ink-muted);
-  margin-top: 0.6rem;
-}
-
-/* The interpretive line — the thing the live timeline does not have. */
-.ilab-stop__voice {
-  font-family: var(--font-serif);
-  font-style: italic;
-  font-size: var(--text-base);
-  line-height: 1.45;
-  color: var(--ink-body);
-  margin-top: 0.7rem;
-}
-
-.ilab-stop__carry {
-  grid-column: 2;
-  font-family: var(--font-mono);
-  font-size: var(--text-meta);
-  letter-spacing: var(--track-label);
-  text-transform: uppercase;
-  color: var(--ink-faint);
-  padding-block: 1.15rem;
-}
-
-.ilab-route__figure {
-  margin: var(--block-gap) auto 0;
-  max-width: var(--content-max);
-}
-
-.ilab-route__figure img {
-  display: block;
+.ilab-tri__panel-marks img {
   width: 100%;
   height: auto;
-  border-radius: var(--card-radius);
+  border-radius: calc(var(--card-radius) * 0.5);
 }
 
-.ilab-route__closer {
-  margin-top: var(--block-gap);
-  font-family: var(--font-serif);
-  font-size: var(--text-xl);
-  line-height: var(--leading-tight);
-  color: var(--ink);
-  text-align: center;
-}
-
-/* ===========================================================================
-   03 — What to Bring Me
-   ======================================================================== */
-
-.ilab-asks__lede {
-  font-size: var(--text-body-lg);
-  line-height: var(--leading-body);
-  color: var(--ink-body);
-  max-width: var(--measure-tight);
-  margin: 0 auto var(--block-gap);
-  text-align: center;
-}
-
-.ilab-asks__list {
-  display: grid;
-  gap: var(--grid-gap);
-}
-
-@container ilab (min-width: 60rem) {
-  .ilab-asks__list {
-    grid-template-columns: repeat(2, 1fr);
-  }
-  /* The first problem is the most common one — it gets the full width. */
-  .ilab-ask:first-child {
-    grid-column: 1 / -1;
-  }
-}
-
-.ilab-ask {
-  padding-top: 1.25rem;
-  border-top: 1px solid var(--line);
-}
-
-.ilab-ask__q {
-  font-family: var(--font-serif);
-  font-size: var(--text-lg);
-  line-height: 1.32;
-  color: var(--ink);
-  max-width: 34ch;
-  text-wrap: balance;
-}
-
-/* The judgement line. Accent, because it is the reason to keep reading. */
-.ilab-ask__reframe {
-  font-size: var(--text-body-sm);
-  line-height: var(--leading-body);
-  color: var(--accent);
-  margin-top: 0.75rem;
-  max-width: var(--measure);
-}
-
-.ilab-ask__a {
-  font-size: var(--text-body-sm);
-  line-height: var(--leading-body);
-  color: var(--ink-muted);
-  margin-top: 0.6rem;
-  max-width: var(--measure);
-}
-
-.ilab-ask__resolves {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: 0.6rem;
-  margin-top: 0.9rem;
-  font-family: var(--font-mono);
-  font-size: var(--text-meta);
-  letter-spacing: var(--track-label);
-  text-transform: uppercase;
-  color: var(--ink-body);
-}
-
-.ilab-ask__resolves-label {
-  color: var(--ink-faint);
-}
-
-.ilab-asks__who {
-  max-width: var(--measure);
-  margin-inline: auto;
-  text-align: center;
-}
-
-.ilab-asks__who .ilab-sub {
-  color: var(--ink-faint);
-}
-
-.ilab-asks__who-body {
-  font-size: var(--text-body-sm);
-  line-height: var(--leading-body);
-  color: var(--ink-muted);
-}
-
-/* ===========================================================================
-   04 — Plain Text
-   ======================================================================== */
-
-.ilab-plain__layout {
-  display: grid;
-  gap: var(--block-gap);
-  max-width: var(--content-max);
-  margin-inline: auto;
-}
-
-/* The margin becomes a real margin only when there is room for one. Below
-   that it is a strip under the prose — never an overlay competing with it. */
-@container ilab (min-width: 58rem) {
-  .ilab-plain__layout {
-    /* The prose column is sized to the measure rather than to `1fr`: a
-       fractional column stretches to the container and strands the margin rule
-       a long way from the text it annotates. */
-    grid-template-columns: minmax(0, var(--measure)) 12rem;
-    justify-content: center;
-    gap: var(--grid-gap);
-    align-items: start;
-  }
-}
-
-.ilab-plain__prose {
-  max-width: var(--measure);
-}
-
-.ilab-plain__p {
-  font-size: var(--text-body-lg);
-  line-height: var(--leading-body);
-  color: var(--ink-body);
-}
-
-.ilab-plain__p + .ilab-plain__p {
-  margin-top: 1.15em;
-}
-
-/* The opening sentence carries the section on its own, so it gets the serif. */
-.ilab-plain__p--lead {
-  font-family: var(--font-serif);
-  font-size: var(--text-lg);
-  line-height: 1.42;
-  color: var(--ink);
-}
-
-/* Byline-sized, never full measure. On a narrow container it sits above the
-   index strip at a fixed small width rather than growing to fill the column —
-   a portrait that fills a phone is the billboard this concept is refusing. */
-.ilab-plain__portrait {
-  display: block;
-  width: 8.5rem;
-  height: auto;
-  aspect-ratio: 3 / 4;
-  object-fit: cover;
-  border-radius: calc(var(--card-radius) * 0.6);
-  margin-bottom: 1.25rem;
-}
-
-.ilab-plain__margin ul {
-  list-style: none;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.55rem 1.25rem;
-  padding-top: 1rem;
-  border-top: 1px solid var(--line-soft);
-}
-
-.ilab-plain__margin li {
-  font-family: var(--font-mono);
-  font-size: var(--text-meta);
-  letter-spacing: var(--track-label);
-  text-transform: uppercase;
-  color: var(--ink-faint);
-}
-
-@container ilab (min-width: 58rem) {
-  .ilab-plain__margin {
-    padding-left: 1.25rem;
-    border-left: 1px solid var(--line-soft);
-  }
-
-  .ilab-plain__portrait {
-    width: 100%;
-    max-width: 11rem;
-  }
-
-  .ilab-plain__margin ul {
-    flex-direction: column;
-    gap: 0.85rem;
-    padding-top: 0;
-    border-top: 0;
-  }
-}
-
-/* ===========================================================================
-   05 — Provenance
-   ======================================================================== */
-
-.ilab-pass__head {
-  text-align: center;
-  max-width: var(--measure);
-  margin: 0 auto var(--block-gap);
-}
-
-.ilab-pass__name {
-  font-family: var(--font-serif);
-  font-size: var(--text-xl);
-  line-height: var(--leading-tight);
-  color: var(--ink);
-}
-
-.ilab-pass__desc {
-  font-size: var(--text-body-sm);
-  line-height: var(--leading-body);
-  color: var(--ink-muted);
-  margin-top: 0.85rem;
-}
-
-/* The record. A description list, so it reads as a record rather than as five
-   unrelated lists. */
-.ilab-pass__record {
-  border-top: 1px solid var(--line);
-}
-
-.ilab-pass__row {
-  display: grid;
-  gap: 0.85rem;
-  padding-block: 1.35rem;
-  border-bottom: 1px solid var(--line-soft);
-}
-
-@container ilab (min-width: 48rem) {
-  .ilab-pass__row {
-    grid-template-columns: 14rem minmax(0, 1fr);
-    gap: var(--grid-gap);
-    align-items: start;
-  }
-}
-
-.ilab-pass__field {
-  display: flex;
-  flex-direction: column;
-  gap: 0.3rem;
-}
-
-.ilab-pass__field-name {
+.ilab-tri__panel-label {
   font-family: var(--font-mono);
   font-size: var(--text-label);
   letter-spacing: var(--track-dymo);
   text-transform: uppercase;
   color: var(--accent);
+  margin-top: 1rem;
 }
 
-.ilab-pass__field-hint {
-  font-size: var(--text-meta);
-  line-height: var(--leading-tight);
-  color: var(--ink-faint);
-}
-
-.ilab-pass__values {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.85rem 1.75rem;
-}
-
-.ilab-pass__value {
-  display: flex;
-  flex-direction: column;
-  gap: 0.2rem;
-  min-width: 0;
-}
-
-.ilab-pass__value-main {
-  font-size: var(--text-body-sm);
-  line-height: var(--leading-tight);
-  color: var(--ink-body);
-}
-
-.ilab-pass__value-note {
-  font-family: var(--font-mono);
-  font-size: var(--text-meta);
-  line-height: var(--leading-tight);
-  color: var(--ink-faint);
-}
-
-.ilab-pass__foot {
-  margin-top: var(--block-gap);
+.ilab-tri__panel-line {
   font-size: var(--text-body-sm);
   line-height: var(--leading-body);
-  color: var(--ink-muted);
-  max-width: var(--measure);
-  margin-inline: auto;
+  color: var(--ink-body);
+  margin-top: 0.5rem;
+  max-width: 30ch;
+}
+
+.ilab-tri__closer {
+  font-family: var(--font-serif);
+  font-size: var(--text-lg);
+  line-height: var(--leading-tight);
+  color: var(--ink);
+  margin-top: var(--block-gap);
+  padding-top: var(--block-gap);
+  border-top: 1px solid var(--line-soft);
+}
+
+/* ===========================================================================
+   03 — Plate
+   The DYMO emboss as an object, on the velvet the CD player rests on.
+   ======================================================================== */
+
+.ilab-plate {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 34rem;
+  padding: var(--section-gap) var(--page-gutter);
+  overflow: hidden;
+}
+
+.ilab-plate__ground {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* The object. Deliberately small — a plate that fills the section is a banner,
+   and the whole idea is that identity can be a thing you could pick up. */
+.ilab-plate__object {
+  position: relative;
+  z-index: 1;
+  width: min(100%, 34rem);
+  padding: clamp(1.5rem, 1rem + 2vw, 2.75rem);
   text-align: center;
+  border-radius: calc(var(--card-radius) * 0.8);
+  background: linear-gradient(#20242b, #16191f);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow:
+    inset 0 2px 5px rgba(0, 0, 0, 0.7),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.06),
+    0 6px 0 #0a0c10,
+    0 14px 28px rgba(0, 0, 0, 0.72);
+  /* The design language allows 1–2deg. This is the tactile tell. */
+  transform: rotate(-1deg);
+}
+
+.ilab-plate__stamp {
+  font-family: var(--font-mono);
+  font-size: var(--text-xl);
+  font-weight: 500;
+  letter-spacing: var(--track-dymo);
+  text-transform: uppercase;
+  color: #fff;
+  text-shadow:
+    0 1px 0 rgba(0, 0, 0, 0.9),
+    0 -1px 0 rgba(255, 255, 255, 0.12);
+}
+
+.ilab-plate__line {
+  font-family: var(--font-serif);
+  font-size: var(--text-lg);
+  line-height: 1.36;
+  color: rgba(255, 255, 255, 0.9);
+  margin-top: 1.1rem;
+  max-width: 26ch;
+  margin-inline: auto;
+  text-wrap: balance;
+}
+
+.ilab-plate__facts {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.45rem 1.1rem;
+  list-style: none;
+  margin-top: 1.5rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.ilab-plate__fact {
+  font-family: var(--font-mono);
+  font-size: var(--text-meta);
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.62);
+}
+
+/* ===========================================================================
+   04 — Margin
+   ======================================================================== */
+
+.ilab-margin {
+  padding: var(--section-gap) var(--page-gutter);
+  max-width: var(--content-max);
+  margin-inline: auto;
+}
+
+.ilab-margin__stage {
+  display: grid;
+  gap: var(--block-gap);
+  margin-top: var(--block-gap);
+}
+
+@container ilab (min-width: 48rem) {
+  .ilab-margin__stage {
+    grid-template-columns: minmax(0, 18rem) minmax(0, 30rem);
+    justify-content: start;
+    gap: var(--grid-gap);
+    align-items: center;
+  }
+}
+
+.ilab-margin__frame img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+  border-radius: var(--card-radius);
+}
+
+.ilab-margin__notes {
+  display: grid;
+  gap: 1.75rem;
+  list-style: none;
+  counter-reset: none;
+}
+
+.ilab-margin__notes li {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+/* Hairline leaders back toward the frame. Each note reaches a little further
+   than the one above, so the three read as a descending annotation rather than
+   as a stacked list. */
+.ilab-margin__leader {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.22);
+  flex: 0 0 auto;
+  width: 1.5rem;
+}
+
+@container ilab (min-width: 48rem) {
+  .ilab-note-1 .ilab-margin__leader { width: 2rem; }
+  .ilab-note-2 .ilab-margin__leader { width: 4rem; }
+  .ilab-note-3 .ilab-margin__leader { width: 6rem; }
+}
+
+.ilab-margin__hand {
+  font-family: var(--font-cursive);
+  /* Caveat runs small for its point size, so it gets a step above body copy
+     rather than the label step — a handwritten note below ~18px is decoration,
+     not text anyone reads. */
+  font-size: clamp(1.375rem, 1.1rem + 0.45vw, 1.875rem);
+  line-height: 1.3;
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.ilab-margin__headline {
+  font-family: var(--font-serif);
+  font-size: var(--text-2xl);
+  line-height: var(--leading-display);
+  font-weight: 400;
+  color: var(--ink);
+  margin-top: var(--block-gap);
+}
+
+.ilab-margin__strip {
+  margin-top: 1.25rem;
+}
+
+/* ===========================================================================
+   05 — Reveal
+   ======================================================================== */
+
+.ilab-reveal {
+  position: relative;
+  isolation: isolate;
+  min-height: 30rem;
+  display: flex;
+  align-items: center;
+}
+
+@container ilab (min-width: 60rem) {
+  .ilab-reveal {
+    min-height: 40rem;
+  }
+}
+
+.ilab-reveal__grounds {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+/* All four grounds are mounted and opacity selects between them. Swapping
+   `src` would decode on every hover, which is exactly the kind of jitter the
+   motion rules exist to prevent. */
+.ilab-reveal__ground {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 420ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.ilab-reveal__ground[data-on] {
+  opacity: 1;
+}
+
+/* Same treatment the Triptych's map gets, and for the same reason: dropped in
+   raw, the cartographic asset is far brighter than anything else on the site
+   and the sentence stops being the loudest thing in the section. */
+.ilab-reveal__ground[data-kind="supply"] {
+  filter: saturate(0.34) brightness(0.5) contrast(1.14);
+}
+
+.ilab-reveal__scrim {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(
+      to right,
+      rgba(6, 10, 16, 0.95) 0%,
+      rgba(6, 10, 16, 0.84) 45%,
+      rgba(6, 10, 16, 0.4) 82%,
+      rgba(6, 10, 16, 0.32) 100%
+    ),
+    linear-gradient(to top, rgba(6, 10, 16, 0.72), transparent 55%);
+}
+
+.ilab-reveal__body {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: var(--content-max);
+  margin-inline: auto;
+  padding: var(--block-gap) var(--page-gutter);
+}
+
+.ilab-reveal__sentence {
+  font-family: var(--font-serif);
+  font-size: var(--text-xl);
+  line-height: 1.28;
+  color: #fff;
+  margin-top: 1.5rem;
+  max-width: 24ch;
+  text-wrap: balance;
+}
+
+@container ilab (min-width: 60rem) {
+  .ilab-reveal__sentence {
+    font-size: var(--text-2xl);
+    max-width: 28ch;
+  }
+}
+
+/* A marked phrase. Underlined at rest so it is discoverable without hover —
+   an affordance that only appears on hover does not exist on a phone. */
+.ilab-reveal__phrase {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  text-decoration: underline;
+  text-decoration-color: var(--accent);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.16em;
+  transition: color 200ms ease, text-decoration-color 200ms ease;
+}
+
+.ilab-reveal__phrase:hover,
+.ilab-reveal__phrase[data-on] {
+  color: var(--accent);
+}
+
+.ilab-reveal__phrase:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.7);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* The facts occupy one reserved block so a reveal never reflows the section. */
+.ilab-reveal__facts {
+  position: relative;
+  margin-top: 1.25rem;
+  min-height: 3.5em;
+}
+
+.ilab-reveal__fact {
+  position: absolute;
+  inset: 0;
+  font-size: var(--text-body-sm);
+  line-height: var(--leading-body);
+  color: rgba(255, 255, 255, 0.88);
+  max-width: 44ch;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 260ms ease, visibility 260ms;
+}
+
+.ilab-reveal__fact[data-on] {
+  opacity: 1;
+  visibility: visible;
+}
+
+.ilab-reveal__strip {
+  margin-top: 0.5rem;
+  transition: opacity 260ms ease;
+}
+
+/* The strip steps back while a fact is up, so the two never compete. */
+.ilab-reveal__strip[data-dim] {
+  opacity: 0.42;
 }
 
 /* ===========================================================================
@@ -854,21 +863,24 @@
   .ilab-readout {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
-  /* Thesis and the site map are the two that decide it — full width each. */
-  .ilab-panel:first-child,
-  .ilab-panel:nth-child(4) {
+  /* Thesis and the site map are the two that decide it — full width each.
+     SCOPED to .ilab-readout on purpose: unscoped, `.ilab-panel:first-child`
+     also matched the Triptych's first panel and gave it `grid-column: 1 / -1`,
+     which is what pushed the other two concepts' panels onto a second row. */
+  .ilab-readout > .ilab-panel:first-child,
+  .ilab-readout > .ilab-panel:nth-child(4) {
     grid-column: 1 / -1;
   }
 }
 
-.ilab-panel {
+.ilab-readout > .ilab-panel {
   padding: 1.25rem;
   background: var(--chrome);
   border: 1px solid var(--line-soft);
   border-radius: var(--card-radius);
 }
 
-.ilab-panel[data-tone="warn"] {
+.ilab-readout > .ilab-panel[data-tone="warn"] {
   border-color: rgba(216, 177, 90, 0.22);
 }
 
