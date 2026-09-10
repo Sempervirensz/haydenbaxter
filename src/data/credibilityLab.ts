@@ -127,7 +127,7 @@ export const QUICK_ANSWERS: QuickAnswer[] = [
   {
     question: "What kinds of opportunities are you open to?",
     answer:
-      "Full-time leadership roles, fractional or consulting engagements, and select build partnerships where AI, supply chain, international business, or traceability are central to the problem.",
+      "I am open to leadership, advisory, consulting, and build-partnership conversations where AI, supply chain, international business, or traceability are central to the problem.",
   },
   {
     question: "What does working with you usually look like?",
