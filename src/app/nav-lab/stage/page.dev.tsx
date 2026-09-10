@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import dynamic from "next/dynamic";
 import HeroSection from "@/components/HeroSection";
 import BrandsCarousel from "@/components/BrandsCarousel";
-import PersonasSection from "@/components/PersonasSection";
 import ConnectSection from "@/components/ConnectSection";
 import AboutSection from "@/components/AboutSection";
 import JournalSection from "@/components/JournalSection";
@@ -38,10 +37,13 @@ export default function NavLabStagePage() {
       <SoftLockGate scene={<HeroSection />}>
         <BrandsCarousel />
         <WorkSection />
-        <PersonasSection />
-        <ConnectSection />
+        {/* Order tracks `page.tsx`: About directly after the Work chapters as
+            the album's liner notes, Connect below Journal. Personas is gone
+            from the real page, so it is gone from here — a mirror that keeps a
+            deleted section stops being a mirror. */}
         <AboutSection />
         <JournalSection />
+        <ConnectSection />
         <SiteFooter />
       </SoftLockGate>
     </main>
