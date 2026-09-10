@@ -1,0 +1,18 @@
+# Deploys go out with `vercel --prod`, which uploads the WORKING TREE rather
+# than a git ref. Without this file the sibling dev dist dirs went with it and
+# broke the production build:
+#
+#   .next-motion/types/validator.ts:25
+#   Type error: Type '"/admin"' is not assignable to type '"/"'.
+#
+# Those dirs come from the NEXT_DIST_DIR escape hatch in next.config.ts, so each
+# chat can run its own dev server without two `next dev` fighting over `.next`
+# (see .claude/launch.json). A dev server registers `.dev.tsx` routes, so the
+# types Next generates in them describe /admin and every lab. Production's
+# pageExtensions has no `.dev.tsx`, those routes do not exist, and the stale
+# validator no longer typechecks against the real route set.
+#
+# `.gitignore` already covers them at `.next-*`, which is why they never showed
+# up in `git status` — and why this was invisible until a deploy failed.
+.next
+.next-*
