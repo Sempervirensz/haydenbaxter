@@ -34,6 +34,11 @@ export const LAB_GROUPS: LabGroup[] = [
       { label: "↳ Display sizes", path: "/entry-cta-lab/viewer", note: "The five directions framed from 375 to 4K" },
       { label: "Hero type lab", path: "/hero-type-lab", note: "5 size + measure iterations · live line-count readout" },
       { label: "Personas lab", path: "/personas-lab", note: "4 glass directions · hover, focus and tap expand" },
+      {
+        label: "Identity lab",
+        path: "/identity-lab",
+        note: "About + Personas \u00b7 5 identity concepts against the shipped sections \u00b7 site-map + SEO readout per concept",
+      },
     ],
   },
   {

@@ -47,6 +47,7 @@ export const NON_PUBLIC_PREFIXES = [
   "/entry-cta-lab",
   "/hero-type-lab",
   "/personas-lab",
+  "/identity-lab",
   "/offer-lab",
   "/etb-lab",
   "/lab",
