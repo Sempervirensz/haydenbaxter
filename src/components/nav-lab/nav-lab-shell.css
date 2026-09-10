@@ -1,0 +1,280 @@
+/* Navbar lab — the comparison shell.
+   Same visual language as the Responsive Viewer (dark ground, mono controls,
+   gold for the active state) so the labs read as one set of tools. */
+
+.nls {
+  display: flex;
+  min-height: 100vh;
+  background:
+    radial-gradient(120% 90% at 20% 0%, rgba(60, 70, 120, 0.12), transparent 60%),
+    #050608;
+  color: #f3f3f3;
+}
+
+/* ---- Control panel ---- */
+
+.nls__panel {
+  position: sticky;
+  top: 0;
+  align-self: flex-start;
+  width: 272px;
+  flex-shrink: 0;
+  height: 100vh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 22px 18px;
+  background: rgba(10, 11, 15, 0.72);
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+.nls__brand {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.nls__brandTitle {
+  font-family: var(--font-serif);
+  font-size: 19px;
+  letter-spacing: -0.01em;
+}
+
+.nls__brandSub {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.nls__group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.nls__groupLabel {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.nls__opt {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(255, 255, 255, 0.78);
+  cursor: pointer;
+  text-align: left;
+  transition: border-color 150ms ease, background 150ms ease, color 150ms ease;
+}
+
+.nls__opt:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.nls__opt.is-on {
+  border-color: rgba(216, 177, 90, 0.7);
+  background: rgba(216, 177, 90, 0.12);
+  color: #f3e6c4;
+}
+
+.nls__opt:focus-visible {
+  outline: 2px solid rgba(216, 177, 90, 0.8);
+  outline-offset: 2px;
+}
+
+.nls__optIndex {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.42);
+}
+
+.nls__opt.is-on .nls__optIndex {
+  color: rgba(243, 230, 196, 0.7);
+}
+
+.nls__optName {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.nls__optMeta {
+  margin-left: auto;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.34);
+}
+
+.nls__row {
+  display: flex;
+  gap: 6px;
+}
+
+.nls__btn {
+  flex: 1;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(255, 255, 255, 0.78);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  transition: border-color 150ms ease, background 150ms ease, color 150ms ease;
+}
+
+.nls__btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.nls__btn.is-on {
+  border-color: rgba(216, 177, 90, 0.7);
+  background: rgba(216, 177, 90, 0.12);
+  color: #f3e6c4;
+}
+
+/* ---- Notes: what the concept is, and what it costs ---- */
+
+.nls__note {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.nls__noteName {
+  font-family: var(--font-serif);
+  font-size: 16px;
+  color: #fff;
+}
+
+.nls__noteTagline {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.nls__noteRow {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.nls__noteLabel {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+.nls__noteRow--strength .nls__noteLabel {
+  color: #8fbf87;
+}
+
+.nls__noteRow--risk .nls__noteLabel {
+  color: #d89a6a;
+}
+
+.nls__noteText {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.66);
+}
+
+/* ---- Stage ---- */
+
+.nls__stage {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 24px;
+}
+
+.nls__frames {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 24px;
+  width: 100%;
+}
+
+.nls__slot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+/* The frame is scaled to fit the lab window; the iframe inside keeps its true
+   pixel width, so the framed route's media queries and vw units respond to the
+   PRESET rather than to this machine's window. Scaling the wrapper instead of
+   the iframe is what preserves that. */
+.nls__frame {
+  position: relative;
+  transform-origin: top center;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow: 0 30px 70px rgba(0, 0, 0, 0.6);
+  background: #000;
+}
+
+.nls__iframe {
+  display: block;
+  border: 0;
+  background: #000;
+}
+
+.nls__slotLabel {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.nls__readout {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.4);
+  text-align: center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nls__opt,
+  .nls__btn {
+    transition-duration: 1ms;
+  }
+}

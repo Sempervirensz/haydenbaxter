@@ -32,6 +32,16 @@
       "port": 3011
     },
     {
+      "//": "Navbar lab, run from the .claude/worktrees/nav-lab worktree. Own port AND own dist dir; 3000/3007/3011/3013 are taken by other chats.",
+      "name": "next-dev-nav-lab",
+      "runtimeExecutable": "/bin/sh",
+      "runtimeArgs": [
+        "-c",
+        "NEXT_DIST_DIR=.next-nav exec /Users/haydenbaxter/.nvm/versions/node/v20.19.6/bin/node node_modules/.bin/next dev -p 3055"
+      ],
+      "port": 3055
+    },
+    {
       "//": "Fourth isolated dev server (own port AND own dist dir) for the WorldPulse panel copy pass; 3000/3007/3011 are all taken by other chats.",
       "name": "next-dev-wp",
       "runtimeExecutable": "/bin/sh",
