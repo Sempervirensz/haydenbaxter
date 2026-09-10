@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import dynamic from "next/dynamic";
 import HeroSection from "@/components/HeroSection";
 import BrandsCarousel from "@/components/BrandsCarousel";
-import PersonasSection from "@/components/PersonasSection";
 import ConnectSection from "@/components/ConnectSection";
 import AboutSection from "@/components/AboutSection";
 import JournalSection from "@/components/JournalSection";
@@ -38,13 +37,21 @@ export default function Home() {
       <SoftLockGate scene={<HeroSection />}>
         <BrandsCarousel />
         <WorkSection />
-        {/* Directly below the Work section's closing "Let's work together"
-            chapter, so the three areas that CTA names resolve into what each
-            one actually covers before the page reaches Connect. */}
-        <PersonasSection />
-        <ConnectSection />
+        {/* Work is the album; About is the liner notes. It follows the Work
+            chapters directly and deliberately contrasts with them — quiet,
+            typographic, nothing to operate.
+
+            Personas used to sit here. It was deleted: its three areas were the
+            same three the Work chapters had just spent ~1,700vh showing,
+            restated as job titles, after the CTA. The component and its data
+            survive for the dev-only labs that still render them.
+
+            Connect moved BELOW Journal. It previously separated the CTA from
+            About, so the page asked for a booking before it had finished the
+            introduction. */}
         <AboutSection />
         <JournalSection />
+        <ConnectSection />
         <SiteFooter />
       </SoftLockGate>
     </main>

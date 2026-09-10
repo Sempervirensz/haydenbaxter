@@ -809,7 +809,6 @@ html {
   overflow: hidden;
 }
 
-
 /* Concept C2 (Hush) — minimalist numbered contents list driven by scroll */
 .wl-c2__list {
   list-style: none;
@@ -1304,26 +1303,6 @@ html.is-safari body {
   .connect__grid {
     gap: 10px;
   }
-  .about__gallery {
-    grid-template-columns: 1fr;
-    gap: 10px;
-  }
-  .about__photo--1,
-  .about__photo--2,
-  .about__photo--3,
-  .about__photo--4,
-  .about__photo--5 {
-    grid-column: 1;
-  }
-  .about__photo--3 {
-    aspect-ratio: 9 / 16;
-  }
-  .about__photo--3 img {
-    padding: 14px 16px;
-  }
-  .about__photo--5 {
-    aspect-ratio: 3 / 2;
-  }
   .journal__card-body {
     padding: 16px 18px 20px;
   }
@@ -1426,7 +1405,6 @@ html.is-safari body {
     border-top: 1px solid rgba(255, 255, 255, 0.06);
   }
 }
-
 
 /* ──────────────────────────────────────────────────────────
    Emerging Tech Builds — standalone gallery + detail pages
@@ -2507,130 +2485,12 @@ html.is-safari body {
   margin: 0;
 }
 
-/* About section */
-.about {
-  background: #0a0a0a;
-  padding: var(--section-gap) var(--page-gutter);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.about__heading {
-  font-family: var(--font-serif);
-  font-size: var(--text-heading);
-  line-height: var(--leading-display);
-  font-weight: 400;
-  color: var(--ink);
-  margin-bottom: var(--block-gap);
-  text-align: center;
-  max-width: 20ch;
-  text-wrap: balance;
-}
-
-/* Was 0.55 alpha — this is the section's only body copy, so it has to clear
-   the readability floor rather than sit at decorative opacity. */
-.about__intro {
-  font-family: var(--font-sans);
-  font-size: var(--text-base);
-  line-height: var(--leading-body);
-  color: var(--ink-body);
-  max-width: var(--measure);
-  text-align: center;
-  margin-bottom: var(--block-gap);
-}
-
 /* Curated collage on a 12-col grid. Frames are sized to each source image's
    native aspect so nothing gets force-cropped:
      row 1: panorama (span 12, ~2.82:1)
      row 2: landscape A (span 8, 4:3)        | phone in dark frame (span 4, 2:3)
      row 3: portrait (span 4, 3:4)           | landscape B (span 8, 3:2)
    Row heights are matched: row 2 = 540, row 3 = 480 (at max-width 1080). */
-/* The 12-col spans and per-photo aspect ratios do the composing, so widening
-   the container scales the whole collage proportionally — no span changes
-   needed. Row-height comments above assume the old 1080px cap; the ratios are
-   what hold the rows in step, so they still match at any width. */
-.about__gallery {
-  display: grid;
-  grid-template-columns: repeat(12, 1fr);
-  gap: var(--grid-gap);
-  max-width: var(--content-wide);
-  width: 100%;
-}
-
-.about__photo {
-  position: relative;
-  overflow: hidden;
-  border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  background: rgba(255, 255, 255, 0.03);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.06),
-    0 12px 32px rgba(0, 0, 0, 0.45);
-}
-
-.about__photo--1 {
-  grid-column: 1 / -1;
-  aspect-ratio: 2.82 / 1;
-}
-
-.about__photo--2 {
-  grid-column: span 8;
-  aspect-ratio: 4 / 3;
-}
-
-/* Phone screenshot in a portrait dark frame so the chrome stays visible
-   instead of being cropped or stretched. */
-.about__photo--3 {
-  grid-column: span 4;
-  aspect-ratio: 2 / 3;
-  background: linear-gradient(180deg, #0d0d12, #07070a);
-}
-.about__photo--3 img {
-  object-fit: contain;
-  padding: 18px 22px;
-  box-sizing: border-box;
-}
-
-.about__photo--4 {
-  grid-column: span 4;
-  aspect-ratio: 3 / 4;
-}
-
-.about__photo--5 {
-  grid-column: span 8;
-  aspect-ratio: 3 / 2;
-}
-
-.about__photo img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
-
-.about__photo-empty {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  padding: 16px;
-}
-
-.about__photo-empty span {
-  font-family: var(--font-mono);
-  font-size: var(--text-label);
-  letter-spacing: var(--track-label);
-  text-transform: uppercase;
-  color: var(--ink-faint);
-}
-
-/* Hide placeholder text when image loads */
-.about__photo img[src]:not([src=""]) ~ .about__photo-empty {
-  display: none;
-}
 
 /* Journal section */
 .journal {

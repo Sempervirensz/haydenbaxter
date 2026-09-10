@@ -38,6 +38,8 @@ const PUBLIC_CSS = [
   "src/styles/scale.css",
   "src/styles/work-details.css",
   "src/components/site-footer.css",
+  // The About section's own stylesheet. Ships on "/" — see AboutSection.tsx.
+  "src/components/about.css",
   "src/components/work/cinematic-work-stack.css",
   "src/components/work/work-together.css",
   // Ships on "/" inside the Consulting chapter's Experience screen.
