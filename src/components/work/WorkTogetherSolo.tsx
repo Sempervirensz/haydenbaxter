@@ -1,8 +1,13 @@
 "use client";
 
-// The OTHER two tabs — Explore WorldPulse and Review My Experience.
+// NO LONGER ON ANY PRODUCTION ROUTE. Both tabs this was built for have their
+// own screens now: Experience moved to `ExperienceScreen`, and WorldPulse to
+// `WorldPulseScreen` — see `src/data/worldpulse.ts` for the measurements that
+// decided the second one. This file survives ONLY as the "shipping today"
+// baseline in /experience-lab, which is what a concept there is compared
+// against. Nothing below describes what the site currently renders.
 //
-// WHY THIS EXISTS
+// WHY IT EXISTED
 //
 // An earlier pass restyled only the consulting answer and left these two on the
 // old `WorkTogetherScreen`. That produced a section with two design systems in
