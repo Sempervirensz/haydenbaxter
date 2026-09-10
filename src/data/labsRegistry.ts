@@ -148,6 +148,16 @@ export const LAB_GROUPS: LabGroup[] = [
     ],
   },
   {
+    title: "Credibility & proof",
+    items: [
+      {
+        label: "Homepage credibility lab",
+        path: "/credibility-lab",
+        note: "Current homepage context · proof cards / impact strip / dossier · recommendation + quick answers",
+      },
+    ],
+  },
+  {
     title: "Content & narrative",
     items: [
       { label: "Detail lab", path: "/detail-lab" },
