@@ -1,0 +1,722 @@
+/* ==========================================================================
+   Credibility Lab
+   Route-scoped. The production sections rendered around it keep their own CSS.
+   ========================================================================== */
+
+.clab-page {
+  min-height: 100vh;
+  background: #080808;
+  color: var(--ink);
+}
+
+.clab-toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 90;
+  display: grid;
+  grid-template-columns: minmax(250px, 1fr) auto minmax(280px, 1fr);
+  gap: 18px;
+  align-items: center;
+  padding: 14px var(--page-gutter);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(8, 8, 8, 0.94);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+
+.clab-toolbar__brand,
+.clab-toolbar__readout {
+  min-width: 0;
+}
+
+.clab-toolbar__kicker,
+.clab-kicker,
+.clab-placement span,
+.clab-proof-card__eyebrow,
+.clab-impact-item__label,
+.clab-dossier__meta,
+.clab-source-flag {
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+}
+
+.clab-toolbar__brand {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.clab-toolbar__brand strong {
+  font-family: var(--font-serif);
+  font-size: var(--text-base);
+  font-weight: 500;
+}
+
+.clab-toolbar__brand p,
+.clab-toolbar__readout span {
+  margin: 0;
+  font-size: var(--text-xs);
+  line-height: 1.45;
+  color: var(--ink-muted);
+}
+
+.clab-toolbar__kicker {
+  color: #c69a4a;
+}
+
+.clab-toolbar__controls {
+  display: inline-flex;
+  gap: 6px;
+  padding: 5px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.035);
+}
+
+.clab-toolbar__button {
+  min-height: 40px;
+  border: 0;
+  border-radius: 999px;
+  padding: 0 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: transparent;
+  color: var(--ink-muted);
+  font-family: var(--font-mono);
+  font-size: var(--text-control);
+  cursor: pointer;
+  transition: background 160ms ease, color 160ms ease;
+}
+
+.clab-toolbar__button span {
+  color: #c69a4a;
+  font-size: var(--text-xs);
+}
+
+.clab-toolbar__button:hover,
+.clab-toolbar__button:focus-visible {
+  color: var(--ink);
+  outline: none;
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.clab-toolbar__button.is-active {
+  color: #fff;
+  background: #1b4bb8;
+}
+
+.clab-toolbar__button.is-active span {
+  color: #fff;
+}
+
+.clab-toolbar__readout {
+  justify-self: end;
+  max-width: 42ch;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  text-align: right;
+}
+
+.clab-toolbar__readout strong {
+  font-family: var(--font-serif);
+  font-weight: 500;
+  font-size: var(--text-sm);
+}
+
+.clab-site {
+  overflow: clip;
+}
+
+.clab-shell {
+  width: min(100% - (2 * var(--page-gutter)), var(--content-max));
+  margin-inline: auto;
+}
+
+.clab-placement {
+  width: min(100% - (2 * var(--page-gutter)), var(--content-max));
+  margin: 24px auto -6px;
+  padding: 10px 0 0;
+  border-top: 1px dashed rgba(198, 154, 74, 0.34);
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  color: rgba(198, 154, 74, 0.82);
+}
+
+.clab-placement--first {
+  margin-top: 28px;
+}
+
+.clab-placement span {
+  font-size: var(--text-xs);
+}
+
+.clab-placement strong {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-weight: 500;
+  letter-spacing: 0.05em;
+}
+
+/* Shared section language */
+
+.clab-proof,
+.clab-impact,
+.clab-quote,
+.clab-faq,
+.clab-dossier {
+  padding-block: clamp(4rem, 2.5rem + 4vw, 8rem);
+  background: #0a0a0a;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.clab-impact,
+.clab-faq {
+  background: #0d0d0d;
+}
+
+.clab-section-head {
+  max-width: 64rem;
+  margin-bottom: clamp(2rem, 1.2rem + 2vw, 4rem);
+}
+
+.clab-section-head--compact {
+  margin-bottom: clamp(1.5rem, 1rem + 1.4vw, 2.5rem);
+}
+
+.clab-kicker {
+  display: block;
+  margin-bottom: 12px;
+  color: #c69a4a;
+}
+
+.clab-title {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: clamp(2rem, 1.5rem + 1.4vw, 4.75rem);
+  line-height: 1.02;
+  font-weight: 500;
+  letter-spacing: -0.025em;
+  color: var(--ink);
+  text-wrap: balance;
+}
+
+.clab-lede {
+  max-width: 58ch;
+  margin: 18px 0 0;
+  font-size: var(--text-base);
+  line-height: var(--leading-body);
+  color: var(--ink-muted);
+}
+
+.clab-action {
+  min-height: var(--control-h);
+  padding: 0 var(--control-px);
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  font-family: var(--font-mono);
+  font-size: var(--text-control);
+  letter-spacing: 0.04em;
+  transition: transform 160ms ease, background 160ms ease, border-color 160ms ease;
+}
+
+.clab-action:hover,
+.clab-action:focus-visible {
+  transform: translateY(-1px);
+  outline: none;
+}
+
+.clab-action--primary {
+  background: #1b4bb8;
+  color: #fff;
+  border: 1px solid #1b4bb8;
+}
+
+.clab-action--ghost {
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: var(--ink);
+  background: transparent;
+}
+
+.clab-action--ghost:hover,
+.clab-action--ghost:focus-visible {
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+/* 01 Receipts */
+
+.clab-proof-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--grid-gap);
+}
+
+.clab-proof-card {
+  min-height: 100%;
+  padding: clamp(1.25rem, 1rem + 0.8vw, 2.25rem);
+  border: 1px solid rgba(255, 255, 255, 0.13);
+  border-radius: var(--card-radius);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.018));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.clab-proof-card__eyebrow {
+  display: block;
+  min-height: 3.1em;
+  color: #c69a4a;
+  line-height: 1.5;
+}
+
+.clab-proof-card__title {
+  margin: 18px 0 12px;
+  font-family: var(--font-serif);
+  font-size: var(--text-xl);
+  font-weight: 500;
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+
+.clab-proof-card__body {
+  margin: 0;
+  font-size: var(--text-body-sm);
+  line-height: var(--leading-body);
+  color: var(--ink-body);
+}
+
+.clab-tags {
+  margin-top: 24px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.clab-tag {
+  padding: 6px 9px;
+  border: 1px solid rgba(255, 255, 255, 0.11);
+  border-radius: 999px;
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--ink-muted);
+  white-space: nowrap;
+}
+
+.clab-proof-actions {
+  margin-top: clamp(2rem, 1.4rem + 1.5vw, 3rem);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+/* 02 Impact */
+
+.clab-impact-grid {
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  border-top: 1px solid rgba(255, 255, 255, 0.13);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.13);
+}
+
+.clab-impact-item {
+  padding: clamp(1.3rem, 1rem + 1vw, 2.4rem);
+  border-right: 1px solid rgba(255, 255, 255, 0.13);
+}
+
+.clab-impact-item:last-child {
+  border-right: 0;
+}
+
+.clab-impact-item__figure {
+  font-family: var(--font-serif);
+  font-size: clamp(3rem, 2rem + 3vw, 7rem);
+  line-height: 0.95;
+  letter-spacing: -0.04em;
+  color: var(--ink);
+}
+
+.clab-impact-item__copy {
+  margin: 20px 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.clab-impact-item__label {
+  color: #c69a4a;
+}
+
+.clab-impact-item__note {
+  max-width: 28ch;
+  font-size: var(--text-sm);
+  line-height: 1.5;
+  color: var(--ink-muted);
+}
+
+/* Testimonial */
+
+.clab-quote {
+  background:
+    radial-gradient(circle at 15% 20%, rgba(27, 75, 184, 0.16), transparent 34%),
+    #080808;
+}
+
+.clab-quote--compact {
+  padding-block: clamp(3.5rem, 2.5rem + 3vw, 6rem);
+}
+
+.clab-quote__shell {
+  max-width: 92rem;
+}
+
+.clab-quote__text {
+  max-width: 21ch;
+  margin: clamp(1.5rem, 1rem + 1.5vw, 2.5rem) 0;
+  font-family: var(--font-serif);
+  font-size: clamp(2rem, 1.25rem + 2.4vw, 6.2rem);
+  font-weight: 500;
+  line-height: 1.04;
+  letter-spacing: -0.035em;
+  color: var(--ink);
+  text-wrap: balance;
+}
+
+.clab-quote--compact .clab-quote__text {
+  font-size: clamp(1.8rem, 1.3rem + 1.7vw, 4.5rem);
+}
+
+.clab-quote__credit {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  font-size: var(--text-sm);
+  line-height: 1.45;
+  color: var(--ink-muted);
+}
+
+.clab-quote__credit strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.clab-source-flag {
+  display: inline-block;
+  margin: 18px 0 0;
+  padding: 6px 8px;
+  border: 1px solid rgba(198, 154, 74, 0.34);
+  color: rgba(198, 154, 74, 0.86);
+  font-size: var(--text-xs);
+}
+
+/* FAQ */
+
+.clab-faq__layout {
+  display: grid;
+  grid-template-columns: minmax(0, 0.78fr) minmax(0, 1.22fr);
+  gap: clamp(2rem, 1.5rem + 4vw, 7rem);
+  align-items: start;
+}
+
+.clab-faq__list {
+  border-top: 1px solid rgba(255, 255, 255, 0.13);
+}
+
+.clab-faq__item {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.13);
+}
+
+.clab-faq__question {
+  min-height: 72px;
+  padding: 20px 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  list-style: none;
+  cursor: pointer;
+  font-family: var(--font-serif);
+  font-size: var(--text-lg);
+  color: var(--ink);
+}
+
+.clab-faq__question::-webkit-details-marker {
+  display: none;
+}
+
+.clab-faq__plus {
+  flex: 0 0 auto;
+  font-family: var(--font-mono);
+  font-size: var(--text-xl);
+  color: #c69a4a;
+  transition: transform 160ms ease;
+}
+
+.clab-faq__item[open] .clab-faq__plus {
+  transform: rotate(45deg);
+}
+
+.clab-faq__answer {
+  max-width: 62ch;
+  margin: -2px 0 24px;
+  font-size: var(--text-base);
+  line-height: var(--leading-body);
+  color: var(--ink-muted);
+}
+
+/* 03 Dossier */
+
+.clab-dossier {
+  background: #080808;
+}
+
+.clab-dossier__sheet {
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: var(--card-radius);
+  overflow: hidden;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.018));
+}
+
+.clab-dossier__head {
+  padding: clamp(1.5rem, 1rem + 1.5vw, 3rem);
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  gap: 24px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.13);
+}
+
+.clab-dossier__rows {
+  display: grid;
+}
+
+.clab-dossier__row {
+  padding: clamp(1.25rem, 1rem + 1vw, 2.4rem);
+  display: grid;
+  grid-template-columns: minmax(180px, 0.34fr) minmax(0, 1fr);
+  gap: clamp(1.5rem, 1rem + 2vw, 4rem);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.clab-dossier__meta {
+  color: #c69a4a;
+  line-height: 1.5;
+}
+
+.clab-dossier__row h3 {
+  margin: 0 0 8px;
+  font-family: var(--font-serif);
+  font-size: var(--text-xl);
+  line-height: 1.1;
+  font-weight: 500;
+}
+
+.clab-dossier__row p {
+  max-width: 70ch;
+  margin: 0;
+  font-size: var(--text-body-sm);
+  line-height: var(--leading-body);
+  color: var(--ink-muted);
+}
+
+.clab-dossier__figures {
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.13);
+}
+
+.clab-dossier__figures > div {
+  padding: clamp(1rem, 0.8rem + 1vw, 2rem);
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.clab-dossier__figures > div:last-child {
+  border-right: 0;
+}
+
+.clab-dossier__figures dt {
+  font-family: var(--font-serif);
+  font-size: clamp(2.2rem, 1.6rem + 1.8vw, 4.8rem);
+  line-height: 1;
+}
+
+.clab-dossier__figures dd {
+  margin: 8px 0 0;
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: var(--track-label);
+  color: var(--ink-muted);
+}
+
+.clab-dossier__quote {
+  padding: clamp(1.5rem, 1rem + 1.8vw, 3.4rem);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(220px, 0.32fr);
+  gap: clamp(1.5rem, 1rem + 2vw, 4rem);
+  align-items: end;
+}
+
+.clab-dossier__quote blockquote {
+  max-width: 32ch;
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: var(--text-2xl);
+  line-height: 1.1;
+}
+
+.clab-dossier__quote p {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  color: var(--ink-muted);
+  font-size: var(--text-sm);
+}
+
+.clab-dossier__quote p strong {
+  color: var(--ink);
+}
+
+.clab-dossier__quote .clab-source-flag {
+  grid-column: 1 / -1;
+  justify-self: start;
+}
+
+/* Responsive */
+
+@media (max-width: 1100px) {
+  .clab-toolbar {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .clab-toolbar__controls {
+    justify-self: start;
+  }
+
+  .clab-toolbar__readout {
+    justify-self: start;
+    text-align: left;
+  }
+
+  .clab-proof-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .clab-proof-card__eyebrow {
+    min-height: auto;
+  }
+
+  .clab-impact-grid,
+  .clab-dossier__figures {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .clab-impact-item:nth-child(2),
+  .clab-dossier__figures > div:nth-child(2) {
+    border-right: 0;
+  }
+
+  .clab-impact-item:nth-child(-n + 2),
+  .clab-dossier__figures > div:nth-child(-n + 2) {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.13);
+  }
+
+  .clab-faq__layout {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+}
+
+@media (max-width: 700px) {
+  .clab-toolbar {
+    position: relative;
+    padding: 12px 14px 14px;
+  }
+
+  .clab-toolbar__controls {
+    width: 100%;
+    overflow-x: auto;
+    justify-self: stretch;
+  }
+
+  .clab-toolbar__button {
+    flex: 0 0 auto;
+  }
+
+  .clab-placement {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 3px;
+  }
+
+  .clab-proof,
+  .clab-impact,
+  .clab-quote,
+  .clab-faq,
+  .clab-dossier {
+    padding-block: 3.5rem;
+  }
+
+  .clab-impact-grid,
+  .clab-dossier__figures {
+    grid-template-columns: 1fr;
+  }
+
+  .clab-impact-item,
+  .clab-impact-item:nth-child(2),
+  .clab-dossier__figures > div,
+  .clab-dossier__figures > div:nth-child(2) {
+    border-right: 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.13);
+  }
+
+  .clab-impact-item:last-child,
+  .clab-dossier__figures > div:last-child {
+    border-bottom: 0;
+  }
+
+  .clab-dossier__head {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .clab-dossier__row {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .clab-dossier__quote {
+    grid-template-columns: 1fr;
+  }
+
+  .clab-dossier__quote .clab-source-flag {
+    grid-column: 1;
+  }
+
+  .clab-proof-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .clab-page *,
+  .clab-page *::before,
+  .clab-page *::after {
+    scroll-behavior: auto !important;
+    animation: none !important;
+    transition: none !important;
+  }
+}
