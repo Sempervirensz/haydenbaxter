@@ -480,6 +480,24 @@ html {
   opacity: 1;
 }
 
+/* This one button sets its own casing.
+
+   `.tag` uppercases every label in the DYMO system, which turned "The 30s
+   Version" into "THE 30S VERSION" — an S beside a digit, in mono, at 11.5px.
+   CSS cannot lower-case a single character without wrapping it in markup, and
+   wrapping one letter of a copy string in a span puts presentation inside
+   `siteContent.ts` where the next person editing the words would have to
+   maintain it.
+
+   So the transform is off here and the casing is written literally in the data
+   instead. The result still reads as a DYMO label — it is caps apart from the
+   one deliberate character — but the string in `siteContent.ts` is now WYSIWYG.
+   That is the trade, and it is noted at the declaration too. */
+.navbar .nav-cta,
+.nav-mobile .nav-cta {
+  text-transform: none;
+}
+
 /* The CTA carries a glyph, so it is a flex box; `line-height: 1` on the label
    and the glyph keeps its box identical to every other tag in the row.
 

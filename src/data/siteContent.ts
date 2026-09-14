@@ -50,7 +50,7 @@ export const SITE_CONTENT = {
        No longer read from `workTogether.ts`: the section's own headline is
        still "Let's work together", and it should be — that is the offer. This
        is the way IN to it, which is a different sentence. */
-    cta: { label: "The 30s Version", glyph: "→", short: "30s Version" },
+    cta: { label: "THE 30s VERSION", glyph: "→", short: "30s VERSION" },
   },
   hero: {
     eyebrow: "View the work, the supply chain background, and where WorldPulse fits in.",
