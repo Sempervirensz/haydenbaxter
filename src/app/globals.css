@@ -811,8 +811,15 @@ html {
   }
 }
 
-/* Full CTA wording wherever it fits. */
-@media (max-width: 429px) {
+/* Full CTA wording wherever it fits, and the breakpoint is measured rather
+   than rounded: "The 30s Version" keeps the wordmark whole at 390px and clips
+   it at 375px, so the swap sits between them. That covers the common phone
+   widths — 390 (iPhone 12-15), 393 (Pixel), 402 (iPhone 16 Pro) all get the
+   full wording; only the small ones (360, 375) fall back.
+
+   Re-measure this if the wording changes again. At "The 30-Second Version" the
+   line was 430px; a shorter label earns a lower one. */
+@media (max-width: 389px) {
   .nav-cta--compact .nav-cta__long {
     display: none;
   }

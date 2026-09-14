@@ -37,16 +37,20 @@ export const SITE_CONTENT = {
        panel behind it honestly delivers on it: three paths, one line of
        reading each.
 
-       `short` is not decoration. Below 430px the bar swaps to it, and the full
-       wording there crushes the wordmark — measured at 360px, "Hayden Baxter"
-       is ellipsised from 89px down to 20px. "30 seconds" is the only
-       abbreviation tested that keeps the wordmark whole at 360/375/402 while
-       keeping the idea.
+       `short` is not decoration. Below the swap the bar uses it, and the full
+       wording on a small phone crushes the wordmark — "Hayden Baxter"
+       ellipsised from 89px down to 71px at 360px. "30s Version" is the
+       shortest form that keeps the whole idea and leaves the wordmark intact.
+
+       NOTE the tag uppercases, so the lowercase "s" renders as "THE 30S
+       VERSION". That is deliberate shorthand, not a typo — but it does put an
+       S beside a digit in mono at 11.5px, which is the one legibility risk in
+       this wording.
 
        No longer read from `workTogether.ts`: the section's own headline is
        still "Let's work together", and it should be — that is the offer. This
        is the way IN to it, which is a different sentence. */
-    cta: { label: "The 30-Second Version", glyph: "→", short: "30 seconds" },
+    cta: { label: "The 30s Version", glyph: "→", short: "30s Version" },
   },
   hero: {
     eyebrow: "View the work, the supply chain background, and where WorldPulse fits in.",
