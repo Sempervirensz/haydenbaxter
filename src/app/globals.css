@@ -287,9 +287,11 @@ html {
   gap: clamp(0.4rem, 0.25rem + 0.5vw, 0.75rem);
   max-width: 60vw;
   overflow: hidden;
+  /* Duration comes from the pace control, so "how quick" means one thing
+     across the state modes and the linked ones alike. */
   transition:
-    max-width 300ms cubic-bezier(0.22, 1, 0.36, 1),
-    opacity 200ms ease;
+    max-width var(--fold-ms, 300ms) cubic-bezier(0.22, 1, 0.36, 1),
+    opacity calc(var(--fold-ms, 300ms) * 0.7) ease;
 }
 
 .navbar--fade.is-condensed .nav-tags,
@@ -304,13 +306,14 @@ html {
    — toward the MENU tag that replaces it, rather than away from it. */
 .nav-tags__slot {
   display: inline-flex;
-  transition: opacity 180ms ease, transform 260ms cubic-bezier(0.22, 1, 0.36, 1);
+  transition: opacity calc(var(--fold-ms, 300ms) * 0.6) ease,
+    transform calc(var(--fold-ms, 300ms) * 0.85) cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .navbar--stagger.is-condensed .nav-tags__slot {
   opacity: 0;
   transform: translateX(10px);
-  transition-delay: calc(var(--nav-tag-i, 0) * 45ms);
+  transition-delay: calc(var(--nav-tag-i, 0) * var(--fold-ms, 300ms) * 0.15);
 }
 
 /* MENU is present from the first frame and fades in place, so the right-hand
@@ -323,9 +326,9 @@ html {
   border-width: 0;
   overflow: hidden;
   transition:
-    opacity 200ms ease 80ms,
-    max-width 280ms cubic-bezier(0.22, 1, 0.36, 1),
-    padding 280ms cubic-bezier(0.22, 1, 0.36, 1);
+    opacity calc(var(--fold-ms, 300ms) * 0.7) ease calc(var(--fold-ms, 300ms) * 0.27),
+    max-width calc(var(--fold-ms, 300ms) * 0.93) cubic-bezier(0.22, 1, 0.36, 1),
+    padding calc(var(--fold-ms, 300ms) * 0.93) cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .nav-fold.is-shown {

@@ -23,12 +23,15 @@ import {
   CONCEPTS,
   CONDENSE_MODES,
   CTA_GLYPHS,
+  FOLD_PACES,
   CTA_LABELS,
   DEFAULT_CONCEPT,
   DEFAULT_CONDENSE,
+  DEFAULT_PACE,
   NAV_LAB_CHANNEL,
   type CondenseMode,
   type ConceptId,
+  type FoldPace,
   type LabAnchor,
   type LabMode,
 } from "@/data/navLab";
@@ -63,6 +66,7 @@ export default function NavLabShell() {
   const [ctaLabelId, setCtaLabelId] = useState("");
   const [ctaGlyphId, setCtaGlyphId] = useState("");
   const [condense, setCondense] = useState<CondenseMode>(DEFAULT_CONDENSE);
+  const [pace, setPace] = useState<FoldPace>(DEFAULT_PACE);
   const [desktop, setDesktop] = useState<Preset>(DESKTOP_PRESETS[0]);
   const [mobile, setMobile] = useState<Preset>(MOBILE_PRESETS[1]);
   const [split, setSplit] = useState(true);
@@ -89,9 +93,10 @@ export default function NavLabShell() {
     post("concept", concept);
     post("hub", hub);
     post("condense", condense);
+    post("pace", pace);
     post("ctaLabel", CTA_LABELS.find((l) => l.id === ctaLabelId)?.label ?? "");
     post("ctaGlyph", CTA_GLYPHS.find((g) => g.id === ctaGlyphId)?.glyph ?? "");
-  }, [post, mode, concept, hub, condense, ctaLabelId, ctaGlyphId]);
+  }, [post, mode, concept, hub, condense, pace, ctaLabelId, ctaGlyphId]);
 
   useEffect(() => {
     const el = stageRef.current;
@@ -121,6 +126,7 @@ export default function NavLabShell() {
   const ctaNote = CTA_LABELS.find((l) => l.id === (ctaLabelId || "current")) ?? CTA_LABELS[0];
   const glyphNote = CTA_GLYPHS.find((g) => g.id === (ctaGlyphId || "arrow")) ?? CTA_GLYPHS[0];
   const condenseNote = CONDENSE_MODES.find((c) => c.id === condense) ?? CONDENSE_MODES[0];
+  const paceNote = FOLD_PACES.find((p) => p.id === pace) ?? FOLD_PACES[2];
 
   /* Fit both frames into the stage together, so switching split on and off
      doesn't change what either one is showing. */
@@ -241,6 +247,29 @@ export default function NavLabShell() {
                     }}
                   >
                     {g.glyph || "—"}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="nls__group">
+              {/* The fold's LENGTH, which turned out to matter more than its
+                  easing — the first linked build ran the whole fold across
+                  ~200px, about two wheel notches. */}
+              <span className="nls__groupLabel">Fold pace</span>
+              <div className="nls__row">
+                {FOLD_PACES.map((p) => (
+                  <button
+                    key={p.id}
+                    type="button"
+                    className={`nls__btn ${pace === p.id ? "is-on" : ""}`}
+                    title={p.note}
+                    onClick={() => {
+                      setPace(p.id);
+                      post("pace", p.id);
+                    }}
+                  >
+                    {p.label}
                   </button>
                 ))}
               </div>
@@ -401,8 +430,14 @@ export default function NavLabShell() {
                 </span>
               </div>
               <div className="nls__note">
-                <span className="nls__noteName">Fold · {condenseNote.label}</span>
+                <span className="nls__noteName">
+                  Fold · {condenseNote.label} · {paceNote.label}
+                </span>
                 <span className="nls__noteTagline">{condenseNote.note}</span>
+                <span className="nls__noteRow">
+                  <span className="nls__noteLabel">Pace</span>
+                  <span className="nls__noteText">{paceNote.note}</span>
+                </span>
                 <span className="nls__noteRow nls__noteRow--risk">
                   <span className="nls__noteLabel">Risk</span>
                   <span className="nls__noteText">{condenseNote.risk}</span>

@@ -29,12 +29,14 @@ import Navbar from "@/components/Navbar";
 import {
   DEFAULT_CONCEPT,
   DEFAULT_CONDENSE,
+  DEFAULT_PACE,
   NAV_LAB_CHANNEL,
   WORK_DETAIL_TRACKS,
   WORK_FALLBACK,
   type CondenseMode,
   type ConceptId,
   type LabAnchor,
+  type FoldPace,
   type LabMode,
   type NavLabMessage,
 } from "@/data/navLab";
@@ -55,6 +57,7 @@ export default function NavLabStage() {
   const [ctaLabel, setCtaLabel] = useState<string | undefined>(undefined);
   const [ctaGlyph, setCtaGlyph] = useState<string | undefined>(undefined);
   const [condense, setCondense] = useState<CondenseMode>(DEFAULT_CONDENSE);
+  const [pace, setPace] = useState<FoldPace>(DEFAULT_PACE);
   const [hubOpen, setHubOpen] = useState(false);
   const [receipt, setReceipt] = useState<NavTarget | null>(null);
   const timerRef = useRef<number | null>(null);
@@ -184,6 +187,7 @@ export default function NavLabStage() {
       if (msg.action === "jump") scrollToAnchor(msg.value);
       if (msg.action === "mode") setMode(msg.value);
       if (msg.action === "condense") setCondense(msg.value);
+      if (msg.action === "pace") setPace(msg.value);
       // "" is a real choice for the glyph (none), so only the label treats an
       // empty string as "leave production alone".
       if (msg.action === "ctaLabel") setCtaLabel(msg.value || undefined);
@@ -203,6 +207,7 @@ export default function NavLabStage() {
         ctaLabel={ctaLabel}
         ctaGlyph={ctaGlyph}
         condense={condense}
+        pace={pace}
       />
     );
   }

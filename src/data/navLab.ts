@@ -310,7 +310,8 @@ export type NavLabMessage =
   | { source: typeof NAV_LAB_CHANNEL; action: "mode"; value: LabMode }
   | { source: typeof NAV_LAB_CHANNEL; action: "ctaLabel"; value: string }
   | { source: typeof NAV_LAB_CHANNEL; action: "ctaGlyph"; value: string }
-  | { source: typeof NAV_LAB_CHANNEL; action: "condense"; value: CondenseMode };
+  | { source: typeof NAV_LAB_CHANNEL; action: "condense"; value: CondenseMode }
+  | { source: typeof NAV_LAB_CHANNEL; action: "pace"; value: FoldPace };
 
 /* ── Refine: iterating on the navbar that shipped ────────────────────────── */
 
@@ -521,3 +522,65 @@ export const CONDENSE_MODES: CondenseOption[] = [
 ];
 
 export const DEFAULT_CONDENSE: CondenseMode = "fade";
+
+/**
+ * How much scrolling the fold is spread across.
+ *
+ * The first linked build ran 64→260px — a 196px window, which is about two
+ * notches of a mouse wheel and a single flick on a trackpad. Coupling the fold
+ * to the scroll made it feel like yours; it did not make it feel unhurried,
+ * because there was barely any scroll to couple it to.
+ *
+ * Expressed as a fraction of VIEWPORT HEIGHT rather than in pixels, so the fold
+ * relates to the composition it is happening over. At `long` the bar finishes
+ * folding just as the entry finishes leaving, on any display, instead of at a
+ * pixel count that means something different on a laptop and a 4K panel.
+ *
+ * `ms` carries the same intent to the four state modes, whose fixed ~300ms was
+ * the other half of "everything feels quick" — so the control means one thing
+ * across all eight.
+ */
+export type FoldPace = "brisk" | "measured" | "long" | "drift";
+
+export interface FoldPaceOption {
+  id: FoldPace;
+  label: string;
+  /** Fold window as a fraction of viewport height (linked modes). */
+  vh: number;
+  /** Transition duration in ms (state modes). */
+  ms: number;
+  note: string;
+}
+
+export const FOLD_PACES: FoldPaceOption[] = [
+  {
+    id: "brisk",
+    label: "Brisk",
+    vh: 0.25,
+    ms: 300,
+    note: "≈200px of scroll — roughly two wheel notches. What the first build did, kept for reference.",
+  },
+  {
+    id: "measured",
+    label: "Measured",
+    vh: 0.6,
+    ms: 500,
+    note: "Just over half a screen. The fold is legible as a movement rather than a cut.",
+  },
+  {
+    id: "long",
+    label: "Long",
+    vh: 1,
+    ms: 750,
+    note: "A full screen of scroll. The bar finishes folding as the entry finishes leaving — the two events line up on any display.",
+  },
+  {
+    id: "drift",
+    label: "Drift",
+    vh: 1.6,
+    ms: 1100,
+    note: "Well past the entry. The fold is barely perceptible as it happens; you notice only that the bar is smaller now.",
+  },
+];
+
+export const DEFAULT_PACE: FoldPace = "long";

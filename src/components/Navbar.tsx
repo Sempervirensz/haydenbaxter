@@ -35,7 +35,7 @@ import { openWorkTogetherPath } from "@/components/work/workTogetherEvents";
 import { CONSULTING_TARGET, resolveConsultingChapter } from "@/data/entryChoice";
 import WorkTogetherHub from "@/components/WorkTogetherHub";
 import type { PathId } from "@/data/workTogether";
-import type { CondenseMode } from "@/data/navLab";
+import { DEFAULT_PACE, FOLD_PACES, type CondenseMode, type FoldPace } from "@/data/navLab";
 
 /* All three paths land in the SAME place: the Work Together chapter, with the
    chosen screen open.
@@ -61,11 +61,12 @@ const CONDENSE_OUT = 60;
 /** The single line `snap` still uses — kept so the lab's control is faithful. */
 const CONDENSE_AT = 72;
 
-/* The scroll window a LINKED fold is drawn across. ~200px is long enough that
-   the fold reads as a gradual change of state rather than a fast wipe, and
-   short enough to be finished before the first Work chapter arrives. */
+/* Where a LINKED fold begins — a dead zone, so a small nudge at the top of the
+   page does not start dismantling the bar. The window's LENGTH is a fraction of
+   viewport height (see FOLD_PACES), not a pixel count: the fold is happening
+   over the entry, so it should be measured in screens rather than in pixels
+   that mean different things on a laptop and a 4K panel. */
 const FOLD_START = 64;
-const FOLD_END = 260;
 
 /** Modes drawn from scroll position rather than switched at a threshold. */
 const LINKED_MODES = new Set<CondenseMode>(["track", "cascade", "recede"]);
@@ -80,10 +81,12 @@ export default function Navbar({
   ctaLabel,
   ctaGlyph,
   condense = "fade",
+  pace = DEFAULT_PACE,
 }: {
   ctaLabel?: string;
   ctaGlyph?: string;
   condense?: CondenseMode;
+  pace?: FoldPace;
 } = {}) {
   const { wordmark, navLinks, cta } = SITE_CONTENT.header;
   /* 0 = open, 1 = folding (MENU live, links still readable), 2 = folded. */
@@ -121,6 +124,15 @@ export default function Navbar({
      Smoothstep rather than a linear ramp — it leaves and arrives at rest
      without overshooting, which is the grounded half of the design language.
      An elastic curve here would read as floaty chrome. */
+  const paceDef = FOLD_PACES.find((p) => p.id === pace) ?? FOLD_PACES[2];
+
+  /* The four STATE modes read their duration from here too, so "pace" means
+     one thing across all eight rather than only applying to the linked half.
+     Their fixed ~300ms was the other half of "everything feels quick". */
+  useEffect(() => {
+    navRef.current?.style.setProperty("--fold-ms", `${paceDef.ms}ms`);
+  }, [paceDef.ms]);
+
   const stageRef = useRef(0);
   useEffect(() => {
     const nav = navRef.current;
@@ -144,7 +156,11 @@ export default function Navbar({
       const y = window.scrollY;
 
       if (linked) {
-        const raw = (y - FOLD_START) / (FOLD_END - FOLD_START);
+        // Read each update rather than cached: `innerHeight` is free, and this
+        // keeps the window correct through a resize or a mobile URL bar
+        // collapsing without a second listener to go stale.
+        const span = Math.max(120, window.innerHeight * paceDef.vh);
+        const raw = (y - FOLD_START) / span;
         const p = raw < 0 ? 0 : raw > 1 ? 1 : raw;
         const eased = reduced ? (p >= 0.5 ? 1 : 0) : p * p * (3 - 2 * p);
         // Written straight to the DOM rather than to React state: this changes
@@ -190,7 +206,7 @@ export default function Navbar({
       window.removeEventListener("scroll", update);
       nav?.style.removeProperty("--fold");
     };
-  }, [condense]);
+  }, [condense, paceDef.vh]);
 
   /* The links' natural width, measured once and handed to CSS.
 
