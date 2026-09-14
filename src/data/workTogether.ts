@@ -45,8 +45,17 @@ const LINKEDIN_HREF =
 const WORLDPULSE_HREF =
   CONNECT_LINKS.find((l) => l.id === "worldpulse")?.href ?? "https://worldxpulse.com";
 
-/** Hayden's resume / CV, served from the public documents directory. */
-export const RESUME_HREF = "/documents/Hayden-Baxter-Resume.pdf";
+/** The resume PDF itself, served from the public documents directory. */
+export const RESUME_FILE_HREF = "/documents/Hayden-Baxter-Resume.pdf";
+
+/* Where a person is sent to read the resume.
+ *
+ * This is the /resume page, not the file: it frames the PDF, states what the
+ * document is, and offers the download. Splitting the two means every human
+ * entry point (Work Together path 03, and the navbar and footer links that
+ * arrive with the Split Yoke nav) can keep importing RESUME_HREF without any
+ * of them knowing where the file physically lives. */
+export const RESUME_HREF = "/resume";
 
 const RESUME_REQUEST_HREF = `${EMAIL_HREF}?subject=${encodeURIComponent("Resume request")}`;
 
@@ -278,7 +287,7 @@ const EXPERIENCE: PathDef = {
     ],
     note: "Design × Domain knowledge × AI × Systems thinking — shared for consulting, partnership, and venture conversations.",
     primary: RESUME_HREF
-      ? { label: "View resume", href: RESUME_HREF, external: true }
+      ? { label: "View resume", href: RESUME_HREF }
       : { label: "Request the resume", href: RESUME_REQUEST_HREF },
     secondary: { label: "LinkedIn", href: LINKEDIN_HREF, external: true },
   },

@@ -68,6 +68,12 @@ const TYPES = {
   ".txt": "text/plain; charset=utf-8",
   ".xml": "application/xml; charset=utf-8",
   ".ico": "image/x-icon",
+  // Without this the resume fell through to application/octet-stream, and
+  // because the CSP block also sends `X-Content-Type-Options: nosniff`,
+  // Chrome refused to render it inline and /resume showed an empty frame.
+  // Vercel infers application/pdf from the extension; this keeps the local
+  // harness honest so a PDF can actually be tested here.
+  ".pdf": "application/pdf",
 };
 
 /** Resolve a URL path to a file on disk using Vercel's static-export rules. */

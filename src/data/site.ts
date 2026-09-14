@@ -23,6 +23,7 @@ export const PUBLIC_ROUTES = [
   "/emerging-tech-builds/atomic-os",
   "/emerging-tech-builds/casebrief",
   "/blog",
+  "/resume",
   "/privacy",
 ] as const;
 

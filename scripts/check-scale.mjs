@@ -49,6 +49,9 @@ const PUBLIC_CSS = [
   // how it kept an 11.52px eyebrow on a public page indefinitely — the guard
   // was never looking at the file.
   "src/app/privacy/privacy.css",
+  // Route-scoped stylesheet for /resume, registered at the same time the route
+  // was created rather than after a regression found it.
+  "src/app/resume/resume.css",
 ];
 
 // JSX carrying fixed type escapes CSS review entirely — two Tailwind

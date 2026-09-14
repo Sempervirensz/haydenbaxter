@@ -1,0 +1,224 @@
+/* Resume route: preview + download for the one PDF in public/documents.
+
+   Every font-size here is on a --text-* token and every container cap is a
+   --content-* / ch measure, because this file is registered in the PUBLIC_CSS
+   list in scripts/check-scale.mjs. privacy.css is the cautionary tale: it sat
+   outside that list and kept an 11.52px eyebrow on a public page for months.
+
+   The page is wider than the prose pages because the document preview is the
+   point of it; the reading columns inside are still pinned to --measure so the
+   text never runs the full width of a large display. */
+
+.resume {
+  width: min(100% - (2 * var(--page-gutter)), var(--content-wide));
+  margin: 0 auto;
+  padding: clamp(4rem, 3rem + 3vw, 8rem) 0 clamp(3rem, 2.5rem + 2vw, 6rem);
+  color: var(--ink-body);
+  font-family: var(--font-sans);
+  line-height: var(--leading-body);
+}
+
+/* Matches .legal__back exactly: same WCAG 2.2 SC 2.5.8 hit-area treatment,
+   with the negative inline margin keeping the label optically flush. */
+.resume__back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-mono);
+  font-size: var(--text-control);
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  text-decoration: none;
+  margin-bottom: clamp(2rem, 1.6rem + 1.2vw, 3.5rem);
+  min-height: 24px;
+  padding: 0.25rem 0.4rem;
+  margin-inline-start: -0.4rem;
+}
+
+.resume__back:hover,
+.resume__back:focus-visible {
+  color: #f3f3f3;
+}
+
+.resume__head {
+  max-width: var(--measure);
+}
+
+.resume__eyebrow {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  letter-spacing: var(--track-dymo);
+  text-transform: uppercase;
+  color: #d8b15a;
+  margin-bottom: 0.75rem;
+}
+
+.resume h1 {
+  font-family: var(--font-serif);
+  /* Same ramp as .legal h1: keeps 48px as the floor rather than dropping to
+     the --text-2xl floor of 32px. */
+  font-size: clamp(3rem, 2.6rem + 0.5vw, 4.25rem);
+  line-height: var(--leading-tight);
+  color: #f3f3f3;
+  margin: 0 0 0.5rem;
+}
+
+.resume__role {
+  font-family: var(--font-mono);
+  font-size: var(--text-meta);
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  margin: 0 0 1.25rem;
+}
+
+.resume__lede {
+  font-size: var(--text-body-lg);
+  color: var(--ink-body);
+  margin: 0 0 clamp(1.75rem, 1.4rem + 1vw, 2.75rem);
+  max-width: var(--measure-lede);
+}
+
+.resume__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+/* .tag carries the DYMO emboss, the mono casing and the press state; this only
+   guarantees the 44px pointer target the base class does not promise. */
+.resume__action {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+}
+
+.resume__meta {
+  font-family: var(--font-mono);
+  font-size: var(--text-meta);
+  color: var(--ink-faint);
+  margin: 0 0 clamp(2.5rem, 2rem + 1.5vw, 4rem);
+}
+
+/* ── Document preview ─────────────────────────────────────────────────────
+   A rendered image of page 1. The <img> carries its real width/height, so the
+   browser reserves the exact box before the file arrives and the section below
+   never jumps. Capped to a document-ish column: a letter page blown up to the
+   full width of a 4K display reads as a wall, not a preview. */
+.resume__viewer {
+  max-width: var(--content-narrow);
+  margin-bottom: clamp(2.5rem, 2rem + 1.5vw, 4rem);
+}
+
+.resume__doc-link {
+  display: block;
+  border-radius: 4px;
+}
+
+.resume__doc-link:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.14);
+}
+
+.resume__doc {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  /* The page is white; matching it stops a dark flash in the reserved box
+     before the image decodes. */
+  background: #fff;
+  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.55);
+}
+
+/* ── At a glance ─────────────────────────────────────────────────────────── */
+.resume__glance {
+  max-width: var(--measure);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding-top: clamp(2rem, 1.6rem + 1.2vw, 3rem);
+}
+
+.resume__glance h2 {
+  font-family: var(--font-serif);
+  font-size: var(--text-lg);
+  line-height: var(--leading-tight);
+  color: #f3f3f3;
+  margin: 0 0 clamp(1.5rem, 1.2rem + 1vw, 2.25rem);
+}
+
+.resume__block {
+  margin-bottom: clamp(1.75rem, 1.4rem + 1vw, 2.5rem);
+}
+
+.resume__block-label {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  letter-spacing: var(--track-dymo);
+  text-transform: uppercase;
+  color: #d8b15a;
+  margin-bottom: 0.5rem;
+}
+
+.resume__block-descriptor {
+  font-size: var(--text-base);
+  color: var(--ink-muted);
+  margin: 0 0 0.75rem;
+}
+
+.resume__block ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.resume__block li {
+  font-size: var(--text-base);
+  color: var(--ink-body);
+  padding-left: 1rem;
+  position: relative;
+}
+
+.resume__block li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.62em;
+  width: 4px;
+  height: 1px;
+  background: #d8b15a;
+}
+
+.resume__signals {
+  list-style: none;
+  padding: 0;
+  margin: clamp(1.5rem, 1.2rem + 1vw, 2.25rem) 0 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.resume__signals li {
+  font-family: var(--font-mono);
+  font-size: var(--text-meta);
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 3px;
+  padding: 0.4rem 0.7rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .resume__back,
+  .resume__action {
+    transition: none;
+  }
+}
