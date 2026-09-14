@@ -381,6 +381,14 @@ export const CTA_LABELS: CtaLabelOption[] = [
       "Drops the words 'work together' from the top of the page entirely, so the nav no longer states the offer — only the route into it.",
   },
   {
+    id: "quicknav",
+    label: "Quick Site Nav",
+    promise:
+      "The plainest possible statement of mechanism: press this, get a way around. On a page that runs ~19,600px, an explicit way around is worth having.",
+    risk:
+      "It promises SITE NAVIGATION and currently opens three engagement paths — Consulting, WorldPulse, Experience — which scroll into the Work Together chapter and open a screen there. A visitor pressing this expects Work / About / Journal / Resume, which is what the MENU tag beside it already does. Picking this means the panel behind it should change to match the promise; see the note in WorkTogetherHub.",
+  },
+  {
     id: "start",
     label: "Start a project",
     promise: "The most concrete, and the strongest verb.",
