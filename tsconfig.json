@@ -31,27 +31,27 @@
   "include": [
     "**/*.ts",
     "**/*.tsx",
-    ".next-alt/types/**/*.ts",
     ".next/types/**/*.ts",
-    "next-env.d.ts",
-    ".next-labs/types/**/*.ts"
+    "next-env.d.ts"
   ],
   /* The e2e suite is checked by tests/tsconfig.json instead. Playwright's
      `test.use()` needs PlaywrightTestOptions in scope, which Next's compiler
      options do not provide — checking it here reports phantom errors on valid
      config (e.g. `reducedMotion` "does not exist"). */
-  /* `.next-alt` is the escape-hatch dist dir from next.config.ts, used when a
-     second dev server runs against this folder. Starting that server makes Next
-     add `.next-alt/types/**` to the `include` above, and those types are
-     generated in DEV mode — where `pageExtensions` registers the `.dev.tsx`
-     admin routes. A production `next build` then typechecks them against a route
-     map that has no `/admin` and fails with "Type '"/admin"' is not assignable
-     to type '"/"'", in a file nobody edited. Excluding it here neutralises the
-     include even when Next re-adds it.
+  /* `.next-*` are the escape-hatch dist dirs from next.config.ts, used when more
+     than one dev server runs against this folder (see .claude/launch.json).
+     Starting such a server makes Next append `.next-<name>/types/**` to the
+     `include` above, and those types are generated in DEV mode — where
+     `pageExtensions` registers the `.dev.tsx` admin and lab routes. A production
+     `next build` then typechecks them against a route map that has no `/admin`
+     and fails with "Type '"/admin"' is not assignable to type '"/"'", in a file
+     nobody edited.
 
-     `.next-labs` is the same story: playwright.labs.config.ts runs a dev server
-     with NEXT_DIST_DIR=.next-labs so lab routes exist for entry-cta.spec.ts, and
-     Next adds its dev-mode types here too. Excluded for the identical reason. */
+     Excluding them neutralises the include even when Next re-adds it. The glob
+     covers every present and future dist dir, so a new one does not silently
+     re-break the build the way `.next-motion` and `.next-wp` did — and does not
+     need a tsconfig edit per dev server. `.next` itself needs the dash to match,
+     so it is untouched and still typechecked. */
   "exclude": [
     "node_modules",
     "legacy",
@@ -59,7 +59,6 @@
     "playwright.config.ts",
     "playwright.labs.config.ts",
     "playwright.audit.config.ts",
-    ".next-alt",
-    ".next-labs"
+    ".next-*"
   ]
 }
