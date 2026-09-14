@@ -203,7 +203,26 @@ test.describe("Supply Chain timeline", () => {
 test.describe("navigation", () => {
   test("nav links reach their sections through the gate", async ({ page }) => {
     await openSite(page, "/");
-    const about = page.locator('a[href="#about"]').first();
+
+    /* Take the route a visitor actually has at this width.
+     *
+     * Below 768px the desktop row is `display: none` and the destinations live
+     * behind MENU, so `a[href="#about"]` matches a link nobody can press and a
+     * click on it waits forever. This used to be masked: the old fold UNMOUNTED
+     * the desktop links once condensed, `count()` came back 0, and the test
+     * skipped itself on every phone project. The fold that ships now keeps them
+     * mounted and inert instead, so the test runs — and has to know where the
+     * pressable link is. */
+    const mobileBar = page.locator(".nav-mobile");
+    if (await mobileBar.isVisible()) {
+      await page.locator(".nav-mobile__actions .tag--nav").click();
+      await expect(page.locator(".nav-mobile__panel")).toBeVisible();
+    }
+
+    const about = page
+      .locator('a[href="#about"]')
+      .locator("visible=true")
+      .first();
     if (!(await about.count())) test.skip(true, "no #about link at this width");
     await about.click();
     await expect(page.locator("#about")).toBeInViewport({ ratio: 0.05, timeout: 8000 });
