@@ -1,4 +1,4 @@
-import { CTA_LABEL, RESUME_HREF } from "@/data/workTogether";
+import { RESUME_HREF } from "@/data/workTogether";
 
 /** Text label, or image asset path under /public */
 export type BrandLogo = {
@@ -28,9 +28,25 @@ export const SITE_CONTENT = {
       // Same PDF the Work Together record (path 03) already offers.
       { label: "Resume", href: RESUME_HREF },
     ],
-    /* Not a link — it discloses the hub. Label read from `workTogether.ts` so
-       the nav and the section it opens cannot drift apart. */
-    cta: { label: CTA_LABEL, glyph: "→", short: "Work with me" },
+    /* Not a link — it discloses the hub.
+
+       "Let's work together" said what the page WANTED and nothing about what
+       the button did; pressing it opens a sheet of three choices, so the press
+       was a small surprise every time. This says what the visitor gets. On a
+       page that runs ~19,600px it is also the more valuable promise, and the
+       panel behind it honestly delivers on it: three paths, one line of
+       reading each.
+
+       `short` is not decoration. Below 430px the bar swaps to it, and the full
+       wording there crushes the wordmark — measured at 360px, "Hayden Baxter"
+       is ellipsised from 89px down to 20px. "30 seconds" is the only
+       abbreviation tested that keeps the wordmark whole at 360/375/402 while
+       keeping the idea.
+
+       No longer read from `workTogether.ts`: the section's own headline is
+       still "Let's work together", and it should be — that is the offer. This
+       is the way IN to it, which is a different sentence. */
+    cta: { label: "The 30-Second Version", glyph: "→", short: "30 seconds" },
   },
   hero: {
     eyebrow: "View the work, the supply chain background, and where WorldPulse fits in.",

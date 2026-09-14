@@ -351,10 +351,18 @@ export interface CtaLabelOption {
 export const CTA_LABELS: CtaLabelOption[] = [
   {
     id: "current",
-    label: "Let's work together",
-    promise: "An invitation. Warm, and the phrase the Work Together section already uses.",
+    label: "The 30-Second Version",
+    promise:
+      "WHAT SHIPS. Says what the visitor gets rather than what the page wants — and on a ~19,600px page that is the more valuable promise. The panel behind it delivers on it honestly: three paths, one line of reading each.",
     risk:
-      "Says nothing about what happens. Reads as a link to a contact page, so the sheet of three choices arrives unannounced — the reason this is being re-opened.",
+      "Sets a clock it has to honour. If the three choices ever grow into something that takes longer than half a minute to read, the label starts lying.",
+  },
+  {
+    id: "invite",
+    label: "Let's work together",
+    promise: "An invitation. Warm, and the phrase the Work Together section still uses as its headline.",
+    risk:
+      "Says nothing about what happens. Reads as a link to a contact page, so the sheet of three choices arrives unannounced — the reason this was re-opened.",
   },
   {
     id: "short",

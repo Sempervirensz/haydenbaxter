@@ -212,7 +212,7 @@ export default function NavLabShell() {
                 }}
               >
                 <span className="nls__optName">As shipped</span>
-                <span className="nls__optMeta">Let&rsquo;s work together</span>
+                <span className="nls__optMeta">The 30-Second Version</span>
               </button>
               {CTA_LABELS.filter((l) => l.id !== "current").map((l) => (
                 <button
