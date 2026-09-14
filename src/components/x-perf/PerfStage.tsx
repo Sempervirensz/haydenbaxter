@@ -144,7 +144,7 @@ export default function PerfStage({ variant }: { variant: string }) {
           ))}
         </div>
 
-        <p className="pl-guide">Flip the four cards to continue in Story Mode.</p>
+        <p className="pl-guide">Flip the four cards to continue in Story Mode!</p>
       </div>
 
       <div className="pl-readout" role="status" aria-live="polite">

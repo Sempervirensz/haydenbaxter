@@ -12,7 +12,7 @@
 // /entry-cta-lab cannot drift apart in wording or destination.
 
 export const ENTRY_CHOICE = {
-  story: "Flip the four cards to continue in Story Mode.",
+  story: "Flip the four cards to continue in Story Mode!",
   /** Lowercase italic, set apart — the pause between the two routes. */
   divider: "or",
   direct: {
