@@ -82,7 +82,7 @@ test.describe("entry route choice", () => {
     await page.goto(LAB, { waitUntil: "load" });
     await ready(page);
 
-    await expect(page.locator(STORY)).toHaveText("Flip the four cards to continue in Story Mode.");
+    await expect(page.locator(STORY)).toHaveText("Flip the four cards to continue in Story Mode!");
     await expect(page.locator(".ecta__or")).toHaveText("or");
     await expect(page.locator(DIRECT)).toContainText("Skip ahead and see where I can add value");
   });
@@ -304,7 +304,7 @@ test.describe("entry route choice — every iteration", () => {
       await ready(page, v.id);
 
       await expect(page.locator(STORY)).toHaveText(
-        "Flip the four cards to continue in Story Mode."
+        "Flip the four cards to continue in Story Mode!"
       );
       await expect(page.locator(".ecta__or")).toHaveText("or");
       await expect(page.locator(DIRECT)).toContainText("Skip ahead and see where I can add value");

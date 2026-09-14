@@ -42,7 +42,7 @@ test.describe("homepage entry choice", () => {
     await ready(page);
 
     await expect(page.locator(STORY)).toHaveText(
-      "Flip the four cards to continue in Story Mode."
+      "Flip the four cards to continue in Story Mode!"
     );
     await expect(page.locator(".dlab-soft__or")).toHaveText("or");
     await expect(page.locator(DIRECT)).toContainText("Skip ahead and see where I can add value");
