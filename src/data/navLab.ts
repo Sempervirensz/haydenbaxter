@@ -521,7 +521,8 @@ export const CONDENSE_MODES: CondenseOption[] = [
   },
 ];
 
-export const DEFAULT_CONDENSE: CondenseMode = "fade";
+/** What ships. The lab opens on it so Refine starts from the real thing. */
+export const DEFAULT_CONDENSE: CondenseMode = "recede";
 
 /**
  * How much scrolling the fold is spread across.

@@ -12,10 +12,25 @@
 //
 // It CONDENSES. Holding five embossed tags over every scene for 13,000px is a
 // lot of chrome, so past the hero the four links fold behind one MENU tag and
-// the bar becomes two objects: who this is, and the one action. How that fold
-// is performed is the `condense` prop below — every mode takes the links out of
-// the tab order as they go, because an invisible link that still holds focus is
-// a bug this component has had to fix once already, on the mobile panel.
+// the bar becomes two objects: who this is, and the one action. Every fold mode
+// takes the links out of the tab order as they go, because an invisible link
+// that still holds focus is a bug this component has had to fix once already,
+// on the mobile panel.
+//
+// The fold that SHIPS is `recede` at `long` pace, chosen in /nav-lab after two
+// rounds. Three things had to be true before it felt right, and only the last
+// is about animation:
+//
+//   1. Two thresholds, not one. A single 72px line meant a 12px jitter flipped
+//      the bar 13 times; a dead band flips it zero times.
+//   2. Drawn from scroll POSITION, not switched at a line. A mode that crosses
+//      a threshold and then plays an animation is never connected to the hand
+//      that caused it, however well eased.
+//   3. Measured in screens, not pixels. The first linked build folded across
+//      196px — two wheel notches — which felt abrupt no matter how it moved.
+//      A viewport-relative window lands the fold exactly as the entry leaves.
+//
+// The other seven modes stay for the lab's sake; production reads the defaults.
 //
 // The CTA DISCLOSES rather than navigates. It is a <button> with
 // `aria-expanded`, opening the Work Together hub. If it ever becomes a link to
@@ -80,7 +95,7 @@ const LINKED_MODES = new Set<CondenseMode>(["track", "cascade", "recede"]);
 export default function Navbar({
   ctaLabel,
   ctaGlyph,
-  condense = "fade",
+  condense = "recede",
   pace = DEFAULT_PACE,
 }: {
   ctaLabel?: string;
