@@ -42,6 +42,10 @@ import { CTA_HINT, CTA_LABEL, PATHS, getPath, type PathId } from "@/data/workTog
 import ConsultingPathsScreen from "@/components/work/ConsultingPathsScreen";
 import ExperienceScreen from "@/components/work/ExperienceScreen";
 import WorldPulseScreen from "@/components/work/WorldPulseScreen";
+import {
+  WORK_TOGETHER_OPEN,
+  type WorkTogetherOpenDetail,
+} from "@/components/work/workTogetherEvents";
 import "@/components/work/work-together.css";
 // The three bars are styled by the shipped scheme too, and they exist before
 // any screen is opened — so the section depends on this stylesheet directly
@@ -75,6 +79,18 @@ export default function WorkTogether({ media, isActive, className = "" }: Props)
   useEffect(() => {
     if (isActive === false) setOpenId(null);
   }, [isActive]);
+
+  // The nav CTA's hub offers these same three paths from anywhere on the page.
+  // Choosing one there scrolls here and then asks for that screen — otherwise
+  // the hub would deposit the visitor on the row and make them choose twice.
+  useEffect(() => {
+    const onOpen = (e: Event) => {
+      const { path } = (e as CustomEvent<WorkTogetherOpenDetail>).detail ?? {};
+      if (path) setOpenId(path);
+    };
+    window.addEventListener(WORK_TOGETHER_OPEN, onOpen);
+    return () => window.removeEventListener(WORK_TOGETHER_OPEN, onOpen);
+  }, []);
 
   // Escape closes the screen. stopPropagation so it doesn't also close a
   // parent card on the mobile stack.

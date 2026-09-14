@@ -1,4 +1,4 @@
-import { CALENDLY_URL } from "@/data/connect";
+import { RESUME_HREF } from "@/data/workTogether";
 
 /** Text label, or image asset path under /public */
 export type BrandLogo = {
@@ -9,15 +9,48 @@ export type BrandLogo = {
 export const SITE_CONTENT = {
   header: {
     wordmark: "Hayden Baxter",
+    /* Four destinations and a CTA that is not one of them.
+
+       CONNECT is deliberately absent. Booking used to be the nav's CTA
+       ("Book a Call" → Calendly), which asked a visitor to commit to a call
+       before the page had said which of three conversations it would be. The
+       CTA below opens the Work Together hub instead, and its Consulting path
+       still ends at the same Calendly link in `data/connect` — so the booking
+       route is one press longer and correctly qualified, rather than gone. The
+       Connect section itself is unchanged and still sits in the scroll. */
     navLinks: [
       { label: "Work", href: "#work" },
       { label: "About", href: "#about" },
-      { label: "Connect", href: "#connect" },
-      { label: "Journal", href: "/blog" },
-      // Booking always points at the single source of truth in `data/connect`
-      // so the nav CTA can't drift from the Connect-section embed again.
-      { label: "Book a Call", href: CALENDLY_URL, cta: true },
+      // The journal moved to its own subdomain; `/blog` still builds and is
+      // still what JournalSection links, so that route is a redirect candidate
+      // rather than something to delete alongside this.
+      { label: "Journal", href: "https://journal.haydenbaxter.com", external: true },
+      // Same PDF the Work Together record (path 03) already offers.
+      { label: "Resume", href: RESUME_HREF },
     ],
+    /* Not a link — it discloses the hub.
+
+       "Let's work together" said what the page WANTED and nothing about what
+       the button did; pressing it opens a sheet of three choices, so the press
+       was a small surprise every time. This says what the visitor gets. On a
+       page that runs ~19,600px it is also the more valuable promise, and the
+       panel behind it honestly delivers on it: three paths, one line of
+       reading each.
+
+       `short` is not decoration. Below the swap the bar uses it, and the full
+       wording on a small phone crushes the wordmark — "Hayden Baxter"
+       ellipsised from 89px down to 71px at 360px. "30s Version" is the
+       shortest form that keeps the whole idea and leaves the wordmark intact.
+
+       NOTE the tag uppercases, so the lowercase "s" renders as "THE 30S
+       VERSION". That is deliberate shorthand, not a typo — but it does put an
+       S beside a digit in mono at 11.5px, which is the one legibility risk in
+       this wording.
+
+       No longer read from `workTogether.ts`: the section's own headline is
+       still "Let's work together", and it should be — that is the offer. This
+       is the way IN to it, which is a different sentence. */
+    cta: { label: "THE 30s VERSION", glyph: "→", short: "30s VERSION" },
   },
   hero: {
     eyebrow: "View the work, the supply chain background, and where WorldPulse fits in.",
