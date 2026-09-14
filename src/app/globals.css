@@ -267,6 +267,98 @@ html {
   margin: 0 auto;
 }
 
+/* ── The fold ────────────────────────────────────────────────────────────────
+   How the centre cluster leaves. `snap` is what shipped first: the links
+   unmount, so there is nothing here to style and nothing moves. Every other
+   mode keeps them in the DOM and animates width and opacity together, because
+   fading alone leaves a hole the CTA then jumps across.
+
+   `max-width` rather than `width`: the cluster has no fixed size — it is four
+   fluid-tracked mono labels — and an auto width cannot be transitioned. The
+   ceiling only has to exceed the real width for the ease to read correctly.
+
+   The dead band that stops the flicker is NOT here; it is the two thresholds
+   in Navbar.tsx. Easing a bar that flickers only makes it flicker smoothly. */
+.navbar--fade .nav-tags,
+.navbar--stagger .nav-tags,
+.navbar--intent .nav-tags {
+  display: flex;
+  align-items: center;
+  gap: clamp(0.4rem, 0.25rem + 0.5vw, 0.75rem);
+  max-width: 60vw;
+  overflow: hidden;
+  transition:
+    max-width 300ms cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 200ms ease;
+}
+
+.navbar--fade.is-condensed .nav-tags,
+.navbar--stagger.is-condensed .nav-tags,
+.navbar--intent.is-condensed .nav-tags {
+  max-width: 0;
+  opacity: 0;
+}
+
+/* Each label rides its own slot so Stagger can delay them individually. The
+   index counts from the END (set in Navbar.tsx), so the row folds right-to-left
+   — toward the MENU tag that replaces it, rather than away from it. */
+.nav-tags__slot {
+  display: inline-flex;
+  transition: opacity 180ms ease, transform 260ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.navbar--stagger.is-condensed .nav-tags__slot {
+  opacity: 0;
+  transform: translateX(10px);
+  transition-delay: calc(var(--nav-tag-i, 0) * 45ms);
+}
+
+/* MENU is present from the first frame and fades in place, so the right-hand
+   cluster settles at ONE width instead of jumping as it pops into the row
+   after the links have gone. `snap` keeps the original pop. */
+.nav-fold {
+  opacity: 0;
+  max-width: 0;
+  padding-inline: 0;
+  border-width: 0;
+  overflow: hidden;
+  transition:
+    opacity 200ms ease 80ms,
+    max-width 280ms cubic-bezier(0.22, 1, 0.36, 1),
+    padding 280ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.nav-fold.is-shown {
+  opacity: 1;
+  max-width: 12rem;
+  padding-inline: var(--tag-pad-inline);
+  border-width: 1px;
+}
+
+/* Snap keeps its abruptness — it is the control, and smoothing it here would
+   make the comparison in /nav-lab meaningless. */
+.navbar--snap .nav-fold,
+.navbar--snap .nav-tags,
+.navbar--snap .nav-tags__slot {
+  transition: none;
+}
+
+.navbar--snap .nav-fold {
+  opacity: 1;
+  max-width: none;
+  padding-inline: var(--tag-pad-inline);
+  border-width: 1px;
+}
+
+.navbar--snap .nav-fold:not(.is-shown) {
+  display: none;
+}
+
+/* Hold never condenses, so the fold control never appears. */
+.navbar--hold .nav-fold {
+  display: none;
+}
+
 .nav-actions {
   display: flex;
   align-items: center;
@@ -3930,6 +4022,9 @@ html.is-safari body {
 @media (prefers-reduced-motion: reduce) {
   .navbar,
   .navbar *,
+  .nav-tags,
+  .nav-tags__slot,
+  .nav-fold,
   .nav-panel,
   .nav-panel *,
   .nav-mobile,

@@ -306,4 +306,172 @@ export const NAV_LAB_CHANNEL = "nav-lab-ctl";
 export type NavLabMessage =
   | { source: typeof NAV_LAB_CHANNEL; action: "concept"; value: ConceptId }
   | { source: typeof NAV_LAB_CHANNEL; action: "jump"; value: LabAnchor }
-  | { source: typeof NAV_LAB_CHANNEL; action: "hub"; value: boolean };
+  | { source: typeof NAV_LAB_CHANNEL; action: "hub"; value: boolean }
+  | { source: typeof NAV_LAB_CHANNEL; action: "mode"; value: LabMode }
+  | { source: typeof NAV_LAB_CHANNEL; action: "ctaLabel"; value: string }
+  | { source: typeof NAV_LAB_CHANNEL; action: "ctaGlyph"; value: string }
+  | { source: typeof NAV_LAB_CHANNEL; action: "condense"; value: CondenseMode };
+
+/* ── Refine: iterating on the navbar that shipped ────────────────────────── */
+
+/**
+ * The lab has two jobs now.
+ *
+ *   concepts  the original eight directions, for choosing one
+ *   refine    the SHIPPED navbar, with the two things still unresolved about it
+ *
+ * Refine mounts the real `Navbar` component rather than the lab's copy of it.
+ * That matters: what you approve here is the thing that ships, not a
+ * look-alike that can drift from it between sessions.
+ */
+export type LabMode = "concepts" | "refine";
+
+/**
+ * What the CTA should say.
+ *
+ * The problem it has today: "Let's work together →" reads like a link to a
+ * contact page, and the arrow promises to TAKE you somewhere. Pressing it
+ * actually opens a sheet headed "Where would you like to start?" with three
+ * numbered choices. Nothing in the button says a choice is coming, so the
+ * press is a small surprise every time.
+ *
+ * Note the two axes are separate below. Half of this button's promise is
+ * carried by the glyph, not the words — the warmest possible label still lies
+ * if it ends in an arrow.
+ */
+export interface CtaLabelOption {
+  id: string;
+  label: string;
+  /** What this wording promises the visitor. */
+  promise: string;
+  risk: string;
+}
+
+export const CTA_LABELS: CtaLabelOption[] = [
+  {
+    id: "current",
+    label: "Let's work together",
+    promise: "An invitation. Warm, and the phrase the Work Together section already uses.",
+    risk:
+      "Says nothing about what happens. Reads as a link to a contact page, so the sheet of three choices arrives unannounced — the reason this is being re-opened.",
+  },
+  {
+    id: "short",
+    label: "Work with me",
+    promise: "The same invitation, two words shorter, and it already fits the narrow phone bar.",
+    risk: "Shorter, but no clearer about what the press does than the current one.",
+  },
+  {
+    id: "ways",
+    label: "Ways to work together",
+    promise:
+      "Plural. The one candidate whose grammar guarantees more than one thing is behind it.",
+    // Measured rather than guessed: 219px against the shipped 210px at 430px,
+    // where the phone bar first shows the full wording. The "it's too long"
+    // objection is worth 9px.
+    risk:
+      "Reads as a category rather than an invitation — it describes the menu instead of asking for the work. Width is not the problem it looks like: 9px wider than what ships.",
+  },
+  {
+    id: "where",
+    label: "Where to start",
+    promise:
+      "Word for word what the sheet then asks (\"Where would you like to start?\"). The button and the panel become one sentence.",
+    risk:
+      "Drops the words 'work together' from the top of the page entirely, so the nav no longer states the offer — only the route into it.",
+  },
+  {
+    id: "start",
+    label: "Start a project",
+    promise: "The most concrete, and the strongest verb.",
+    risk:
+      "Names only path 01. Someone arriving about WorldPulse or the record reads this as 'not for me' — the exact narrowing the hub exists to undo.",
+  },
+];
+
+/**
+ * The glyph is doing as much work as the words.
+ *
+ * `→` is a promise of travel; it is why the current button reads as a link.
+ * A disclosure marker is the honest one here, because the press opens a panel
+ * in place. Kept as its own control so the wording can be judged apart from it.
+ */
+export interface CtaGlyphOption {
+  id: string;
+  glyph: string;
+  label: string;
+  note: string;
+}
+
+export const CTA_GLYPHS: CtaGlyphOption[] = [
+  { id: "arrow", glyph: "→", label: "Arrow", note: "Promises travel. What ships today." },
+  { id: "chevron", glyph: "▾", label: "Chevron", note: "Promises disclosure — what actually happens." },
+  { id: "plus", glyph: "+", label: "Plus", note: "Promises expansion; quieter than a chevron." },
+  { id: "ellipsis", glyph: "···", label: "Ellipsis", note: "Promises 'more', without saying how much." },
+  { id: "none", glyph: "", label: "None", note: "Let the words carry it alone." },
+];
+
+/**
+ * How the desktop bar goes from five objects to two.
+ *
+ * What ships today is `snap`, and it is abrupt in three separate ways that are
+ * worth separating, because only one of them is about animation:
+ *
+ *   1. the four links UNMOUNT in a single frame — nothing moves, they are
+ *      simply gone;
+ *   2. the MENU tag appears in the same frame, so the right-hand cluster
+ *      changes width at the same instant;
+ *   3. there is ONE threshold at 72px and no hysteresis, so a two-pixel wheel
+ *      nudge around the fold flips the whole bar back and forth.
+ *
+ * (3) is the one a visitor actually feels as "janky", and no amount of easing
+ * fixes it — it needs two thresholds, not a smoother curve.
+ */
+export type CondenseMode = "snap" | "fade" | "stagger" | "intent" | "hold";
+
+export interface CondenseOption {
+  id: CondenseMode;
+  label: string;
+  note: string;
+  risk: string;
+}
+
+export const CONDENSE_MODES: CondenseOption[] = [
+  {
+    id: "snap",
+    label: "Snap",
+    note: "What ships today: unmount at 72px, no animation, one threshold.",
+    risk: "Flickers when you settle near the fold, and four objects vanish between frames.",
+  },
+  {
+    id: "fade",
+    label: "Fade",
+    note:
+      "The cluster loses opacity and width together over 260ms, then goes inert. Collapses at 160px, re-opens at 60px — the gap is what stops the flicker.",
+    risk: "Still a width change under the CTA, so the right cluster shifts once per fold.",
+  },
+  {
+    id: "stagger",
+    label: "Stagger",
+    note:
+      "Same as Fade, but the four leave right-to-left 45ms apart, so the row reads as folding rather than dissolving.",
+    risk: "The most motion of the set; the last tag leaves ~180ms after the first.",
+  },
+  {
+    id: "intent",
+    label: "Intent",
+    note:
+      "Reads direction, not position: collapsed while descending, the full row returns the moment you scroll up. Never flickers, because position is not the trigger.",
+    risk:
+      "The bar changes when the visitor reverses for an unrelated reason, which can read as twitchy on a trackpad.",
+  },
+  {
+    id: "hold",
+    label: "Hold",
+    note: "Never condenses. Five tags the whole way down, scrim and all.",
+    risk:
+      "The thing condensing was meant to solve — a lot of chrome held over ~13,600px of photography.",
+  },
+];
+
+export const DEFAULT_CONDENSE: CondenseMode = "fade";

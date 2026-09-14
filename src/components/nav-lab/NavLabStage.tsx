@@ -25,13 +25,17 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { releaseSoftLock } from "@/components/design-lab/softLockEvents";
+import Navbar from "@/components/Navbar";
 import {
   DEFAULT_CONCEPT,
+  DEFAULT_CONDENSE,
   NAV_LAB_CHANNEL,
   WORK_DETAIL_TRACKS,
   WORK_FALLBACK,
+  type CondenseMode,
   type ConceptId,
   type LabAnchor,
+  type LabMode,
   type NavLabMessage,
 } from "@/data/navLab";
 import NavLabNav, { type NavTarget } from "./NavLabNav";
@@ -44,7 +48,13 @@ const MOUNT_TIMEOUT_MS = 2000;
 const MOUNT_POLL_MS = 120;
 
 export default function NavLabStage() {
+  const [mode, setMode] = useState<LabMode>("concepts");
   const [concept, setConcept] = useState<ConceptId>(DEFAULT_CONCEPT);
+  /* Refine drives the SHIPPED navbar. Undefined means "whatever production
+     does", so the lab opens showing the real thing rather than a variant. */
+  const [ctaLabel, setCtaLabel] = useState<string | undefined>(undefined);
+  const [ctaGlyph, setCtaGlyph] = useState<string | undefined>(undefined);
+  const [condense, setCondense] = useState<CondenseMode>(DEFAULT_CONDENSE);
   const [hubOpen, setHubOpen] = useState(false);
   const [receipt, setReceipt] = useState<NavTarget | null>(null);
   const timerRef = useRef<number | null>(null);
@@ -63,17 +73,22 @@ export default function NavLabStage() {
     return () => window.clearTimeout(id);
   }, []);
 
-  /* Hide the production navbar for as long as this overlay is mounted. Done as
-     a stylesheet rather than by editing `Navbar.tsx`, so the lab cannot leave a
-     mark on the component it is proposing to replace. */
+  /* In CONCEPTS mode the eight directions replace the navbar, so production's
+     is hidden — as a stylesheet rather than an edit to `Navbar.tsx`, so the lab
+     leaves no mark on the component it is proposing to replace.
+
+     In REFINE mode there is nothing to hide: the stage mounts the real navbar
+     itself, below, and the whole point is that what you are judging is the
+     shipping component. */
   useEffect(() => {
+    if (mode !== "concepts") return;
     const style = document.createElement("style");
     style.dataset.navLab = "hide-production-nav";
     style.textContent =
-      ".navbar, .nav-mobile__btn, .nav-mobile__panel { display: none !important; }";
+      ".navbar, .nav-mobile, .nav-mobile__panel { display: none !important; }";
     document.head.appendChild(style);
     return () => style.remove();
-  }, []);
+  }, [mode]);
 
   /* Scroll to a target that may not have mounted yet.
 
@@ -167,10 +182,30 @@ export default function NavLabStage() {
       if (msg.action === "concept") setConcept(msg.value);
       if (msg.action === "hub") setHubOpen(msg.value);
       if (msg.action === "jump") scrollToAnchor(msg.value);
+      if (msg.action === "mode") setMode(msg.value);
+      if (msg.action === "condense") setCondense(msg.value);
+      // "" is a real choice for the glyph (none), so only the label treats an
+      // empty string as "leave production alone".
+      if (msg.action === "ctaLabel") setCtaLabel(msg.value || undefined);
+      if (msg.action === "ctaGlyph") setCtaGlyph(msg.value);
     };
     window.addEventListener("message", onMessage);
     return () => window.removeEventListener("message", onMessage);
   }, [scrollToAnchor]);
+
+  /* Refine: the real navbar, with the two things still open about it wired to
+     the shell's controls. Keyed on the mode so switching back and forth
+     remounts it cleanly rather than leaving a half-collapsed bar behind. */
+  if (mode === "refine") {
+    return (
+      <Navbar
+        key={`refine:${condense}`}
+        ctaLabel={ctaLabel}
+        ctaGlyph={ctaGlyph}
+        condense={condense}
+      />
+    );
+  }
 
   return (
     <>

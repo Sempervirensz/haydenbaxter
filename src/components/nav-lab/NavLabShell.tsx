@@ -21,10 +21,16 @@ import Link from "next/link";
 import {
   BACKGROUNDS,
   CONCEPTS,
+  CONDENSE_MODES,
+  CTA_GLYPHS,
+  CTA_LABELS,
   DEFAULT_CONCEPT,
+  DEFAULT_CONDENSE,
   NAV_LAB_CHANNEL,
+  type CondenseMode,
   type ConceptId,
   type LabAnchor,
+  type LabMode,
 } from "@/data/navLab";
 import "./nav-lab-shell.css";
 
@@ -51,7 +57,12 @@ const MOBILE_PRESETS: Preset[] = [
 ];
 
 export default function NavLabShell() {
+  const [mode, setMode] = useState<LabMode>("concepts");
   const [concept, setConcept] = useState<ConceptId>(DEFAULT_CONCEPT);
+  // "" keeps production's own wording, so Refine opens on the shipping bar.
+  const [ctaLabelId, setCtaLabelId] = useState("");
+  const [ctaGlyphId, setCtaGlyphId] = useState("");
+  const [condense, setCondense] = useState<CondenseMode>(DEFAULT_CONDENSE);
   const [desktop, setDesktop] = useState<Preset>(DESKTOP_PRESETS[0]);
   const [mobile, setMobile] = useState<Preset>(MOBILE_PRESETS[1]);
   const [split, setSplit] = useState(true);
@@ -74,9 +85,13 @@ export default function NavLabShell() {
      be pushed again or it silently reverts to the default while the control
      still reads as selected. */
   const pushAll = useCallback(() => {
+    post("mode", mode);
     post("concept", concept);
     post("hub", hub);
-  }, [post, concept, hub]);
+    post("condense", condense);
+    post("ctaLabel", CTA_LABELS.find((l) => l.id === ctaLabelId)?.label ?? "");
+    post("ctaGlyph", CTA_GLYPHS.find((g) => g.id === ctaGlyphId)?.glyph ?? "");
+  }, [post, mode, concept, hub, condense, ctaLabelId, ctaGlyphId]);
 
   useEffect(() => {
     const el = stageRef.current;
@@ -103,6 +118,9 @@ export default function NavLabShell() {
   const jump = (anchor: LabAnchor) => post("jump", anchor);
 
   const def = CONCEPTS.find((c) => c.id === concept) ?? CONCEPTS[0];
+  const ctaNote = CTA_LABELS.find((l) => l.id === (ctaLabelId || "current")) ?? CTA_LABELS[0];
+  const glyphNote = CTA_GLYPHS.find((g) => g.id === (ctaGlyphId || "arrow")) ?? CTA_GLYPHS[0];
+  const condenseNote = CONDENSE_MODES.find((c) => c.id === condense) ?? CONDENSE_MODES[0];
 
   /* Fit both frames into the stage together, so switching split on and off
      doesn't change what either one is showing. */
@@ -152,7 +170,103 @@ export default function NavLabShell() {
           <span className="nls__brandSub">8 concepts · sticky · CTA hub</span>
         </div>
 
+        {/* Two jobs, one lab. `concepts` compares the eight directions;
+            `refine` mounts the SHIPPED navbar and opens the two questions still
+            outstanding about it — what the CTA should say, and how the desktop
+            row should fold. */}
         <div className="nls__group">
+          <span className="nls__groupLabel">Mode</span>
+          <div className="nls__row">
+            {(["concepts", "refine"] as const).map((m) => (
+              <button
+                key={m}
+                type="button"
+                className={`nls__btn ${mode === m ? "is-on" : ""}`}
+                onClick={() => {
+                  setMode(m);
+                  post("mode", m);
+                }}
+              >
+                {m === "concepts" ? "8 concepts" : "Refine shipped"}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {mode === "refine" && (
+          <>
+            <div className="nls__group">
+              <span className="nls__groupLabel">CTA wording</span>
+              <button
+                type="button"
+                className={`nls__opt ${ctaLabelId === "" ? "is-on" : ""}`}
+                onClick={() => {
+                  setCtaLabelId("");
+                  post("ctaLabel", "");
+                }}
+              >
+                <span className="nls__optName">As shipped</span>
+                <span className="nls__optMeta">Let&rsquo;s work together</span>
+              </button>
+              {CTA_LABELS.filter((l) => l.id !== "current").map((l) => (
+                <button
+                  key={l.id}
+                  type="button"
+                  className={`nls__opt ${ctaLabelId === l.id ? "is-on" : ""}`}
+                  onClick={() => {
+                    setCtaLabelId(l.id);
+                    post("ctaLabel", l.label);
+                  }}
+                >
+                  <span className="nls__optName">{l.label}</span>
+                </button>
+              ))}
+            </div>
+
+            <div className="nls__group">
+              {/* Its own control because half the button's promise is the
+                  glyph: an arrow says "you will be taken somewhere", which is
+                  the reason the current CTA reads as a link. */}
+              <span className="nls__groupLabel">CTA glyph</span>
+              <div className="nls__row">
+                {CTA_GLYPHS.map((g) => (
+                  <button
+                    key={g.id}
+                    type="button"
+                    className={`nls__btn ${ctaGlyphId === g.id ? "is-on" : ""}`}
+                    title={g.note}
+                    onClick={() => {
+                      setCtaGlyphId(g.id);
+                      post("ctaGlyph", g.glyph);
+                    }}
+                  >
+                    {g.glyph || "—"}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="nls__group">
+              <span className="nls__groupLabel">Desktop fold</span>
+              {CONDENSE_MODES.map((c) => (
+                <button
+                  key={c.id}
+                  type="button"
+                  className={`nls__opt ${condense === c.id ? "is-on" : ""}`}
+                  onClick={() => {
+                    setCondense(c.id);
+                    post("condense", c.id);
+                  }}
+                >
+                  <span className="nls__optName">{c.label}</span>
+                  {c.id === "snap" && <span className="nls__optMeta">shipped</span>}
+                </button>
+              ))}
+            </div>
+          </>
+        )}
+
+        <div className="nls__group" hidden={mode !== "concepts"}>
           <span className="nls__groupLabel">Concept</span>
           {CONCEPTS.map((c) => (
             <button
@@ -252,20 +366,50 @@ export default function NavLabShell() {
 
         <div className="nls__group">
           <span className="nls__groupLabel">Notes</span>
-          <div className="nls__note">
-            <span className="nls__noteName">
-              {def.index} · {def.name}
-            </span>
-            <span className="nls__noteTagline">{def.tagline}</span>
-            <span className="nls__noteRow nls__noteRow--strength">
-              <span className="nls__noteLabel">Strength</span>
-              <span className="nls__noteText">{def.strength}</span>
-            </span>
-            <span className="nls__noteRow nls__noteRow--risk">
-              <span className="nls__noteLabel">Risk</span>
-              <span className="nls__noteText">{def.risk}</span>
-            </span>
-          </div>
+          {mode === "concepts" ? (
+            <div className="nls__note">
+              <span className="nls__noteName">
+                {def.index} · {def.name}
+              </span>
+              <span className="nls__noteTagline">{def.tagline}</span>
+              <span className="nls__noteRow nls__noteRow--strength">
+                <span className="nls__noteLabel">Strength</span>
+                <span className="nls__noteText">{def.strength}</span>
+              </span>
+              <span className="nls__noteRow nls__noteRow--risk">
+                <span className="nls__noteLabel">Risk</span>
+                <span className="nls__noteText">{def.risk}</span>
+              </span>
+            </div>
+          ) : (
+            <>
+              {/* Wording and fold are separate decisions, so each gets its own
+                  card rather than being averaged into one verdict. */}
+              <div className="nls__note">
+                <span className="nls__noteName">{ctaNote.label}</span>
+                <span className="nls__noteRow nls__noteRow--strength">
+                  <span className="nls__noteLabel">Promises</span>
+                  <span className="nls__noteText">{ctaNote.promise}</span>
+                </span>
+                <span className="nls__noteRow nls__noteRow--risk">
+                  <span className="nls__noteLabel">Risk</span>
+                  <span className="nls__noteText">{ctaNote.risk}</span>
+                </span>
+                <span className="nls__noteRow">
+                  <span className="nls__noteLabel">Glyph</span>
+                  <span className="nls__noteText">{glyphNote.note}</span>
+                </span>
+              </div>
+              <div className="nls__note">
+                <span className="nls__noteName">Fold · {condenseNote.label}</span>
+                <span className="nls__noteTagline">{condenseNote.note}</span>
+                <span className="nls__noteRow nls__noteRow--risk">
+                  <span className="nls__noteLabel">Risk</span>
+                  <span className="nls__noteText">{condenseNote.risk}</span>
+                </span>
+              </div>
+            </>
+          )}
         </div>
       </aside>
 

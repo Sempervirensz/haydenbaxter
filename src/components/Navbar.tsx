@@ -12,9 +12,10 @@
 //
 // It CONDENSES. Holding five embossed tags over every scene for 13,000px is a
 // lot of chrome, so past the hero the four links fold behind one MENU tag and
-// the bar becomes two objects: who this is, and the one action. The links are
-// unmounted rather than hidden — an invisible link that still takes focus is a
-// bug this component has had to fix once already, on the mobile panel.
+// the bar becomes two objects: who this is, and the one action. How that fold
+// is performed is the `condense` prop below — every mode takes the links out of
+// the tab order as they go, because an invisible link that still holds focus is
+// a bug this component has had to fix once already, on the mobile panel.
 //
 // The CTA DISCLOSES rather than navigates. It is a <button> with
 // `aria-expanded`, opening the Work Together hub. If it ever becomes a link to
@@ -34,9 +35,7 @@ import { openWorkTogetherPath } from "@/components/work/workTogetherEvents";
 import { CONSULTING_TARGET, resolveConsultingChapter } from "@/data/entryChoice";
 import WorkTogetherHub from "@/components/WorkTogetherHub";
 import type { PathId } from "@/data/workTogether";
-
-/** Past this the bar is over content rather than over the hero, and folds. */
-const CONDENSE_AT = 72;
+import type { CondenseMode } from "@/data/navLab";
 
 /* All three paths land in the SAME place: the Work Together chapter, with the
    chosen screen open.
@@ -50,20 +49,84 @@ const CONDENSE_AT = 72;
    that answers all three. The WorldPulse chapter is still there to be scrolled
    to, and its screen here carries the same outbound links. */
 
-export default function Navbar() {
+/* Two thresholds, not one.
+
+   A single 72px line meant a two-pixel wheel nudge around the fold flipped the
+   whole bar back and forth. Collapsing later than it re-opens gives the state a
+   100px dead band to settle in, which is what actually removes the flicker —
+   easing the transition only made a flickering bar flicker smoothly. */
+const CONDENSE_IN = 160;
+const CONDENSE_OUT = 60;
+
+/** The single line `snap` still uses — kept so the lab's control is faithful. */
+const CONDENSE_AT = 72;
+
+/**
+ * The three props exist for /nav-lab and are inert when omitted, which is how
+ * the homepage renders this. They let the lab drive the REAL navbar rather than
+ * a copy of it, so what gets approved there is the thing that ships. Same
+ * arrangement `SoftLockGate` has with the card-entry lab.
+ */
+export default function Navbar({
+  ctaLabel,
+  ctaGlyph,
+  condense = "fade",
+}: {
+  ctaLabel?: string;
+  ctaGlyph?: string;
+  condense?: CondenseMode;
+} = {}) {
   const { wordmark, navLinks, cta } = SITE_CONTENT.header;
   const [condensed, setCondensed] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [hubOpen, setHubOpen] = useState(false);
 
+  const label = ctaLabel ?? cta.label;
+  const glyph = ctaGlyph ?? cta.glyph;
+
   /* Reads one number and sets one boolean React discards when unchanged, so
-     this stays out of the way of the Work section's own scroll work. */
+     this stays out of the way of the Work section's own scroll work.
+
+     `hold` never condenses. `intent` watches DIRECTION rather than position —
+     it cannot flicker, because settling in place is not a change. Everything
+     else uses the hysteresis band above. */
   useEffect(() => {
-    const update = () => setCondensed(window.scrollY > CONDENSE_AT);
+    if (condense === "hold") {
+      setCondensed(false);
+      return;
+    }
+
+    let last = window.scrollY;
+    const update = () => {
+      const y = window.scrollY;
+      if (condense === "intent") {
+        // Ignore sub-pixel jitter and rubber-banding at the top.
+        if (Math.abs(y - last) > 4) {
+          setCondensed(y > last && y > CONDENSE_OUT);
+          last = y;
+        }
+        return;
+      }
+      // `snap` deliberately keeps the ONE threshold that ships, so the lab's
+      // control still reproduces the flicker the other modes are fixing. Wiring
+      // the hysteresis into it too would leave nothing to compare against.
+      if (condense === "snap") {
+        setCondensed(y > CONDENSE_AT);
+        return;
+      }
+      setCondensed((was) => (was ? y > CONDENSE_OUT : y > CONDENSE_IN));
+    };
     update();
     window.addEventListener("scroll", update, { passive: true });
     return () => window.removeEventListener("scroll", update);
-  }, []);
+  }, [condense]);
+
+  /* Snap is the only mode that unmounts. The others keep the links in the DOM
+     so their width and opacity can animate, and mark the collapsed cluster
+     `inert` — which removes it from the tab order the way `display: none` did,
+     without removing it from the layout mid-transition. */
+  const unmountLinks = condense === "snap" && condensed;
+  const linksInert = condense !== "snap" && condensed;
 
   // In-page anchors can't resolve while the soft lock hides their targets, so
   // hand the destination to the gate: it opens, then scrolls once the content
@@ -195,10 +258,10 @@ export default function Navbar() {
       aria-expanded={hubOpen}
       onClick={openHub}
     >
-      <span className="nav-cta__long">{cta.label}</span>
+      <span className="nav-cta__long">{label}</span>
       <span className="nav-cta__short">{cta.short}</span>
       <span className="nav-cta__glyph" aria-hidden="true">
-        {cta.glyph}
+        {glyph}
       </span>
     </button>
   );
@@ -208,33 +271,52 @@ export default function Navbar() {
       {/* No py-* here: `.navbar` owns the vertical padding via --nav-pad-block,
           because the hero derives its nav clearance from the resulting height. */}
       <nav
-        className={`navbar navbar--yoke ${condensed ? "is-condensed" : ""}`}
+        className={`navbar navbar--yoke navbar--${condense} ${condensed ? "is-condensed" : ""}`}
         style={{ fontFamily: "var(--font-sans)" }}
       >
         <a href="#main" className="navbar__mark">
           {wordmark}
         </a>
 
-        {/* Unmounted when condensed, so the four links leave the tab order with
-            the visual rather than staying focusable behind nothing. */}
-        {!condensed && (
-          <div className="nav-tags">
-            {navLinks.map((link) => renderLink(link, "tag tag--nav"))}
+        {/* The four links leave the tab order with the visual, either by
+            unmounting (snap) or by going inert once collapsed — `aria-hidden`
+            alone would not do it, and a focusable link behind nothing is the
+            bug the mobile panel already had to fix once. */}
+        {!unmountLinks && (
+          <div
+            className="nav-tags"
+            inert={linksInert || undefined}
+            aria-hidden={linksInert || undefined}
+          >
+            {navLinks.map((link, i) => (
+              <span
+                key={link.label}
+                className="nav-tags__slot"
+                /* Stagger leaves right-to-left, so the index counts from the
+                   end; every other mode resolves this to a 0ms delay. */
+                style={{ "--nav-tag-i": navLinks.length - 1 - i } as React.CSSProperties}
+              >
+                {renderLink(link, "tag tag--nav")}
+              </span>
+            ))}
           </div>
         )}
 
         <div className="nav-actions">
-          {condensed && (
-            <button
-              type="button"
-              className="tag tag--nav nav-fold"
-              aria-expanded={menuOpen}
-              aria-controls="nav-fold-panel"
-              onClick={() => setMenuOpen((v) => !v)}
-            >
-              {menuOpen ? "Close" : "Menu"}
-            </button>
-          )}
+          {/* Present from the first frame of the collapse so the right cluster
+              settles at one width, rather than jumping as MENU pops in after
+              the links have gone. */}
+          <button
+            type="button"
+            className={`tag tag--nav nav-fold ${condensed ? "is-shown" : ""}`}
+            aria-expanded={menuOpen}
+            aria-controls="nav-fold-panel"
+            inert={!condensed || undefined}
+            aria-hidden={!condensed || undefined}
+            onClick={() => setMenuOpen((v) => !v)}
+          >
+            {menuOpen ? "Close" : "Menu"}
+          </button>
           {ctaButton()}
         </div>
 
