@@ -12,11 +12,23 @@
       "Edit(./.env.*)",
       "Edit(./secrets/**)",
       "Bash(curl *)",
-      "Bash(wget *)"
+      "Bash(wget *)",
+      "Bash(git reset --hard*)",
+      "Bash(git checkout -- *)",
+      "Bash(git checkout .*)",
+      "Bash(git clean *)",
+      "Bash(git stash drop*)",
+      "Bash(git stash clear*)",
+      "Bash(git stash pop*)",
+      "Bash(git branch -D *)",
+      "Bash(git push --force*)",
+      "Bash(git push -f *)"
     ],
     "ask": [
-      "Bash",
-      "Edit"
+      "Bash(git checkout *)",
+      "Bash(git switch *)",
+      "Bash(git merge *)",
+      "Bash(git rebase *)"
     ],
     "allow": [
       "Read",

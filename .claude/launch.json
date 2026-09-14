@@ -97,6 +97,36 @@
       "port": 5174
     },
     {
+      "//": "Serves the lab/card-entry-motion worktree so the lab can be viewed without checking that branch out in the shared working copy. Own port AND own dist dir.",
+      "name": "card-entry-motion-lab",
+      "runtimeExecutable": "/bin/sh",
+      "runtimeArgs": [
+        "-c",
+        "NEXT_DIST_DIR=.next-cem exec /Users/haydenbaxter/.nvm/versions/node/v20.19.6/bin/node node_modules/.bin/next dev .claude/worktrees/card-entry-motion -p 3012"
+      ],
+      "port": 3012
+    },
+    {
+      "//": "Serves the feat/scroll-dealt-entry worktree. Own port AND own dist dir.",
+      "name": "scroll-dealt",
+      "runtimeExecutable": "/bin/sh",
+      "runtimeArgs": [
+        "-c",
+        "NEXT_DIST_DIR=.next-sd exec /Users/haydenbaxter/.nvm/versions/node/v20.19.6/bin/node node_modules/.bin/next dev .claude/worktrees/scroll-dealt -p 3031"
+      ],
+      "port": 3031
+    },
+    {
+      "//": "Serves the copy/story-mode-exclamation worktree (branched off main). Its own directory means its own .next, so only the port is unique. Remove when that branch lands.",
+      "name": "story-copy",
+      "runtimeExecutable": "/bin/sh",
+      "runtimeArgs": [
+        "-c",
+        "exec /Users/haydenbaxter/.nvm/versions/node/v20.19.6/bin/node node_modules/.bin/next dev .claude/worktrees/story-copy -p 3061"
+      ],
+      "port": 3061
+    },
+    {
       "//": "Serves the feat/resume-integration worktree. The worktree has no node_modules of its own, so this runs the primary checkout's next binary against the worktree directory (same pattern as scroll-dealt/story-copy). Own directory means its own .next, so only the port is unique. Remove when the branch lands.",
       "name": "resume-integration",
       "runtimeExecutable": "/bin/sh",

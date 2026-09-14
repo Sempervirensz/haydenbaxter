@@ -16,3 +16,7 @@
 # up in `git status` — and why this was invisible until a deploy failed.
 .next
 .next-*
+
+# Local performance lab — ~16MB of PNG filmstrips and run JSON that no route
+# imports. `.gitignore` covers it too, but this file is what governs the upload.
+experiments/

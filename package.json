@@ -4,6 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "generate:ai-source": "node scripts/generate-ai-source.mjs",
+    "prebuild": "npm run generate:ai-source",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
