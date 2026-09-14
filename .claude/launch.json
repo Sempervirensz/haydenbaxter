@@ -12,7 +12,7 @@
       "autoPort": true
     },
     {
-      "//": "Second dev server for when another one is already running against this folder. Its own port AND its own build dir — two `next dev` sharing .next flap a live route between 200 and 404, and a different port alone does not fix that.",
+      "//": "Second dev server for when another one is already running against this folder. Its own port AND its own build dir \u2014 two `next dev` sharing .next flap a live route between 200 and 404, and a different port alone does not fix that.",
       "name": "next-dev-alt",
       "runtimeExecutable": "/bin/sh",
       "runtimeArgs": [
@@ -95,6 +95,16 @@
         "legacy/design-inspo/experiments/supply-chain-hero"
       ],
       "port": 5174
+    },
+    {
+      "//": "Serves the feat/resume-integration worktree. The worktree has no node_modules of its own, so this runs the primary checkout's next binary against the worktree directory (same pattern as scroll-dealt/story-copy). Own directory means its own .next, so only the port is unique. Remove when the branch lands.",
+      "name": "resume-integration",
+      "runtimeExecutable": "/bin/sh",
+      "runtimeArgs": [
+        "-c",
+        "exec /Users/haydenbaxter/.nvm/versions/node/v20.19.6/bin/node /Users/haydenbaxter/Desktop/haydenbaxter/node_modules/.bin/next dev /Users/haydenbaxter/Desktop/haydenbaxter/.claude/worktrees/resume-integration -p 3071"
+      ],
+      "port": 3071
     }
   ]
 }
