@@ -84,6 +84,15 @@ export default function Navbar({
   const label = ctaLabel ?? cta.label;
   const glyph = ctaGlyph ?? cta.glyph;
 
+  /* The phone bar swaps in a shorter wording below 430px. That pairing is
+     written for the shipped label — "Let's work together" → "Work with me" is
+     the same voice, abbreviated — and an override has no such partner, so
+     using `cta.short` alongside one puts TWO different promises on the same
+     button depending on screen width. Measured with "Quick Site Nav": the full
+     wording is 159px in a 402px bar with nothing escaping, so there is room to
+     simply not abbreviate. An override therefore replaces both strings. */
+  const shortLabel = ctaLabel ?? cta.short;
+
   /* Reads one number and sets one boolean React discards when unchanged, so
      this stays out of the way of the Work section's own scroll work.
 
@@ -259,7 +268,7 @@ export default function Navbar({
       onClick={openHub}
     >
       <span className="nav-cta__long">{label}</span>
-      <span className="nav-cta__short">{cta.short}</span>
+      <span className="nav-cta__short">{shortLabel}</span>
       <span className="nav-cta__glyph" aria-hidden="true">
         {glyph}
       </span>
