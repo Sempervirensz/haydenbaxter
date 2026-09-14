@@ -33,7 +33,11 @@ public/Personal Photos/
 # Static sub-apps kept for reference. Out of public/ so Next stops copying
 # them into the deployed build (ETB-P1-04b); still here if ever needed.
 archive/
-.next-labs/
 
-# Sibling dev dist dirs from next.config.ts NEXT_DIST_DIR escape hatch
+# Sibling dev dist dirs from next.config.ts NEXT_DIST_DIR escape hatch. Covers
+# .next-labs, .next-motion, .next-wp and every future one.
 .next-*
+
+# Local performance lab: throwaway scripts plus ~16MB of PNG filmstrips and raw
+# run JSON. Rerunnable from the scripts, and nothing in src/ imports it.
+experiments/
