@@ -435,7 +435,15 @@ export const CTA_GLYPHS: CtaGlyphOption[] = [
  * (3) is the one a visitor actually feels as "janky", and no amount of easing
  * fixes it — it needs two thresholds, not a smoother curve.
  */
-export type CondenseMode = "snap" | "fade" | "stagger" | "intent" | "hold";
+export type CondenseMode =
+  | "snap"
+  | "fade"
+  | "stagger"
+  | "intent"
+  | "hold"
+  | "track"
+  | "cascade"
+  | "recede";
 
 export interface CondenseOption {
   id: CondenseMode;
@@ -445,6 +453,36 @@ export interface CondenseOption {
 }
 
 export const CONDENSE_MODES: CondenseOption[] = [
+  /* ── Linked: the fold is drawn from scroll position ──────────────────────
+     The state modes below all share one trait — you cross a line and an
+     animation then plays on its own schedule. However well eased, the motion
+     is not connected to the hand that caused it. These three are: the bar is
+     drawn at the position you have scrolled to, folds under your finger, and
+     unfolds again the moment you back up. */
+  {
+    id: "track",
+    label: "Track",
+    note:
+      "Scroll-linked. The cluster's width and opacity are a function of scroll position across 64→260px, so the fold happens under your finger and reverses if you scroll back a pixel.",
+    risk:
+      "Nothing settles while you are moving — the bar is mid-fold for as long as you sit inside the window, which is livelier chrome than a two-state bar.",
+  },
+  {
+    id: "cascade",
+    label: "Cascade",
+    note:
+      "Track, but each label has its own slice of the fold: RESUME leaves first and WORK last, retreating toward the MENU tag that replaces it. The stagger is in POSITION, so scrubbing up brings them back in reverse.",
+    risk:
+      "Four things moving at four different rates is the most going on of any option; at speed it can read as busy rather than considered.",
+  },
+  {
+    id: "recede",
+    label: "Recede",
+    note:
+      "Cascade, plus the bar itself quietens with depth — padding tightens ~30% and the wordmark steps back, so the chrome is physically smaller inside the Work section than it was over the hero.",
+    risk:
+      "The bar's HEIGHT now changes with scroll. Nothing below it is pushed (it is fixed), but it is the most movement of the set and the one most likely to catch the eye when you did not want it to.",
+  },
   {
     id: "snap",
     label: "Snap",

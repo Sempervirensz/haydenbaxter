@@ -359,6 +359,88 @@ html {
   display: none;
 }
 
+/* ── Linked folds ────────────────────────────────────────────────────────────
+   Drawn from scroll position, not switched at a threshold. Navbar.tsx writes
+   `--fold` (0→1, smoothstepped) on the bar every frame and everything below is
+   a function of it — so the bar is simply DRAWN at the position you scrolled
+   to, and reverses the instant you scroll back.
+
+   Note the absence of `transition` on these. A transition here would fight the
+   scroll: the property would be chasing a target that moves every frame, and
+   the result lags behind the hand instead of tracking it. Coupling to the
+   input IS the effect. */
+.navbar--track,
+.navbar--cascade,
+.navbar--recede {
+  --fold: 0;
+}
+
+.navbar--track .nav-tags,
+.navbar--cascade .nav-tags,
+.navbar--recede .nav-tags {
+  display: flex;
+  align-items: center;
+  gap: clamp(0.4rem, 0.25rem + 0.5vw, 0.75rem);
+  overflow: hidden;
+  /* Scaled against the measured natural width — `auto` cannot be interpolated,
+     so Navbar.tsx measures `scrollWidth` once and hands it over. */
+  max-width: calc((1 - var(--fold)) * var(--nav-links-w, 24rem));
+  opacity: calc(1 - var(--fold));
+}
+
+/* Track: the cluster leaves as one object. */
+.navbar--track .nav-tags__slot {
+  transition: none;
+}
+
+/* Cascade and Recede peel the labels off one at a time. Each slot gets its own
+   window of the fold — `--nav-tag-i` counts from the END (set in Navbar.tsx),
+   so RESUME goes first and WORK last, the row retreating toward the MENU tag
+   that replaces it rather than away from it.
+
+   The stagger is in POSITION, not time: every label's departure is pinned to a
+   scroll range, so scrubbing back up brings them home in reverse order. A
+   time-based stagger could not do that. */
+.navbar--cascade .nav-tags__slot,
+.navbar--recede .nav-tags__slot {
+  --start: calc(var(--nav-tag-i, 0) * 0.14);
+  --local: clamp(0, calc((var(--fold) - var(--start)) / 0.5), 1);
+  opacity: calc(1 - var(--local));
+  transform: translateX(calc(var(--local) * 10px));
+  transition: none;
+}
+
+/* Recede also lets the bar itself quieten with depth: the padding tightens and
+   the wordmark steps back, so the chrome is physically smaller once you are
+   inside the Work section than it was over the hero. */
+.navbar--recede {
+  padding-block: calc(var(--nav-pad-block) * (1 - var(--fold) * 0.3));
+}
+
+.navbar--recede .navbar__mark {
+  opacity: calc(1 - var(--fold) * 0.25);
+}
+
+/* MENU arrives across the same window, so the two halves of the fold are one
+   continuous movement rather than a disappearance followed by an appearance. */
+.navbar--track .nav-fold,
+.navbar--cascade .nav-fold,
+.navbar--recede .nav-fold {
+  opacity: var(--fold);
+  max-width: calc(var(--fold) * 12rem);
+  padding-inline: calc(var(--fold) * var(--tag-pad-inline));
+  border-width: 1px;
+  transition: none;
+}
+
+/* The scrim thickens with the fold too, on the same driver. */
+.navbar--track::before,
+.navbar--cascade::before,
+.navbar--recede::before {
+  opacity: var(--fold);
+  transition: none;
+}
+
 .nav-actions {
   display: flex;
   align-items: center;

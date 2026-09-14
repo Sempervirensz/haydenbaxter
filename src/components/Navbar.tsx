@@ -28,7 +28,7 @@
 // underneath the Work section that follows. The hero's clearance is unaffected:
 // that comes from the `--nav-height` token, not from this element's box.
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { SITE_CONTENT } from "@/data/siteContent";
 import { releaseSoftLock } from "@/components/design-lab/softLockEvents";
 import { openWorkTogetherPath } from "@/components/work/workTogetherEvents";
@@ -61,6 +61,15 @@ const CONDENSE_OUT = 60;
 /** The single line `snap` still uses — kept so the lab's control is faithful. */
 const CONDENSE_AT = 72;
 
+/* The scroll window a LINKED fold is drawn across. ~200px is long enough that
+   the fold reads as a gradual change of state rather than a fast wipe, and
+   short enough to be finished before the first Work chapter arrives. */
+const FOLD_START = 64;
+const FOLD_END = 260;
+
+/** Modes drawn from scroll position rather than switched at a threshold. */
+const LINKED_MODES = new Set<CondenseMode>(["track", "cascade", "recede"]);
+
 /**
  * The three props exist for /nav-lab and are inert when omitted, which is how
  * the homepage renders this. They let the lab drive the REAL navbar rather than
@@ -77,7 +86,10 @@ export default function Navbar({
   condense?: CondenseMode;
 } = {}) {
   const { wordmark, navLinks, cta } = SITE_CONTENT.header;
-  const [condensed, setCondensed] = useState(false);
+  /* 0 = open, 1 = folding (MENU live, links still readable), 2 = folded. */
+  const [foldStage, setFoldStage] = useState(0);
+  const navRef = useRef<HTMLElement>(null);
+  const linksRef = useRef<HTMLDivElement>(null);
   const [menuOpen, setMenuOpen] = useState(false);
   const [hubOpen, setHubOpen] = useState(false);
 
@@ -93,25 +105,69 @@ export default function Navbar({
      simply not abbreviate. An override therefore replaces both strings. */
   const shortLabel = ctaLabel ?? cta.short;
 
-  /* Reads one number and sets one boolean React discards when unchanged, so
-     this stays out of the way of the Work section's own scroll work.
+  /* Two shapes of fold, and the difference is what "natural" means here.
 
-     `hold` never condenses. `intent` watches DIRECTION rather than position —
-     it cannot flicker, because settling in place is not a change. Everything
-     else uses the hysteresis band above. */
+     The STATE modes (snap / fade / stagger / intent) cross a line and then play
+     an animation at their own pace. However well eased, that motion is
+     disconnected from the hand that caused it — you push, and a moment later
+     something happens on its own schedule.
+
+     The LINKED modes draw the fold from scroll POSITION instead, writing a 0→1
+     `--fold` custom property the stylesheet reads. Nothing transitions: the bar
+     is simply drawn at the position you have scrolled to, so it folds under
+     your finger and unfolds again if you back up a pixel. Same principle the
+     entry deck already uses (`dealProgress` in SoftLockGate).
+
+     Smoothstep rather than a linear ramp — it leaves and arrives at rest
+     without overshooting, which is the grounded half of the design language.
+     An elastic curve here would read as floaty chrome. */
+  const stageRef = useRef(0);
   useEffect(() => {
+    const nav = navRef.current;
+
     if (condense === "hold") {
-      setCondensed(false);
+      setFoldStage(0);
+      nav?.style.setProperty("--fold", "0");
       return;
     }
 
+    const linked = LINKED_MODES.has(condense);
+    /* A scroll-linked fold has no CSS transition, so the reduced-motion block
+       in globals.css cannot reach it — zeroing a duration does nothing to a
+       property being redrawn every frame. Quantising the progress to 0 or 1 is
+       what actually honours the preference: the bar still folds, it just stops
+       travelling to get there. */
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     let last = window.scrollY;
+
     const update = () => {
       const y = window.scrollY;
+
+      if (linked) {
+        const raw = (y - FOLD_START) / (FOLD_END - FOLD_START);
+        const p = raw < 0 ? 0 : raw > 1 ? 1 : raw;
+        const eased = reduced ? (p >= 0.5 ? 1 : 0) : p * p * (3 - 2 * p);
+        // Written straight to the DOM rather than to React state: this changes
+        // every frame of a scroll, and a re-render per frame is the one thing
+        // guaranteed to make it feel worse than it does today.
+        nav?.style.setProperty("--fold", eased.toFixed(4));
+        /* Three stages rather than a boolean, because "visible" and
+           "interactive" stop agreeing once the fold is continuous. The links
+           stay focusable while they can still be read; MENU becomes focusable
+           only once it can be seen. React bails out when the stage has not
+           changed, so the frames between crossings cost nothing. */
+        const stage = eased >= 0.98 ? 2 : eased > 0.35 ? 1 : 0;
+        if (stage !== stageRef.current) {
+          stageRef.current = stage;
+          setFoldStage(stage);
+        }
+        return;
+      }
+
       if (condense === "intent") {
         // Ignore sub-pixel jitter and rubber-banding at the top.
         if (Math.abs(y - last) > 4) {
-          setCondensed(y > last && y > CONDENSE_OUT);
+          setFoldStage(y > last && y > CONDENSE_OUT ? 2 : 0);
           last = y;
         }
         return;
@@ -120,22 +176,49 @@ export default function Navbar({
       // control still reproduces the flicker the other modes are fixing. Wiring
       // the hysteresis into it too would leave nothing to compare against.
       if (condense === "snap") {
-        setCondensed(y > CONDENSE_AT);
+        setFoldStage(y > CONDENSE_AT ? 2 : 0);
         return;
       }
-      setCondensed((was) => (was ? y > CONDENSE_OUT : y > CONDENSE_IN));
+      setFoldStage((was) =>
+        was === 2 ? (y > CONDENSE_OUT ? 2 : 0) : y > CONDENSE_IN ? 2 : 0
+      );
     };
+
     update();
     window.addEventListener("scroll", update, { passive: true });
-    return () => window.removeEventListener("scroll", update);
+    return () => {
+      window.removeEventListener("scroll", update);
+      nav?.style.removeProperty("--fold");
+    };
   }, [condense]);
 
+  /* The links' natural width, measured once and handed to CSS.
+
+     A linked fold interpolates the cluster's width, and `auto` cannot be
+     interpolated — so the stylesheet needs a real number to scale against.
+     `scrollWidth` reports the content width even while the container is
+     clipped partway through a fold, which is exactly when this is read. */
+  useEffect(() => {
+    const measure = () => {
+      const el = linksRef.current;
+      if (!el) return;
+      navRef.current?.style.setProperty("--nav-links-w", `${el.scrollWidth}px`);
+    };
+    measure();
+    window.addEventListener("resize", measure);
+    return () => window.removeEventListener("resize", measure);
+  }, [navLinks.length, condense]);
+
+  const condensed = foldStage >= 1;
+
   /* Snap is the only mode that unmounts. The others keep the links in the DOM
-     so their width and opacity can animate, and mark the collapsed cluster
-     `inert` — which removes it from the tab order the way `display: none` did,
-     without removing it from the layout mid-transition. */
-  const unmountLinks = condense === "snap" && condensed;
-  const linksInert = condense !== "snap" && condensed;
+     so width and opacity can be drawn at any point of the fold, and mark the
+     cluster `inert` once it is gone — which removes it from the tab order the
+     way `display: none` did, without removing it from the layout partway
+     through. */
+  const unmountLinks = condense === "snap" && foldStage === 2;
+  const linksInert = condense !== "snap" && foldStage === 2;
+  const foldInert = foldStage === 0;
 
   // In-page anchors can't resolve while the soft lock hides their targets, so
   // hand the destination to the gate: it opens, then scrolls once the content
@@ -280,7 +363,9 @@ export default function Navbar({
       {/* No py-* here: `.navbar` owns the vertical padding via --nav-pad-block,
           because the hero derives its nav clearance from the resulting height. */}
       <nav
+        ref={navRef}
         className={`navbar navbar--yoke navbar--${condense} ${condensed ? "is-condensed" : ""}`}
+        data-fold-stage={foldStage}
         style={{ fontFamily: "var(--font-sans)" }}
       >
         <a href="#main" className="navbar__mark">
@@ -293,6 +378,7 @@ export default function Navbar({
             bug the mobile panel already had to fix once. */}
         {!unmountLinks && (
           <div
+            ref={linksRef}
             className="nav-tags"
             inert={linksInert || undefined}
             aria-hidden={linksInert || undefined}
@@ -320,8 +406,8 @@ export default function Navbar({
             className={`tag tag--nav nav-fold ${condensed ? "is-shown" : ""}`}
             aria-expanded={menuOpen}
             aria-controls="nav-fold-panel"
-            inert={!condensed || undefined}
-            aria-hidden={!condensed || undefined}
+            inert={foldInert || undefined}
+            aria-hidden={foldInert || undefined}
             onClick={() => setMenuOpen((v) => !v)}
           >
             {menuOpen ? "Close" : "Menu"}
