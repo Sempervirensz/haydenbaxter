@@ -67,7 +67,13 @@ export default function ConnectSection() {
         })}
       </div>
 
-      <CalendlyEmbed className="connect__calendly" active={armed} />
+      {/* The scheduler is Calendly's light-themed widget and cannot be darkened
+          on this plan, so it is mounted rather than dropped in raw — see
+          `.connect__booking` in globals.css. */}
+      <div className="connect__booking">
+        <p className="connect__bookingLabel">Book a call — 30 min</p>
+        <CalendlyEmbed className="connect__calendly" active={armed} />
+      </div>
     </section>
   );
 }

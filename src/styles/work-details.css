@@ -4191,10 +4191,14 @@
   margin-bottom: 20px;
 }
 
+/* Sized by Calendly's own `page_height` message (see CalendlyEmbed). The flat
+   580px here was the worst of the three embeds: the widget wants 772-880px, so
+   `overflow: hidden` was cutting roughly 200-300px — the whole lower half of
+   the calendar — off the drawer. */
 .cns-photo__calendly {
   width: 100%;
   min-width: 280px;
-  height: 580px;
+  height: var(--calendly-h, 580px);
   border-radius: 8px;
   overflow: hidden;
   border: 1px solid rgba(255, 255, 255, 0.06);

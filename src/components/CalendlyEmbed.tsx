@@ -14,16 +14,35 @@
 //      and silently skips containers mounted after that.
 //   3. Falls back to a plain link to the same booking page if the embed does
 //      not come up, so "Book a Call" always leads somewhere real.
+//   4. Sizes its host to the height Calendly reports, so the scheduler is
+//      never cut off.
+//
+// Readiness is taken from Calendly's own `event_type_viewed` message, NOT from
+// the presence of an iframe. `initInlineWidget` appends the iframe
+// synchronously, before a single byte is fetched, so an "is there an iframe?"
+// check passes instantly and can never fail — which made the fallback below
+// unreachable. A widget that mounts its frame and then dies inside it (blocked
+// storage, a tripped bot check) left exactly the 700px void this file exists
+// to prevent.
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { CALENDLY_URL } from "@/data/connect";
 
 const SCRIPT_SRC = "https://assets.calendly.com/assets/external/widget.js";
+const CALENDLY_ORIGIN = "https://calendly.com";
 
-// How long to wait for the script global, and then for the iframe, before
-// giving up and showing the fallback.
+// How long to wait for the script global, and then for the widget to report
+// itself ready, before giving up and showing the fallback. The ready budget is
+// generous because it covers the iframe's own cold start — Calendly boots a
+// React app, reCAPTCHA and Stripe in there, which is several seconds on a warm
+// connection and more on a cold one. Tripping early would swap a scheduler
+// that was about to appear for a link.
 const SCRIPT_TIMEOUT_MS = 8000;
-const READY_TIMEOUT_MS = 6000;
+const READY_TIMEOUT_MS = 12000;
+
+// Calendly emits a `page_height` of "2px" while its app boots, before the real
+// height (~880px). Honouring that would collapse the host to a sliver.
+const MIN_REPORTED_HEIGHT = 320;
 
 declare global {
   interface Window {
@@ -84,6 +103,7 @@ export default function CalendlyEmbed({
 }: CalendlyEmbedProps) {
   const hostRef = useRef<HTMLDivElement | null>(null);
   const [failed, setFailed] = useState(false);
+  const [height, setHeight] = useState<number | null>(null);
 
   useEffect(() => {
     if (!active) return;
@@ -91,9 +111,34 @@ export default function CalendlyEmbed({
     if (!host) return;
 
     let cancelled = false;
+    let ready = false;
     let timer: number | undefined;
 
-    const url = `${CALENDLY_URL}?hide_gdpr_banner=1&background_color=0a0a0a&text_color=f3f3f3&primary_color=ffffff`;
+    // No colour parameters. `background_color` / `text_color` / `primary_color`
+    // are a paid-plan feature; on this account Calendly discards them and
+    // serves the stock light widget regardless. They were here for a dark
+    // scheduler that never rendered, so keeping them only implied the theme
+    // was wired up. Re-add them if the plan changes.
+    const url = `${CALENDLY_URL}?hide_gdpr_banner=1`;
+
+    const onMessage = (e: MessageEvent) => {
+      if (e.origin !== CALENDLY_ORIGIN) return;
+      const data = e.data as { event?: string; payload?: { height?: string } };
+      if (!data || typeof data !== "object") return;
+
+      if (data.event === "calendly.event_type_viewed") {
+        ready = true;
+        if (timer) window.clearTimeout(timer);
+      }
+
+      if (data.event === "calendly.page_height") {
+        const px = Number.parseInt(String(data.payload?.height ?? ""), 10);
+        // Calendly re-reports this whenever its layout grows — picking a date
+        // opens the time list — so the host keeps pace instead of clipping.
+        if (Number.isFinite(px) && px >= MIN_REPORTED_HEIGHT) setHeight(px);
+      }
+    };
+    window.addEventListener("message", onMessage);
 
     loadCalendlyScript()
       .then(() => {
@@ -103,7 +148,7 @@ export default function CalendlyEmbed({
         window.Calendly.initInlineWidget({ url, parentElement: host });
 
         timer = window.setTimeout(() => {
-          if (!cancelled && !host.querySelector("iframe")) setFailed(true);
+          if (!cancelled && !ready) setFailed(true);
         }, READY_TIMEOUT_MS);
       })
       .catch(() => {
@@ -112,6 +157,7 @@ export default function CalendlyEmbed({
 
     return () => {
       cancelled = true;
+      window.removeEventListener("message", onMessage);
       if (timer) window.clearTimeout(timer);
     };
   }, [active]);
@@ -141,5 +187,19 @@ export default function CalendlyEmbed({
   // "Cannot read properties of null" into the console on every homepage load.
   // This component initialises the widget itself (see above), so opting into
   // the scan bought nothing — and no stylesheet targets the class either.
-  return <div ref={hostRef} className={className} />;
+  //
+  // `--calendly-h` is the height Calendly asked for. The stylesheet decides
+  // what to do with it; until the first message lands it is simply unset and
+  // the CSS fallback height applies.
+  return (
+    <div
+      ref={hostRef}
+      className={className}
+      style={
+        height
+          ? ({ "--calendly-h": `${height}px` } as CSSProperties)
+          : undefined
+      }
+    />
+  );
 }
