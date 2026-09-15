@@ -125,16 +125,6 @@
         "exec /Users/haydenbaxter/.nvm/versions/node/v20.19.6/bin/node node_modules/.bin/next dev .claude/worktrees/story-copy -p 3061"
       ],
       "port": 3061
-    },
-    {
-      "//": "Serves the feat/resume-integration worktree. The worktree has no node_modules of its own, so this runs the primary checkout's next binary against the worktree directory (same pattern as scroll-dealt/story-copy). Own directory means its own .next, so only the port is unique. Remove when the branch lands.",
-      "name": "resume-integration",
-      "runtimeExecutable": "/bin/sh",
-      "runtimeArgs": [
-        "-c",
-        "exec /Users/haydenbaxter/.nvm/versions/node/v20.19.6/bin/node /Users/haydenbaxter/Desktop/haydenbaxter/node_modules/.bin/next dev /Users/haydenbaxter/Desktop/haydenbaxter/.claude/worktrees/resume-integration -p 3071"
-      ],
-      "port": 3071
     }
   ]
 }
