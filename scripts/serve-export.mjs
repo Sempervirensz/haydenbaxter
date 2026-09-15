@@ -29,6 +29,27 @@ const PORT = Number(process.argv[2] || process.env.PORT || 3100);
 
 const vj = JSON.parse(fs.readFileSync(VERCEL, "utf8"));
 const REDIRECTS = new Map((vj.redirects || []).map((r) => [r.source, r.destination]));
+
+/* Rewrites with a literal source. `/resume.pdf` is the resume download: it is
+   the same file as /documents/Hayden-Baxter-Resume.pdf, served with an
+   `attachment` disposition instead of `inline`. Without replaying it here the
+   local harness 404s a URL that production serves, which is the one shape of
+   bug this server exists to catch before deploy. Patterned sources are left
+   alone — nothing needs them yet, and half-implementing regex routing would be
+   worse than not implementing it. */
+const REWRITES = new Map(
+  (vj.rewrites || []).filter((r) => !/[(*?\[]/.test(r.source)).map((r) => [r.source, r.destination])
+);
+
+/* Per-path header blocks, again literal sources only. These layer on top of
+   the global block below, so a path can add `Content-Disposition` without
+   restating the whole security policy. */
+const PATH_HEADERS = new Map(
+  (vj.headers || [])
+    .filter((b) => !/[(*?\[]/.test(b.source))
+    .map((b) => [b.source, b.headers.map((h) => [h.key, h.value])])
+);
+
 const HEADERS = (vj.headers || [])
   .filter((b) => b.source === "/(.*)")
   .flatMap((b) => b.headers)
@@ -103,10 +124,21 @@ const server = http.createServer((req, res) => {
     return res.end();
   }
 
-  const file = resolveFile(urlPath === "/" ? "/index.html" : urlPath);
+  const routed = REWRITES.get(urlPath) || urlPath;
+  const file = resolveFile(routed === "/" ? "/index.html" : routed);
   const send = (code, body, type) => {
     for (const [k, v] of HEADERS) res.setHeader(k, v);
-    res.writeHead(code, { "Content-Type": type, "Content-Length": body.length });
+    // Matched on the REQUEST path, not the rewritten one — that is how Vercel
+    // matches them, and it is what lets /resume.pdf carry its own disposition
+    // while the file it rewrites to stays inline.
+    const extra = PATH_HEADERS.get(urlPath) || [];
+    for (const [k, v] of extra) res.setHeader(k, v);
+    const declared = extra.find(([k]) => k.toLowerCase() === "content-type");
+    res.removeHeader("Content-Type");
+    res.writeHead(code, {
+      "Content-Type": declared ? declared[1] : type,
+      "Content-Length": body.length,
+    });
     res.end(req.method === "HEAD" ? undefined : body);
   };
 

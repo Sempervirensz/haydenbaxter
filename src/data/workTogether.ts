@@ -48,6 +48,23 @@ const WORLDPULSE_HREF =
 /** The resume PDF itself, served from the public documents directory. */
 export const RESUME_FILE_HREF = "/documents/Hayden-Baxter-Resume.pdf";
 
+/* The same PDF, served as a download rather than a view.
+ *
+ * Vercel serves the file above with `Content-Disposition: inline`, so what
+ * makes the Download button download anything is the HTML `download`
+ * attribute — and that attribute is a no-op in every iOS in-app browser
+ * (LinkedIn, Instagram, Facebook, Slack, Gmail), which is where most people
+ * actually open a portfolio. There the tap fell back to navigating, `inline`
+ * told the webview to render the PDF instead of saving it, and nothing was
+ * downloaded.
+ *
+ * This path is a rewrite to the file above — same bytes, one asset on disk —
+ * carrying `Content-Disposition: attachment` (see vercel.json). The server,
+ * not the markup, is what says "download", so it works in browsers that never
+ * implemented the attribute. RESUME_FILE_HREF stays inline, because the
+ * preview and "Open in new tab" still need a PDF you can look at. */
+export const RESUME_DOWNLOAD_HREF = "/resume.pdf";
+
 /* Where a person is sent to read the resume.
  *
  * This is the /resume page, not the file: it frames the PDF, states what the

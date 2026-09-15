@@ -82,6 +82,12 @@
       "permanent": true
     }
   ],
+  "rewrites": [
+    {
+      "source": "/resume.pdf",
+      "destination": "/documents/Hayden-Baxter-Resume.pdf"
+    }
+  ],
   "headers": [
     {
       "source": "/images/(.*)",
@@ -171,6 +177,23 @@
     {
       "source": "/documents/(.*)\\.pdf",
       "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=0, must-revalidate"
+        }
+      ]
+    },
+    {
+      "source": "/resume.pdf",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "application/pdf"
+        },
+        {
+          "key": "Content-Disposition",
+          "value": "attachment; filename=\"Hayden-Baxter-Resume.pdf\""
+        },
         {
           "key": "Cache-Control",
           "value": "public, max-age=0, must-revalidate"

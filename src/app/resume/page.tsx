@@ -4,7 +4,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import SiteFooter from "@/components/SiteFooter";
 import { SITE_NAME, socialCard } from "@/data/site";
-import { RESUME_FILE_HREF } from "@/data/workTogether";
+import { RESUME_DOWNLOAD_HREF, RESUME_FILE_HREF } from "@/data/workTogether";
 import { RESUME_PREVIEW } from "@/data/resumePreview";
 import { RESUME_COPY } from "@/data/resume";
 import "./resume.css";
@@ -54,9 +54,14 @@ export default function ResumePage() {
           <p className="resume__lede">{RESUME_COPY.lede}</p>
 
           <div className="resume__actions">
+            {/* The attachment URL, not the file's own path: the `download`
+                attribute below is ignored by every iOS in-app browser, so the
+                server has to be the thing that says "download". See
+                RESUME_DOWNLOAD_HREF. The attribute stays as the filename hint
+                for browsers that do honour it. */}
             <a
               className="tag tag--cta resume__action"
-              href={RESUME_FILE_HREF}
+              href={RESUME_DOWNLOAD_HREF}
               download="Hayden-Baxter-Resume.pdf"
             >
               Download PDF
