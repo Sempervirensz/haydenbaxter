@@ -2,8 +2,12 @@ function renderNavButtons(navButtons) {
   return navButtons
     .map(function(button) {
       var className = button.variant === "cta" ? "tag tag--cta" : "tag tag--nav";
-      if (button.href && button.external) {
-        return '<a class="' + className + '" href="' + button.href + '" target="_blank" rel="noopener noreferrer">' + button.label + "</a>";
+      // An href alone is enough to make it a link. `external` only decides
+      // whether it opens away from the page — Journal is in-site now (/blog),
+      // and gating the <a> on `external` used to render it as a dead button.
+      if (button.href) {
+        var target = button.external ? ' target="_blank" rel="noopener noreferrer"' : "";
+        return '<a class="' + className + '" href="' + button.href + '"' + target + ">" + button.label + "</a>";
       }
       return '<button class="' + className + '" type="button">' + button.label + "</button>";
     })

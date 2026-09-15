@@ -1,6 +1,6 @@
 # Hayden Baxter
 
-Generated from the HaydenBaxter.com source content on 2026-09-14. The live website is the canonical source of truth; regenerate this file after changing public site content.
+Generated from the HaydenBaxter.com source content on 2026-09-15. The live website is the canonical source of truth; regenerate this file after changing public site content.
 
 ## Current Professional Positioning
 
@@ -183,7 +183,6 @@ The site supports these tools and technical domains without positioning Hayden a
 - Email: mailto:haydenjbaxter@gmail.com
 - WhatsApp: https://wa.me/14355123025
 - WeChat: haydenjbaxter
-- Book a Call: https://calendly.com/haydenjbaxter/30min
 
 ## Website Pages / Source URLs
 
@@ -193,6 +192,7 @@ The site supports these tools and technical domains without positioning Hayden a
 - emerging tech builds / atomic os: https://www.haydenbaxter.com/emerging-tech-builds/atomic-os
 - emerging tech builds / casebrief: https://www.haydenbaxter.com/emerging-tech-builds/casebrief
 - Journal: https://www.haydenbaxter.com/blog
+- resume: https://www.haydenbaxter.com/resume
 - privacy: https://www.haydenbaxter.com/privacy
 - 3 Takeaways from Innovation Forum’s Sustainable Apparel & Textiles Conference: https://www.haydenbaxter.com/blog/3-takeaways-from-innovation-forum-s-sustainable-apparel-textiles-conference
 
@@ -206,4 +206,4 @@ When public site content changes, update the relevant source data first, then ru
 
 ## Last Updated
 
-2026-09-14
+2026-09-15

@@ -22,11 +22,11 @@ export const SITE_CONTENT = {
     navLinks: [
       { label: "Work", href: "#work" },
       { label: "About", href: "#about" },
-      // Stays on the site. This used to point at the journal.haydenbaxter.com
-      // subdomain, which opened a new tab and left the page behind. `/blog` is
-      // the same journal, it's already what JournalSection's own CTA links
-      // (`ctaHref` in `data/journal`), and it keeps the nav, the footer and the
-      // back button intact — so the two Journal entrances can't drift apart.
+      // Stays on the site. This used to point at an off-site journal host,
+      // which opened a new tab and left the page behind. `/blog` is the same
+      // journal, it's already what JournalSection's own CTA links (`ctaHref`
+      // in `data/journal`), and it keeps the nav, the footer and the back
+      // button intact — so the two Journal entrances can't drift apart.
       { label: "Journal", href: JOURNAL_COPY.ctaHref },
       // Same PDF the Work Together record (path 03) already offers.
       { label: "Resume", href: RESUME_HREF },

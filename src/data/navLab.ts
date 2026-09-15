@@ -57,17 +57,17 @@ export interface NavItem {
 }
 
 /**
- * Journal is the one destination the brief pins to an absolute URL. Production
- * still renders `/blog` (see `siteContent.ts`), so the lab shows the subdomain
- * the brief specifies and the receipt names both — this is a real discrepancy
- * to settle before promotion, not something to paper over.
+ * Settled: the journal lives on the site, at `/blog`. The brief originally
+ * pinned this to an off-site host and the lab showed that discrepancy on the
+ * receipt; production now points here too (see `siteContent.ts`), so the lab
+ * and the shipped nav agree and there is nothing left to reconcile.
  */
-export const JOURNAL_HREF = "https://journal.haydenbaxter.com";
+export const JOURNAL_HREF = "/blog";
 
 export const NAV_ITEMS: NavItem[] = [
   { label: "Work", href: "#work", anchor: { selector: "#work" } },
   { label: "About", href: "#about", anchor: { selector: "#about" } },
-  { label: "Journal", href: JOURNAL_HREF, external: true },
+  { label: "Journal", href: JOURNAL_HREF },
   // No permanent Resume URL is invented here: this is the PDF the Work
   // Together path 03 already links, flagged provisional on the receipt.
   { label: "Resume", href: RESUME_HREF, provisional: true },
