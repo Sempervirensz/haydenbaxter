@@ -19,7 +19,6 @@ import { fileURLToPath } from "node:url";
 
 const ROOT = path.resolve(fileURLToPath(new URL("..", import.meta.url)));
 const PDF = path.join(ROOT, "public/documents/Hayden-Baxter-Resume.pdf");
-const IMAGE = path.join(ROOT, "public/documents/resume-preview.webp");
 const DATA = path.join(ROOT, "src/data/resumePreview.ts");
 
 const fail = (msg) => {
@@ -27,12 +26,31 @@ const fail = (msg) => {
   process.exit(1);
 };
 
-for (const [label, file] of [["resume PDF", PDF], ["preview image", IMAGE], ["preview data", DATA]]) {
+for (const [label, file] of [["resume PDF", PDF], ["preview data", DATA]]) {
   if (!fs.existsSync(file)) fail(`${label} missing at ${path.relative(ROOT, file)}`);
 }
 
-const recorded = /sourceSha256:\s*"([0-9a-f]{64})"/.exec(fs.readFileSync(DATA, "utf8"))?.[1];
+const data = fs.readFileSync(DATA, "utf8");
+
+const recorded = /sourceSha256:\s*"([0-9a-f]{64})"/.exec(data)?.[1];
 if (!recorded) fail(`no sourceSha256 in ${path.relative(ROOT, DATA)} — regenerate it.`);
+
+/* The image filename is content-hashed, so this must follow `src` rather than
+   assume a name — see the note in generate-resume-preview.mjs about the
+   year-long `immutable` header that made a fixed filename unshippable. */
+const src = /src:\s*"([^"]+)"/.exec(data)?.[1];
+if (!src) fail(`no src in ${path.relative(ROOT, DATA)} — regenerate it.`);
+
+const IMAGE = path.join(ROOT, "public", src);
+if (!fs.existsSync(IMAGE)) fail(`preview image missing at ${path.relative(ROOT, IMAGE)}`);
+
+// A hash in the name that disagrees with the recorded one means the two were
+// written by different runs, and the URL would no longer bust on a new resume.
+const named = /resume-preview\.([0-9a-f]{8})\.webp$/.exec(src)?.[1];
+if (!named) fail(`src "${src}" is not a content-hashed preview name — regenerate it.`);
+if (!recorded.startsWith(named)) {
+  fail(`src "${src}" carries hash ${named}, but sourceSha256 starts ${recorded.slice(0, 8)}.`);
+}
 
 const actual = createHash("sha256").update(fs.readFileSync(PDF)).digest("hex");
 

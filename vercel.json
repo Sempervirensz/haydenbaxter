@@ -169,6 +169,16 @@
       ]
     },
     {
+      "//": "The resume PDF is replaced in place at a stable URL so links already out in the world keep resolving to the current document. That only works if it revalidates. It happens to be Vercel's default for static files, which is not a guarantee \u2014 stating it here makes the contract deliberate.",
+      "source": "/documents/(.*)\\.pdf",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=0, must-revalidate"
+        }
+      ]
+    },
+    {
       "source": "/ai/(.*)\\.md",
       "headers": [
         {

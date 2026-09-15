@@ -2,10 +2,13 @@
  *
  * Re-run `npm run gen:resume-preview` after replacing the resume PDF.
  * `npm run check` fails if sourceSha256 no longer matches the PDF on disk.
+ *
+ * `src` is hashed on purpose -- see the note in the generator. Never pin
+ * this filename anywhere; read it from here.
  */
 
 export const RESUME_PREVIEW = {
-  src: "/documents/resume-preview.webp",
+  src: "/documents/resume-preview.f384c06d.webp",
   width: 1500,
   height: 1941,
   /** SHA-256 of the PDF this image was rendered from. */
