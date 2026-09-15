@@ -6,8 +6,8 @@
 
 export const RESUME_PREVIEW = {
   src: "/documents/resume-preview.webp",
-  width: 1400,
-  height: 1811,
+  width: 1500,
+  height: 1941,
   /** SHA-256 of the PDF this image was rendered from. */
   sourceSha256: "f384c06df923044a3039705714c6aaaf3bfd2b2100bdd8a1b20d157c9ebfdad4",
 } as const;
