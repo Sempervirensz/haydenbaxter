@@ -45,7 +45,7 @@ export const RESTATEMENTS: Restatement[] = [
   },
   {
     where: "Card deck",
-    says: "Jack of All Trades · Queen of Vision · King of Strategy · Ace of Execution — a fourth character portrait, in a fourth vocabulary.",
+    says: "Jack of All Trades · Queen of Connection · King of Supply Chains · Ace of Applied AI — a fourth character portrait, in a fourth vocabulary.",
     triad: false,
   },
   {
