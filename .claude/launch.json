@@ -125,6 +125,16 @@
         "exec /Users/haydenbaxter/.nvm/versions/node/v20.19.6/bin/node node_modules/.bin/next dev .claude/worktrees/story-copy -p 3061"
       ],
       "port": 3061
+    },
+    {
+      "//": "Serves the feat/resume-integration worktree. Own port; its own directory means its own .next. Remove when that branch lands.",
+      "name": "resume-integration",
+      "runtimeExecutable": "/bin/sh",
+      "runtimeArgs": [
+        "-c",
+        "exec /Users/haydenbaxter/.nvm/versions/node/v20.19.6/bin/node node_modules/.bin/next dev .claude/worktrees/resume-integration -p 3071"
+      ],
+      "port": 3071
     }
   ]
 }

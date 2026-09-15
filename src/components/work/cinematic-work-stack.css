@@ -358,8 +358,12 @@
   padding: clamp(1.375rem, 1.1rem + 0.7vw, 2.25rem)
     clamp(1.5rem, 1.2rem + 0.75vw, 2.5rem);
   border-radius: clamp(1.375rem, 1.1rem + 0.6vw, 2rem);
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.28);
+  /* Cloned from the mobile card's `.wm-glass--dark`, which had already solved
+     this: a light frost over the sunlit half of the coastal photo drops body
+     copy under 4.5:1. The material — blur, saturate, inset highlight, shadow —
+     was already identical between the two panels; only the tint differed. */
+  background: rgba(9, 11, 16, 0.62);
+  border: 1px solid rgba(255, 255, 255, 0.24);
   backdrop-filter: blur(26px) saturate(1.7);
   -webkit-backdrop-filter: blur(26px) saturate(1.7);
   box-shadow:
@@ -390,6 +394,66 @@
   }
 }
 
+/* Dismissed — the X, Escape, or an outside click. This has to BEAT a live
+   `:hover`, which is still true while the pointer sits on the panel it just
+   closed, so it is last and matches the hover rule's specificity. React clears
+   the latch as soon as the pointer or focus leaves the group. */
+.cstack__infoWrap.is-dismissed .cstack__glass {
+  transform: scale(0.6) translateY(12px);
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Small, subtle dismiss for the dossier. Sticky rather than absolute so it is
+   still reachable at the bottom of a panel tall enough to scroll its 58vh cap. */
+.cstack__glassClose {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  align-self: flex-end;
+  /* Taken out of flow — cancels its own height plus the panel's row gap — so it
+     sits on the label's row exactly as an absolute control would, while keeping
+     sticky's scroll behaviour. */
+  margin-bottom: calc(-36px - clamp(0.75rem, 0.6rem + 0.35vw, 1.25rem));
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  /* Opaque enough that body copy scrolling underneath stays legible. */
+  background: rgba(10, 11, 15, 0.72);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: rgba(255, 255, 255, 0.82);
+  font-family: var(--font-mono);
+  font-size: 17px;
+  line-height: 1;
+  cursor: pointer;
+  transition: color 160ms ease, border-color 160ms ease, background 160ms ease;
+}
+
+/* 44px pointer target without growing the 36px visual. */
+.cstack__glassClose::after {
+  content: "";
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+}
+
+.cstack__glassClose:hover {
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.5);
+  background: rgba(10, 11, 15, 0.85);
+}
+
+.cstack__glassClose:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.85);
+  outline-offset: 2px;
+}
+
 /* Glossy diagonal sweep — the "liquid" refraction highlight. */
 .cstack__glassSheen {
   position: absolute;
@@ -398,11 +462,23 @@
   pointer-events: none;
   background: linear-gradient(
     130deg,
-    rgba(255, 255, 255, 0.42) 0%,
-    rgba(255, 255, 255, 0.05) 30%,
+    rgba(255, 255, 255, 0.28) 0%,
+    rgba(255, 255, 255, 0.05) 28%,
     transparent 52%
   );
   mix-blend-mode: screen;
+}
+
+/* Brand lockup, the mobile panel's opening element. Sized with the desktop
+   clamp idiom rather than mobile's `cqw` — there is no container context here,
+   and the panel is 420-640px against the phone's 342px. Holds the same ~50%
+   of the panel width the mobile card gives it. */
+.cstack__glassLogo {
+  position: relative;
+  display: block;
+  width: clamp(13rem, 10rem + 3.6vw, 20rem);
+  height: auto;
+  margin-left: -5px;
 }
 
 .cstack__glassLabel {
@@ -411,7 +487,9 @@
   font-size: var(--text-label);
   letter-spacing: var(--track-dymo);
   text-transform: uppercase;
-  color: var(--ink-body);
+  /* The --ink* tokens read against the old light frost. On the dark tint the
+     panel carries its own scale, the same one `.wm-label` / `.wm-para` use. */
+  color: rgba(255, 255, 255, 0.62);
 }
 
 .cstack__glassText {
@@ -420,7 +498,7 @@
   font-family: var(--font-sans);
   font-size: var(--text-sm);
   line-height: var(--leading-body);
-  color: var(--ink);
+  color: rgba(255, 255, 255, 0.92);
 }
 
 /* Primary CTA — solid, high-contrast pill so it clearly reads as clickable
@@ -584,6 +662,7 @@
   transform: scale(1.05) !important;
 }
 @media (prefers-reduced-motion: reduce) {
+  .cstack__glassClose,
   .cstack__glassLink,
   .cstack__glassArrow {
     transition: none !important;

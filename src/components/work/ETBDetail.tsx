@@ -65,22 +65,20 @@ function DossierCard({ project }: { project: ETBProject }) {
         />
       ) : null}
 
-      {/* Metadata strip */}
-      <div className="etb-dos__meta">
-        {panel ? (
-          <span className="etb-dos__category">{panel.meta}</span>
-        ) : (
-          <>
-            <span className={`etb-dos__status etb-dos__status--${toSlug(project.status)}`}>
-              {project.status}
-            </span>
-            <span className="etb-dos__category">{project.category}</span>
-          </>
-        )}
-      </div>
-
-      {/* Title */}
+      {/* Title leads. The category label that used to sit above it ("Case
+          Intelligence", "Personal OS", "Editorial Brain") restated the taxonomy
+          rather than the project, and the panel projects never showed a status
+          beside it — so the strip only survives where it still carries
+          something the title doesn't, which is the build status. */}
       <h2 className="etb-dos__title">{project.name}</h2>
+
+      {panel ? null : (
+        <div className="etb-dos__meta">
+          <span className={`etb-dos__status etb-dos__status--${toSlug(project.status)}`}>
+            {project.status}
+          </span>
+        </div>
+      )}
 
       {panel ? (
         <>
@@ -436,7 +434,6 @@ export default function ETBDetail({ data }: ETBDetailProps) {
             <div className="etb-dos">
               {/* Top bar */}
               <div className="etb-dos__topbar">
-                <span className="etb-dos__eyebrow">Project File</span>
                 <button
                   className="etb-dos__close"
                   type="button"
@@ -540,7 +537,6 @@ export default function ETBDetail({ data }: ETBDetailProps) {
             >
               <div className="etb-dos">
                 <div className="etb-dos__topbar">
-                  <span className="etb-dos__eyebrow">Project File</span>
                   <button
                     className="etb-dos__close"
                     type="button"
