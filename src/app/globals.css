@@ -2788,15 +2788,44 @@ html.is-safari body {
   letter-spacing: 0.12em;
 }
 
-.connect__calendly {
+/* The scheduler is a light third-party widget on a dark-only site. Calendly's
+   `background_color` / `text_color` / `primary_color` parameters are a
+   paid-plan feature and this account's are discarded, so the white card is a
+   given rather than a bug to chase. It is therefore mounted deliberately — a
+   dark mat, a hairline edge and a mono caption — so it reads as an inset
+   object instead of a bright slab that escaped the design. */
+.connect__booking {
   width: 100%;
   max-width: min(100%, clamp(43.75rem, 34rem + 16vw, 68rem));
   min-width: 320px;
-  height: clamp(43.75rem, 38rem + 8vw, 56rem);
   margin-top: clamp(40px, 6vw, 72px);
+  padding: clamp(14px, 1.8vw, 22px);
   border-radius: 12px;
-  overflow: hidden;
   border: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.connect__bookingLabel {
+  font-family: var(--font-mono);
+  font-size: var(--text-meta);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  text-align: center;
+  margin: 0 0 clamp(12px, 1.4vw, 18px);
+}
+
+/* Height comes from Calendly itself: CalendlyEmbed sets `--calendly-h` from
+   the widget's `page_height` message, and Calendly re-sends it whenever its
+   layout grows (picking a date opens the time list). The old fixed clamp gave
+   the widget 698-760px while it wanted 772-880px, and `overflow: hidden` cut
+   74-180px off the bottom at every viewport — the time-zone control included.
+   The clamp survives only as the pre-message fallback. */
+.connect__calendly {
+  width: 100%;
+  height: var(--calendly-h, clamp(43.75rem, 38rem + 8vw, 56rem));
+  border-radius: 8px;
+  overflow: hidden;
 }
 
 /* Shown only if the Calendly script never loads (content blockers, strict
