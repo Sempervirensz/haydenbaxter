@@ -107,6 +107,7 @@ export default function CinematicCardBody({ card, isActive, peek, onTogglePeek }
       case 1: {
         const wp = screenOf("full");
         const full = wp && wp.type === "full" ? wp.full : null;
+        const logo = wp?.logo;
         return (
           <>
             <div className="cstack__hero">
@@ -150,6 +151,20 @@ export default function CinematicCardBody({ card, isActive, peek, onTogglePeek }
                   >
                     <span aria-hidden="true">×</span>
                   </button>
+                  {/* Brand lockup — the mobile panel opens on it, and the
+                      desktop panel now does too. */}
+                  {logo && (
+                    /* eslint-disable-next-line @next/next/no-img-element */
+                    <img
+                      className="cstack__glassLogo"
+                      src={logo.src}
+                      alt={logo.alt}
+                      width={4166}
+                      height={2000}
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  )}
                   <span className="cstack__glassLabel">WorldPulse · Founder</span>
                   {full?.caption.map((para, i) => (
                     <p key={i} className="cstack__glassText">{para}</p>
