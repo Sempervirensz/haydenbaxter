@@ -52,8 +52,9 @@ function briefSummary(project: ETBProject): string {
   return text.split(" ").slice(0, 6).join(" ");
 }
 
-/** The off-white Project File — same content contract as DossierCard in
- *  ETBDetail: mark, meta, title, hook, description, tags, CTA. */
+/** The off-white dossier — same content contract as DossierCard in ETBDetail:
+ *  mark, title, status, hook, description, tags, CTA. Title-first, and the
+ *  category label dropped, in step with that component. */
 function DossierBody({ project }: { project: ETBProject }) {
   const panel = project.panel;
   const route = ETB_DETAIL_ROUTES[project.id];
@@ -68,10 +69,8 @@ function DossierBody({ project }: { project: ETBProject }) {
           width={project.mark.width}
           height={project.mark.height} loading="lazy" decoding="async" />
       )}
-      <span className="wm-dos__category">
-        {panel?.meta ?? project.category} · {project.status}
-      </span>
       <h3 className="wm-dos__title">{project.name}</h3>
+      <span className="wm-dos__category">{project.status}</span>
       {panel?.hook && <p className="wm-dos__hook">{panel.hook}</p>}
       <p className="wm-dos__text">{panel?.description ?? project.oneLiner}</p>
       <div className="wm-dos__tags">

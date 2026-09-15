@@ -327,18 +327,44 @@
 }
 
 .etb-barStack {
-  min-height: clamp(260px, calc(100vh - 200px), 460px);
+  /* Held in a custom property so the open state can derive from it instead of
+     restating all three responsive tiers below. */
+  --etb-stack-h: clamp(260px, calc(100vh - 200px), 460px);
+  /* The reading panel's width, and the air the bars must leave beside it.
+     Both came from this one value after `padding-right: clamp(300px, 35vw,
+     440px)` and the panel's own width formula drifted apart: at 1440px the
+     panel was 451px wide inside a 440px reserve, so it sat 11px OVER the bars
+     instead of clear of them. Deriving the reserve from the width means the
+     gap is whatever is written here, at every size. The panel additionally
+     caps at 42%, which only ever widens this gap. */
+  --etb-overlay-w: clamp(17.5rem, 12rem + 18vw, 46rem);
+  --etb-overlay-gap: clamp(20px, 2vw, 32px);
+  min-height: var(--etb-stack-h);
   display: flex;
   flex-direction: column;
   gap: 14px;
   padding: 6px clamp(20px, 3vw, 40px) 14px;
   position: relative;
   z-index: 1;
-  transition: padding-right 300ms cubic-bezier(0.22, 1, 0.36, 1);
+  transition: padding-right 300ms cubic-bezier(0.22, 1, 0.36, 1),
+    min-height 300ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
+/* Opening a project compacts the selector: the bars give up some height and
+   step back, so the panel that just opened is what holds the eye.
+   Compacting the STACK rather than capping each bar is deliberate — the bars
+   are `flex: 1 1 0`, so the stack's height is what sets theirs, and a
+   `max-height` on the bar would clip the summary wherever it wraps to a second
+   line. The multiplier stays gentle because the panel is pinned to this same
+   height: shrink it hard and a long dossier just scrolls more. */
 .etb-barStack.has-active {
-  padding-right: clamp(300px, 35vw, 440px);
+  min-height: calc(var(--etb-stack-h) * 0.88);
+  gap: 12px;
+  padding-right: calc(var(--etb-overlay-w) + var(--etb-overlay-gap));
+}
+
+.etb-barStack.has-active .etb-bar__head {
+  min-height: clamp(44px, 5.4vh, 58px);
 }
 
 /* The 460px ceiling above is a laptop measurement: on a 2160px-tall card it
@@ -349,13 +375,13 @@
    it, or the bars overflow their frame on a short ultrawide. */
 @media (min-width: 100rem) and (min-height: 56.25rem) {
   .etb-barStack {
-    min-height: clamp(260px, calc(100vh - 300px), 640px);
+    --etb-stack-h: clamp(260px, calc(100vh - 300px), 640px);
   }
 }
 
 @media (min-width: 150rem) and (min-height: 75rem) {
   .etb-barStack {
-    min-height: clamp(260px, calc(100vh - 320px), 880px);
+    --etb-stack-h: clamp(260px, calc(100vh - 320px), 880px);
   }
 }
 
@@ -606,7 +632,7 @@
      a reading panel narrower than the summary line it expands. Percentage
      bound as well as absolute so it stays a side panel rather than swallowing
      the row list it slides over. */
-  width: min(clamp(17.5rem, 12rem + 18vw, 46rem), 42%);
+  width: min(var(--etb-overlay-w), 42%);
   border-radius: var(--card-radius);
   border: 1px solid rgba(255, 255, 255, 0.07);
   background: rgba(7, 8, 11, 0.97);
@@ -653,22 +679,16 @@
   height: 100%;
 }
 
+/* Holds only the close control now that the "Project File" eyebrow is gone —
+   so it no longer needs eyebrow-sized padding, which hands a little height
+   back to the dossier below it. */
 .etb-dos__topbar {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding: 12px 16px 10px;
+  justify-content: flex-end;
+  padding: 9px 14px 8px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.06);
   flex-shrink: 0;
-}
-
-.etb-dos__eyebrow {
-  font-family: var(--font-mono);
-  font-size: var(--text-label);
-  font-weight: 500;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.38);
 }
 
 .etb-dos__close {
@@ -702,16 +722,25 @@
 .etb-dos__card {
   position: relative;
   margin: 12px;
-  padding: 20px 18px 18px;
+  padding: 22px 20px 20px;
   border-radius: 12px;
   background: #f5f4f1;
   border: 1px solid rgba(17, 17, 22, 0.08);
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 14px;
   flex: 1;
   overflow-y: auto;
 }
+
+/* Slightly more air between the dossier's bands — title, what it is, the
+   supporting detail, and the way out — so the panel reads as four things
+   rather than one block. Direct-child form so these beat the `all: unset` on
+   the CTA without depending on source order. */
+.etb-dos__card > .etb-dos__meta { margin-top: -4px; }
+.etb-dos__card > .etb-dos__tags { margin-top: 4px; }
+.etb-dos__card > .etb-dos__notes { margin-top: 6px; }
+.etb-dos__card > .etb-dos__cta { margin-top: 8px; }
 
 /* Project mark — small embroidered patch in the dossier card's top-right
    corner. Dark fabric sits as a stamped emblem against the off-white
@@ -727,8 +756,10 @@
     inset 0 0 0 1px rgba(255, 255, 255, 0.04);
   pointer-events: none;
 }
-/* Reserve room so the metadata strip doesn't run under the mark on narrow
-   layouts — only when a mark is actually present. */
+/* Reserve room so the top of the card doesn't run under the mark on narrow
+   layouts — only when a mark is actually present. The title leads the card
+   now, so it is the element that has to clear the patch. */
+.etb-dos__card:has(> .etb-dos__mark) .etb-dos__title,
 .etb-dos__card:has(> .etb-dos__mark) .etb-dos__meta {
   padding-right: 64px;
 }
@@ -999,9 +1030,16 @@
     display: none;
   }
 
-  /* Remove padding-right shift on mobile */
+  /* Remove padding-right shift on mobile — the dossier is a full-screen
+     portal here, so the bars neither make room for it nor compact behind it. */
   .etb-barStack.has-active {
+    min-height: var(--etb-stack-h);
+    gap: 14px;
     padding-right: clamp(20px, 3vw, 40px);
+  }
+
+  .etb-barStack.has-active .etb-bar__head {
+    min-height: clamp(52px, 7vh, 72px);
   }
 
   /* Full-screen mobile overlay — portaled to body, escapes all parent stacking */
@@ -1088,6 +1126,12 @@
 @media (prefers-reduced-motion: reduce) {
   .etb-mobileOverlay {
     animation: none;
+  }
+
+  /* The stack re-lays-out when a project opens (it reserves room for the panel
+     and compacts); with motion reduced it should just be in the new state. */
+  .etb-barStack {
+    transition: none;
   }
 
   .etb-dos__close,
