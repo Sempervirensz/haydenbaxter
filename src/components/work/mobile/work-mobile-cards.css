@@ -181,10 +181,17 @@
   mix-blend-mode: screen;
 }
 
+/* Sticky, not absolute: the panel scrolls (`max-height` + `overflow-y: auto`),
+   and an absolutely positioned control scrolls away with the content — so on a
+   long dossier the only way back out was Escape or the scrim. */
 .wm-glass__close {
-  position: absolute;
-  top: 10px;
-  right: 10px;
+  position: sticky;
+  top: 8px;
+  z-index: 3;
+  align-self: flex-end;
+  /* Taken out of flow — cancels its own height plus the panel's row gap — so
+     the dossier starts exactly where it did when this was absolute. */
+  margin-bottom: -46px;
   width: 34px;
   height: 34px;
   display: flex;
@@ -192,12 +199,23 @@
   justify-content: center;
   border-radius: 50%;
   border: 1px solid rgba(255, 255, 255, 0.28);
-  background: rgba(10, 11, 15, 0.4);
+  /* Opaque enough that copy scrolling underneath stays legible. */
+  background: rgba(10, 11, 15, 0.72);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   color: rgba(255, 255, 255, 0.9);
   font-family: var(--font-mono);
   font-size: 15px;
   line-height: 1;
   cursor: pointer;
+}
+
+/* 44px touch target without growing the 34px visual. */
+.wm-glass__close::after {
+  content: "";
+  position: absolute;
+  inset: -5px;
+  border-radius: 50%;
 }
 
 /* ---- Controls — mirrors .cstack__infoBtn / .cstack__glassLink ---- */
