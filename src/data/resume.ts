@@ -26,7 +26,7 @@ export const RESUME_COPY = {
      the document was written, so deriving these would relabel the resume on
      every deploy. */
   updated: "September 2026",
-  pageCount: "1 page",
+  pageCount: "2 pages",
 
   sections: [
     {
