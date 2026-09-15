@@ -10,8 +10,8 @@ import { RESUME_COPY } from "@/data/resume";
 import "./resume.css";
 
 const DESCRIPTION =
-  "Eight years sourcing product for Nike, Disney, and Aosom across China, Vietnam, " +
-  "and Indonesia, now building WorldPulse. Preview and download the resume.";
+  "Eight years sourcing product for Nike, Converse, Disney, and Aosom across China, " +
+  "Vietnam, and Indonesia, now building WorldPulse. Preview and download the resume.";
 
 export const metadata: Metadata = {
   title: "Resume",

@@ -17,9 +17,9 @@ export const RESUME_COPY = {
   role: "Founder, WorldPulse",
   lede:
     "I spent eight years sourcing product across China, Vietnam, and Indonesia " +
-    "for Nike, Disney, and Aosom before I started building software. Now I run " +
-    "WorldPulse, a platform for digital product passports and supply chain " +
-    "traceability, and build a few other tools on the side.",
+    "for Nike, Converse, Disney, and Aosom before I started building software. " +
+    "Now I run WorldPulse, a platform for digital product passports and supply " +
+    "chain traceability, and build a few other tools on the side.",
 
   /* Stated by hand, unlike the file size, which is read off disk at build
      time. The PDF's mtime is its checkout or upload time rather than the date
@@ -32,7 +32,7 @@ export const RESUME_COPY = {
     {
       label: "Background",
       items: [
-        "8+ years in sourcing and supply chain operations at Nike, Disney, Aosom, and Three Tree",
+        "8+ years in sourcing and supply chain operations at Nike, Converse, Disney, Aosom, and Three Tree",
         "Supplier networks in China, Vietnam, and Indonesia",
         "M.S., Artificial Intelligence in Business, Arizona State University",
         "Fluent in Mandarin",
@@ -42,9 +42,12 @@ export const RESUME_COPY = {
       label: "Selected work",
       items: [
         "WorldPulse: digital product passports for supply chain traceability",
+        "ProcureBridge: supplier scoring and procurement intelligence",
+        "Cortex: source-backed AI for editorial research",
         "CaseBrief: turns medical records into case narratives for legal teams",
         "AtomicOS: a personal operating system for habits",
-        "Supplier ops and data governance work at Nike, Disney, and Aosom",
+        "OpenClaw: turns rough concepts into working internal tools",
+        "Supplier ops and data governance work at Nike, Converse, Disney, and Aosom",
         "AI roadmap and MVP prototype sprints",
       ],
     },
