@@ -1,6 +1,6 @@
 # Hayden Baxter
 
-Generated from the HaydenBaxter.com source content on 2026-09-15. The live website is the canonical source of truth; regenerate this file after changing public site content.
+Generated from the HaydenBaxter.com source content on 2026-09-23. The live website is the canonical source of truth; regenerate this file after changing public site content.
 
 ## Current Professional Positioning
 
@@ -206,4 +206,4 @@ When public site content changes, update the relevant source data first, then ru
 
 ## Last Updated
 
-2026-09-15
+2026-09-23
