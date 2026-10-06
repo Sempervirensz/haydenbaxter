@@ -25,7 +25,7 @@ export const RESUME_COPY = {
      time. The PDF's mtime is its checkout or upload time rather than the date
      the document was written, so deriving these would relabel the resume on
      every deploy. */
-  updated: "September 2026",
+  updated: "October 2026",
   pageCount: "2 pages",
 
   sections: [
