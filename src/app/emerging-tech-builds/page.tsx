@@ -21,7 +21,7 @@ export const metadata: Metadata = {
   title: "Selected AI Work",
   description: DESCRIPTION,
   alternates: { canonical: "/emerging-tech-builds" },
-  ...socialCard({ title: "Selected AI Work | Hayden Baxter", description: DESCRIPTION, path: "/emerging-tech-builds" }),
+  ...socialCard({ title: "Selected AI Work | Hayden Baxter", description: DESCRIPTION, path: "/emerging-tech-builds", image: "/emerging-tech-builds/opengraph-image" }),
 
 };
 
