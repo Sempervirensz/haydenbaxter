@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   title: "Journal",
   description: JOURNAL_COPY.subline,
   alternates: { canonical: "/blog" },
-  ...socialCard({ title: "Journal | Hayden Baxter", description: JOURNAL_COPY.subline, path: "/blog" }),
+  ...socialCard({ title: "Journal | Hayden Baxter", description: JOURNAL_COPY.subline, path: "/blog", image: "/blog/opengraph-image" }),
 
 };
 
