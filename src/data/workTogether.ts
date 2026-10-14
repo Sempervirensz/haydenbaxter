@@ -46,7 +46,7 @@ const WORLDPULSE_HREF =
   CONNECT_LINKS.find((l) => l.id === "worldpulse")?.href ?? "https://worldxpulse.com";
 
 /** The resume PDF itself, served from the public documents directory. */
-export const RESUME_FILE_HREF = "/documents/Hayden-Baxter-Resume.pdf";
+export const RESUME_FILE_HREF = "/documents/Hayden-Baxter-Resume-2026.pdf";
 
 /* Where a person is sent to read the resume.
  *

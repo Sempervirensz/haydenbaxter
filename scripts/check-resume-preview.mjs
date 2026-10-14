@@ -18,7 +18,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const ROOT = path.resolve(fileURLToPath(new URL("..", import.meta.url)));
-const PDF = path.join(ROOT, "public/documents/Hayden-Baxter-Resume.pdf");
+const PDF = path.join(ROOT, "public/documents/Hayden-Baxter-Resume-2026.pdf");
 const DATA = path.join(ROOT, "src/data/resumePreview.ts");
 
 const fail = (msg) => {

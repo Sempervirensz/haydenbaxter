@@ -5,7 +5,7 @@
  * Why an image and not the PDF itself: the site sends `X-Frame-Options: DENY`
  * and `frame-ancestors 'none'` on every response, so the PDF cannot be put in
  * an <iframe> or <object> without relaxing that hardening site-wide. For a
- * one-page resume an image is also the better preview — it renders on phones,
+ * a resume preview image is also the better first-page preview — it renders on phones,
  * where iOS refuses inline PDFs outright, and it carries no viewer chrome.
  *
  * Two stages, both already in the toolchain:
@@ -41,7 +41,7 @@ import { fileURLToPath } from "node:url";
 import sharp from "sharp";
 
 const ROOT = path.resolve(fileURLToPath(new URL("..", import.meta.url)));
-const PDF = path.join(ROOT, "public/documents/Hayden-Baxter-Resume.pdf");
+const PDF = path.join(ROOT, "public/documents/Hayden-Baxter-Resume-2026.pdf");
 const IMAGE_DIR = path.join(ROOT, "public/documents");
 const OUT_DATA = path.join(ROOT, "src/data/resumePreview.ts");
 

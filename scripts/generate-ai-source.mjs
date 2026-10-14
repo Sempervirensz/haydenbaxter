@@ -83,6 +83,7 @@ const work = dataModule("src/data/work.ts");
 const worldpulse = dataModule("src/data/worldpulse.ts");
 const journal = dataModule("src/data/journal.ts");
 const connect = dataModule("src/data/connect.ts");
+const resume = dataModule("src/data/resume.ts");
 
 const SITE_URL = site.SITE_URL;
 const date = new Date().toISOString().slice(0, 10);
@@ -200,8 +201,16 @@ const writingLines = journal.BLOG_POSTS.map((post) =>
 const markdown = [
   "# Hayden Baxter",
   "",
-  `Generated from the HaydenBaxter.com source content on ${date}. The live website is the canonical source of truth; regenerate this file after changing public site content.`,
+  `Generated from HaydenBaxter.com source content on ${date}. Hayden-Baxter-Resume-2026.pdf is the authoritative professional source; site content and older records are secondary and must not override conflicting resume facts. Regenerate this file after changing public site content.`,
   "",
+  section(
+    "Authoritative Resume",
+    [
+      "Primary source: Hayden-Baxter-Resume-2026.pdf",
+      `Resume positioning: ${resume.RESUME_COPY.role}`,
+      "Older resumes are historical references only.",
+    ].join("\n\n"),
+  ),
   section(
     "Current Professional Positioning",
     [

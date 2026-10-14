@@ -8,9 +8,9 @@
  */
 
 export const RESUME_PREVIEW = {
-  src: "/documents/resume-preview.fd9a3dad.webp",
+  src: "/documents/resume-preview.bc644fd1.webp",
   width: 1500,
   height: 1941,
   /** SHA-256 of the PDF this image was rendered from. */
-  sourceSha256: "fd9a3dad77b75858093ea29e320d72e3465cc8533e6ec87a801e9fbb11fc076b",
+  sourceSha256: "bc644fd1ecaa0043f9f65d0ea010b1fbdf831e2f064b147dd69d5c2fbee841a2",
 } as const;

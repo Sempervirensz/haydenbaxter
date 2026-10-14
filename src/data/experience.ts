@@ -122,8 +122,8 @@ export const EDUCATION: Education[] = [
     id: "usu",
     school: "Utah State University",
     schoolShort: "Utah State",
-    program: "International Business + Chinese",
-    programShort: "Intl Business + Chinese",
+    program: "B.S. Global Business + B.A. Mandarin Chinese",
+    programShort: "Global Business + Mandarin",
   },
 ];
 

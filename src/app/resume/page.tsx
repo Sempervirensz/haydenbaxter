@@ -57,7 +57,7 @@ export default function ResumePage() {
             <a
               className="tag tag--cta resume__action"
               href={RESUME_FILE_HREF}
-              download="Hayden-Baxter-Resume.pdf"
+              download="Hayden-Baxter-Resume-2026.pdf"
             >
               Download PDF
             </a>
@@ -78,7 +78,7 @@ export default function ResumePage() {
             The site sends `X-Frame-Options: DENY` and `frame-ancestors 'none'`
             on every response, so an <iframe>/<object> of the PDF is refused
             unless that hardening is relaxed. An image keeps the headers
-            untouched, and for a one-page resume it is the better preview
+            untouched, and for a resume it is the better first-page preview
             anyway: iOS will not render an inline PDF at all, so this is the
             only version of the preview a phone can actually show.
             width/height are the file's real pixels, so the box is reserved

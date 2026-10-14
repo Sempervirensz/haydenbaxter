@@ -14,12 +14,12 @@
 export const RESUME_COPY = {
   /** Mono eyebrow above the name, matching the "Legal" eyebrow on /privacy. */
   eyebrow: "Resume",
-  role: "Founder, WorldPulse",
+  role: "Strategic Sourcing Manager",
   lede:
-    "I spent eight years sourcing product across China, Vietnam, and Indonesia " +
-    "for Nike, Converse, Disney, and Aosom before I started building software. " +
-    "Now I run WorldPulse, a platform for digital product passports and supply " +
-    "chain traceability, and build a few other tools on the side.",
+    "Global sourcing and supply chain leader with 8+ years across APAC and U.S. " +
+    "operations at Nike, Converse, and Disney. I lead supplier onboarding, factory " +
+    "expansion, procurement, and data governance across global networks, and apply " +
+    "AI to traceability and procurement intelligence.",
 
   /* Stated by hand, unlike the file size, which is read off disk at build
      time. The PDF's mtime is its checkout or upload time rather than the date
@@ -34,7 +34,8 @@ export const RESUME_COPY = {
       items: [
         "8+ years in sourcing and supply chain operations at Nike, Converse, Disney, Aosom, and Three Tree",
         "Supplier networks in China, Vietnam, and Indonesia",
-        "M.S., Artificial Intelligence in Business, Arizona State University",
+        "M.S. Artificial Intelligence in Business, Arizona State University",
+        "B.S. Global Business and B.A. Mandarin Chinese, Utah State University",
         "Fluent in Mandarin",
       ],
     },
@@ -46,9 +47,7 @@ export const RESUME_COPY = {
         "Cortex: source-backed AI for editorial research",
         "CaseBrief: turns medical records into case narratives for legal teams",
         "AtomicOS: a personal operating system for habits",
-        "OpenClaw: turns rough concepts into working internal tools",
         "Supplier ops and data governance work at Nike, Converse, Disney, and Aosom",
-        "AI roadmap and MVP prototype sprints",
       ],
     },
   ],

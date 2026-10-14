@@ -1,6 +1,14 @@
 # Hayden Baxter
 
-Generated from the HaydenBaxter.com source content on 2026-10-06. The live website is the canonical source of truth; regenerate this file after changing public site content.
+Generated from HaydenBaxter.com source content on 2026-10-14. Hayden-Baxter-Resume-2026.pdf is the authoritative professional source; site content and older records are secondary and must not override conflicting resume facts. Regenerate this file after changing public site content.
+
+## Authoritative Resume
+
+Primary source: Hayden-Baxter-Resume-2026.pdf
+
+Resume positioning: Strategic Sourcing Manager
+
+Older resumes are historical references only.
 
 ## Current Professional Positioning
 
@@ -66,7 +74,7 @@ The medium keeps changing. The instinct doesn’t: figure out how the pieces fit
 ## Education
 
 - Arizona State University: M.S. Artificial Intelligence in Business
-- Utah State University: International Business + Chinese
+- Utah State University: B.S. Global Business + B.A. Mandarin Chinese
 
 ## AI and Data Capabilities
 
@@ -206,4 +214,4 @@ When public site content changes, update the relevant source data first, then ru
 
 ## Last Updated
 
-2026-10-06
+2026-10-14
