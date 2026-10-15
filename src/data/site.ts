@@ -94,8 +94,10 @@ export function socialCard(opts: {
   description: string;
   path: string;
   type?: "website" | "article";
+  /** Route-specific card, e.g. "/blog/opengraph-image". Defaults to the site card. */
+  image?: string;
 }) {
-  const image = { url: "/opengraph-image", width: 1200, height: 630, alt: opts.title };
+  const image = { url: opts.image ?? "/opengraph-image", width: 1200, height: 630, alt: opts.title };
   return {
     openGraph: {
       type: opts.type ?? "website",
