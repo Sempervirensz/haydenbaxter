@@ -1,0 +1,111 @@
+/* ===========================================================================
+   Page-scoped styles for the hidden /v2 site. Everything is under .v2-root
+   so none of it reaches the main site.
+   =========================================================================== */
+
+/* The root layout paints the body near-black; match the parchment so
+   overscroll bounce doesn't flash dark at the edges. */
+body:has(.v2-root) {
+  background-color: #f7f5f0;
+}
+
+.v2-root {
+  /* Swap the site's DM fonts for this design's Fraunces / Inter / JetBrains.
+     Tailwind's font-serif/sans/mono utilities read these variables. */
+  --font-serif: var(--font-v2-serif), Georgia, serif;
+  --font-sans: var(--font-v2-sans), system-ui, sans-serif;
+  --font-mono: var(--font-v2-mono), ui-monospace, monospace;
+
+  font-family: var(--font-sans);
+  font-feature-settings: "ss01", "cv01";
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+@layer base {
+  /* Tailwind v3 defaulted borders to a light gray; v4 uses currentColor.
+     Keep the prototype's look for any bare `border`. */
+  .v2-root *,
+  .v2-root ::before,
+  .v2-root ::after {
+    border-color: var(--color-ink-200, #d9d2c2);
+  }
+
+  /* v4 preflight dropped the pointer cursor on buttons. */
+  .v2-root button:not(:disabled) {
+    cursor: pointer;
+  }
+
+  .v2-root ::selection {
+    background-color: #d4a832;
+    color: #13110d;
+  }
+
+  .v2-root :focus-visible {
+    outline: 2px solid #2a776f;
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  /* Offset anchored sections so the fixed header doesn't cover titles */
+  .v2-root section[id] {
+    scroll-margin-top: 72px;
+  }
+}
+
+/* Subtle paper grain texture via SVG */
+.v2-root .paper-grain {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+}
+
+.v2-root .ink-grain {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.06'/%3E%3C/svg%3E");
+}
+
+.v2-root .text-balance { text-wrap: balance; }
+.v2-root .text-pretty { text-wrap: pretty; }
+
+/* Reveal-on-scroll base state */
+.v2-root .reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.v2-root .reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.v2-root .reveal-delay-1 { transition-delay: 0.08s; }
+.v2-root .reveal-delay-2 { transition-delay: 0.16s; }
+.v2-root .reveal-delay-3 { transition-delay: 0.24s; }
+.v2-root .reveal-delay-4 { transition-delay: 0.32s; }
+
+.v2-root .stroke-draw {
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 1000;
+}
+
+/* Custom scrollbar */
+.v2-root .nice-scroll::-webkit-scrollbar { width: 8px; height: 8px; }
+.v2-root .nice-scroll::-webkit-scrollbar-track { background: transparent; }
+.v2-root .nice-scroll::-webkit-scrollbar-thumb { background: #b8ad97; border-radius: 4px; }
+.v2-root .nice-scroll::-webkit-scrollbar-thumb:hover { background: #8d8166; }
+
+/* Reduced motion: disable transitions and animations */
+@media (prefers-reduced-motion: reduce) {
+  .v2-root *,
+  .v2-root *::before,
+  .v2-root *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+  .v2-root .reveal {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  .v2-root .stroke-draw {
+    stroke-dashoffset: 0 !important;
+  }
+}

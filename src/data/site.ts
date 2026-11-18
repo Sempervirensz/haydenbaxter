@@ -68,6 +68,8 @@ export const NON_PUBLIC_PREFIXES = [
   "/procurebridge-preview",
   "/atomicos-preview",
   "/happybirthdaykemmerlee",
+  // Hidden alternate site (unlisted, noindex). Delete with src/app/v2/.
+  "/v2",
   // Temporary: the mobile load lab. Ships deliberately (it must be measured on a
   // real phone on cellular) but must never be indexed. Delete with the route.
   "/x-perf",
