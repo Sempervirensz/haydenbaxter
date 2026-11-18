@@ -42,7 +42,7 @@ export function SectionLabel({
         <h2 className="font-serif text-2xl font-medium tracking-tight text-ink-900 sm:text-3xl">
           {title}
         </h2>
-        {subtitle && <p className="mt-1 text-sm text-ink-400">{subtitle}</p>}
+        {subtitle && <p className="mt-1 text-sm text-ink-500">{subtitle}</p>}
       </div>
     </div>
   );
@@ -76,7 +76,7 @@ export function Rule({ label }: { label?: string }) {
   return (
     <div className="flex items-center gap-4">
       <div className="h-px flex-1 bg-ink-200" />
-      {label && <span className="text-xs uppercase tracking-widest text-ink-300">{label}</span>}
+      {label && <span className="text-xs uppercase tracking-widest text-ink-500">{label}</span>}
       <div className="h-px flex-1 bg-ink-200" />
     </div>
   );

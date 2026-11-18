@@ -18,14 +18,16 @@ export function WorkOverview() {
                 <div className="grid gap-6 lg:grid-cols-[1fr_2fr]">
                   {/* Left: company + role */}
                   <div>
-                    <div className="flex items-center gap-2 text-xs font-medium text-ink-400">
+                    <div className="flex items-center gap-2 text-xs font-medium text-ink-500">
                       <MapPin size={14} strokeWidth={1.5} />
                       {exp.region}
                     </div>
                     <h3 className="mt-2 font-serif text-2xl font-medium text-ink-900">{exp.company}</h3>
                     <p className="mt-1 text-sm font-semibold text-clay-600">{exp.role}</p>
                     <p className="mt-1 text-sm text-ink-500">{exp.focus}</p>
-                    <div className="mt-3 flex flex-wrap gap-1.5">
+                    {/* Tools and the detail list are repeated in the Operator
+                        chapter's accordion, so phones get the summary only. */}
+                    <div className="mt-3 hidden flex-wrap gap-1.5 sm:flex">
                       {exp.tools.map((tool) => (
                         <Pill key={tool}>{tool}</Pill>
                       ))}
@@ -35,7 +37,7 @@ export function WorkOverview() {
                   {/* Right: summary + details */}
                   <div>
                     <p className="text-pretty text-base leading-relaxed text-ink-700">{exp.summary}</p>
-                    <div className="mt-4 space-y-3">
+                    <div className="mt-4 hidden space-y-3 sm:block">
                       {exp.details.map((d) => (
                         <div key={d.heading}>
                           <p className="text-sm font-semibold text-ink-800">{d.heading}</p>
@@ -58,7 +60,7 @@ export function WorkOverview() {
           <div className="mt-10 text-center">
             <button
               onClick={() => document.getElementById('operator')?.scrollIntoView({ behavior: scrollBehavior() })}
-              className="inline-flex items-center gap-2 text-sm font-semibold text-clay-600 transition-colors hover:text-clay-700"
+              className="inline-flex min-h-11 items-center gap-2 text-sm font-semibold text-clay-600 transition-colors hover:text-clay-700"
             >
               Explore the full operator chapter <ArrowRight size={16} />
             </button>

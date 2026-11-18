@@ -17,7 +17,7 @@ export function Operator() {
               <h2 className="font-serif text-2xl font-medium tracking-tight text-ink-900 sm:text-3xl">
                 The Global Operator
               </h2>
-              <p className="mt-1 text-sm text-ink-400">Eight years across sourcing & supply</p>
+              <p className="mt-1 text-sm text-ink-500">Eight years across sourcing & supply</p>
             </div>
           </div>
         </Reveal>
@@ -42,7 +42,7 @@ export function Operator() {
                     aria-expanded={isOpen}
                   >
                     <div className="flex items-center gap-4">
-                      <span className="font-mono text-xs text-ink-400 tabular-nums">
+                      <span className="font-mono text-xs text-ink-500 tabular-nums">
                         0{i + 1}
                       </span>
                       <div>
@@ -54,7 +54,7 @@ export function Operator() {
                     </div>
                     <ChevronDown
                       size={20}
-                      className={`shrink-0 text-ink-400 transition-transform duration-300 ${
+                      className={`shrink-0 text-ink-500 transition-transform duration-300 ${
                         isOpen ? 'rotate-180' : ''
                       }`}
                     />
@@ -83,7 +83,7 @@ export function Operator() {
                         {/* Side panel: tools + region */}
                         <div className="space-y-5">
                           <div>
-                            <div className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-ink-400">
+                            <div className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-ink-500">
                               <Wrench size={14} strokeWidth={1.5} /> Tools & methods
                             </div>
                             <div className="mt-2 flex flex-wrap gap-1.5">
@@ -93,13 +93,13 @@ export function Operator() {
                             </div>
                           </div>
                           <div>
-                            <div className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-ink-400">
+                            <div className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-ink-500">
                               <MapPin size={14} strokeWidth={1.5} /> Geography
                             </div>
                             <p className="mt-2 text-sm text-ink-600">{exp.region}</p>
                           </div>
                           <div>
-                            <div className="text-xs font-semibold uppercase tracking-wider text-ink-400">
+                            <div className="text-xs font-semibold uppercase tracking-wider text-ink-500">
                               Focus
                             </div>
                             <p className="mt-2 text-sm text-ink-600">{exp.focus}</p>

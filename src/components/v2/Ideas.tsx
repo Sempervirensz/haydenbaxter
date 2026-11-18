@@ -1,43 +1,7 @@
 import { useState } from 'react';
 import { Reveal } from './primitives';
-import { JOURNAL_THEMES } from '@/data/v2Content';
-import { BookOpen, Quote, Globe2 } from 'lucide-react';
-
-const JOURNAL_ENTRIES = [
-  {
-    id: 'amsterdam',
-    title: 'From Amsterdam: Sustainability as shared responsibility',
-    origin: 'Inspired by the Sustainable Apparel & Textiles Conference in Amsterdam',
-    theme: 0,
-    body: [
-      'The conference surfaced a tension that runs through the entire apparel and textile industry. Sustainability is often framed as a compliance burden, and the pressure to meet it gets pushed down the supply chain to suppliers who can least afford to absorb the cost.',
-      'The more productive framing is shared responsibility. Brands, manufacturers, logistics providers, and regulators each hold a piece of the solution. No single actor can deliver sustainability alone, and no single actor should bear the full cost of trying.',
-      'What makes this practical is data. When supplier practices, material origins, and environmental impacts are visible to all parties, the conversation shifts from blame to coordination. Transparency is not a weapon; it is a meeting point.',
-    ],
-  },
-  {
-    id: 'passport-value',
-    title: 'Beyond compliance: the product experience opportunity',
-    origin: 'On Digital Product Passports and what they make possible',
-    theme: 1,
-    body: [
-      'The default framing of Digital Product Passports is regulatory: meet the requirement, check the box, move on. That framing undersells the concept.',
-      'A passport is not just a compliance document. It is a connection point between a product and the person who buys it. The same data that satisfies a regulator can tell a story that builds trust, differentiates a brand, and creates a relationship that lasts beyond the sale.',
-      'The insight is that compliance and experience are not separate work streams. They are the same data, presented with different intent. Design decides whether transparency feels like a burden or a gift.',
-    ],
-  },
-  {
-    id: 'business-model',
-    title: 'Sustainability needs a better business model',
-    origin: 'On the economics of ethical supply chains',
-    theme: 2,
-    body: [
-      'The strongest critique of sustainability efforts is not that they are wrong, but that they are economically fragile. When doing the right thing costs more and the customer will not pay for it, the right thing does not scale.',
-      'The path forward is not to abandon the ethical purpose, but to build business models that make sustainability the cheaper, faster, or better option. That means using transparency to reduce waste, using traceability to manage risk, and using data to find efficiencies that compliance alone would never surface.',
-      'Sustainability without a viable business model depends on charity. Sustainability with one becomes the default. The goal is to make the ethical choice the obvious one.',
-    ],
-  },
-];
+import { JOURNAL_THEMES, JOURNAL_ENTRIES } from '@/data/v2Content';
+import { BookOpen, Quote, Globe2, ArrowRight } from 'lucide-react';
 
 const INTERESTS = [
   'Responsible AI',
@@ -105,6 +69,12 @@ export function Ideas() {
             <div className="flex items-center gap-2">
               <BookOpen size={20} className="text-clay-400" strokeWidth={1.5} />
               <h3 className="font-serif text-xl font-medium text-ink-100">Journal</h3>
+              <a
+                href="/blog"
+                className="ml-auto inline-flex min-h-11 items-center gap-1.5 text-sm font-medium text-clay-300 transition-colors hover:text-clay-200"
+              >
+                All journal posts <ArrowRight size={14} />
+              </a>
             </div>
           </div>
         </Reveal>
@@ -117,6 +87,7 @@ export function Ideas() {
                 <button
                   key={e.id}
                   onClick={() => setActiveEntry(e.id)}
+                  aria-pressed={activeEntry === e.id}
                   className={`rounded-lg border px-4 py-3 text-left transition-all ${
                     activeEntry === e.id
                       ? 'border-clay-500 bg-clay-500/10 text-ink-50'
@@ -145,6 +116,14 @@ export function Ideas() {
                   </p>
                 ))}
               </div>
+              {entry.postSlug && (
+                <a
+                  href={`/blog/${entry.postSlug}`}
+                  className="mt-6 inline-flex min-h-11 items-center gap-1.5 text-sm font-semibold text-clay-300 transition-colors hover:text-clay-200"
+                >
+                  Read the full post <ArrowRight size={14} />
+                </a>
+              )}
             </article>
           </Reveal>
         </div>

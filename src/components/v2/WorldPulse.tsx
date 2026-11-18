@@ -37,7 +37,7 @@ export function WorldPulse() {
               <h2 className="font-serif text-2xl font-medium tracking-tight text-ink-900 sm:text-3xl">
                 WorldPulse
               </h2>
-              <p className="mt-1 text-sm text-ink-400">The future of products tells its own story</p>
+              <p className="mt-1 text-sm text-ink-500">The future of products tells its own story</p>
             </div>
           </div>
         </Reveal>

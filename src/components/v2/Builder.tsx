@@ -17,7 +17,7 @@ export function Builder() {
               <h2 className="font-serif text-2xl font-medium tracking-tight text-ink-900 sm:text-3xl">
                 The AI Builder
               </h2>
-              <p className="mt-1 text-sm text-ink-400">From research systems to legal intelligence</p>
+              <p className="mt-1 text-sm text-ink-500">From research systems to legal intelligence</p>
             </div>
           </div>
         </Reveal>
@@ -38,6 +38,7 @@ export function Builder() {
                 <button
                   key={p.id}
                   onClick={() => setActiveId(p.id)}
+                  aria-pressed={activeId === p.id}
                   className={`flex items-center gap-3 rounded-lg border px-4 py-3 text-left transition-all ${
                     activeId === p.id
                       ? 'border-ink-900 bg-ink-900 text-ink-50'
@@ -46,7 +47,7 @@ export function Builder() {
                 >
                   <div className="min-w-0">
                     <p className="font-serif text-base font-medium">{p.name}</p>
-                    <p className={`truncate text-xs ${activeId === p.id ? 'text-ink-300' : 'text-ink-400'}`}>
+                    <p className={`truncate text-xs ${activeId === p.id ? 'text-ink-300' : 'text-ink-500'}`}>
                       {p.tagline}
                     </p>
                   </div>
@@ -76,7 +77,7 @@ export function Builder() {
 
               {/* Pillars */}
               <div className="mt-8">
-                <p className="text-xs font-semibold uppercase tracking-wider text-ink-400">Core pillars</p>
+                <p className="text-xs font-semibold uppercase tracking-wider text-ink-500">Core pillars</p>
                 <div className="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
                   {active.pillars.map((pillar) => (
                     <div key={pillar.label} className="rounded-lg border border-ink-200 bg-ink-50/60 px-4 py-3">

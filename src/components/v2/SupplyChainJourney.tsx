@@ -85,7 +85,7 @@ export function SupplyChainJourney() {
 
           {/* Data panel */}
           <div className="mt-5 rounded-lg border border-ink-200 bg-white/60 p-4">
-            <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-ink-400">
+            <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-ink-500">
               <Database size={14} strokeWidth={1.5} />
               Traceability data {passportEnabled ? '' : '(limited)'}
             </div>
@@ -95,7 +95,7 @@ export function SupplyChainJourney() {
                   <dt className="text-ink-500">{d.label}</dt>
                   <dd
                     className={`font-medium ${
-                      passportEnabled ? 'text-sea-700' : 'text-ink-400'
+                      passportEnabled ? 'text-sea-700' : 'text-ink-500'
                     }`}
                   >
                     {passportEnabled ? d.value : d.value === 'Pending' || d.value === 'No' || d.value === 'None' || d.value === 'Unavailable' ? '—' : d.value}
@@ -159,7 +159,9 @@ function JourneyDiagram({
   });
 
   return (
-    <svg viewBox="0 0 300 240" className="w-full" role="img" aria-label="Supply chain journey diagram">
+    // role="group", not "img": an img role hides the focusable stage nodes
+    // inside it from assistive tech.
+    <svg viewBox="0 0 300 240" className="w-full" role="group" aria-label="Supply chain journey diagram">
       {/* Connecting arcs */}
       {positions.map((pos, i) => {
         const next = positions[(i + 1) % positions.length];
@@ -196,14 +198,25 @@ function JourneyDiagram({
             tabIndex={0}
             role="button"
             aria-label={`Stage ${i + 1}: ${stages[i].label}`}
+            aria-pressed={isActive}
             onKeyDown={(e) => {
               if (e.key === 'Enter' || e.key === ' ') {
                 e.preventDefault();
                 onStageClick(i);
               }
             }}
-            className="cursor-pointer focus:outline-hidden"
+            className="v2-node cursor-pointer"
           >
+            {/* Keyboard focus ring; shown by .v2-node:focus-visible in v2.css */}
+            <circle
+              className="v2-node__ring"
+              cx={pos.x}
+              cy={pos.y}
+              r={17}
+              fill="none"
+              stroke="#2a776f"
+              strokeWidth={2}
+            />
             {isActive && (
               <circle cx={pos.x} cy={pos.y} r={16} fill="#a8543a" opacity={0.15} className="animate-pulse-slow" />
             )}

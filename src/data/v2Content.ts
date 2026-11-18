@@ -365,3 +365,51 @@ export const CHAPTERS: Chapter[] = [
   { id: 'worldpulse', letter: 'D', title: 'WorldPulse', subtitle: 'The future of products tells its own story' },
   { id: 'ideas', letter: 'E', title: 'Ideas, Judgment & the Future', subtitle: 'Where strategy meets stewardship' },
 ];
+
+/* Journal excerpts shown in chapter E. Where an entry grew out of a real
+   post on /blog, `postSlug` links it to the full piece. */
+export type JournalEntry = {
+  id: string;
+  title: string;
+  origin: string;
+  theme: number;
+  body: string[];
+  postSlug?: string;
+};
+
+export const JOURNAL_ENTRIES: JournalEntry[] = [
+  {
+    id: 'amsterdam',
+    title: 'From Amsterdam: Sustainability as shared responsibility',
+    origin: 'Inspired by the Sustainable Apparel & Textiles Conference in Amsterdam',
+    theme: 0,
+    postSlug: '3-takeaways-from-innovation-forum-s-sustainable-apparel-textiles-conference',
+    body: [
+      'The conference surfaced a tension that runs through the entire apparel and textile industry. Sustainability is often framed as a compliance burden, and the pressure to meet it gets pushed down the supply chain to suppliers who can least afford to absorb the cost.',
+      'The more productive framing is shared responsibility. Brands, manufacturers, logistics providers, and regulators each hold a piece of the solution. No single actor can deliver sustainability alone, and no single actor should bear the full cost of trying.',
+      'What makes this practical is data. When supplier practices, material origins, and environmental impacts are visible to all parties, the conversation shifts from blame to coordination. Transparency is not a weapon; it is a meeting point.',
+    ],
+  },
+  {
+    id: 'passport-value',
+    title: 'Beyond compliance: the product experience opportunity',
+    origin: 'On Digital Product Passports and what they make possible',
+    theme: 1,
+    body: [
+      'The default framing of Digital Product Passports is regulatory: meet the requirement, check the box, move on. That framing undersells the concept.',
+      'A passport is not just a compliance document. It is a connection point between a product and the person who buys it. The same data that satisfies a regulator can tell a story that builds trust, differentiates a brand, and creates a relationship that lasts beyond the sale.',
+      'The insight is that compliance and experience are not separate work streams. They are the same data, presented with different intent. Design decides whether transparency feels like a burden or a gift.',
+    ],
+  },
+  {
+    id: 'business-model',
+    title: 'Sustainability needs a better business model',
+    origin: 'On the economics of ethical supply chains',
+    theme: 2,
+    body: [
+      'The strongest critique of sustainability efforts is not that they are wrong, but that they are economically fragile. When doing the right thing costs more and the customer will not pay for it, the right thing does not scale.',
+      'The path forward is not to abandon the ethical purpose, but to build business models that make sustainability the cheaper, faster, or better option. That means using transparency to reduce waste, using traceability to manage risk, and using data to find efficiencies that compliance alone would never surface.',
+      'Sustainability without a viable business model depends on charity. Sustainability with one becomes the default. The goal is to make the ethical choice the obvious one.',
+    ],
+  },
+];

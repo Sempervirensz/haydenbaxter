@@ -1,6 +1,7 @@
 import { LINKS } from '@/data/v2Content';
 import { ArrowUp } from 'lucide-react';
 import { scrollBehavior } from './hooks';
+import { RESUME_HREF } from '@/data/workTogether';
 
 export function Footer() {
   const year = new Date().getFullYear();
@@ -13,17 +14,23 @@ export function Footer() {
             <p className="mt-1 text-sm text-ink-500">
               Global Business Strategist {'\u00b7'} AI Product Builder {'\u00b7'} Founder, WorldPulse
             </p>
-            <p className="mt-4 text-xs text-ink-400">
+            <p className="mt-4 text-xs text-ink-500">
               &copy; {year} Hayden Baxter. All rights reserved.
             </p>
           </div>
 
-          <div className="flex flex-wrap items-center gap-4 text-sm">
+          <div className="flex flex-wrap items-center gap-x-5 gap-y-1 text-sm">
+            <a
+              href={RESUME_HREF}
+              className="inline-flex min-h-11 items-center font-medium text-ink-600 transition-colors hover:text-clay-600"
+            >
+              Resume
+            </a>
             <a
               href={LINKS.linkedin}
               target="_blank"
               rel="noopener noreferrer"
-              className="font-medium text-ink-600 transition-colors hover:text-clay-600"
+              className="inline-flex min-h-11 items-center font-medium text-ink-600 transition-colors hover:text-clay-600"
             >
               LinkedIn
             </a>
@@ -31,13 +38,13 @@ export function Footer() {
               href={LINKS.worldpulse}
               target="_blank"
               rel="noopener noreferrer"
-              className="font-medium text-ink-600 transition-colors hover:text-clay-600"
+              className="inline-flex min-h-11 items-center font-medium text-ink-600 transition-colors hover:text-clay-600"
             >
               WorldPulse
             </a>
             <a
               href={LINKS.email}
-              className="font-medium text-ink-600 transition-colors hover:text-clay-600"
+              className="inline-flex min-h-11 items-center font-medium text-ink-600 transition-colors hover:text-clay-600"
             >
               Email
             </a>
@@ -45,7 +52,7 @@ export function Footer() {
               href={LINKS.calendly}
               target="_blank"
               rel="noopener noreferrer"
-              className="font-medium text-ink-600 transition-colors hover:text-clay-600"
+              className="inline-flex min-h-11 items-center font-medium text-ink-600 transition-colors hover:text-clay-600"
             >
               Schedule
             </a>

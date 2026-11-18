@@ -1,5 +1,6 @@
-import { Linkedin, Mail, Calendar, ArrowUpRight, Globe } from 'lucide-react';
+import { Linkedin, Mail, Calendar, ArrowUpRight, ArrowRight, Globe, FileText } from 'lucide-react';
 import { LINKS, PROFILE } from '@/data/v2Content';
+import { RESUME_HREF } from '@/data/workTogether';
 import { Reveal, SectionLabel } from './primitives';
 
 const AUDIENCES = [
@@ -54,7 +55,7 @@ export function Connect() {
                     <Calendar size={20} strokeWidth={1.5} />
                     <div>
                       <p className="text-sm font-semibold">Schedule a conversation</p>
-                      <p className="text-xs text-ink-400">30 minutes via Calendly</p>
+                      <p className="text-xs text-ink-300">30 minutes via Calendly</p>
                     </div>
                   </div>
                   <ArrowUpRight size={18} className="text-ink-400 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
@@ -71,7 +72,7 @@ export function Connect() {
                     <Linkedin size={20} strokeWidth={1.5} className="text-ink-700" />
                     <div>
                       <p className="text-sm font-semibold text-ink-900">LinkedIn</p>
-                      <p className="text-xs text-ink-400">/haydenjbaxter</p>
+                      <p className="text-xs text-ink-500">/haydenjbaxter</p>
                     </div>
                   </div>
                   <ArrowUpRight size={18} className="text-ink-400 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
@@ -103,10 +104,25 @@ export function Connect() {
                     <Mail size={20} strokeWidth={1.5} className="text-ink-700" />
                     <div>
                       <p className="text-sm font-semibold text-ink-900">Email</p>
-                      <p className="text-xs text-ink-400">haydenjbaxter@gmail.com</p>
+                      <p className="text-xs text-ink-500">haydenjbaxter@gmail.com</p>
                     </div>
                   </div>
                   <ArrowUpRight size={18} className="text-ink-400 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                </a>
+
+                {/* Resume */}
+                <a
+                  href={RESUME_HREF}
+                  className="group flex items-center justify-between gap-4 rounded-xl border border-ink-200 px-5 py-4 transition-all hover:border-ink-400 hover:bg-ink-100/50"
+                >
+                  <div className="flex items-center gap-3">
+                    <FileText size={20} strokeWidth={1.5} className="text-ink-700" />
+                    <div>
+                      <p className="text-sm font-semibold text-ink-900">Resume</p>
+                      <p className="text-xs text-ink-500">View or download the PDF</p>
+                    </div>
+                  </div>
+                  <ArrowRight size={18} className="text-ink-400 transition-transform group-hover:translate-x-0.5" />
                 </a>
               </div>
             </div>

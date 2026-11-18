@@ -44,7 +44,7 @@ export function SupplierDemo() {
       <div className="mt-6 grid gap-8 lg:grid-cols-[1fr_1.2fr]">
         {/* Controls */}
         <div>
-          <p className="text-xs font-semibold uppercase tracking-wider text-ink-400">
+          <p className="text-xs font-semibold uppercase tracking-wider text-ink-500">
             Adjust your priorities
           </p>
           <div className="mt-4 space-y-5">
@@ -54,7 +54,7 @@ export function SupplierDemo() {
                   <label htmlFor={`slider-${p.key}`} className="text-sm font-medium text-ink-800">
                     {p.label}
                   </label>
-                  <span className="font-mono text-xs text-ink-400 tabular-nums">
+                  <span className="font-mono text-xs text-ink-500 tabular-nums">
                     {weights[p.key]}
                   </span>
                 </div>
@@ -69,7 +69,7 @@ export function SupplierDemo() {
                   }
                   className="mt-2 w-full accent-clay-500"
                 />
-                <p className="mt-1 text-xs text-ink-400">{p.description}</p>
+                <p className="mt-1 text-xs text-ink-500">{p.description}</p>
               </div>
             ))}
           </div>
@@ -77,7 +77,7 @@ export function SupplierDemo() {
 
         {/* Results */}
         <div>
-          <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-ink-400">
+          <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-ink-500">
             <Trophy size={14} strokeWidth={1.5} className="text-gold-500" />
             Recommended supplier
           </div>
@@ -90,7 +90,7 @@ export function SupplierDemo() {
           </div>
 
           {/* Full ranking */}
-          <p className="mt-5 text-xs font-semibold uppercase tracking-wider text-ink-400">
+          <p className="mt-5 text-xs font-semibold uppercase tracking-wider text-ink-500">
             Full ranking
           </p>
           <div className="mt-3 space-y-2">
@@ -103,7 +103,7 @@ export function SupplierDemo() {
               >
                 <div className="flex items-center justify-between gap-3">
                   <div className="flex items-center gap-2 min-w-0">
-                    <span className="font-mono text-xs text-ink-400 tabular-nums">
+                    <span className="font-mono text-xs text-ink-500 tabular-nums">
                       {i + 1}
                     </span>
                     <span className="truncate text-sm font-medium text-ink-800">{s.name}</span>

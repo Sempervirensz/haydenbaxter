@@ -40,11 +40,15 @@ export function useActiveSection(sectionIds: string[]): string {
     sectionIds.forEach((id) => {
       const el = document.getElementById(id);
       if (!el) return;
+      // Watch a thin "reading line" 30% down the viewport: whichever section
+      // crosses it is active. The previous 35%-visible threshold could never
+      // fire for sections taller than ~1.1 viewports, so the highlight stuck
+      // on the wrong chapter through most of the page.
       const obs = new IntersectionObserver(
         ([entry]) => {
           if (entry.isIntersecting) setActive(id);
         },
-        { threshold: 0.35, rootMargin: '-20% 0px -40% 0px' }
+        { threshold: 0, rootMargin: '-30% 0px -69% 0px' }
       );
       obs.observe(el);
       observers.push(obs);

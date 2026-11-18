@@ -43,7 +43,7 @@ export function Background() {
             <Reveal key={fact.label} delay={(i % 5) as 0 | 1 | 2 | 3 | 4}>
               <div className="h-full rounded-xl border border-ink-200 bg-white/40 p-5">
                 <fact.icon size={20} className="text-clay-500" strokeWidth={1.5} />
-                <p className="mt-3 text-xs font-semibold uppercase tracking-wider text-ink-400">
+                <p className="mt-3 text-xs font-semibold uppercase tracking-wider text-ink-500">
                   {fact.label}
                 </p>
                 <p className="mt-1 text-sm leading-relaxed text-ink-700">{fact.value}</p>
@@ -86,10 +86,10 @@ export function Background() {
         </Reveal>
 
         {/* Skills */}
-        <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-10 grid grid-cols-2 gap-3 sm:gap-6 lg:grid-cols-4">
           {SKILL_AREAS.map((area, i) => (
             <Reveal key={area.title} delay={(i % 4) as 0 | 1 | 2 | 3}>
-              <div className="rounded-xl border border-ink-200 bg-white/30 p-5">
+              <div className="h-full rounded-xl border border-ink-200 bg-white/30 p-4 sm:p-5">
                 <h4 className="font-serif text-base font-medium text-ink-900">{area.title}</h4>
                 <ul className="mt-3 space-y-1.5">
                   {area.items.map((item) => (

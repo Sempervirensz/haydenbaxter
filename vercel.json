@@ -169,7 +169,7 @@
       ]
     },
     {
-      "source": "/(blog|emerging-tech-builds)/opengraph-image",
+      "source": "/(blog|emerging-tech-builds|v2)/opengraph-image",
       "headers": [
         {
           "key": "Content-Type",

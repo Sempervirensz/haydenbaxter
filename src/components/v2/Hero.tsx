@@ -15,7 +15,7 @@ export function Hero() {
         <Reveal>
           <div className="mb-6 flex items-center gap-3">
             <span className="h-2 w-2 rounded-full bg-clay-500" />
-            <span className="text-xs font-medium uppercase tracking-[0.2em] text-ink-400">
+            <span className="text-xs font-medium uppercase tracking-[0.2em] text-ink-500">
               {'Global Business \u00b7 AI \u00b7 Supply Chain'}
             </span>
           </div>
@@ -49,7 +49,7 @@ export function Hero() {
         {/* Credibility markers */}
         <Reveal delay={4}>
           <div className="mt-8">
-            <p className="mb-3 text-xs uppercase tracking-widest text-ink-300">Experience across</p>
+            <p className="mb-3 text-xs uppercase tracking-widest text-ink-500">Experience across</p>
             <div className="flex flex-wrap gap-2">
               {CREDIBILITY.map((name) => (
                 <span
@@ -93,7 +93,7 @@ export function Hero() {
         </Reveal>
 
         {/* Scroll hint */}
-        <div className="mt-16 flex items-center gap-2 text-sm text-ink-400">
+        <div className="mt-16 flex items-center gap-2 text-sm text-ink-500">
           <ArrowDown size={16} className="animate-bounce" />
           <span>{'Scroll to explore \u00b7 30-second summary, five-minute depth, or a full chapter journey'}</span>
         </div>
